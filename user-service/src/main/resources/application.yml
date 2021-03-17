@@ -7,8 +7,8 @@ spring:
     hibernate:
       ddl-auto: validate
   datasource:
-    url: jdbc:postgresql://ec2-52-50-171-4.eu-west-1.compute.amazonaws.com:5432/d76mm3mhqo6moi
-    username: lvqitshsnqslvy
-    password: 75bc2450866e9ad20e85c913e7cd9a84bfc4916147ea8e92bb0c1a82770face9
+    url: jdbc:postgresql://ec2-54-155-226-153.eu-west-1.compute.amazonaws.com:5432/d75d4ailid467f
+    username: tykptcfbkuiaxb
+    password: bf9acf118d9ed1720f79bd30dde99b131dfd562dea86e934a93db201b833e1bc
     initialization-mode: always
     type: com.zaxxer.hikari.HikariDataSource
