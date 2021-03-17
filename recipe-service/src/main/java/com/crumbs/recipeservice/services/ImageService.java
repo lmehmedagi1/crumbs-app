@@ -1,2 +1,4 @@
-package com.crumbs.recipeservice.services;public class ImageService {
+package com.crumbs.recipeservice.services;
+
+public class ImageService {
 }

@@ -1,2 +1,4 @@
-package com.crumbs.recipeservice.controllers;public class DietController {
+package com.crumbs.recipeservice.controllers;
+
+public class DietController {
 }

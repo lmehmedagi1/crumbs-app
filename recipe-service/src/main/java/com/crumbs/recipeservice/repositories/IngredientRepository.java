@@ -1,2 +1,4 @@
-package com.crumbs.recipeservice.repositories;public class IngredientRepository {
+package com.crumbs.recipeservice.repositories;
+
+public class IngredientRepository {
 }

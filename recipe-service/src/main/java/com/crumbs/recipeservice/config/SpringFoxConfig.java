@@ -1,4 +1,4 @@
-package com.crumbs.userservice.config;
+package com.crumbs.recipeservice.config;
 
 
 import org.springframework.context.annotation.Bean;
