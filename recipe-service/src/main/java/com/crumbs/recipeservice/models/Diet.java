@@ -9,7 +9,7 @@ import org.hibernate.annotations.Type;
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import java.util.Set;
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -18,6 +18,7 @@ import java.util.UUID;
 @Entity
 @Table(name = "diets")
 public class Diet {
+
     @Id
     @Type(type="uuid-char")
     @GeneratedValue(generator = "UUID")
@@ -42,10 +43,10 @@ public class Diet {
 
     @ManyToMany
     @JoinTable(
-            name = "diet_recipe",
+            name = "diet_recipes",
             joinColumns = @JoinColumn(
                     name = "diet_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(
                     name = "recipe_id", referencedColumnName = "id"))
-    private Set<Recipe> recipes;
+    private List<Recipe> recipes;
 }

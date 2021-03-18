@@ -39,7 +39,7 @@ public class Recipe {
 
     @ManyToMany
     @JoinTable(
-            name = "recipe_category",
+            name = "recipe_categories",
             joinColumns = @JoinColumn(
                     name = "recipe_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(
@@ -48,7 +48,7 @@ public class Recipe {
 
     @ManyToMany
     @JoinTable(
-            name = "recipe_ingredient",
+            name = "recipe_ingredients",
             joinColumns = @JoinColumn(
                     name = "recipe_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(

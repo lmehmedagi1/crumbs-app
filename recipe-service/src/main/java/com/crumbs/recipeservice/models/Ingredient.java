@@ -20,6 +20,7 @@ import java.util.UUID;
 @Entity
 @Table(name = "ingredients")
 public class Ingredient {
+
     @Id
     @Type(type="uuid-char")
     @GeneratedValue(generator = "UUID")

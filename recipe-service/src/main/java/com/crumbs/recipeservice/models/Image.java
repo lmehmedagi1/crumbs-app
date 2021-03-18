@@ -26,7 +26,6 @@ public class Image {
     private UUID id;
 
     @NotNull
-    @NotEmpty
     private byte[] image;
 
     @JsonBackReference
