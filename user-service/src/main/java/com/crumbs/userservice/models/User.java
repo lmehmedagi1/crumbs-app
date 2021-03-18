@@ -10,6 +10,8 @@ import org.hibernate.annotations.Type;
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Data
@@ -41,4 +43,13 @@ public class User {
     @JsonManagedReference
     @OneToOne(mappedBy = "user")
     private UserDetails userDetails;
+
+    @ManyToMany
+    @JoinTable(
+            name = "subscriptions",
+            joinColumns = @JoinColumn(
+                    name = "subscriber_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(
+                    name = "author_id", referencedColumnName = "id"))
+    private List<User> subscriptions;
 }
