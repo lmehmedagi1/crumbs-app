@@ -1,0 +1,14 @@
+server:
+  port: 8083
+  error:
+    include-message: always
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: validate
+  datasource:
+    url: jdbc:postgresql://ec2-108-128-104-50.eu-west-1.compute.amazonaws.com:5432/d79sqlvpd875cl
+    username: civuylxdjzbhxf
+    password: e9a497ee9ce75553d183c06b9d8964004afe5e85c4cdbb6c71dad504ab70b064
+    initialization-mode: always
+    type: com.zaxxer.hikari.HikariDataSource
