@@ -21,11 +21,22 @@ import java.util.UUID;
 @Table(name = "reviews")
 public class Review {
 
+    @Id
+    @Type(type="uuid-char")
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
+    private UUID recipe_d;
+
+    @Id
+    @Type(type="uuid-char")
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
+    private UUID user_id;
+
     @NotNull
     @NotEmpty
     private boolean liked;
-
-    @NotEmpty
+    
     private int rating;
 
     @NotEmpty
