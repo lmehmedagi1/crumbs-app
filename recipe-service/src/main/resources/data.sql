@@ -1,35 +1,50 @@
-INSERT INTO recipes VALUES ('123e4567-e89b-42d3-a456-556642440001', 'Sampita', 'Anelov najdrazi kolac', '1. Kupite sampitu. 2. Poklonite Anelu');
-INSERT INTO recipes VALUES ('123e4567-e89b-42d3-a456-556642440002', 'Mon chai', 'Cheesecake iz Metropolisa', '1. Odete u Metropolis. 2. Kupite.');
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
-INSERT INTO categories VALUES ('123e4567-e89b-42d3-a456-556642440003', 'Kolac');
-INSERT INTO categories VALUES ('123e4567-e89b-42d3-a456-556642440004', 'Dorucak');
+DO
+'
+    DECLARE
+        sampita_id      UUID := uuid_generate_v4();
+        monchay_id      UUID := uuid_generate_v4();
+        kolac_cat_id    UUID := uuid_generate_v4();
+        dorucak_cat_id  UUID := uuid_generate_v4();
+        sir_ing_id      UUID := uuid_generate_v4();
+        visnja_ing_id   UUID := uuid_generate_v4();
+        slag_ing_id     UUID := uuid_generate_v4();
+        sporcka_diet_id UUID := uuid_generate_v4();
+    BEGIN
+        INSERT INTO recipes VALUES (sampita_id, ''Šampita'', ''Najgori kolac u istoriji'', ''1. Kupite sampitu; 2. Bacite je'');
+        INSERT INTO recipes VALUES (monchay_id, ''Mon Chay'', ''Najjaci kolac u istoriji'', ''1. Kupite Mon Chay u Metropolisu; 2. Dajte Anelu'');
 
-INSERT INTO ingredients VALUES ('123e4567-e89b-42d3-a456-556642440000', 'Sir');
-INSERT INTO ingredients VALUES ('123e4567-e89b-42d3-a456-556642440001', 'Visnja');
-INSERT INTO ingredients VALUES ('123e4567-e89b-42d3-a456-556642440002', 'Slag');
+        INSERT INTO categories VALUES (kolac_cat_id, ''Kolac'');
+        INSERT INTO categories VALUES (dorucak_cat_id, ''Dorucak'');
 
-INSERT INTO recipe_categories VALUES ('123e4567-e89b-42d3-a456-556642440001', '123e4567-e89b-42d3-a456-556642440003');
-INSERT INTO recipe_categories VALUES ('123e4567-e89b-42d3-a456-556642440002', '123e4567-e89b-42d3-a456-556642440003');
+        INSERT INTO ingredients VALUES (sir_ing_id, ''Sir'');
+        INSERT INTO ingredients VALUES (visnja_ing_id, ''Visnja'');
+        INSERT INTO ingredients VALUES (slag_ing_id, ''Slag'');
 
-INSERT INTO recipe_ingredients VALUES ('123e4567-e89b-42d3-a456-556642440001', '123e4567-e89b-42d3-a456-556642440002');
-INSERT INTO recipe_ingredients VALUES ('123e4567-e89b-42d3-a456-556642440002', '123e4567-e89b-42d3-a456-556642440000');
-INSERT INTO recipe_ingredients VALUES ('123e4567-e89b-42d3-a456-556642440002', '123e4567-e89b-42d3-a456-556642440002');
+        INSERT INTO recipe_categories VALUES (sampita_id, kolac_cat_id);
+        INSERT INTO recipe_categories VALUES (monchay_id, dorucak_cat_id);
 
-INSERT INTO diets VALUES ('123e4567-e89b-42d3-a456-556642440000', 'Sporcka ishrana', 'Idealna dijeta preko vikenda', 3, 'f',
-'123e4567-e89b-42d3-a456-556642440001');
+        INSERT INTO recipe_ingredients VALUES (sampita_id, slag_ing_id);
+        INSERT INTO recipe_ingredients VALUES (monchay_id, sir_ing_id);
+        INSERT INTO recipe_ingredients VALUES (monchay_id, visnja_ing_id);
 
-INSERT INTO diet_recipes VALUES ('123e4567-e89b-42d3-a456-556642440000', '123e4567-e89b-42d3-a456-556642440001');
-INSERT INTO diet_recipes VALUES ('123e4567-e89b-42d3-a456-556642440000', '123e4567-e89b-42d3-a456-556642440002');
+        INSERT INTO diets VALUES (sporcka_diet_id, ''Sporcka ishrana'', ''Idealna dijeta preko vikenda'', 3, ''f'', uuid_generate_v4());
 
-INSERT INTO images VALUES ('123e4567-e89b-42d3-a456-556642440000',
-decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z/C/HgAGgwJ/lK3Q6wAAAABJRU5ErkJggg==', 'base64'),
-'123e4567-e89b-42d3-a456-556642440001');
-INSERT INTO images VALUES ('123e4567-e89b-42d3-a456-556642440001',
-decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z/C/HgAGgwJ/lK3Q6wAAAABJRU5ErkJggg==', 'base64'),
-'123e4567-e89b-42d3-a456-556642440001');
-INSERT INTO images VALUES ('123e4567-e89b-42d3-a456-556642440002',
-decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z/C/HgAGgwJ/lK3Q6wAAAABJRU5ErkJggg==', 'base64'),
-'123e4567-e89b-42d3-a456-556642440001');
-INSERT INTO images VALUES ('123e4567-e89b-42d3-a456-556642440004',
-decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z/C/HgAGgwJ/lK3Q6wAAAABJRU5ErkJggg==', 'base64'),
-'123e4567-e89b-42d3-a456-556642440002');
+        INSERT INTO diet_recipes VALUES (sporcka_diet_id, monchay_id);
+        INSERT INTO diet_recipes VALUES (sporcka_diet_id, sampita_id);
+
+        INSERT INTO images VALUES (uuid_generate_v4(),
+        decode(''iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z/C/HgAGgwJ/lK3Q6wAAAABJRU5ErkJggg=='',
+                ''base64''), sampita_id);
+        INSERT INTO images VALUES (uuid_generate_v4(),
+        decode(''iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z/C/HgAGgwJ/lK3Q6wAAAABJRU5ErkJggg=='',
+                ''base64''), sampita_id);
+        INSERT INTO images VALUES (uuid_generate_v4(),
+        decode(''iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z/C/HgAGgwJ/lK3Q6wAAAABJRU5ErkJggg=='',
+                ''base64''), monchay_id);
+        INSERT INTO images VALUES (uuid_generate_v4(),
+        decode(''iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z/C/HgAGgwJ/lK3Q6wAAAABJRU5ErkJggg=='',
+                ''base64''), monchay_id);
+    END;
+' LANGUAGE PLPGSQL;

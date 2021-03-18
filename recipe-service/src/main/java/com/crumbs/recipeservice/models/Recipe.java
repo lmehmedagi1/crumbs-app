@@ -22,7 +22,6 @@ import java.util.UUID;
 public class Recipe {
 
     @Id
-    @Type(type="uuid-char")
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     private UUID id;
@@ -58,5 +57,4 @@ public class Recipe {
     @JsonManagedReference
     @OneToMany(mappedBy = "recipe")
     private List<Image> images;
-
 }

@@ -1,7 +1,9 @@
 package com.crumbs.recipeservice.controllers;
 
+import com.crumbs.recipeservice.exceptions.RecipeNotFoundException;
 import com.crumbs.recipeservice.models.Recipe;
-import com.crumbs.recipeservice.requests.RecipeRequest;
+import com.crumbs.recipeservice.requests.CreateRecipeRequest;
+import com.crumbs.recipeservice.requests.UpdateRecipeRequest;
 import com.crumbs.recipeservice.responses.RecipeResponse;
 import com.crumbs.recipeservice.services.RecipeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +27,17 @@ public class RecipeController {
         return ResponseEntity.ok(recipeService.getRecipes());
     }
 
+    @GetMapping("/recipe")
+    public ResponseEntity<Recipe> getRecipe(@RequestParam @Valid String id) {
+        try {
+            return ResponseEntity.ok(recipeService.getRecipe(id));
+        } catch (RecipeNotFoundException recipeNotFoundException){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, recipeNotFoundException.getMessage());
+        }
+    }
+
     @PostMapping("/recipes/create")
-    public ResponseEntity<RecipeResponse> createRecipe(@RequestBody @Valid RecipeRequest createRecipeRequest, HttpServletResponse response) {
+    public ResponseEntity<RecipeResponse> createRecipe(@RequestBody @Valid CreateRecipeRequest createRecipeRequest) {
         try {
             final Recipe recipe = recipeService.saveRecipe(createRecipeRequest);
             return ResponseEntity.ok(new RecipeResponse(recipe));
@@ -36,22 +47,21 @@ public class RecipeController {
     }
 
     @PatchMapping("/recipes/update")
-    public ResponseEntity<RecipeResponse> updateRecipe(@RequestBody @Valid RecipeRequest updateRecipeRequest, HttpServletResponse response){
+    public ResponseEntity<RecipeResponse> updateRecipe(@RequestBody @Valid UpdateRecipeRequest updateRecipeRequest){
         try {
             final Recipe recipe = recipeService.updateRecipe(updateRecipeRequest);
             return ResponseEntity.ok(new RecipeResponse(recipe));
-        } catch(Exception e){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        } catch(RecipeNotFoundException recipeNotFoundException){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, recipeNotFoundException.getMessage());
         }
     }
 
     @DeleteMapping("/recipes/delete")
-    public ResponseEntity<RecipeResponse> deleteRecipe(@RequestBody @Valid RecipeRequest deleteRecipeRequest, HttpServletResponse response) {
+    public void deleteRecipe(@RequestParam @Valid String id) {
         try {
-            final Recipe recipe = recipeService.deleteRecipe(deleteRecipeRequest);
-            return ResponseEntity.ok(new RecipeResponse(recipe));
-        } catch(Exception e){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+            recipeService.deleteRecipe(id);
+        } catch(RecipeNotFoundException recipeNotFoundException){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, recipeNotFoundException.getMessage());
         }
     }
 }

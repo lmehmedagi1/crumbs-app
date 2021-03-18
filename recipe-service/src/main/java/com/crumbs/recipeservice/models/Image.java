@@ -20,7 +20,6 @@ import java.util.UUID;
 public class Image {
 
     @Id
-    @Type(type="uuid-char")
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     private UUID id;

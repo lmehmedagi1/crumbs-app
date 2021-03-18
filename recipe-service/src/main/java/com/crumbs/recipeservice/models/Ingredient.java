@@ -22,7 +22,6 @@ import java.util.UUID;
 public class Ingredient {
 
     @Id
-    @Type(type="uuid-char")
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     private UUID id;
