@@ -33,12 +33,11 @@ public class Diet {
     private String description;
 
     @NotNull
-    @NotEmpty
     private Integer duration;
 
     @NotNull
-    @NotEmpty
-    private boolean is_private;
+    @Column(name = "is_private")
+    private Boolean isPrivate;
 
     @ManyToMany
     @JoinTable(

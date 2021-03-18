@@ -9,7 +9,5 @@ import lombok.NonNull;
 @AllArgsConstructor
 public class RecipeResponse {
     @NonNull
-    private final Recipe recipe;
-
-
+    private Recipe recipe;
 }

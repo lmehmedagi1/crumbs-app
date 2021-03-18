@@ -54,8 +54,8 @@ CREATE TABLE diets
     "title"       TEXT NOT NULL,
     "description" TEXT NOT NULL,
     "duration"    INT  NOT NULL,
-    "is_private"  BOOL NOT NULL,
-    "user_id"     uuid NOT NULL,
+    "is_private"  BOOLEAN NOT NULL DEFAULT 'false',
+    "user_id"     uuid ,
     PRIMARY KEY ("id")
 );
 
