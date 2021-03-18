@@ -1,5 +1,6 @@
 package com.crumbs.userservice.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,7 +23,6 @@ import java.util.UUID;
 public class User {
 
     @Id
-    @Type(type="uuid-char")
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     private UUID id;
@@ -44,6 +44,7 @@ public class User {
     @OneToOne(mappedBy = "user")
     private UserDetails userDetails;
 
+    @JsonIgnore
     @ManyToMany
     @JoinTable(
             name = "subscriptions",

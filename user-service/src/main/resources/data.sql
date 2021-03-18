@@ -1,22 +1,57 @@
-INSERT INTO users VALUES ('123e4567-e89b-42d3-a456-556642440000', 'lmehmedagi', 'lmehmedagi1@etf.unsa.ba',
-'$2a$10$QTyNy5czbfGeid0fJIGFTO4Fb4Pa4c6XeO4Y1YXRxUQzv4uSo6w92');
-INSERT INTO users VALUES ('123e4567-e89b-42d3-a456-556642450000', 'amandal', 'amandal1@etf.unsa.ba',
-'$2a$10$QTyNy5czbfGeid0fJIGFTO4Fb4Pa4c6XeO4Y1YXRxUQzv4uSo6w92');
-INSERT INTO users VALUES ('123e4567-e89b-42d3-a456-556642460000', 'mpaldum', 'mpaldum1@etf.unsa.ba',
-'$2a$10$QTyNy5czbfGeid0fJIGFTO4Fb4Pa4c6XeO4Y1YXRxUQzv4uSo6w92');
-INSERT INTO users VALUES ('123e4567-e89b-42d3-a456-556642470000', 'aturkusic', 'aturkusic1@etf.unsa.ba',
-'$2a$10$QTyNy5czbfGeid0fJIGFTO4Fb4Pa4c6XeO4Y1YXRxUQzv4uSo6w92');
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
-INSERT INTO user_details VALUES ('123e4567-e89b-42d3-a456-556642440001', 'Lejla', 'Mehmedagic', 'F', '062123123',
-decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z/C/HgAGgwJ/lK3Q6wAAAABJRU5ErkJggg==', 'base64'), '123e4567-e89b-42d3-a456-556642440000');
-INSERT INTO user_details VALUES ('123e4567-e89b-42d3-a456-556642440002', 'Anel', 'Mandal', 'F', '062123123',
-decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z/C/HgAGgwJ/lK3Q6wAAAABJRU5ErkJggg==', 'base64'),
-'123e4567-e89b-42d3-a456-556642450000');
-INSERT INTO user_details VALUES ('123e4567-e89b-42d3-a456-556642440003', 'Medin', 'Paldum', 'F', '062123123',
-decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z/C/HgAGgwJ/lK3Q6wAAAABJRU5ErkJggg==', 'base64'),
-'123e4567-e89b-42d3-a456-556642460000');
-INSERT INTO user_details VALUES ('123e4567-e89b-42d3-a456-556642440004', 'Arslan', 'Turkusic', 'F', '062123123',
-decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z/C/HgAGgwJ/lK3Q6wAAAABJRU5ErkJggg==', 'base64'),
-'123e4567-e89b-42d3-a456-556642470000');
+DO
+'
+    DECLARE
+        lela_id         UUID := uuid_generate_v4();
+        manda_id        UUID := uuid_generate_v4();
+        medo_id         UUID := uuid_generate_v4();
+        aki_id          UUID := uuid_generate_v4();
+    BEGIN
+        INSERT INTO users
+        VALUES (lela_id, ''lmehmedagi'', ''lmehmedagi1@etf.unsa.ba'',
+                ''c5gAjBCcX8hdmm3uUkE2XvWT7nJfSGQfuwNWBBsfqLph5uSm'');
+        INSERT INTO users
+        VALUES (manda_id, ''amandal'', ''amandal1@etf.unsa.ba'',
+                ''yj4g4BS5uMX6VTg4mGGHtjmSpvUTWvsHAHf4JVwpUKkLWnXv'');
+        INSERT INTO users
+        VALUES (medo_id, ''mpaldum'', ''mpaldum1@etf.unsa.ba'',
+                ''GUQgp5Ju5GFsey58qjzwMKEkNsZrZgdYS4cASWQvjrF4HDKD'');
+        INSERT INTO users
+        VALUES (aki_id, ''aturkusic'', ''aturkusic1@etf.unsa.ba'',
+                ''rpapBsgsCYtqfQPGhmTx3tweLfkLNG2df94usYs48qZ5R35q'');
 
-INSERT INTO subscriptions VALUES ('123e4567-e89b-42d3-a456-556642450000', '123e4567-e89b-42d3-a456-556642440000');
+        INSERT INTO user_details
+        VALUES (uuid_generate_v4(), ''Lejla'', ''Mehmedagic'', ''Female'', ''062123123'',
+                decode(
+                        ''iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z/C/HgAGgwJ/lK3Q6wAAAABJRU5ErkJggg=='',
+                        ''base64''), lela_id);
+        INSERT INTO user_details
+        VALUES (uuid_generate_v4(), ''Anel'', ''Mandal'', ''Male'', ''062123123'',
+                decode(
+                        ''iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z/C/HgAGgwJ/lK3Q6wAAAABJRU5ErkJggg=='',
+                        ''base64''), manda_id);
+        INSERT INTO user_details
+        VALUES (uuid_generate_v4(), ''Medin'', ''Paldum'', ''Male'', ''062123123'',
+                decode(
+                        ''iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z/C/HgAGgwJ/lK3Q6wAAAABJRU5ErkJggg=='',
+                        ''base64''), medo_id);
+        INSERT INTO user_details
+        VALUES (uuid_generate_v4(), ''Arslan'', ''Turkusic'', ''Non-Binary'', ''062123123'',
+                decode(
+                        ''iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z/C/HgAGgwJ/lK3Q6wAAAABJRU5ErkJggg=='',
+                        ''base64''), aki_id);
+
+        INSERT INTO subscriptions VALUES (manda_id, lela_id);
+        INSERT INTO subscriptions VALUES (manda_id, aki_id);
+        INSERT INTO subscriptions VALUES (aki_id, medo_id);
+        INSERT INTO subscriptions VALUES (medo_id, manda_id);
+    END;
+' LANGUAGE PLPGSQL;
+
+
+
+
+
+
+
