@@ -9,8 +9,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.*;
 import java.util.List;
 import java.util.UUID;
 
@@ -28,6 +27,9 @@ public class User {
 
     @NotNull
     @NotEmpty
+    @Size(min = 6, max = 30, message= "Username must be between 6 and 30 characters")
+    @Pattern(regexp = "^(?!.*\\.\\.)(?!.*\\.$)[a-z0-9_.]{6,29}$", flags = Pattern.Flag.UNICODE_CASE, message = "Username can only have lowercase " +
+            "letters, numbers and underscores.")
     private String username;
 
     @NotNull
@@ -37,6 +39,7 @@ public class User {
 
     @NotNull
     @NotEmpty
+    @Size(min = 8, message= "Password must contain at least 8 characters")
     private String password;
 
     @JsonManagedReference

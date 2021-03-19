@@ -73,7 +73,7 @@ public class UserService {
         return JWTUtil.generateToken(userDetails);
     }
 
-    public User registerUser(RegisterRequest registerRequest) {
+    public User registerUser(@NonNull RegisterRequest registerRequest) {
         if (userRepository.findByUsername(registerRequest.getUsername()) != null)
             throw new UserAlreadyExistsException("User with this username already exists");
 

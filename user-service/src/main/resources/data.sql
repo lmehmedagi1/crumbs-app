@@ -10,16 +10,16 @@ DO
     BEGIN
         INSERT INTO users
         VALUES (lela_id, ''lmehmedagi'', ''lmehmedagi1@etf.unsa.ba'',
-                ''$2a$10$QTyNy5czbfGeid0fJIGFTO4Fb4Pa4c6XeO4Y1YXRxUQzv4uSo6w92'');
+                ''$2a$10$Z1bciZuRtMCbNHjKfZ7zTO73054Tsfcsol03pV6DdAest.xONe8Ga'');
         INSERT INTO users
         VALUES (manda_id, ''amandal'', ''amandal1@etf.unsa.ba'',
-                ''$2a$10$QTyNy5czbfGeid0fJIGFTO4Fb4Pa4c6XeO4Y1YXRxUQzv4uSo6w92'');
+                ''$2a$10$Z1bciZuRtMCbNHjKfZ7zTO73054Tsfcsol03pV6DdAest.xONe8Ga'');
         INSERT INTO users
         VALUES (medo_id, ''mpaldum'', ''mpaldum1@etf.unsa.ba'',
-                ''$2a$10$QTyNy5czbfGeid0fJIGFTO4Fb4Pa4c6XeO4Y1YXRxUQzv4uSo6w92'');
+                ''$2a$10$Z1bciZuRtMCbNHjKfZ7zTO73054Tsfcsol03pV6DdAest.xONe8Ga'');
         INSERT INTO users
         VALUES (aki_id, ''aturkusic'', ''aturkusic1@etf.unsa.ba'',
-                ''$2a$10$QTyNy5czbfGeid0fJIGFTO4Fb4Pa4c6XeO4Y1YXRxUQzv4uSo6w92'');
+                ''$2a$10$Z1bciZuRtMCbNHjKfZ7zTO73054Tsfcsol03pV6DdAest.xONe8Ga'');
 
         INSERT INTO user_details
         VALUES (uuid_generate_v4(), ''Lejla'', ''Mehmedagic'', ''Female'', ''062123123'',
