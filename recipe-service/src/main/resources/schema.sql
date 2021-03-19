@@ -35,8 +35,8 @@ CREATE TABLE recipe_categories
     "recipe_id"   uuid,
     "category_id" uuid,
     PRIMARY KEY ("recipe_id", "category_id"),
-    FOREIGN KEY ("recipe_id") REFERENCES recipes ("id"),
-    FOREIGN KEY ("category_id") REFERENCES categories ("id")
+    FOREIGN KEY ("recipe_id") REFERENCES recipes ("id") ON DELETE CASCADE,
+    FOREIGN KEY ("category_id") REFERENCES categories ("id") ON DELETE CASCADE
 );
 
 CREATE TABLE recipe_ingredients
@@ -44,8 +44,8 @@ CREATE TABLE recipe_ingredients
     "recipe_id"     uuid,
     "ingredient_id" uuid,
     PRIMARY KEY ("recipe_id", "ingredient_id"),
-    FOREIGN KEY ("recipe_id") REFERENCES recipes ("id"),
-    FOREIGN KEY ("ingredient_id") REFERENCES ingredients ("id")
+    FOREIGN KEY ("recipe_id") REFERENCES recipes ("id") ON DELETE CASCADE,
+    FOREIGN KEY ("ingredient_id") REFERENCES ingredients ("id") ON DELETE CASCADE
 );
 
 CREATE TABLE diets
@@ -64,8 +64,8 @@ CREATE TABLE diet_recipes
     "diet_id"   uuid,
     "recipe_id" uuid,
     PRIMARY KEY ("diet_id", "recipe_id"),
-    FOREIGN KEY ("diet_id") REFERENCES diets ("id"),
-    FOREIGN KEY ("recipe_id") REFERENCES recipes ("id")
+    FOREIGN KEY ("diet_id") REFERENCES diets ("id") ON DELETE CASCADE,
+    FOREIGN KEY ("recipe_id") REFERENCES recipes ("id") ON DELETE CASCADE
 );
 
 CREATE TABLE images
