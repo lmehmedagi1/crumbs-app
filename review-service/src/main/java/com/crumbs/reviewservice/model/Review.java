@@ -7,8 +7,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.util.UUID;
 
@@ -36,8 +35,12 @@ public class Review implements Serializable {
     @Column(name = "is_liked")
     private Boolean isLiked;
 
+    @Min(1)
+    @Max(5)
     private Integer rating;
 
     @NotEmpty
+    @Size(min = 1, max = 8000, message = "Comment exceeds allowed limit of 8000 characters!")
+    @Pattern(regexp = "^[A-Za-z0-9 _.,!\"'-/]*$", flags = Pattern.Flag.UNICODE_CASE, message = "Comment can only contain letters, numbers, spaces, and punctuation.")
     private String comment;
 }
