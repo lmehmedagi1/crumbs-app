@@ -20,17 +20,23 @@ import java.util.UUID;
 public class Review implements Serializable {
 
     @Id
-    @Type(type="uuid-char")
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     private UUID id;
 
     @NotNull
-    @NotEmpty
+    @Column(name = "user_id")
+    private UUID userId;
+
+    @NotNull
+    @Column(name = "recipe_id")
+    private UUID recipeId;
+
+    @NotNull
     @Column(name = "is_liked")
-    private boolean liked;
-    
-    private int rating;
+    private Boolean isLiked;
+
+    private Integer rating;
 
     @NotEmpty
     private String comment;
