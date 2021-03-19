@@ -18,7 +18,7 @@ CREATE TABLE user_details
     "last_name"    TEXT  NOT NULL,
     "gender"       TEXT  NOT NULL,
     "phone_number" TEXT  NOT NULL,
-    "avatar"       bytea NOT NULL,
+    "avatar"       bytea,
     "user_id"      UUID  NOT NULL,
     FOREIGN KEY ("user_id") REFERENCES users ("id"),
     PRIMARY KEY ("id")

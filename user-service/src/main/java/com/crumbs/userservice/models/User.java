@@ -1,18 +1,17 @@
 package com.crumbs.userservice.models;
 
+import com.crumbs.userservice.utilities.ValidEmail;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 @Data
@@ -29,11 +28,11 @@ public class User {
 
     @NotNull
     @NotEmpty
-    @Column
     private String username;
 
     @NotNull
     @NotEmpty
+    @ValidEmail
     private String email;
 
     @NotNull
@@ -41,7 +40,7 @@ public class User {
     private String password;
 
     @JsonManagedReference
-    @OneToOne(mappedBy = "user")
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private UserDetails userDetails;
 
     @JsonIgnore
