@@ -29,11 +29,7 @@ public class RecipeController {
 
     @GetMapping("/recipe")
     public ResponseEntity<Recipe> getRecipe(@RequestParam @Valid String id) {
-        try {
-            return ResponseEntity.ok(recipeService.getRecipe(id));
-        } catch (RecipeNotFoundException recipeNotFoundException){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, recipeNotFoundException.getMessage());
-        }
+        return ResponseEntity.ok(recipeService.getRecipe(id));
     }
 
     @PostMapping("/recipes/create")
@@ -41,27 +37,19 @@ public class RecipeController {
         try {
             final Recipe recipe = recipeService.saveRecipe(createRecipeRequest);
             return ResponseEntity.ok(new RecipeResponse(recipe));
-        } catch (Exception e){
+        } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
     }
 
     @PatchMapping("/recipes/update")
-    public ResponseEntity<RecipeResponse> updateRecipe(@RequestBody @Valid UpdateRecipeRequest updateRecipeRequest){
-        try {
-            final Recipe recipe = recipeService.updateRecipe(updateRecipeRequest);
-            return ResponseEntity.ok(new RecipeResponse(recipe));
-        } catch(RecipeNotFoundException recipeNotFoundException){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, recipeNotFoundException.getMessage());
-        }
+    public ResponseEntity<RecipeResponse> updateRecipe(@RequestBody @Valid UpdateRecipeRequest updateRecipeRequest) {
+        final Recipe recipe = recipeService.updateRecipe(updateRecipeRequest);
+        return ResponseEntity.ok(new RecipeResponse(recipe));
     }
 
     @DeleteMapping("/recipes/delete")
-    public void deleteRecipe(@RequestParam @Valid String id) {
-        try {
-            recipeService.deleteRecipe(id);
-        } catch(RecipeNotFoundException recipeNotFoundException){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, recipeNotFoundException.getMessage());
-        }
+    public void deleteIngredient(@RequestParam @Valid String id) {
+        recipeService.deleteRecipe(id);
     }
 }
