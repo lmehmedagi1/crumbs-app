@@ -1,8 +1,11 @@
-INSERT INTO reviews VALUES ('123e4567-e89b-42d3-a456-556642440000', '123e4567-e89b-42d3-a456-556642440001',
-'123e4567-e89b-42d3-a456-556642440000', true, 4,  'Dobar pravo');
-INSERT INTO reviews VALUES ('123e4567-e89b-42d3-a456-556642440001', '123e4567-e89b-42d3-a456-556642440001',
-'123e4567-e89b-42d3-a456-556642450000', false, 3, 'Meh bezze');
-INSERT INTO reviews VALUES ('123e4567-e89b-42d3-a456-556642440002', '123e4567-e89b-42d3-a456-556642440001',
-'123e4567-e89b-42d3-a456-556642460000', true, 5,  'Prejako fakat');
-INSERT INTO reviews VALUES ('123e4567-e89b-42d3-a456-556642440003', '123e4567-e89b-42d3-a456-556642440001', '123e4567-e89b-42d3-a456-556642440000',
- true,  5, 'Najbolji kolac');
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
+DO
+'
+BEGIN
+    INSERT INTO reviews VALUES (uuid_generate_v4(), uuid_generate_v4(), uuid_generate_v4(), true, 4, ''Dobar pravo'');
+    INSERT INTO reviews VALUES (uuid_generate_v4(), uuid_generate_v4(), uuid_generate_v4(), false, 3, ''Meh bezze'');
+    INSERT INTO reviews VALUES (uuid_generate_v4(), uuid_generate_v4(), uuid_generate_v4(), true, 5, ''Prejako fakat'');
+    INSERT INTO reviews VALUES (uuid_generate_v4(), uuid_generate_v4(), uuid_generate_v4(), true, 5, ''Najbolji kolac'');
+END;
+' LANGUAGE PLPGSQL;
