@@ -54,13 +54,13 @@ public class DietController {
         try {
             final Diet diet = dietService.updateDiet(updateDietRequest);
             return ResponseEntity.ok(new DietResponse(diet));
-        } catch (RecipeNotFoundException recipeNotFoundException) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, recipeNotFoundException.getMessage());
+        } catch (DietNotFoundException dietNotFoundException) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, dietNotFoundException.getMessage());
         }
     }
 
     @DeleteMapping("/diet/delete")
-    public void deleteRecipe(@RequestParam @Valid String id) {
+    public void deleteDiet(@RequestParam @Valid String id) {
         try {
             dietService.deleteDiet(id);
         } catch(DietNotFoundException dietNotFoundException){
