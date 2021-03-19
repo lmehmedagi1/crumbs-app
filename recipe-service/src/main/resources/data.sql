@@ -3,7 +3,7 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 DO
 '
     DECLARE
-        sampita_id      UUID := uuid_generate_v4();
+        sampita_id      UUID := ''fb244360-88cb-11eb-8dcd-0242ac130003'';
         monchay_id      UUID := uuid_generate_v4();
         kolac_cat_id    UUID := uuid_generate_v4();
         dorucak_cat_id  UUID := uuid_generate_v4();

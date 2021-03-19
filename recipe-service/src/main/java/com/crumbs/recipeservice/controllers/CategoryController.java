@@ -58,7 +58,7 @@ public class CategoryController {
     public void deleteCategory(@RequestParam @Valid String id) {
         try {
             categoryService.deleteCategory(id);
-        } catch(CategoryNotFoundException categoryNotFoundException){
+        } catch (CategoryNotFoundException categoryNotFoundException) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, categoryNotFoundException.getMessage());
         }
     }
