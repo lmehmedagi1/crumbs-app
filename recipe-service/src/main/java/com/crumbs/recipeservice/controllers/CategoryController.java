@@ -35,9 +35,9 @@ public class CategoryController {
     }
 
     @PostMapping("/category/create")
-    public ResponseEntity<CategoryResponse> createCategory(@RequestBody @Valid String categoryName) {
+    public ResponseEntity<CategoryResponse> createCategory(@RequestBody @Valid CreateCategoryRequest createCategoryRequest) {
         try {
-            final Category category = categoryService.saveCategory(categoryName);
+            final Category category = categoryService.saveCategory(createCategoryRequest);
             return ResponseEntity.ok(new CategoryResponse(category));
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
