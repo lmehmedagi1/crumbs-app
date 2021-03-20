@@ -34,12 +34,13 @@ public class Review implements Serializable {
     @Column(name = "is_liked")
     private Boolean isLiked;
 
-    @Min(1)
-    @Max(5)
+    @Min(value = 1, message = "Rating must be between 1-5 inclusive!")
+    @Max(value = 5, message = "Rating must be between 1-5 inclusive!")
     private Integer rating;
 
     @NotEmpty
     @Size(min = 1, max = 8000, message = "Comment exceeds allowed limit of 8000 characters!")
     @Pattern(regexp = "^[A-Za-z0-9 _.,!\"'-/]*$", flags = Pattern.Flag.UNICODE_CASE, message = "Comment can only contain letters, numbers, spaces, and punctuation.")
     private String comment;
+
 }
