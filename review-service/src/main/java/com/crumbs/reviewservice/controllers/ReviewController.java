@@ -10,6 +10,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fge.jsonpatch.JsonPatch;
 import com.github.fge.jsonpatch.JsonPatchException;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
@@ -39,6 +41,10 @@ public class ReviewController {
     }
 
     @GetMapping("/reviews")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
     public CollectionModel<EntityModel<Review>> getAllReviews() {
         List<EntityModel<Review>> reviews = reviewService.getAllReviews().stream()
                 .map(reviewModelAssembler::toModel)
@@ -47,11 +53,22 @@ public class ReviewController {
     }
 
     @GetMapping("/reviews/{id}")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 404, message = "Not Found"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
     public EntityModel<Review> getReview(@PathVariable String id) throws ReviewNotFoundException {
         return reviewModelAssembler.toModel(reviewService.getReview(id));
     }
 
     @PostMapping("/reviews")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 404, message = "Not Found"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
     public ResponseEntity<?> createReview(@RequestBody @Valid ReviewRequest reviewRequest) throws ReviewNotFoundException {
         final Review newReview = reviewService.saveReview(reviewRequest);
         EntityModel<Review> entityModel = reviewModelAssembler.toModel(newReview);
@@ -59,10 +76,16 @@ public class ReviewController {
     }
 
     @PatchMapping(path = "/reviews/{id}", consumes = "application/json")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 404, message = "Not Found"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
     public ResponseEntity<?> updateReview(@RequestBody @Valid ReviewRequest reviewRequest, @PathVariable String id) throws ReviewNotFoundException {
         final Review updatedReview = reviewService.updateReview(reviewRequest, id);
         EntityModel<Review> entityModel = reviewModelAssembler.toModel(updatedReview);
-        return ResponseEntity.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(entityModel);
+        return ResponseEntity.ok().body(entityModel);
     }
 
     private Review applyPatchToReview(
@@ -75,6 +98,12 @@ public class ReviewController {
      * PATCH method with partial update, based on JSON Patch
      */
     @PatchMapping(path = "/reviews/{id}", consumes = "application/json-patch+json")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 404, message = "Not Found"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
     public ResponseEntity<?> patchReview(@PathVariable String id, @RequestBody JsonPatch patch) {
         try {
             Review review = reviewService.getReview(id);
@@ -89,6 +118,10 @@ public class ReviewController {
     }
 
     @DeleteMapping("/reviews/{id}")
+    @ApiResponses(value = {
+            @ApiResponse(code = 204, message = "No Content"),
+            @ApiResponse(code = 404, message = "Not Found")
+    })
     public ResponseEntity<?> deleteReview(@PathVariable String id) {
         reviewService.deleteReview(id);
         return ResponseEntity.noContent().build();

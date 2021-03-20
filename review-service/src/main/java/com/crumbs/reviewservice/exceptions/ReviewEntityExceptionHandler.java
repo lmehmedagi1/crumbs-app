@@ -42,7 +42,7 @@ public class ReviewEntityExceptionHandler extends ResponseEntityExceptionHandler
             MissingServletRequestParameterException ex, HttpHeaders headers,
             HttpStatus status, WebRequest request) {
         String error = ex.getParameterName() + " parameter is missing";
-        return new ResponseEntity<>(new ApiError(BAD_REQUEST, error, ex), BAD_REQUEST);
+        return new ResponseEntity<>(new ApiError(BAD_REQUEST, error), BAD_REQUEST);
     }
 
     /**
@@ -64,7 +64,8 @@ public class ReviewEntityExceptionHandler extends ResponseEntityExceptionHandler
         builder.append(ex.getContentType());
         builder.append(" media type is not supported. Supported media types are ");
         ex.getSupportedMediaTypes().forEach(t -> builder.append(t).append(", "));
-        return new ResponseEntity<>(new ApiError(UNSUPPORTED_MEDIA_TYPE, builder.substring(0, builder.length() - 2), ex), UNSUPPORTED_MEDIA_TYPE);
+        return new ResponseEntity<>(new ApiError(UNSUPPORTED_MEDIA_TYPE, builder.substring(0, builder.length() - 2)),
+                UNSUPPORTED_MEDIA_TYPE);
     }
 
     /**
@@ -83,7 +84,7 @@ public class ReviewEntityExceptionHandler extends ResponseEntityExceptionHandler
             HttpStatus status,
             WebRequest request) {
         ApiError apiError = new ApiError(BAD_REQUEST);
-        apiError.setMessage("Validation error");
+        apiError.setError("Validation error");
         apiError.addValidationErrors(ex.getBindingResult().getFieldErrors());
         apiError.addValidationError(ex.getBindingResult().getGlobalErrors());
         return new ResponseEntity<>(apiError, BAD_REQUEST);
@@ -99,7 +100,7 @@ public class ReviewEntityExceptionHandler extends ResponseEntityExceptionHandler
     protected ResponseEntity<Object> handleConstraintViolation(
             javax.validation.ConstraintViolationException ex) {
         ApiError apiError = new ApiError(BAD_REQUEST);
-        apiError.setMessage("Validation error");
+        apiError.setError("Validation error");
         apiError.addValidationErrors(ex.getConstraintViolations());
         return new ResponseEntity<>(apiError, BAD_REQUEST);
     }
@@ -114,8 +115,7 @@ public class ReviewEntityExceptionHandler extends ResponseEntityExceptionHandler
     @ExceptionHandler(ReviewNotFoundException.class)
     protected ResponseEntity<Object> handleEntityNotFound(
             ReviewNotFoundException ex) {
-        ApiError apiError = new ApiError(NOT_FOUND);
-        apiError.setMessage(ex.getMessage());
+        ApiError apiError = new ApiError(NOT_FOUND, ex.getMessage());
         return new ResponseEntity<>(apiError, NOT_FOUND);
     }
 
@@ -129,11 +129,11 @@ public class ReviewEntityExceptionHandler extends ResponseEntityExceptionHandler
      * @return the ApiError object
      */
     @Override
-    protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+    protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex,
+                                                                  HttpHeaders headers, HttpStatus status, WebRequest request) {
         ServletWebRequest servletWebRequest = (ServletWebRequest) request;
         log.info("{} to {}", servletWebRequest.getHttpMethod(), servletWebRequest.getRequest().getServletPath());
-        String error = "Malformed JSON request";
-        return new ResponseEntity<>(new ApiError(BAD_REQUEST, error, ex), BAD_REQUEST);
+        return new ResponseEntity<>(new ApiError(BAD_REQUEST, "Malformed JSON request"), BAD_REQUEST);
     }
 
     /**
@@ -146,9 +146,9 @@ public class ReviewEntityExceptionHandler extends ResponseEntityExceptionHandler
      * @return the ApiError object
      */
     @Override
-    protected ResponseEntity<Object> handleHttpMessageNotWritable(HttpMessageNotWritableException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
-        String error = "Error writing JSON output";
-        return new ResponseEntity<>(new ApiError(INTERNAL_SERVER_ERROR, error, ex), INTERNAL_SERVER_ERROR);
+    protected ResponseEntity<Object> handleHttpMessageNotWritable(HttpMessageNotWritableException ex,
+                                                                  HttpHeaders headers, HttpStatus status, WebRequest request) {
+        return new ResponseEntity<>(new ApiError(INTERNAL_SERVER_ERROR, "Error writing JSON output"), INTERNAL_SERVER_ERROR);
     }
 
     /**
@@ -164,8 +164,7 @@ public class ReviewEntityExceptionHandler extends ResponseEntityExceptionHandler
     protected ResponseEntity<Object> handleNoHandlerFoundException(
             NoHandlerFoundException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
         ApiError apiError = new ApiError(BAD_REQUEST);
-        apiError.setMessage(String.format("Could not find the %s method for URL %s", ex.getHttpMethod(), ex.getRequestURL()));
-        apiError.setDebugMessage(ex.getMessage());
+        apiError.setError(String.format("Could not find the %s method for URL %s", ex.getHttpMethod(), ex.getRequestURL()));
         return new ResponseEntity<>(apiError, BAD_REQUEST);
     }
 
@@ -186,9 +185,8 @@ public class ReviewEntityExceptionHandler extends ResponseEntityExceptionHandler
     @ExceptionHandler(DataIntegrityViolationException.class)
     protected ResponseEntity<Object> handleDataIntegrityViolation(DataIntegrityViolationException ex,
                                                                   WebRequest request) {
-        if (ex.getCause() instanceof ConstraintViolationException) {
-            return new ResponseEntity<>(new ApiError(CONFLICT, "Database error", ex.getCause()), CONFLICT);
-        }
+        if (ex.getCause() instanceof ConstraintViolationException)
+            return new ResponseEntity<>(new ApiError(CONFLICT, "Database error"), CONFLICT);
         return new ResponseEntity<>(new ApiError(HttpStatus.INTERNAL_SERVER_ERROR, ex), INTERNAL_SERVER_ERROR);
     }
 
@@ -202,8 +200,8 @@ public class ReviewEntityExceptionHandler extends ResponseEntityExceptionHandler
     protected ResponseEntity<Object> handleMethodArgumentTypeMismatch(MethodArgumentTypeMismatchException ex,
                                                                       WebRequest request) {
         ApiError apiError = new ApiError(BAD_REQUEST);
-        apiError.setMessage(String.format("The parameter '%s' of value '%s' could not be converted to type '%s'", ex.getName(), ex.getValue(), ex.getRequiredType().getSimpleName()));
-        apiError.setDebugMessage(ex.getMessage());
+        apiError.setError(String.format("The parameter '%s' of value '%s' could not be converted to type '%s'",
+                ex.getName(), ex.getValue(), ex.getRequiredType().getSimpleName()));
         return new ResponseEntity<>(apiError, BAD_REQUEST);
     }
 }

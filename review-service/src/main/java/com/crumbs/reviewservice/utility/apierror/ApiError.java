@@ -28,9 +28,8 @@ class ApiError {
     private LocalDateTime timestamp;
     private String status;
     private Integer code;
-    private String message;
-    private String debugMessage;
-    private List<ApiSubError> subErrors;
+    private String error;
+    private List<ApiSubError> message = new ArrayList<>();
 
     private ApiError() {
         timestamp = LocalDateTime.now();
@@ -44,21 +43,18 @@ class ApiError {
 
     public ApiError(HttpStatus status, Throwable ex) {
         this(status);
-        this.message = "Unexpected error";
-        this.debugMessage = ex.getLocalizedMessage();
+        this.error = "Unexpected error";
     }
 
-    public ApiError(HttpStatus status, String message, Throwable ex) {
+    public ApiError(HttpStatus status, String error) {
         this(status);
-        this.message = message;
-        this.debugMessage = ex.getLocalizedMessage();
+        this.error = error;
     }
 
     private void addSubError(ApiSubError subError) {
-        if (subErrors == null) {
-            subErrors = new ArrayList<>();
-        }
-        subErrors.add(subError);
+        if (message == null)
+            message = new ArrayList<>();
+        message.add(subError);
     }
 
     private void addValidationError(String field, Object rejectedValue, String message) {

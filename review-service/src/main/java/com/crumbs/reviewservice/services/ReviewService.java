@@ -35,9 +35,9 @@ public class ReviewService {
     }
 
     private void modifyReview(ReviewRequest reviewRequest, Review review) {
-        review.setUserId(UUID.fromString(reviewRequest.getUserId()));
-        review.setRecipeId(UUID.fromString(reviewRequest.getRecipeId()));
-        review.setIsLiked(reviewRequest.getIsLiked());
+        review.setUserId(UUID.fromString(reviewRequest.getUser_id()));
+        review.setRecipeId(UUID.fromString(reviewRequest.getRecipe_id()));
+        review.setIsLiked(reviewRequest.getIs_liked());
         review.setRating(reviewRequest.getRating());
         review.setComment(reviewRequest.getComment());
     }
