@@ -37,17 +37,12 @@ public class IngredientController {
     public CollectionModel<EntityModel<Ingredient>> getAllIngredients() {
         List<EntityModel<Ingredient>> employees = ingredientService.getIngredients().stream()
                 .map(ingredientModelAssembler::toModel).collect(Collectors.toList());
-
         return CollectionModel.of(employees, linkTo(methodOn(IngredientController.class).getAllIngredients()).withSelfRel());
     }
 
     @GetMapping("/ingredients/{id}")
     public EntityModel<Ingredient> getIngredient(@PathVariable String id) {
-        try {
-            return ingredientModelAssembler.toModel(ingredientService.getIngredient(id));
-        } catch (IngredientNotFoundException ingredientNotFoundException) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, ingredientNotFoundException.getMessage());
-        }
+        return ingredientModelAssembler.toModel(ingredientService.getIngredient(id));
     }
 
     @PostMapping("/ingredients")
@@ -62,18 +57,13 @@ public class IngredientController {
 
     @PatchMapping("/ingredients/{id}")
     public ResponseEntity<?> updateIngredient(@RequestBody @Valid IngredientRequest ingredientRequest, @PathVariable String id) {
-
         EntityModel<Ingredient> entityModel = ingredientModelAssembler.toModel(ingredientService.updateIngredient(ingredientRequest, id));
         return ResponseEntity.status(HttpStatus.OK).body(entityModel);
     }
 
     @DeleteMapping("/ingredients/{id}")
     public ResponseEntity<?> deleteRecipe(@PathVariable String id) {
-        try {
-            ingredientService.deleteIngredient(id);
-            return ResponseEntity.noContent().build();
-        } catch (IngredientNotFoundException ingredientNotFoundException) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, ingredientNotFoundException.getMessage());
-        }
+        ingredientService.deleteIngredient(id);
+        return ResponseEntity.noContent().build();
     }
 }
