@@ -1,5 +1,6 @@
 package com.crumbs.reviewservice.model;
 
+import com.crumbs.reviewservice.utility.annotation.NullOrNotBlank;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -23,12 +24,12 @@ public class Review implements Serializable {
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     private UUID id;
 
-    @NotNull
+    @NotBlank
     @Column(name = "user_id")
     @JsonProperty("user_id")
     private UUID userId;
 
-    @NotNull
+    @NotBlank
     @Column(name = "recipe_id")
     @JsonProperty("recipe_id")
     private UUID recipeId;
@@ -42,9 +43,9 @@ public class Review implements Serializable {
     @Max(value = 5, message = "Rating must be between 1-5 inclusive!")
     private Integer rating;
 
-    @NotEmpty
-    @Size(max = 8000, message = "Comment exceeds allowed limit of 8000 characters!")
-    @Pattern(regexp = "^[A-Za-z0-9 _.,!\"'-/]*$", flags = Pattern.Flag.UNICODE_CASE, message = "Comment can only contain letters, numbers, spaces, and punctuation.")
+    @NullOrNotBlank
+    @Size(max = 1000, message = "Comment exceeds allowed limit of 1000 characters!")
+    @Pattern(regexp = "^[A-Za-z0-9 _.,!?\"'-/]*$", flags = Pattern.Flag.UNICODE_CASE, message = "Comment can only contain letters, numbers, spaces, and punctuation.")
     private String comment;
 
 }

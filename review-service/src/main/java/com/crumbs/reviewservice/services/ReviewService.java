@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.UUID;
@@ -29,7 +30,7 @@ public class ReviewService {
     }
 
     @Transactional(readOnly = true)
-    public Review getReview(String id) throws ReviewNotFoundException {
+    public Review getReview(@NotBlank String id) throws ReviewNotFoundException {
         return reviewRepository.findById(UUID.fromString(id)).orElseThrow(() ->
                 new ReviewNotFoundException(Review.class, "id", id));
     }
@@ -50,7 +51,7 @@ public class ReviewService {
     }
 
     @Transactional
-    public Review updateReview(@NotNull @Valid ReviewRequest reviewRequest, @NotNull String id) {
+    public Review updateReview(@NotNull @Valid ReviewRequest reviewRequest, @NotBlank String id) {
         return reviewRepository.findById(UUID.fromString(id)).map(review -> {
             modifyReview(reviewRequest, review);
             return reviewRepository.save(review);
@@ -63,7 +64,7 @@ public class ReviewService {
     }
 
     @Transactional
-    public void deleteReview(@NotNull String id) {
+    public void deleteReview(@NotBlank String id) {
         if (!reviewRepository.existsById(UUID.fromString(id)))
             throw new ReviewNotFoundException(Review.class, "id", id);
 
