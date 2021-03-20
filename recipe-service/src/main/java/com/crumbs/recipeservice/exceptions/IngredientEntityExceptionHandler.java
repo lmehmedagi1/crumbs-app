@@ -1,4 +1,4 @@
-package com.crumbs.recipeservice.payroll;
+package com.crumbs.recipeservice.exceptions;
 
 import com.crumbs.recipeservice.exceptions.ApiError;
 import com.crumbs.recipeservice.exceptions.IngredientNotFoundException;
@@ -10,10 +10,11 @@ import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import javax.validation.ValidationException;
 import java.util.Date;
 
 @RestControllerAdvice
-class IngredientNotFoundAdvice extends ResponseEntityExceptionHandler {
+class IngredientEntityExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(IngredientNotFoundException.class)
     public final ResponseEntity<ApiError> handleNotFoundException(IngredientNotFoundException ex, WebRequest request) {
