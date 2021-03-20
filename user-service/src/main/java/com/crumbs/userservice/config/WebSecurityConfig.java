@@ -39,11 +39,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         "/webjars/**"
     };
 
-    @Autowired
-    private UserDetailsServiceImpl userDetailsService;
+    private final UserDetailsServiceImpl userDetailsService;
+    private final JWTRequestFilter jwtRequestFilter;
 
     @Autowired
-    private JWTRequestFilter jwtRequestFilter;
+    public WebSecurityConfig(UserDetailsServiceImpl userDetailsService, JWTRequestFilter jwtRequestFilter) {
+        this.userDetailsService = userDetailsService;
+        this.jwtRequestFilter = jwtRequestFilter;
+    }
+
+    public WebSecurityConfig(boolean disableDefaults, UserDetailsServiceImpl userDetailsService, JWTRequestFilter jwtRequestFilter) {
+        super(disableDefaults);
+        this.userDetailsService = userDetailsService;
+        this.jwtRequestFilter = jwtRequestFilter;
+    }
 
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
