@@ -5,7 +5,7 @@ import com.crumbs.userservice.exceptions.UserAlreadyExistsException;
 import com.crumbs.userservice.exceptions.UserNotFoundException;
 import com.crumbs.userservice.models.User;
 import com.crumbs.userservice.requests.RegisterRequest;
-import com.crumbs.userservice.utilities.JWTUtil;
+import com.crumbs.userservice.utility.JWTUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

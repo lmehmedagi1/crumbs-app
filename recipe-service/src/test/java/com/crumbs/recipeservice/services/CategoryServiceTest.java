@@ -1,19 +1,16 @@
 package com.crumbs.recipeservice.services;
 
 import com.crumbs.recipeservice.exceptions.CategoryNotFoundException;
-import com.crumbs.recipeservice.exceptions.RecipeNotFoundException;
 import com.crumbs.recipeservice.models.Category;
-import com.crumbs.recipeservice.models.Recipe;
 import com.crumbs.recipeservice.requests.CreateCategoryRequest;
-import com.crumbs.recipeservice.requests.CreateRecipeRequest;
 import com.crumbs.recipeservice.requests.UpdateCategoryRequest;
-import com.crumbs.recipeservice.requests.UpdateRecipeRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 @Transactional
@@ -21,6 +18,7 @@ class CategoryServiceTest {
 
     @Autowired
     private CategoryService categoryService;
+
     //fb244361-88cb-14eb-8ecd-0242ac130003
     @Test
     void testGetRecipeIncorrectId() {

@@ -1,7 +1,7 @@
 package com.crumbs.reviewservice.controllers;
 
 import com.crumbs.reviewservice.exceptions.ReviewNotFoundException;
-import com.crumbs.reviewservice.model.Review;
+import com.crumbs.reviewservice.models.Review;
 import com.crumbs.reviewservice.requests.ReviewRequest;
 import com.crumbs.reviewservice.services.ReviewService;
 import com.crumbs.reviewservice.utility.ReviewModelAssembler;

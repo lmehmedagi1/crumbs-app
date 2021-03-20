@@ -1,4 +1,4 @@
-package com.crumbs.notificationservice.response;
+package com.crumbs.notificationservice.responses;
 
 import com.crumbs.notificationservice.models.Notification;
 import lombok.AllArgsConstructor;

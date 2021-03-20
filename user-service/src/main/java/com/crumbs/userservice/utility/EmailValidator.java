@@ -1,4 +1,4 @@
-package com.crumbs.userservice.utilities;
+package com.crumbs.userservice.utility;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

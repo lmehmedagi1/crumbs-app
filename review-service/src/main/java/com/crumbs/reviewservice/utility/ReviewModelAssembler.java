@@ -1,7 +1,7 @@
 package com.crumbs.reviewservice.utility;
 
 import com.crumbs.reviewservice.controllers.ReviewController;
-import com.crumbs.reviewservice.model.Review;
+import com.crumbs.reviewservice.models.Review;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.RepresentationModelAssembler;

@@ -1,6 +1,6 @@
 package com.crumbs.userservice.models;
 
-import com.crumbs.userservice.utilities.ValidEmail;
+import com.crumbs.userservice.utility.ValidEmail;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;

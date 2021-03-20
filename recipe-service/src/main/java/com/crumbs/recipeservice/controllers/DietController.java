@@ -1,14 +1,10 @@
 package com.crumbs.recipeservice.controllers;
 
 import com.crumbs.recipeservice.exceptions.DietNotFoundException;
-import com.crumbs.recipeservice.exceptions.RecipeNotFoundException;
 import com.crumbs.recipeservice.models.Diet;
-import com.crumbs.recipeservice.models.Recipe;
 import com.crumbs.recipeservice.requests.CreateDietRequest;
 import com.crumbs.recipeservice.requests.UpdateDietRequest;
-import com.crumbs.recipeservice.requests.UpdateRecipeRequest;
 import com.crumbs.recipeservice.responses.DietResponse;
-import com.crumbs.recipeservice.responses.RecipeResponse;
 import com.crumbs.recipeservice.services.DietService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -63,7 +59,7 @@ public class DietController {
     public void deleteDiet(@RequestParam @Valid String id) {
         try {
             dietService.deleteDiet(id);
-        } catch(DietNotFoundException dietNotFoundException){
+        } catch (DietNotFoundException dietNotFoundException) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, dietNotFoundException.getMessage());
         }
     }

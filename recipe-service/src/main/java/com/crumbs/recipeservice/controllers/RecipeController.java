@@ -1,6 +1,5 @@
 package com.crumbs.recipeservice.controllers;
 
-import com.crumbs.recipeservice.exceptions.RecipeNotFoundException;
 import com.crumbs.recipeservice.models.Recipe;
 import com.crumbs.recipeservice.requests.CreateRecipeRequest;
 import com.crumbs.recipeservice.requests.UpdateRecipeRequest;
@@ -12,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.crumbs.userservice.utilities;
+package com.crumbs.userservice.utility;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -14,8 +14,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static com.crumbs.userservice.utilities.JWTUtil.HEADER_STRING;
-import static com.crumbs.userservice.utilities.JWTUtil.TOKEN_PREFIX;
+import static com.crumbs.userservice.utility.JWTUtil.HEADER_STRING;
+import static com.crumbs.userservice.utility.JWTUtil.TOKEN_PREFIX;
 
 @Component
 public class JWTRequestFilter extends OncePerRequestFilter {

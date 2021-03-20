@@ -1,4 +1,4 @@
-package com.crumbs.userservice.utilities;
+package com.crumbs.userservice.utility;
 
 import com.crumbs.userservice.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;

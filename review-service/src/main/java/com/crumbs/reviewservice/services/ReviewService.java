@@ -1,7 +1,7 @@
 package com.crumbs.reviewservice.services;
 
 import com.crumbs.reviewservice.exceptions.ReviewNotFoundException;
-import com.crumbs.reviewservice.model.Review;
+import com.crumbs.reviewservice.models.Review;
 import com.crumbs.reviewservice.repositories.ReviewRepository;
 import com.crumbs.reviewservice.requests.ReviewRequest;
 import org.springframework.beans.factory.annotation.Autowired;

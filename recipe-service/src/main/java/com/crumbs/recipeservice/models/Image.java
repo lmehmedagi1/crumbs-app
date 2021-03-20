@@ -5,10 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
@@ -29,6 +27,6 @@ public class Image {
 
     @JsonBackReference
     @ManyToOne
-    @JoinColumn(name="recipe_id", nullable=false)
+    @JoinColumn(name = "recipe_id", nullable = false)
     private Recipe recipe;
 }

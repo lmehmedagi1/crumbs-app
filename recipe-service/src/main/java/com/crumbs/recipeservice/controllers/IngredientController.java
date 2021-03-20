@@ -1,10 +1,9 @@
 package com.crumbs.recipeservice.controllers;
 
-import com.crumbs.recipeservice.exceptions.IngredientNotFoundException;
 import com.crumbs.recipeservice.models.Ingredient;
 import com.crumbs.recipeservice.requests.IngredientRequest;
 import com.crumbs.recipeservice.services.IngredientService;
-import com.crumbs.recipeservice.util.IngredientModelAssembler;
+import com.crumbs.recipeservice.utility.IngredientModelAssembler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;

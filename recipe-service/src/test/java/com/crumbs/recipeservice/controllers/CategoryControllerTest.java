@@ -15,7 +15,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @WebAppConfiguration
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -27,6 +27,7 @@ class CategoryControllerTest {
 
     @Autowired
     WebApplicationContext webApplicationContext;
+
     //fb244361-88cb-14eb-8ecd-0242ac130003
     @Test
     void testGetAllCategories() throws Exception {

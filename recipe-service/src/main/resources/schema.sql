@@ -51,11 +51,11 @@ CREATE TABLE recipe_ingredients
 CREATE TABLE diets
 (
     "id"          uuid,
-    "title"       TEXT NOT NULL,
-    "description" TEXT NOT NULL,
-    "duration"    INT  NOT NULL,
+    "title"       TEXT    NOT NULL,
+    "description" TEXT    NOT NULL,
+    "duration"    INT     NOT NULL,
     "is_private"  BOOLEAN NOT NULL DEFAULT 'false',
-    "user_id"     uuid ,
+    "user_id"     uuid,
     PRIMARY KEY ("id")
 );
 

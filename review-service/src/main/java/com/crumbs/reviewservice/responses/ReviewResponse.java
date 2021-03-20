@@ -1,6 +1,6 @@
-package com.crumbs.reviewservice.response;
+package com.crumbs.reviewservice.responses;
 
-import com.crumbs.reviewservice.model.Review;
+import com.crumbs.reviewservice.models.Review;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 

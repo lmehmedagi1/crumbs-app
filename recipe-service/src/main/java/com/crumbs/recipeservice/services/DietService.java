@@ -1,14 +1,10 @@
 package com.crumbs.recipeservice.services;
 
 import com.crumbs.recipeservice.exceptions.DietNotFoundException;
-import com.crumbs.recipeservice.exceptions.RecipeNotFoundException;
 import com.crumbs.recipeservice.models.Diet;
-import com.crumbs.recipeservice.models.Recipe;
 import com.crumbs.recipeservice.repositories.DietRepository;
 import com.crumbs.recipeservice.requests.CreateDietRequest;
-import com.crumbs.recipeservice.requests.CreateRecipeRequest;
 import com.crumbs.recipeservice.requests.UpdateDietRequest;
-import com.crumbs.recipeservice.requests.UpdateRecipeRequest;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

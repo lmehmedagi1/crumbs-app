@@ -1,9 +1,7 @@
 package com.crumbs.recipeservice.services;
 
 import com.crumbs.recipeservice.exceptions.CategoryNotFoundException;
-import com.crumbs.recipeservice.exceptions.DietNotFoundException;
 import com.crumbs.recipeservice.models.Category;
-import com.crumbs.recipeservice.models.Diet;
 import com.crumbs.recipeservice.repositories.CategoryRepository;
 import com.crumbs.recipeservice.requests.CreateCategoryRequest;
 import com.crumbs.recipeservice.requests.UpdateCategoryRequest;
@@ -11,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -23,7 +20,7 @@ public class CategoryService {
     private CategoryRepository categoryRepository;
 
     @Transactional(readOnly = true)
-    public List<Category> getAllCategories( ) {
+    public List<Category> getAllCategories() {
         return categoryRepository.findAll();
     }
 

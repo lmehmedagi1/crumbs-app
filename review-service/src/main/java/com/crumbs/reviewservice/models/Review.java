@@ -1,4 +1,4 @@
-package com.crumbs.reviewservice.model;
+package com.crumbs.reviewservice.models;
 
 import com.crumbs.reviewservice.utility.annotation.NullOrNotBlank;
 import com.fasterxml.jackson.annotation.JsonProperty;

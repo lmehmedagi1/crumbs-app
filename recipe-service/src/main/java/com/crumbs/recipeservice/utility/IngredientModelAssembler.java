@@ -1,4 +1,4 @@
-package com.crumbs.recipeservice.util;
+package com.crumbs.recipeservice.utility;
 
 import com.crumbs.recipeservice.controllers.IngredientController;
 import com.crumbs.recipeservice.models.Ingredient;

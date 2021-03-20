@@ -1,6 +1,6 @@
 package com.crumbs.reviewservice.repositories;
 
-import com.crumbs.reviewservice.model.Review;
+import com.crumbs.reviewservice.models.Review;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -1,7 +1,7 @@
 package com.crumbs.userservice.config;
 
-import com.crumbs.userservice.utilities.JWTRequestFilter;
-import com.crumbs.userservice.utilities.UserDetailsServiceImpl;
+import com.crumbs.userservice.utility.JWTRequestFilter;
+import com.crumbs.userservice.utility.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
