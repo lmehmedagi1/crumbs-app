@@ -14,7 +14,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 public class ReviewModelAssembler implements RepresentationModelAssembler<Review, EntityModel<Review>> {
     @Override
     public EntityModel<Review> toModel(Review review) {
-        return EntityModel.of(review, linkTo(methodOn(ReviewController.class).getReview(review.getId().toString())).withSelfRel(),
+        return EntityModel.of(review, linkTo(methodOn(ReviewController.class).getReviewById(review.getId())).withSelfRel(),
                 linkTo(methodOn(ReviewController.class).getAllReviews()).withRel("reviews"));
     }
 

@@ -1,4 +1,13 @@
 package com.crumbs.reviewservice.utility.apierror;
 
-public abstract class ApiSubError {
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+@Data
+@EqualsAndHashCode(callSuper = false)
+@AllArgsConstructor
+public class ApiSubError {
+    private String field;
+    private String message;
 }

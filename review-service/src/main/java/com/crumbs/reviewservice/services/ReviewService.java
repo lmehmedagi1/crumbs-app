@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.UUID;
@@ -30,9 +29,18 @@ public class ReviewService {
     }
 
     @Transactional(readOnly = true)
-    public Review getReview(@NotBlank String id) throws ReviewNotFoundException {
-        return reviewRepository.findById(UUID.fromString(id)).orElseThrow(() ->
-                new ReviewNotFoundException(Review.class, "id", id));
+    public Review getReview(@NotNull UUID id) {
+        return reviewRepository.findById(id).orElseThrow(ReviewNotFoundException::new);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Review> getReviewsOfUser(@NotNull UUID userId) {
+        return reviewRepository.findByUserId(userId);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Review> getReviewsOfRecipe(@NotNull UUID recipeId) {
+        return reviewRepository.findByRecipeId(recipeId);
     }
 
     private void modifyReview(ReviewRequest reviewRequest, Review review) {
@@ -51,23 +59,27 @@ public class ReviewService {
     }
 
     @Transactional
-    public Review updateReview(@NotNull @Valid ReviewRequest reviewRequest, @NotBlank String id) {
-        return reviewRepository.findById(UUID.fromString(id)).map(review -> {
+    public Review updateReview(@NotNull @Valid ReviewRequest reviewRequest, @NotNull UUID id) {
+        return reviewRepository.findById(id).map(review -> {
             modifyReview(reviewRequest, review);
             return reviewRepository.save(review);
-        }).orElseThrow(() -> new ReviewNotFoundException(Review.class, "id", id));
+        }).orElseThrow(ReviewNotFoundException::new);
     }
 
+    /**
+     * Essentially a PUT request.
+     *
+     * @param review - updated review
+     */
     @Transactional
     public void updateReview(@NotNull @Valid Review review) {
         reviewRepository.save(review);
     }
 
     @Transactional
-    public void deleteReview(@NotBlank String id) {
-        if (!reviewRepository.existsById(UUID.fromString(id)))
-            throw new ReviewNotFoundException(Review.class, "id", id);
-
-        reviewRepository.deleteById(UUID.fromString(id));
+    public void deleteReview(@NotNull UUID id) {
+        if (!reviewRepository.existsById(id))
+            throw new ReviewNotFoundException();
+        reviewRepository.deleteById(id);
     }
 }

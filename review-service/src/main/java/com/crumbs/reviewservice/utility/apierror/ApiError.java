@@ -3,13 +3,11 @@ package com.crumbs.reviewservice.utility.apierror;
 import com.crumbs.reviewservice.utility.LowerCaseClassNameResolver;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.annotation.JsonTypeIdResolver;
 import lombok.Data;
 import org.hibernate.validator.internal.engine.path.PathImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
-import org.springframework.validation.ObjectError;
 
 import javax.validation.ConstraintViolation;
 import java.time.LocalDateTime;
@@ -18,7 +16,6 @@ import java.util.List;
 import java.util.Set;
 
 @Data
-@JsonTypeInfo(include = JsonTypeInfo.As.WRAPPER_OBJECT, use = JsonTypeInfo.Id.CUSTOM, property = "error", visible = true)
 @JsonTypeIdResolver(LowerCaseClassNameResolver.class)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public
@@ -29,7 +26,14 @@ class ApiError {
     private String status;
     private Integer code;
     private String error;
-    private List<ApiSubError> message = new ArrayList<>();
+    private String message;
+    private String path;
+    private List<ApiSubError> reason;
+
+    public void setStatus(HttpStatus httpStatus) {
+        this.status = httpStatus.getReasonPhrase();
+        this.code = httpStatus.value();
+    }
 
     private ApiError() {
         timestamp = LocalDateTime.now();
@@ -37,13 +41,7 @@ class ApiError {
 
     public ApiError(HttpStatus httpStatus) {
         this();
-        this.status = httpStatus.getReasonPhrase();
-        this.code = httpStatus.value();
-    }
-
-    public ApiError(HttpStatus status, Throwable ex) {
-        this(status);
-        this.error = "Unexpected error";
+        this.setStatus(httpStatus);
     }
 
     public ApiError(HttpStatus status, String error) {
@@ -51,37 +49,38 @@ class ApiError {
         this.error = error;
     }
 
+    public ApiError(HttpStatus status, String error, String message) {
+        this(status, error);
+        this.message = message;
+    }
+
+    public ApiError(HttpStatus status, String error, String message, String path) {
+        this(status, error, message);
+        this.path = path;
+    }
+
     private void addSubError(ApiSubError subError) {
-        if (message == null)
-            message = new ArrayList<>();
-        message.add(subError);
+        if (reason == null)
+            reason = new ArrayList<>();
+        reason.add(subError);
     }
 
-    private void addValidationError(String field, Object rejectedValue, String message) {
-        addSubError(new ApiValidationError(field, rejectedValue, message));
+    public void addApiSubError(ApiSubError apiSubError) {
+        addSubError(apiSubError);
     }
 
-    private void addValidationError(String message) {
-        addSubError(new ApiValidationError(message));
+    public void addApiSubError(String field, String message) {
+        addSubError(new ApiSubError(field, message));
     }
 
-    private void addValidationError(FieldError fieldError) {
-        this.addValidationError(
+    public void addApiSubError(FieldError fieldError) {
+        this.addApiSubError(new ApiSubError(
                 fieldError.getField(),
-                fieldError.getRejectedValue(),
-                fieldError.getDefaultMessage());
+                fieldError.getDefaultMessage()));
     }
 
-    public void addValidationErrors(List<FieldError> fieldErrors) {
-        fieldErrors.forEach(this::addValidationError);
-    }
-
-    private void addValidationError(ObjectError objectError) {
-        this.addValidationError(objectError.getDefaultMessage());
-    }
-
-    public void addValidationError(List<ObjectError> globalErrors) {
-        globalErrors.forEach(this::addValidationError);
+    public void addApiSubError(List<FieldError> fieldErrors) {
+        fieldErrors.forEach(this::addApiSubError);
     }
 
     /**
@@ -89,14 +88,13 @@ class ApiError {
      *
      * @param cv the ConstraintViolation
      */
-    private void addValidationError(ConstraintViolation<?> cv) {
-        this.addValidationError(
+    private void addApiSubError(ConstraintViolation<?> cv) {
+        this.addApiSubError(new ApiSubError(
                 ((PathImpl) cv.getPropertyPath()).getLeafNode().asString(),
-                cv.getInvalidValue(),
-                cv.getMessage());
+                cv.getMessage()));
     }
 
-    public void addValidationErrors(Set<ConstraintViolation<?>> constraintViolations) {
-        constraintViolations.forEach(this::addValidationError);
+    public void addApiSubError(Set<ConstraintViolation<?>> constraintViolations) {
+        constraintViolations.forEach(this::addApiSubError);
     }
 }

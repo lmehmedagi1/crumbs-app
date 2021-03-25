@@ -52,6 +52,13 @@
 			<scope>provided</scope>
 		</dependency>
 
+		<!--JSON Patch-->
+		<dependency>
+			<groupId>com.github.java-json-tools</groupId>
+			<artifactId>json-patch</artifactId>
+			<version>1.13</version>
+		</dependency>
+
 		<!--Swagger-->
 		<dependency>
 			<groupId>io.springfox</groupId>
@@ -63,12 +70,6 @@
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-swagger-ui</artifactId>
 			<version>3.0.0</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.github.java-json-tools</groupId>
-			<artifactId>json-patch</artifactId>
-			<version>1.13</version>
 		</dependency>
 	</dependencies>
 

@@ -1,6 +1,5 @@
 package com.crumbs.reviewservice.controllers;
 
-import com.crumbs.reviewservice.exceptions.ReviewNotFoundException;
 import com.crumbs.reviewservice.models.Review;
 import com.crumbs.reviewservice.requests.ReviewRequest;
 import com.crumbs.reviewservice.services.ReviewService;
@@ -21,13 +20,22 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
+@RequestMapping(value = "/reviews")
+@ApiResponses(value = {
+        @ApiResponse(code = 200, message = "OK"),
+        @ApiResponse(code = 400, message = "Bad Request"),
+        @ApiResponse(code = 404, message = "Not Found"),
+        @ApiResponse(code = 500, message = "Internal Server Error")
+})
 public class ReviewController {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
@@ -40,11 +48,7 @@ public class ReviewController {
         this.reviewModelAssembler = reviewModelAssembler;
     }
 
-    @GetMapping("/reviews")
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "OK"),
-            @ApiResponse(code = 500, message = "Internal Server Error")
-    })
+    @GetMapping
     public CollectionModel<EntityModel<Review>> getAllReviews() {
         List<EntityModel<Review>> reviews = reviewService.getAllReviews().stream()
                 .map(reviewModelAssembler::toModel)
@@ -52,77 +56,59 @@ public class ReviewController {
         return CollectionModel.of(reviews, linkTo(methodOn(ReviewController.class).getAllReviews()).withSelfRel());
     }
 
-    @GetMapping("/reviews/{id}")
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "OK"),
-            @ApiResponse(code = 404, message = "Not Found"),
-            @ApiResponse(code = 500, message = "Internal Server Error")
-    })
-    public EntityModel<Review> getReview(@PathVariable String id) throws ReviewNotFoundException {
+    @RequestMapping(params = "id", method = RequestMethod.GET)
+    public EntityModel<Review> getReviewById(@RequestParam("id") @NotNull UUID id) {
         return reviewModelAssembler.toModel(reviewService.getReview(id));
     }
 
-    @PostMapping("/reviews")
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "OK"),
-            @ApiResponse(code = 400, message = "Bad Request"),
-            @ApiResponse(code = 404, message = "Not Found"),
-            @ApiResponse(code = 500, message = "Internal Server Error")
-    })
-    public ResponseEntity<?> createReview(@RequestBody @Valid ReviewRequest reviewRequest) throws ReviewNotFoundException {
+    @RequestMapping(params = "userId", method = RequestMethod.GET)
+    public CollectionModel<EntityModel<Review>> getReviewsOfUser(@RequestParam("userId") @NotNull UUID userId) {
+        List<EntityModel<Review>> reviews = reviewService.getReviewsOfUser(userId).stream()
+                .map(reviewModelAssembler::toModel)
+                .collect(Collectors.toList());
+        return CollectionModel.of(reviews, linkTo(methodOn(ReviewController.class).getAllReviews()).withSelfRel());
+    }
+
+    @RequestMapping(params = "recipeId", method = RequestMethod.GET)
+    public CollectionModel<EntityModel<Review>> getReviewsOfRecipe(@RequestParam("recipeId") @NotNull UUID recipeId) {
+        List<EntityModel<Review>> reviews = reviewService.getReviewsOfRecipe(recipeId).stream()
+                .map(reviewModelAssembler::toModel)
+                .collect(Collectors.toList());
+        return CollectionModel.of(reviews, linkTo(methodOn(ReviewController.class).getAllReviews()).withSelfRel());
+    }
+
+    @PostMapping
+    public ResponseEntity<?> createReview(@RequestBody @Valid ReviewRequest reviewRequest) {
         final Review newReview = reviewService.saveReview(reviewRequest);
         EntityModel<Review> entityModel = reviewModelAssembler.toModel(newReview);
         return ResponseEntity.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(entityModel);
     }
 
-    @PatchMapping(path = "/reviews/{id}", consumes = "application/json")
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "OK"),
-            @ApiResponse(code = 400, message = "Bad Request"),
-            @ApiResponse(code = 404, message = "Not Found"),
-            @ApiResponse(code = 500, message = "Internal Server Error")
-    })
-    public ResponseEntity<?> updateReview(@RequestBody @Valid ReviewRequest reviewRequest, @PathVariable String id) throws ReviewNotFoundException {
+    @PatchMapping(consumes = "application/json")
+    public ResponseEntity<?> updateReview(@RequestParam("id") @NotNull UUID id, @RequestBody @Valid ReviewRequest reviewRequest) {
         final Review updatedReview = reviewService.updateReview(reviewRequest, id);
         EntityModel<Review> entityModel = reviewModelAssembler.toModel(updatedReview);
-        return ResponseEntity.ok().body(entityModel);
-    }
-
-    private Review applyPatchToReview(
-            JsonPatch patch, Review targetCustomer) throws JsonPatchException, JsonProcessingException {
-        JsonNode patched = patch.apply(objectMapper.convertValue(targetCustomer, JsonNode.class));
-        return objectMapper.treeToValue(patched, Review.class);
+        return ResponseEntity.ok(entityModel);
     }
 
     /**
      * PATCH method with partial update, based on JSON Patch
      */
-    @PatchMapping(path = "/reviews/{id}", consumes = "application/json-patch+json")
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "OK"),
-            @ApiResponse(code = 400, message = "Bad Request"),
-            @ApiResponse(code = 404, message = "Not Found"),
-            @ApiResponse(code = 500, message = "Internal Server Error")
-    })
-    public ResponseEntity<?> patchReview(@PathVariable String id, @RequestBody JsonPatch patch) {
+    @PatchMapping(consumes = "application/json-patch+json")
+    public ResponseEntity<?> patchReview(@RequestParam("id") @NotNull UUID id, @RequestBody JsonPatch patch) {
         try {
             Review review = reviewService.getReview(id);
-            Review reviewPatched = applyPatchToReview(patch, review);
+            JsonNode patched = patch.apply(objectMapper.convertValue(review, JsonNode.class));
+            Review reviewPatched = objectMapper.treeToValue(patched, Review.class);
             reviewService.updateReview(reviewPatched);
             return ResponseEntity.ok(reviewPatched);
         } catch (JsonPatchException | JsonProcessingException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        } catch (ReviewNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
 
-    @DeleteMapping("/reviews/{id}")
-    @ApiResponses(value = {
-            @ApiResponse(code = 204, message = "No Content"),
-            @ApiResponse(code = 404, message = "Not Found")
-    })
-    public ResponseEntity<?> deleteReview(@PathVariable String id) {
+    @DeleteMapping
+    public ResponseEntity<?> deleteReview(@RequestParam("id") @NotNull UUID id) {
         reviewService.deleteReview(id);
         return ResponseEntity.noContent().build();
     }
