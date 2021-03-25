@@ -8,5 +8,3 @@ CREATE TABLE notifications
     "is_read"     BOOLEAN DEFAULT 'false' NOT NULL,
     PRIMARY KEY ("id")
 );
-
-

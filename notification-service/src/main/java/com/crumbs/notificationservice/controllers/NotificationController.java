@@ -21,13 +21,22 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
+@RequestMapping(value = "/notifications")
+@ApiResponses(value = {
+        @ApiResponse(code = 200, message = "OK"),
+        @ApiResponse(code = 400, message = "Bad Request"),
+        @ApiResponse(code = 404, message = "Not Found"),
+        @ApiResponse(code = 500, message = "Internal Server Error")
+})
 public class NotificationController {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
@@ -40,11 +49,7 @@ public class NotificationController {
         this.notificationModelAssembler = notificationModelAssembler;
     }
 
-    @GetMapping("/notifications")
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "OK"),
-            @ApiResponse(code = 500, message = "Internal Server Error")
-    })
+    @GetMapping
     public CollectionModel<EntityModel<Notification>> getAllNotifications() {
         List<EntityModel<Notification>> notifications = notificationService.getAllNotifications().stream()
                 .map(notificationModelAssembler::toModel)
@@ -52,80 +57,53 @@ public class NotificationController {
         return CollectionModel.of(notifications, linkTo(methodOn(NotificationController.class).getAllNotifications()).withSelfRel());
     }
 
-    @GetMapping("/notifications/{id}")
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "OK"),
-            @ApiResponse(code = 404, message = "Not Found"),
-            @ApiResponse(code = 500, message = "Internal Server Error")
-    })
-    public EntityModel<Notification> getNotification(@PathVariable String id) throws NotificationNotFoundException {
+    @RequestMapping(params = "id", method = RequestMethod.GET)
+    public EntityModel<Notification> getNotificationById(@RequestParam("id") @NotNull UUID id) {
         return notificationModelAssembler.toModel(notificationService.getNotification(id));
     }
 
-    @PostMapping("/notifications")
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "OK"),
-            @ApiResponse(code = 400, message = "Bad Request"),
-            @ApiResponse(code = 404, message = "Not Found"),
-            @ApiResponse(code = 500, message = "Internal Server Error")
-    })
+    @RequestMapping(params = "userId", method = RequestMethod.GET)
+    public CollectionModel<EntityModel<Notification>> getNotificationsOfUser(@RequestParam("userId") @NotNull UUID userId) {
+        List<EntityModel<Notification>> reviews = notificationService.getNotificationsOfUser(userId).stream()
+                .map(notificationModelAssembler::toModel)
+                .collect(Collectors.toList());
+        return CollectionModel.of(reviews, linkTo(methodOn(NotificationController.class).getAllNotifications()).withSelfRel());
+    }
+
+    @PostMapping
     public ResponseEntity<?> createNotification(@RequestBody @Valid NotificationRequest notificationRequest) throws NotificationNotFoundException {
         final Notification newNotification = notificationService.saveNotification(notificationRequest);
         EntityModel<Notification> entityModel = notificationModelAssembler.toModel(newNotification);
         return ResponseEntity.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(entityModel);
     }
 
-    @PatchMapping(path = "/notifications/{id}", consumes = "application/json")
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "OK"),
-            @ApiResponse(code = 400, message = "Bad Request"),
-            @ApiResponse(code = 404, message = "Not Found"),
-            @ApiResponse(code = 500, message = "Internal Server Error")
-    })
-    public ResponseEntity<?> updateNotification(@RequestBody @Valid NotificationRequest notificationRequest, @PathVariable String id) throws NotificationNotFoundException {
+    @PatchMapping(consumes = "application/json")
+    public ResponseEntity<?> updateNotification(@RequestParam("id") @NotNull UUID id, @RequestBody @Valid NotificationRequest notificationRequest) {
         final Notification updatedNotification = notificationService.updateNotification(notificationRequest, id);
         EntityModel<Notification> entityModel = notificationModelAssembler.toModel(updatedNotification);
         return ResponseEntity.ok().body(entityModel);
     }
 
-    private Notification applyPatchToNotification(
-            JsonPatch patch, Notification targetCustomer) throws JsonPatchException, JsonProcessingException {
-        JsonNode patched = patch.apply(objectMapper.convertValue(targetCustomer, JsonNode.class));
-        return objectMapper.treeToValue(patched, Notification.class);
-    }
-
     /**
      * PATCH method with partial update, based on JSON Patch
      */
-    @PatchMapping(path = "/notifications/{id}", consumes = "application/json-patch+json")
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "OK"),
-            @ApiResponse(code = 400, message = "Bad Request"),
-            @ApiResponse(code = 404, message = "Not Found"),
-            @ApiResponse(code = 500, message = "Internal Server Error")
-    })
-    public ResponseEntity<?> patchNotification(@PathVariable String id, @RequestBody JsonPatch patch) {
+    @PatchMapping(consumes = "application/json-patch+json")
+    public ResponseEntity<?> patchNotification(@RequestParam("id") @NotNull UUID id, @RequestBody JsonPatch patch) {
         try {
             Notification notification = notificationService.getNotification(id);
-            Notification notificationPatched = applyPatchToNotification(patch, notification);
+            JsonNode patched = patch.apply(objectMapper.convertValue(notification, JsonNode.class));
+            Notification notificationPatched = objectMapper.treeToValue(patched, Notification.class);
             notificationService.updateNotification(notificationPatched);
             return ResponseEntity.ok(notificationPatched);
         } catch (JsonPatchException | JsonProcessingException e) {
             System.out.println(e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        } catch (NotificationNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
 
-    @DeleteMapping("/notifications/{id}")
-    @ApiResponses(value = {
-            @ApiResponse(code = 204, message = "No Content"),
-            @ApiResponse(code = 404, message = "Not Found")
-    })
-    public ResponseEntity<?> deleteNotification(@PathVariable String id) {
+    @DeleteMapping
+    public ResponseEntity<?> deleteNotification(@RequestParam("id") @NotNull UUID id) {
         notificationService.deleteNotification(id);
         return ResponseEntity.noContent().build();
     }
-
 }

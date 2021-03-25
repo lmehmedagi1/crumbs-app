@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.UUID;
@@ -30,9 +29,13 @@ public class NotificationService {
     }
 
     @Transactional(readOnly = true)
-    public Notification getNotification(@NotBlank String id) throws NotificationNotFoundException {
-        return notificationRepository.findById(UUID.fromString(id)).orElseThrow(() ->
-                new NotificationNotFoundException(Notification.class, "id", id));
+    public List<Notification> getNotificationsOfUser(@NotNull UUID userId) {
+        return notificationRepository.findByUserId(userId);
+    }
+
+    @Transactional(readOnly = true)
+    public Notification getNotification(@NotNull UUID id) throws NotificationNotFoundException {
+        return notificationRepository.findById(id).orElseThrow(NotificationNotFoundException::new);
     }
 
     private void modifyNotification(NotificationRequest notificationRequest, Notification notification) {
@@ -49,23 +52,28 @@ public class NotificationService {
     }
 
     @Transactional
-    public Notification updateNotification(@NotNull @Valid NotificationRequest notificationRequest, @NotBlank String id) {
-        return notificationRepository.findById(UUID.fromString(id)).map(notification -> {
+    public Notification updateNotification(@NotNull @Valid NotificationRequest notificationRequest, @NotNull UUID id) {
+        return notificationRepository.findById(id).map(notification -> {
             modifyNotification(notificationRequest, notification);
             return notificationRepository.save(notification);
-        }).orElseThrow(() -> new NotificationNotFoundException(Notification.class, "id", id));
+        }).orElseThrow(NotificationNotFoundException::new);
     }
 
+    /**
+     * Essentially a PUT request.
+     *
+     * @param notification - updated notification
+     */
     @Transactional
     public void updateNotification(@NotNull @Valid Notification notification) {
         notificationRepository.save(notification);
     }
 
     @Transactional
-    public void deleteNotification(@NotBlank String id) {
-        if (!notificationRepository.existsById(UUID.fromString(id)))
-            throw new NotificationNotFoundException(Notification.class, "id", id);
+    public void deleteNotification(@NotNull UUID id) {
+        if (!notificationRepository.existsById(id))
+            throw new NotificationNotFoundException();
 
-        notificationRepository.deleteById(UUID.fromString(id));
+        notificationRepository.deleteById(id);
     }
 }

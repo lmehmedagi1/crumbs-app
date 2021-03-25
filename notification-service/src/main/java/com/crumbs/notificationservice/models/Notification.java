@@ -45,9 +45,9 @@ public class Notification {
     private LocalDateTime createdAt = LocalDateTime.now();
 
     @NotBlank
-    @Size(max = 150, message = "Description exceeds allowed limit of 250 characters!")
+    @Size(max = 150, message = "Description exceeds allowed limit of 250 characters")
     @Pattern(regexp = "^[A-Za-z0-9 _.,!\"'-/]*$", flags = Pattern.Flag.UNICODE_CASE,
-            message = "Description can only contain letters, numbers, spaces, and punctuation.")
+            message = "Description can only contain letters, numbers, spaces, and punctuation")
     private String description;
 
     @NotNull
