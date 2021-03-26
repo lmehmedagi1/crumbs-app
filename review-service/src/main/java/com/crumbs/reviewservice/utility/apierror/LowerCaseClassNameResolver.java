@@ -1,4 +1,4 @@
-package com.crumbs.reviewservice.utility;
+package com.crumbs.reviewservice.utility.apierror;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.jsontype.impl.TypeIdResolverBase;

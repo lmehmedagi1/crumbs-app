@@ -4,103 +4,93 @@ import com.crumbs.userservice.exceptions.IncorrectPasswordException;
 import com.crumbs.userservice.exceptions.UserAlreadyExistsException;
 import com.crumbs.userservice.exceptions.UserNotFoundException;
 import com.crumbs.userservice.models.User;
-import com.crumbs.userservice.repositories.UserDetailsRepository;
+import com.crumbs.userservice.models.UserProfile;
+import com.crumbs.userservice.repositories.UserProfileRepository;
 import com.crumbs.userservice.repositories.UserRepository;
 import com.crumbs.userservice.requests.RegisterRequest;
-import com.crumbs.userservice.utility.JWTUtil;
-import com.crumbs.userservice.utility.UserDetailsServiceImpl;
-import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
 @Service
 public class UserService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+    private final UserProfileRepository userProfileRepository;
 
     @Autowired
-    private UserDetailsRepository userDetailsRepository;
-
-    @Autowired
-    private UserDetailsServiceImpl userDetailsServiceImpl;
-
-    @Transactional(readOnly = true)
-    public List<User> getUsers() {
-        return userRepository.findAll();
+    public UserService(UserRepository userRepository, UserProfileRepository userProfileRepository) {
+        this.userRepository = userRepository;
+        this.userProfileRepository = userProfileRepository;
     }
 
     @Transactional(readOnly = true)
-    public User getUserByEmail(@NonNull String email) {
+    public User getUserById(@NotNull UUID id) throws UserNotFoundException {
+        return userRepository.findById(id).orElseThrow(() ->
+                new UserNotFoundException("Specified ID does not exists!"));
+    }
+
+    @Transactional(readOnly = true)
+    public User getUserByEmail(@NotBlank String email) {
         final User user = userRepository.findByEmail(email);
-        if (user == null) throw new UserNotFoundException("User with this email does not exist");
-        // Do not return password
-        user.setPassword(null);
+        if (user == null)
+            throw new UserNotFoundException("Specified email does not exists!");
+
         return user;
     }
 
     @Transactional(readOnly = true)
-    public User getUser(@NonNull String username, @NonNull String password) {
+    public User getUserByUsername(@NotBlank String username) {
         final User user = userRepository.findByUsername(username);
-        if (user == null) {
-            throw new UserNotFoundException("User with this username does not exist");
-        }
+        if (user == null)
+            throw new UserNotFoundException("Specified username does not exists!");
+        return user;
+    }
+
+    @Transactional(readOnly = true)
+    public User getUserByCredentials(@NotBlank String username, @NotBlank String password) {
+        final User user = getUserByUsername(username);
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         if (!passwordEncoder.matches(password, user.getPassword()))
-            throw new IncorrectPasswordException("Password is incorrect");
-
+            throw new IncorrectPasswordException();
         return user;
     }
 
-    @Transactional(readOnly = true)
-    public User getUser(@NonNull String username) {
-        final User user = userRepository.findByUsername(username);
-        if (user == null) {
-            throw new UserNotFoundException("User with this username does not exist");
-        }
-        return user;
-    }
-
-    @Transactional(readOnly = true)
-    public String generateToken(@NonNull String username) {
-        final UserDetails userDetails = userDetailsServiceImpl.loadUserByUsername(username);
-        return JWTUtil.generateToken(userDetails);
-    }
-
-    public User registerUser(@NonNull RegisterRequest registerRequest) {
+    public User registerUser(@NotNull RegisterRequest registerRequest) {
         if (userRepository.findByUsername(registerRequest.getUsername()) != null)
-            throw new UserAlreadyExistsException("User with this username already exists");
+            throw new UserAlreadyExistsException("Username is taken, try another one!");
+        else if (userRepository.findByEmail(registerRequest.getEmail()) != null)
+            throw new UserAlreadyExistsException("Email is taken, try another one!");
 
         User user = new User();
         user.setUsername(registerRequest.getUsername());
         user.setEmail(registerRequest.getEmail());
         user.setPassword((new BCryptPasswordEncoder()).encode(registerRequest.getPassword()));
 
-        com.crumbs.userservice.models.UserDetails userDetails = new com.crumbs.userservice.models.UserDetails();
-        userDetails.setFirstName(registerRequest.getFirstName());
-        userDetails.setLastName(registerRequest.getLastName());
-        userDetails.setPhoneNumber(registerRequest.getPhoneNumber());
-        userDetails.setGender(registerRequest.getGender());
+        UserProfile userProfile = new UserProfile();
+        userProfile.setFirstName(registerRequest.getFirst_name());
+        userProfile.setLastName(registerRequest.getLast_name());
+        userProfile.setPhoneNumber(registerRequest.getPhone_number());
+        userProfile.setGender(registerRequest.getGender());
 
-        user.setUserDetails(userDetails);
-        userDetails.setUser(user);
+        user.setUserProfile(userProfile);
+        userProfile.setUser(user);
 
         final User newUser = userRepository.save(user);
-        userDetailsRepository.save(userDetails);
+        userProfileRepository.save(userProfile);
 
         return newUser;
     }
 
     @Transactional
-    public void deleteUser(@NonNull String id) {
+    public void deleteUserById(@NotBlank String id) {
         if (!userRepository.existsById(UUID.fromString(id)))
-            throw new UserNotFoundException("The specified user does not exist :(");
+            throw new UserNotFoundException("Specified ID does not exists!");
 
         userRepository.deleteById(UUID.fromString(id));
     }

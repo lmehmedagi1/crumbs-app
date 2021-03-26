@@ -1,4 +1,4 @@
-package com.crumbs.userservice.utility;
+package com.crumbs.userservice.utility.annotation;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -11,9 +11,10 @@ public class EmailValidator implements ConstraintValidator<ValidEmail, String> {
             "[A-Za-z0-9-]+(.[A-Za-z0-9]+)*(.[A-Za-z]{2,})$";
 
     @Override
-    public boolean isValid(String email, ConstraintValidatorContext context){
+    public boolean isValid(String email, ConstraintValidatorContext context) {
         return (validateEmail(email));
     }
+
     private boolean validateEmail(String email) {
         Pattern pattern = Pattern.compile(EMAIL_PATTERN);
         Matcher matcher = pattern.matcher(email);

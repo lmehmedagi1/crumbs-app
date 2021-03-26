@@ -1,11 +1,12 @@
 package com.crumbs.userservice.config;
 
-import com.crumbs.userservice.utility.JWTRequestFilter;
-import com.crumbs.userservice.utility.UserDetailsServiceImpl;
+import com.crumbs.userservice.jwt.JwtAuthenticationFilter;
+import com.crumbs.userservice.jwt.JwtConfigAndUtil;
+import com.crumbs.userservice.jwt.JwtTokenVerifyFilter;
+import com.crumbs.userservice.services.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -16,7 +17,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -27,47 +27,41 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     public static final String[] PUBLIC_ROUTES = {
-        "/login",
-        "/register",
-        "/users",
-        "/users/email",
-        "/swagger-ui/",
-        "/swagger-ui/**",
-        "/v2/api-docs",
-        "/swagger-resources/**",
-        "/swagger-ui.html**",
-        "/webjars/**"
+            "/account/login",
+            "/account/register",
+            "/swagger-ui/",
+            "/swagger-ui/**",
+            "/v2/api-docs",
+            "/swagger-resources/**",
+            "/swagger-ui.html**",
+            "/webjars/**"
     };
 
-    private final UserDetailsServiceImpl userDetailsService;
-    private final JWTRequestFilter jwtRequestFilter;
+    private final CustomUserDetailsService customUserDetailsService;
+    private final JwtConfigAndUtil jwtConfigAndUtil;
 
     @Autowired
-    public WebSecurityConfig(UserDetailsServiceImpl userDetailsService, JWTRequestFilter jwtRequestFilter) {
-        this.userDetailsService = userDetailsService;
-        this.jwtRequestFilter = jwtRequestFilter;
-    }
-
-    public WebSecurityConfig(boolean disableDefaults, UserDetailsServiceImpl userDetailsService, JWTRequestFilter jwtRequestFilter) {
-        super(disableDefaults);
-        this.userDetailsService = userDetailsService;
-        this.jwtRequestFilter = jwtRequestFilter;
+    public WebSecurityConfig(CustomUserDetailsService customUserDetailsService, JwtConfigAndUtil jwtConfigAndUtil) {
+        this.customUserDetailsService = customUserDetailsService;
+        this.jwtConfigAndUtil = jwtConfigAndUtil;
     }
 
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService);
+        auth.userDetailsService(customUserDetailsService);
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.cors().and().csrf().disable().authorizeRequests()
-                .antMatchers(HttpMethod.POST, "/login").permitAll()
-                .antMatchers(PUBLIC_ROUTES).permitAll().
-                anyRequest().authenticated().and().
-                exceptionHandling().and().sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+        http.csrf().disable()
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .addFilter(new JwtAuthenticationFilter(authenticationManager(), jwtConfigAndUtil))
+                .addFilterAfter(new JwtTokenVerifyFilter(customUserDetailsService, jwtConfigAndUtil), JwtAuthenticationFilter.class)
+                .authorizeRequests()
+                .antMatchers(PUBLIC_ROUTES).permitAll().anyRequest()
+                .authenticated();
     }
 
     @Override

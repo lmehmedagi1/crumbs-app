@@ -1,11 +1,24 @@
 package com.crumbs.userservice.exceptions;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
-
-@ResponseStatus(HttpStatus.BAD_REQUEST)
 public class UserNotFoundException extends RuntimeException {
-    public UserNotFoundException(String message) {
-        super(message);
+
+    private String altMessage;
+
+    public UserNotFoundException() {
+        super("User not found");
     }
+
+    public UserNotFoundException(String altMessage) {
+        this();
+        this.altMessage = altMessage;
+    }
+
+    public String getAltMessage() {
+        return altMessage;
+    }
+
+    public void setAltMessage(String altMessage) {
+        this.altMessage = altMessage;
+    }
+
 }

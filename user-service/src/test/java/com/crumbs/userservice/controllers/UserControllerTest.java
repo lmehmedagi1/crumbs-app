@@ -34,10 +34,10 @@ class UserControllerTest {
     @Test
     void testLoginSuccess() throws Exception {
         mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-        String uri = "/login";
-        String inputJson = "{" +
-                "\"username\": \"lmehmedagi\"," +
-                "\"password\": \"Password123\"" +
+        String uri = "/account/login";
+        String inputJson = "{\n" +
+                "    \"username\": \"lmehmedagi\",\n" +
+                "    \"password\": \"Password123\"\n" +
                 "}";
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post(uri)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -48,24 +48,21 @@ class UserControllerTest {
     @Test
     void testLoginFailIncorrectPassword() throws Exception {
         mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-        String uri = "/login";
-        String inputJson = "{" +
-                "\"username\": \"lmehmedagi\"," +
-                "\"password\": \"pass\"" +
+        String uri = "/account/login";
+        String inputJson = "{\n" +
+                "    \"username\": \"lmehmedagi\",\n" +
+                "    \"password\": \"Passw\"\n" +
                 "}";
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post(uri)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(inputJson)).andReturn();
-
-        assertAll(
-                () -> assertEquals(HttpStatus.UNAUTHORIZED.value(), mvcResult.getResponse().getStatus()),
-                () -> assertEquals("Password is incorrect", mvcResult.getResponse().getErrorMessage()));
+        assertEquals(HttpStatus.FORBIDDEN.value(), mvcResult.getResponse().getStatus());
     }
 
     @Test
     void testLoginFailIncorrectUsername() throws Exception {
         mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-        String uri = "/login";
+        String uri = "/account/login";
         String inputJson = "{" +
                 "\"username\": \"lmehmedagiiii\"," +
                 "\"password\": \"password\"" +
@@ -73,43 +70,40 @@ class UserControllerTest {
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post(uri)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(inputJson)).andReturn();
-
-        assertAll(
-                () -> assertEquals(HttpStatus.NOT_FOUND.value(), mvcResult.getResponse().getStatus()),
-                () -> assertEquals("User with this username does not exist", mvcResult.getResponse().getErrorMessage()));
+        System.out.println(mvcResult.getResponse().getContentAsString());
+        assertEquals(HttpStatus.NOT_FOUND.value(), mvcResult.getResponse().getStatus());
     }
 
     @Test
     void testRegisterSuccess() throws Exception {
         mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-        String uri = "/register";
+        String uri = "/account/register";
         String inputJson = "{" +
                 "    \"email\": \"test@gmail.com\"," +
                 "    \"username\": \"testtest\"," +
-                "    \"firstName\": \"test\"," +
-                "    \"lastName\": \"test\"," +
+                "    \"first_name\": \"test\"," +
+                "    \"last_name\": \"test\"," +
                 "    \"gender\": \"female\"," +
                 "    \"password\": \"Password123\"," +
-                "    \"phoneNumber\": \"062175175\"" +
+                "    \"phone_number\": \"062175175\"" +
                 "}";
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post(uri)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(inputJson)).andReturn();
-
         assertEquals(HttpStatus.OK.value(), mvcResult.getResponse().getStatus());
     }
 
     @Test
     void testRegisterFailMissingField() throws Exception {
         mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-        String uri = "/register";
+        String uri = "/account/register";
         String inputJson = "{" +
                 "    \"email\": \"test@gmail.com\"," +
-                "    \"firstName\": \"test\"," +
-                "    \"lastName\": \"test\"," +
+                "    \"first_name\": \"test\"," +
+                "    \"last_name\": \"test\"," +
                 "    \"gender\": \"female\"," +
                 "    \"password\": \"pass\"," +
-                "    \"phoneNumber\": \"062175175\"" +
+                "    \"phone_number\": \"062175175\"" +
                 "}";
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post(uri)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -121,15 +115,15 @@ class UserControllerTest {
     @Test
     void testRegisterFailInvalidEmail() throws Exception {
         mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-        String uri = "/register";
+        String uri = "/account/register";
         String inputJson = "{" +
                 "    \"email\": \"gmail.com\"," +
                 "    \"username\": \"test\"," +
-                "    \"firstName\": \"test\"," +
-                "    \"lastName\": \"test\"," +
+                "    \"first_name\": \"test\"," +
+                "    \"last_name\": \"test\"," +
                 "    \"gender\": \"female\"," +
                 "    \"password\": \"Password123\"," +
-                "    \"phoneNumber\": \"062175175\"" +
+                "    \"phone_number\": \"062175175\"" +
                 "}";
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post(uri)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -141,15 +135,15 @@ class UserControllerTest {
     @Test
     void testRegisterFailUserAlreadyExists() throws Exception {
         mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-        String uri = "/register";
+        String uri = "/account/register";
         String inputJson = "{" +
                 "    \"email\": \"test@gmail.com\"," +
                 "    \"username\": \"lmehmedagi\"," +
-                "    \"firstName\": \"test\"," +
-                "    \"lastName\": \"test\"," +
+                "    \"first_name\": \"test\"," +
+                "    \"last_name\": \"test\"," +
                 "    \"gender\": \"female\"," +
                 "    \"password\": \"Password123\"," +
-                "    \"phoneNumber\": \"062175175\"" +
+                "    \"phone_number\": \"062175175\"" +
                 "}";
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post(uri)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
