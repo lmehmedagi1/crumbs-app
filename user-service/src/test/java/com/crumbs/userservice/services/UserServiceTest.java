@@ -3,13 +3,15 @@ package com.crumbs.userservice.services;
 import com.crumbs.userservice.exceptions.IncorrectPasswordException;
 import com.crumbs.userservice.exceptions.UserAlreadyExistsException;
 import com.crumbs.userservice.exceptions.UserNotFoundException;
+import com.crumbs.userservice.jwt.JwtConfigAndUtil;
 import com.crumbs.userservice.models.User;
 import com.crumbs.userservice.requests.RegisterRequest;
-import com.crumbs.userservice.utility.JWTUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.validation.ConstraintViolationException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -17,81 +19,89 @@ import static org.junit.jupiter.api.Assertions.*;
 @Transactional
 class UserServiceTest {
 
+    private final UserService userService;
+    private final CustomUserDetailsService customUserDetailsService;
+    private final JwtConfigAndUtil jwtConfigAndUtil;
+
     @Autowired
-    private UserService userService;
+    public UserServiceTest(UserService userService, CustomUserDetailsService customUserDetailsService, JwtConfigAndUtil jwtConfigAndUtil) {
+        this.userService = userService;
+        this.customUserDetailsService = customUserDetailsService;
+        this.jwtConfigAndUtil = jwtConfigAndUtil;
+    }
 
     @Test
     void testGenerateTokenNullInputParameter() {
-        assertThrows(IllegalArgumentException.class, () -> {
-            userService.generateToken(null);
+        assertThrows(NullPointerException.class, () -> {
+            jwtConfigAndUtil.generateToken(null);
         });
     }
 
     @Test
     void testGenerateTokenSuccess() {
-        final String generatedToken = userService.generateToken("lmehmedagi");
-        final String extractedUsername = JWTUtil.extractUsername(generatedToken);
+        final String generatedToken = jwtConfigAndUtil.generateToken(customUserDetailsService.loadUserByUsername("lmehmedagi"));
+        final String extractedUsername = jwtConfigAndUtil.extractUsername(generatedToken);
         assertEquals("lmehmedagi", extractedUsername);
     }
 
     @Test
     void testGenerateTokenWrongUsername() {
-        assertThrows(UserNotFoundException.class, () -> userService.generateToken("testtest"));
+        assertThrows(UserNotFoundException.class, () -> jwtConfigAndUtil.generateToken(customUserDetailsService.loadUserByUsername("testtest")));
     }
 
     @Test
     void testGetUserByPasswordAndUsernameNullInputParameter() {
         assertAll(
                 () -> assertThrows(IllegalArgumentException.class, () -> {
-                    userService.getUser(null, null);
+                    userService.getUserByCredentials(null, null);
                 }),
                 () -> assertThrows(IllegalArgumentException.class, () -> {
-                    userService.getUser(null, "password");
+                    userService.getUserByCredentials(null, "password");
                 }),
                 () -> assertThrows(IllegalArgumentException.class, () -> {
-                    userService.getUser("lmehmedagi1", null);
+                    userService.getUserByCredentials("lmehmedagi1", null);
                 })
         );
     }
 
     @Test
     void testGetUserByPasswordAndUsernameSuccess() {
-        final User user = userService.getUser("lmehmedagi", "Password123");
+        final User user = userService.getUserByCredentials("lmehmedagi", "Password123");
         assertAll(
                 () -> assertEquals("lmehmedagi1@etf.unsa.ba", user.getEmail()),
-                () -> assertEquals("Lejla", user.getUserDetails().getFirstName()),
-                () -> assertEquals("Mehmedagic", user.getUserDetails().getLastName()));
+                () -> assertEquals("Lejla", user.getUserProfile().getFirstName()),
+                () -> assertEquals("Mehmedagic", user.getUserProfile().getLastName()));
     }
 
     @Test
     void testGetUserByPasswordAndUsernameIncorrectPassword() {
-        assertThrows(IncorrectPasswordException.class, () -> userService.getUser("lmehmedagi", "pasword"));
+        assertThrows(IncorrectPasswordException.class, () -> userService.getUserByCredentials("lmehmedagi", "pasword"));
     }
 
     @Test
     void testGetUserByPasswordAndUsernameIncorrectUsername() {
-        assertThrows(UserNotFoundException.class, () -> userService.getUser("testtest", "pasword"));
+        assertThrows(UserNotFoundException.class, () -> userService.getUserByCredentials("testtest", "pasword"));
     }
 
     @Test
     void testGetUserByEmailNullInputParameter() {
         assertThrows(IllegalArgumentException.class, () -> {
-            userService.getUser(null);
+            userService.getUserByEmail(null);
         });
     }
 
     @Test
     void testGetUserByUsernameSuccess() {
-        final User user = userService.getUser("lmehmedagi");
+        final User user = userService.getUserByUsername("lmehmedagi");
         assertAll(
                 () -> assertEquals("lmehmedagi1@etf.unsa.ba", user.getEmail()),
-                () -> assertEquals("Lejla", user.getUserDetails().getFirstName()),
-                () -> assertEquals("Mehmedagic", user.getUserDetails().getLastName()));
+                () -> assertEquals("Lejla", user.getUserProfile().getFirstName()),
+                () -> assertEquals("Mehmedagic", user.getUserProfile().getLastName()));
     }
 
     @Test
     void testGetUserByUsernameFail() {
-        assertThrows(UserNotFoundException.class, () -> userService.getUser("testetst"));
+        assertThrows(UserNotFoundException.class, () -> userService.getUserByUsername("testetst"));
     }
 
     @Test
@@ -103,19 +113,19 @@ class UserServiceTest {
 
     @Test
     void testRegisterUserSuccess() {
-        final RegisterRequest registerRequest = new RegisterRequest("lejla", "mehmedagic", "lejlatest", "lejlameh@etf.unsa.ba",
-                "Pasword123", "male", "062122122");
+        final RegisterRequest registerRequest = new RegisterRequest("lejlatest", "lejlameh@etf.unsa.ba", "Pasword123", "lejla",
+                "mehmedagic", "female", "062122122");
         final User user = userService.registerUser(registerRequest);
         assertAll(
                 () -> assertEquals("lejlameh@etf.unsa.ba", user.getEmail()),
-                () -> assertEquals("lejla", user.getUserDetails().getFirstName()),
-                () -> assertEquals("mehmedagic", user.getUserDetails().getLastName()));
+                () -> assertEquals("lejla", user.getUserProfile().getFirstName()),
+                () -> assertEquals("mehmedagic", user.getUserProfile().getLastName()));
     }
 
     @Test
     void testSaveUserEmailTakenFail() {
-        final RegisterRequest registerRequest = new RegisterRequest("lejla", "mehmedagic", "lmehmedagi", "lejlameh@etf.unsa.ba",
-                "Pasword123", "male", "062122122");
+        final RegisterRequest registerRequest = new RegisterRequest("lejlatest", "lejlameh@etf.unsa.ba", "Pasword123", "lejla",
+                "mehmedagic", "female", "062122122");
 
         assertThrows(UserAlreadyExistsException.class, () -> userService.registerUser(registerRequest));
     }
