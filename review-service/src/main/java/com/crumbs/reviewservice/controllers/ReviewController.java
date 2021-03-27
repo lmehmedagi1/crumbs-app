@@ -113,7 +113,7 @@ public class ReviewController {
             JsonNode patched = patch.apply(objectMapper.convertValue(review, JsonNode.class));
             Review reviewPatched = objectMapper.treeToValue(patched, Review.class);
             reviewService.updateReview(reviewPatched);
-            return ResponseEntity.ok(reviewPatched);
+            return ResponseEntity.ok(reviewModelAssembler.toModel(reviewPatched));
         } catch (JsonPatchException | JsonProcessingException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }

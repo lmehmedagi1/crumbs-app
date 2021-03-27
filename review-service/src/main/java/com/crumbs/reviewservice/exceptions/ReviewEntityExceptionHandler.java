@@ -15,7 +15,6 @@ import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.ServletWebRequest;
@@ -43,7 +42,7 @@ public class ReviewEntityExceptionHandler extends ResponseEntityExceptionHandler
     }
 
     @ExceptionHandler(IllegalStateException.class)
-    protected ResponseEntity<Object> handleIllegalStateException(IllegalStateException exception, WebRequest request){
+    protected ResponseEntity<Object> handleIllegalStateException(IllegalStateException exception, WebRequest request) {
         ApiError apiError = new ApiError(BAD_REQUEST, "Requested operation caused an inappropriate state",
                 "Check the request and try again!", getRequestUri(request));
         return new ResponseEntity<>(apiError, BAD_REQUEST);
@@ -83,7 +82,7 @@ public class ReviewEntityExceptionHandler extends ResponseEntityExceptionHandler
     /**
      * Handle MethodArgumentNotValidException.
      * Triggered when an object fails @Valid validation.
-    */
+     */
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
             MethodArgumentNotValidException ex,
@@ -91,9 +90,10 @@ public class ReviewEntityExceptionHandler extends ResponseEntityExceptionHandler
             HttpStatus status,
             WebRequest request) {
         String message = null;
-        try{
+        try {
             message = ex.getBindingResult().getFieldErrors().get(0).getDefaultMessage();
-        } catch (Exception ignored){}
+        } catch (Exception ignored) {
+        }
         ApiError apiError = new ApiError(BAD_REQUEST, "Validation error", message, getRequestUri(request));
         apiError.addApiSubError(ex.getBindingResult().getFieldErrors());
         return new ResponseEntity<>(apiError, BAD_REQUEST);
@@ -106,9 +106,10 @@ public class ReviewEntityExceptionHandler extends ResponseEntityExceptionHandler
     @ExceptionHandler(javax.validation.ConstraintViolationException.class)
     protected ResponseEntity<Object> handleConstraintViolation(javax.validation.ConstraintViolationException ex, WebRequest request) {
         String message = null;
-        try{
+        try {
             message = ex.getConstraintViolations().iterator().next().getMessage();
-        } catch (Exception ignored){}
+        } catch (Exception ignored) {
+        }
         ApiError apiError = new ApiError(BAD_REQUEST, "Validation error", message, getRequestUri(request));
         apiError.addApiSubError(ex.getConstraintViolations());
         return new ResponseEntity<>(apiError, BAD_REQUEST);
