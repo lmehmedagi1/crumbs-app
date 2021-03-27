@@ -1,22 +1,22 @@
 package com.crumbs.userservice.exceptions;
 
 public class UserAlreadyExistsException extends RuntimeException {
-    private String altMessage;
+    private String errorMessage;
 
     public UserAlreadyExistsException() {
         super("User already exists");
     }
 
-    public UserAlreadyExistsException(String altMessage) {
+    public UserAlreadyExistsException(String errorMessage) {
         this();
-        this.altMessage = altMessage;
+        this.errorMessage = errorMessage;
     }
 
-    public String getAltMessage() {
-        return altMessage;
+    public String getErrorMessage() {
+        return errorMessage;
     }
 
-    public void setAltMessage(String altMessage) {
-        this.altMessage = altMessage;
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
     }
 }

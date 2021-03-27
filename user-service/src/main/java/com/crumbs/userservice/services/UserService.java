@@ -1,7 +1,6 @@
 package com.crumbs.userservice.services;
 
 import com.crumbs.userservice.exceptions.IncorrectPasswordException;
-import com.crumbs.userservice.exceptions.UserAlreadyExistsException;
 import com.crumbs.userservice.exceptions.UserNotFoundException;
 import com.crumbs.userservice.models.User;
 import com.crumbs.userservice.models.UserProfile;
@@ -62,10 +61,11 @@ public class UserService {
     }
 
     public User registerUser(@NotNull RegisterRequest registerRequest) {
+        /*
         if (userRepository.findByUsername(registerRequest.getUsername()) != null)
             throw new UserAlreadyExistsException("Username is taken, try another one!");
         else if (userRepository.findByEmail(registerRequest.getEmail()) != null)
-            throw new UserAlreadyExistsException("Email is taken, try another one!");
+            throw new UserAlreadyExistsException("Email is taken, try another one!"); */
 
         User user = new User();
         user.setUsername(registerRequest.getUsername());

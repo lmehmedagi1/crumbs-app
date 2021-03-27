@@ -20,6 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 
 @Configuration
 @EnableWebSecurity
@@ -39,11 +40,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final CustomUserDetailsService customUserDetailsService;
     private final JwtConfigAndUtil jwtConfigAndUtil;
+    private final HandlerExceptionResolver handlerExceptionResolver;
 
     @Autowired
-    public WebSecurityConfig(CustomUserDetailsService customUserDetailsService, JwtConfigAndUtil jwtConfigAndUtil) {
+    public WebSecurityConfig(CustomUserDetailsService customUserDetailsService, JwtConfigAndUtil jwtConfigAndUtil, HandlerExceptionResolver handlerExceptionResolver) {
         this.customUserDetailsService = customUserDetailsService;
         this.jwtConfigAndUtil = jwtConfigAndUtil;
+        this.handlerExceptionResolver = handlerExceptionResolver;
     }
 
     @Override
@@ -57,15 +60,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .addFilter(new JwtAuthenticationFilter(authenticationManager(), jwtConfigAndUtil))
-                .addFilterAfter(new JwtTokenVerifyFilter(customUserDetailsService, jwtConfigAndUtil), JwtAuthenticationFilter.class)
+                .addFilter(new JwtAuthenticationFilter(authenticationManager(), jwtConfigAndUtil, handlerExceptionResolver))
+                .addFilterAfter(new JwtTokenVerifyFilter(customUserDetailsService, jwtConfigAndUtil, handlerExceptionResolver), JwtAuthenticationFilter.class)
                 .authorizeRequests()
                 .antMatchers(PUBLIC_ROUTES).permitAll().anyRequest()
                 .authenticated();
     }
 
     @Override
-    public void configure(WebSecurity web) throws Exception {
+    public void configure(WebSecurity web) {
         web.ignoring().antMatchers("/resources/**", "/images/**", "/static/**", "/css/**", "/js/**");
     }
 
