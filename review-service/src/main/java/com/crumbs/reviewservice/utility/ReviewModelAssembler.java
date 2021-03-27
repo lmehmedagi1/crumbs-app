@@ -2,10 +2,11 @@ package com.crumbs.reviewservice.utility;
 
 import com.crumbs.reviewservice.controllers.ReviewController;
 import com.crumbs.reviewservice.models.Review;
-import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.stereotype.Component;
+
+import java.util.HashMap;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -14,12 +15,8 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 public class ReviewModelAssembler implements RepresentationModelAssembler<Review, EntityModel<Review>> {
     @Override
     public EntityModel<Review> toModel(Review review) {
-        return EntityModel.of(review, linkTo(methodOn(ReviewController.class).getReviewById(review.getId())).withSelfRel(),
+        return EntityModel.of(review,
+                linkTo(methodOn(ReviewController.class).getReviewById(review.getId())).withSelfRel(),
                 linkTo(methodOn(ReviewController.class).getAllReviews()).withRel("reviews"));
-    }
-
-    @Override
-    public CollectionModel<EntityModel<Review>> toCollectionModel(Iterable<? extends Review> entities) {
-        return null;
     }
 }

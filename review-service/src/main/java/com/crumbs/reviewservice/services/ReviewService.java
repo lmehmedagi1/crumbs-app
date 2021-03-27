@@ -66,14 +66,9 @@ public class ReviewService {
         }).orElseThrow(ReviewNotFoundException::new);
     }
 
-    /**
-     * Essentially a PUT request.
-     *
-     * @param review - updated review
-     */
     @Transactional
-    public void updateReview(@NotNull @Valid Review review) {
-        reviewRepository.save(review);
+    public void updateReview(@NotNull @Valid Review updatedReview) {
+        reviewRepository.save(updatedReview);
     }
 
     @Transactional
