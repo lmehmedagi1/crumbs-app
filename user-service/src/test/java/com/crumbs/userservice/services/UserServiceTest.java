@@ -52,13 +52,13 @@ class UserServiceTest {
     @Test
     void testGetUserByPasswordAndUsernameNullInputParameter() {
         assertAll(
-                () -> assertThrows(IllegalArgumentException.class, () -> {
+                () -> assertThrows(ConstraintViolationException.class, () -> {
                     userService.getUserByCredentials(null, null);
                 }),
-                () -> assertThrows(IllegalArgumentException.class, () -> {
+                () -> assertThrows(ConstraintViolationException.class, () -> {
                     userService.getUserByCredentials(null, "password");
                 }),
-                () -> assertThrows(IllegalArgumentException.class, () -> {
+                () -> assertThrows(ConstraintViolationException.class, () -> {
                     userService.getUserByCredentials("lmehmedagi1", null);
                 })
         );
@@ -85,7 +85,7 @@ class UserServiceTest {
 
     @Test
     void testGetUserByEmailNullInputParameter() {
-        assertThrows(IllegalArgumentException.class, () -> {
+        assertThrows(ConstraintViolationException.class, () -> {
             userService.getUserByEmail(null);
         });
     }
@@ -105,17 +105,12 @@ class UserServiceTest {
     }
 
     @Test
-    void testRegisterUserNullInputParameter() {
-        assertThrows(IllegalArgumentException.class, () -> {
-            userService.registerUser(null);
-        });
-    }
-
-    @Test
     void testRegisterUserSuccess() {
-        final RegisterRequest registerRequest = new RegisterRequest("lejlatest", "lejlameh@etf.unsa.ba", "Pasword123", "lejla",
+        final RegisterRequest registerRequest = new RegisterRequest("lejlaa_1", "lejlameh@etf.unsa.ba", "Passsword123!", "lejla",
                 "mehmedagic", "female", "062122122");
+
         final User user = userService.registerUser(registerRequest);
+
         assertAll(
                 () -> assertEquals("lejlameh@etf.unsa.ba", user.getEmail()),
                 () -> assertEquals("lejla", user.getUserProfile().getFirstName()),
@@ -124,7 +119,12 @@ class UserServiceTest {
 
     @Test
     void testSaveUserEmailTakenFail() {
-        final RegisterRequest registerRequest = new RegisterRequest("lejlatest", "lejlameh@etf.unsa.ba", "Pasword123", "lejla",
+        final RegisterRequest registerRequest = new RegisterRequest("lejlaa_1", "lejlameh@etf.unsa.ba", "Pasword123!", "lejla",
+                "mehmedagic", "female", "062122122");
+
+        final User user = userService.registerUser(registerRequest);
+
+        final RegisterRequest registerRequest2 = new RegisterRequest("lejlaa_2", "lejlameh@etf.unsa.ba", "Pasword123!", "lejla",
                 "mehmedagic", "female", "062122122");
 
         assertThrows(UserAlreadyExistsException.class, () -> userService.registerUser(registerRequest));

@@ -10,16 +10,16 @@ DECLARE
 BEGIN
 INSERT INTO users
 VALUES (lela_id, ''lmehmedagi'', ''lmehmedagi1@etf.unsa.ba'',
-    ''$2a$10$Z1bciZuRtMCbNHjKfZ7zTO73054Tsfcsol03pV6DdAest.xONe8Ga'');
+    ''$2y$10$IPqxD1wMn6kmnRI1rwT3ZeHqamUL46ZNsDtovq01Y.3Eh7lXAYQaW'');
 INSERT INTO users
 VALUES (manda_id, ''amandal'', ''amandal1@etf.unsa.ba'',
-    ''$2a$10$Z1bciZuRtMCbNHjKfZ7zTO73054Tsfcsol03pV6DdAest.xONe8Ga'');
+    ''$2y$10$IPqxD1wMn6kmnRI1rwT3ZeHqamUL46ZNsDtovq01Y.3Eh7lXAYQaW'');
 INSERT INTO users
 VALUES (medo_id, ''mpaldum'', ''mpaldum1@etf.unsa.ba'',
-    ''$2a$10$Z1bciZuRtMCbNHjKfZ7zTO73054Tsfcsol03pV6DdAest.xONe8Ga'');
+    ''$2y$10$IPqxD1wMn6kmnRI1rwT3ZeHqamUL46ZNsDtovq01Y.3Eh7lXAYQaW'');
 INSERT INTO users
 VALUES (aki_id, ''aturkusic'', ''aturkusic1@etf.unsa.ba'',
-    ''$2a$10$Z1bciZuRtMCbNHjKfZ7zTO73054Tsfcsol03pV6DdAest.xONe8Ga'');
+    ''$2y$10$IPqxD1wMn6kmnRI1rwT3ZeHqamUL46ZNsDtovq01Y.3Eh7lXAYQaW'');
 
 INSERT INTO user_profile
 VALUES (''Lejla'', ''Mehmedagic'', ''female'', ''062123123'',
