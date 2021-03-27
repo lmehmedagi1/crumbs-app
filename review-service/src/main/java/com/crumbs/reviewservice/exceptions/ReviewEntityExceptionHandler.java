@@ -120,7 +120,7 @@ public class ReviewEntityExceptionHandler extends ResponseEntityExceptionHandler
      */
     @ExceptionHandler(ReviewNotFoundException.class)
     protected ResponseEntity<Object> handleEntityNotFound(ReviewNotFoundException ex, WebRequest request) {
-        ApiError apiError = new ApiError(NOT_FOUND, ex.getMessage(), "Specified ID does not exist", getRequestUri(request));
+        ApiError apiError = new ApiError(NOT_FOUND, ex.getMessage(), "Review with specified parameters does not exist!", getRequestUri(request));
         return new ResponseEntity<>(apiError, NOT_FOUND);
     }
 
