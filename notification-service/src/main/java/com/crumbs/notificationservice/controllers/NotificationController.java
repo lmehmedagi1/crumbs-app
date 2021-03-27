@@ -1,6 +1,5 @@
 package com.crumbs.notificationservice.controllers;
 
-import com.crumbs.notificationservice.exceptions.NotificationNotFoundException;
 import com.crumbs.notificationservice.models.Notification;
 import com.crumbs.notificationservice.requests.NotificationRequest;
 import com.crumbs.notificationservice.services.NotificationService;
@@ -18,11 +17,14 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Nullable;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -39,7 +41,6 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 })
 public class NotificationController {
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
     private final NotificationService notificationService;
     private final NotificationModelAssembler notificationModelAssembler;
 
@@ -49,12 +50,20 @@ public class NotificationController {
         this.notificationModelAssembler = notificationModelAssembler;
     }
 
-    @GetMapping
     public CollectionModel<EntityModel<Notification>> getAllNotifications() {
-        List<EntityModel<Notification>> notifications = notificationService.getAllNotifications().stream()
+        List<EntityModel<Notification>> notifications = notificationService.getAllNotifications()
+                .stream()
                 .map(notificationModelAssembler::toModel)
                 .collect(Collectors.toList());
         return CollectionModel.of(notifications, linkTo(methodOn(NotificationController.class).getAllNotifications()).withSelfRel());
+    }
+
+    @GetMapping
+    public CollectionModel<EntityModel<Notification>> getNotifications(@RequestParam @Nullable Map<String, String> allRequestParams) throws HttpRequestMethodNotSupportedException {
+        if (allRequestParams != null && !allRequestParams.isEmpty())
+            throw new HttpRequestMethodNotSupportedException("GET");
+
+        return getAllNotifications();
     }
 
     @RequestMapping(params = "id", method = RequestMethod.GET)
@@ -64,14 +73,15 @@ public class NotificationController {
 
     @RequestMapping(params = "userId", method = RequestMethod.GET)
     public CollectionModel<EntityModel<Notification>> getNotificationsOfUser(@RequestParam("userId") @NotNull UUID userId) {
-        List<EntityModel<Notification>> reviews = notificationService.getNotificationsOfUser(userId).stream()
+        List<EntityModel<Notification>> reviews = notificationService.getNotificationsOfUser(userId)
+                .stream()
                 .map(notificationModelAssembler::toModel)
                 .collect(Collectors.toList());
         return CollectionModel.of(reviews, linkTo(methodOn(NotificationController.class).getAllNotifications()).withSelfRel());
     }
 
     @PostMapping
-    public ResponseEntity<?> createNotification(@RequestBody @Valid NotificationRequest notificationRequest) throws NotificationNotFoundException {
+    public ResponseEntity<?> createNotification(@RequestBody @Valid NotificationRequest notificationRequest) {
         final Notification newNotification = notificationService.saveNotification(notificationRequest);
         EntityModel<Notification> entityModel = notificationModelAssembler.toModel(newNotification);
         return ResponseEntity.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(entityModel);
@@ -80,8 +90,7 @@ public class NotificationController {
     @PatchMapping(consumes = "application/json")
     public ResponseEntity<?> updateNotification(@RequestParam("id") @NotNull UUID id, @RequestBody @Valid NotificationRequest notificationRequest) {
         final Notification updatedNotification = notificationService.updateNotification(notificationRequest, id);
-        EntityModel<Notification> entityModel = notificationModelAssembler.toModel(updatedNotification);
-        return ResponseEntity.ok().body(entityModel);
+        return ResponseEntity.ok().body(notificationModelAssembler.toModel(updatedNotification));
     }
 
     /**
@@ -91,12 +100,12 @@ public class NotificationController {
     public ResponseEntity<?> patchNotification(@RequestParam("id") @NotNull UUID id, @RequestBody JsonPatch patch) {
         try {
             Notification notification = notificationService.getNotification(id);
+            final ObjectMapper objectMapper = new ObjectMapper();
             JsonNode patched = patch.apply(objectMapper.convertValue(notification, JsonNode.class));
             Notification notificationPatched = objectMapper.treeToValue(patched, Notification.class);
             notificationService.updateNotification(notificationPatched);
-            return ResponseEntity.ok(notificationPatched);
+            return ResponseEntity.ok(notificationModelAssembler.toModel(notification));
         } catch (JsonPatchException | JsonProcessingException e) {
-            System.out.println(e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }

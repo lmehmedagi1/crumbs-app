@@ -1,4 +1,4 @@
-package com.crumbs.notificationservice.utility;
+package com.crumbs.notificationservice.utility.apierror;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.jsontype.impl.TypeIdResolverBase;

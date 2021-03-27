@@ -17,6 +17,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.UUID;
 
 @Data
@@ -45,9 +46,9 @@ public class Notification {
     private LocalDateTime createdAt = LocalDateTime.now();
 
     @NotBlank
-    @Size(max = 150, message = "Description exceeds allowed limit of 250 characters")
-    @Pattern(regexp = "^[A-Za-z0-9 _.,!\"'-/]*$", flags = Pattern.Flag.UNICODE_CASE,
-            message = "Description can only contain letters, numbers, spaces, and punctuation")
+    @Size(max = 150, message = "Description exceeds allowed limit of 250 characters!")
+    @Pattern(regexp = "^[A-Za-z0-9 .,:;\\-_?!&%/'@()\"]*$", flags = {Pattern.Flag.MULTILINE, Pattern.Flag.UNICODE_CASE},
+            message = "Description can only contain letters, numbers, spaces, and punctuation marks!")
     private String description;
 
     @NotNull
