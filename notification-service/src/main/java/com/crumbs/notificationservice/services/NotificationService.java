@@ -29,13 +29,13 @@ public class NotificationService {
     }
 
     @Transactional(readOnly = true)
-    public List<Notification> getNotificationsOfUser(@NotNull UUID userId) {
-        return notificationRepository.findByUserId(userId);
+    public Notification getNotification(@NotNull UUID id) throws NotificationNotFoundException {
+        return notificationRepository.findById(id).orElseThrow(NotificationNotFoundException::new);
     }
 
     @Transactional(readOnly = true)
-    public Notification getNotification(@NotNull UUID id) throws NotificationNotFoundException {
-        return notificationRepository.findById(id).orElseThrow(NotificationNotFoundException::new);
+    public List<Notification> getNotificationsOfUser(@NotNull UUID userId) {
+        return notificationRepository.findByUserId(userId);
     }
 
     private void modifyNotification(NotificationRequest notificationRequest, Notification notification) {
@@ -59,11 +59,6 @@ public class NotificationService {
         }).orElseThrow(NotificationNotFoundException::new);
     }
 
-    /**
-     * Essentially a PUT request.
-     *
-     * @param notification - updated notification
-     */
     @Transactional
     public void updateNotification(@NotNull @Valid Notification notification) {
         notificationRepository.save(notification);

@@ -1,8 +1,5 @@
 package com.crumbs.notificationservice.utility.apierror;
 
-
-import com.crumbs.notificationservice.utility.LowerCaseClassNameResolver;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonTypeIdResolver;
 import lombok.Data;
@@ -22,14 +19,13 @@ import java.util.Set;
 public
 class ApiError {
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
     private LocalDateTime timestamp;
     private String status;
     private Integer code;
     private String error;
     private String message;
     private String path;
-    private List<ApiSubError> reason;
+    private List<ApiSubError> subErrors;
 
     public void setStatus(HttpStatus httpStatus) {
         this.status = httpStatus.getReasonPhrase();
@@ -61,9 +57,9 @@ class ApiError {
     }
 
     private void addSubError(ApiSubError subError) {
-        if (reason == null)
-            reason = new ArrayList<>();
-        reason.add(subError);
+        if (subErrors == null)
+            subErrors = new ArrayList<>();
+        subErrors.add(subError);
     }
 
     public void addApiSubError(ApiSubError apiSubError) {
