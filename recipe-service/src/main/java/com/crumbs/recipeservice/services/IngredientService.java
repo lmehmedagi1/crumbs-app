@@ -4,38 +4,40 @@ import com.crumbs.recipeservice.exceptions.IngredientNotFoundException;
 import com.crumbs.recipeservice.models.Ingredient;
 import com.crumbs.recipeservice.repositories.IngredientRepository;
 import com.crumbs.recipeservice.requests.IngredientRequest;
-import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@Validated
 public class IngredientService {
     @Autowired
     private IngredientRepository ingredientRepository;
 
     @Transactional(readOnly = true)
-    public List<Ingredient> getIngredients() {
+    public List<Ingredient> getAllIngredients() {
         return ingredientRepository.findAll();
     }
 
     @Transactional(readOnly = true)
-    public Ingredient getIngredient(String id) {
-        final Optional<Ingredient> optionalIngredient = ingredientRepository.findById(UUID.fromString(id));
+    public Ingredient getIngredient(@NotNull UUID id) {
+        final Optional<Ingredient> optionalIngredient = ingredientRepository.findById(id);
 
         if (optionalIngredient.isEmpty())
-            throw new IngredientNotFoundException(id);
+            throw new IngredientNotFoundException();
 
         return optionalIngredient.get();
     }
 
     @Transactional
-    public Ingredient createIngredient(@NonNull @Valid IngredientRequest ingredientRequest) {
+    public Ingredient saveIngredient(@NotNull @Valid IngredientRequest ingredientRequest) {
         Ingredient recipe = new Ingredient();
         recipe.setName(ingredientRequest.getName());
         ingredientRepository.save(recipe);
@@ -43,23 +45,28 @@ public class IngredientService {
     }
 
     @Transactional
-    public Ingredient updateIngredient(@NonNull @Valid IngredientRequest ingredientRequest, @NonNull String id) {
-        Optional<Ingredient> optional = ingredientRepository.findById(UUID.fromString(id));
+    public Ingredient updateIngredient(@NotNull @Valid IngredientRequest ingredientRequest, @NotNull UUID id) {
+        Optional<Ingredient> optional = ingredientRepository.findById(id);
         if (optional.isPresent()) {
             Ingredient recipe = optional.get();
             recipe.setName(ingredientRequest.getName());
             ingredientRepository.save(recipe);
             return recipe;
         } else {
-            throw new IngredientNotFoundException(id);
+            throw new IngredientNotFoundException();
         }
     }
 
     @Transactional
-    public void deleteIngredient(@NonNull @Valid String id) {
-        if (!ingredientRepository.existsById(UUID.fromString(id)))
-            throw new IngredientNotFoundException(id);
+    public void updateIngredient(@NotNull @Valid Ingredient updatedIngredient) {
+        ingredientRepository.save(updatedIngredient);
+    }
 
-        ingredientRepository.deleteById(UUID.fromString(id));
+    @Transactional
+    public void deleteIngredient(@NotNull UUID id) {
+        if (!ingredientRepository.existsById(id))
+            throw new IngredientNotFoundException();
+
+        ingredientRepository.deleteById(id);
     }
 }

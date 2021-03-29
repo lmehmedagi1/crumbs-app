@@ -1,53 +1,111 @@
 package com.crumbs.recipeservice.controllers;
 
 import com.crumbs.recipeservice.models.Recipe;
-import com.crumbs.recipeservice.requests.CreateRecipeRequest;
-import com.crumbs.recipeservice.requests.UpdateRecipeRequest;
-import com.crumbs.recipeservice.responses.RecipeResponse;
+import com.crumbs.recipeservice.requests.RecipeRequest;
 import com.crumbs.recipeservice.services.RecipeService;
+import com.crumbs.recipeservice.utility.RecipeModelAssembler;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.fge.jsonpatch.JsonPatch;
+import com.github.fge.jsonpatch.JsonPatchException;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
+@RequestMapping(value = "/recipes")
+@ApiResponses(value = {
+        @ApiResponse(code = 200, message = "OK"),
+        @ApiResponse(code = 400, message = "Bad Request"),
+        @ApiResponse(code = 404, message = "Not Found"),
+        @ApiResponse(code = 500, message = "Internal Server Error")
+})
 public class RecipeController {
 
+    private final RecipeService recipeService;
+    private final RecipeModelAssembler recipeModelAssembler;
+
     @Autowired
-    private RecipeService recipeService;
-
-    @GetMapping("/recipes")
-    public ResponseEntity<List<Recipe>> getAllRecipes() {
-        return ResponseEntity.ok(recipeService.getRecipes());
+    public RecipeController(RecipeService recipeService, RecipeModelAssembler recipeModelAssembler) {
+        this.recipeService = recipeService;
+        this.recipeModelAssembler = recipeModelAssembler;
     }
 
-    @GetMapping("/recipe")
-    public ResponseEntity<Recipe> getRecipe(@RequestParam @Valid String id) {
-        return ResponseEntity.ok(recipeService.getRecipe(id));
+    public CollectionModel<EntityModel<Recipe>> getAllRecipes() {
+        List<EntityModel<Recipe>> recipes = recipeService.getAllRecipes()
+                .stream()
+                .map(recipeModelAssembler::toModel)
+                .collect(Collectors.toList());
+
+        return CollectionModel.of(recipes, linkTo(methodOn(RecipeController.class).getAllRecipes()).withSelfRel());
     }
 
-    @PostMapping("/recipes/create")
-    public ResponseEntity<RecipeResponse> createRecipe(@RequestBody @Valid CreateRecipeRequest createRecipeRequest) {
+    @GetMapping
+    public CollectionModel<EntityModel<Recipe>> getRecipes(@RequestParam Map<String, String> allRequestParams)
+            throws HttpRequestMethodNotSupportedException {
+        if (allRequestParams != null && !allRequestParams.isEmpty())
+            throw new HttpRequestMethodNotSupportedException("GET");
+
+        return getAllRecipes();
+    }
+
+    @RequestMapping(params = "id", method = RequestMethod.GET)
+    public EntityModel<Recipe> getRecipe(@RequestParam("id") @NotNull UUID id) {
+        return recipeModelAssembler.toModel(recipeService.getRecipe(id));
+    }
+
+    @PostMapping
+    public ResponseEntity<?> createRecipe(@RequestBody @Valid RecipeRequest recipeRequest) {
+        final Recipe recipe = recipeService.saveRecipe(recipeRequest);
+        EntityModel<Recipe> entityModel = recipeModelAssembler.toModel(recipe);
+        return ResponseEntity.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(entityModel);
+    }
+
+    @PatchMapping(consumes = "application/json")
+    public ResponseEntity<?> updateRecipe(@RequestParam("id") @NotNull UUID id, @RequestBody @Valid RecipeRequest recipeRequest) {
+        final Recipe recipe = recipeService.updateRecipe(recipeRequest, id);
+        EntityModel<Recipe> entityModel = recipeModelAssembler.toModel(recipe);
+        return ResponseEntity.ok(entityModel);
+    }
+
+    /**
+     * PATCH method with partial update, based on JSON Patch
+     */
+    @PatchMapping(consumes = "application/json-patch+json")
+    public ResponseEntity<?> patchRecipe(@RequestParam("id") @NotNull UUID id, @RequestBody JsonPatch patch) {
         try {
-            final Recipe recipe = recipeService.saveRecipe(createRecipeRequest);
-            return ResponseEntity.ok(new RecipeResponse(recipe));
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+            Recipe recipe = recipeService.getRecipe(id);
+            final ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode patched = patch.apply(objectMapper.convertValue(recipe, JsonNode.class));
+            Recipe recipePatched = objectMapper.treeToValue(patched, Recipe.class);
+            recipeService.updateRecipe(recipePatched);
+            return ResponseEntity.ok(recipeModelAssembler.toModel(recipePatched));
+        } catch (JsonPatchException | JsonProcessingException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
-    @PatchMapping("/recipes/update")
-    public ResponseEntity<RecipeResponse> updateRecipe(@RequestBody @Valid UpdateRecipeRequest updateRecipeRequest) {
-        final Recipe recipe = recipeService.updateRecipe(updateRecipeRequest);
-        return ResponseEntity.ok(new RecipeResponse(recipe));
-    }
-
-    @DeleteMapping("/recipes/delete")
-    public void deleteIngredient(@RequestParam @Valid String id) {
+    @DeleteMapping
+    public ResponseEntity<?> deleteIngredient(@RequestParam("id") @NotNull UUID id) {
         recipeService.deleteRecipe(id);
+        return ResponseEntity.noContent().build();
     }
 }

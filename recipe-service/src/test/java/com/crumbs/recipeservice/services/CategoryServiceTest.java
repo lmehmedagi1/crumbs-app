@@ -3,7 +3,6 @@ package com.crumbs.recipeservice.services;
 import com.crumbs.recipeservice.exceptions.CategoryNotFoundException;
 import com.crumbs.recipeservice.models.Category;
 import com.crumbs.recipeservice.requests.CreateCategoryRequest;
-import com.crumbs.recipeservice.requests.UpdateCategoryRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

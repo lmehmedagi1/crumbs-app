@@ -9,8 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.UUID;
@@ -27,9 +26,9 @@ public class Ingredient {
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     private UUID id;
 
-    @NotNull
-    @NotEmpty
-    @Size(min = 1, max = 50, message = "Ingredient exceeds allowed limit of 50 characters!")
-    @Pattern(regexp = "^[A-Za-z ]*$", flags = Pattern.Flag.UNICODE_CASE, message = "Ingredient can only contain letters and spaces.")
+    @NotBlank
+    @Size(min = 5, message = "Ingredient name must be at least 5 characters long!")
+    @Size(max = 30, message = "Ingredient name exceeds allowed limit of 30 characters!")
+    @Pattern(regexp = "^[A-Za-z\\s]+$", flags = Pattern.Flag.UNICODE_CASE, message = "Ingredient name can only contain letters and whitespaces!")
     private String name;
 }

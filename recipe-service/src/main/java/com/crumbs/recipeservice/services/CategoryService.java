@@ -3,21 +3,27 @@ package com.crumbs.recipeservice.services;
 import com.crumbs.recipeservice.exceptions.CategoryNotFoundException;
 import com.crumbs.recipeservice.models.Category;
 import com.crumbs.recipeservice.repositories.CategoryRepository;
-import com.crumbs.recipeservice.requests.CreateCategoryRequest;
-import com.crumbs.recipeservice.requests.UpdateCategoryRequest;
+import com.crumbs.recipeservice.requests.CategoryRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@Validated
 public class CategoryService {
 
+    private final CategoryRepository categoryRepository;
+
     @Autowired
-    private CategoryRepository categoryRepository;
+    public CategoryService(CategoryRepository categoryRepository) {
+        this.categoryRepository = categoryRepository;
+    }
 
     @Transactional(readOnly = true)
     public List<Category> getAllCategories() {
@@ -25,41 +31,39 @@ public class CategoryService {
     }
 
     @Transactional(readOnly = true)
-    public Category getCategory(String id) {
-        final Optional<Category> optionalCategory = categoryRepository.findById(UUID.fromString(id));
+    public Category getCategory(@NotNull UUID id) {
+        return categoryRepository.findById(id).orElseThrow(CategoryNotFoundException::new);
+    }
 
-        if (optionalCategory.isEmpty())
-            throw new CategoryNotFoundException("The specified category does not exist :(");
-
-        return optionalCategory.get();
+    private void modifyCategory(CategoryRequest categoryRequest, Category category) {
+        category.setName(categoryRequest.getName());
     }
 
     @Transactional
-    public Category saveCategory(CreateCategoryRequest createCategoryRequest) {
+    public Category saveCategory(@NotNull @Valid CategoryRequest categoryRequest) {
         Category category = new Category();
-        category.setName(createCategoryRequest.getName());
-        categoryRepository.save(category);
-        return category;
+        modifyCategory(categoryRequest, category);
+        return categoryRepository.save(category);
     }
 
     @Transactional
-    public Category updateCategory(UpdateCategoryRequest updateCategoryRequest) {
-        Optional<Category> optional = categoryRepository.findById(UUID.fromString(updateCategoryRequest.getId()));
-        if (optional.isPresent()) {
-            Category category = optional.get();
-            category.setName(updateCategoryRequest.getName());
-            categoryRepository.save(category);
-            return category;
-        } else {
-            throw new CategoryNotFoundException("The specified category does not exist :(");
-        }
+    public Category updateCategory(@NotNull @Valid CategoryRequest categoryRequest, @NotNull UUID id) {
+        return categoryRepository.findById(id).map(category -> {
+            modifyCategory(categoryRequest, category);
+            return categoryRepository.save(category);
+        }).orElseThrow(CategoryNotFoundException::new);
     }
 
     @Transactional
-    public void deleteCategory(String id) {
-        if (!categoryRepository.existsById(UUID.fromString(id)))
-            throw new CategoryNotFoundException("The specified category does not exist :(");
+    public void updateCategory(@NotNull @Valid Category updatedCategory) {
+        categoryRepository.save(updatedCategory);
+    }
 
-        categoryRepository.deleteById(UUID.fromString(id));
+    @Transactional
+    public void deleteCategory(@NotNull UUID id) {
+        if (!categoryRepository.existsById(id))
+            throw new CategoryNotFoundException();
+
+        categoryRepository.deleteById(id);
     }
 }

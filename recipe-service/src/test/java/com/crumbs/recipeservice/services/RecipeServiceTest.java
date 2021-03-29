@@ -3,7 +3,6 @@ package com.crumbs.recipeservice.services;
 import com.crumbs.recipeservice.exceptions.RecipeNotFoundException;
 import com.crumbs.recipeservice.models.Recipe;
 import com.crumbs.recipeservice.requests.CreateRecipeRequest;
-import com.crumbs.recipeservice.requests.UpdateRecipeRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
