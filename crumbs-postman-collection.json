@@ -1,0 +1,1319 @@
+{
+	"info": {
+		"_postman_id": "5399b26a-1c68-4cd7-b5b8-96a9d255da53",
+		"name": "CRUMBS-APP",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "USER-SERVICE",
+			"item": [
+				{
+					"name": "/account/login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"lmehmedagi\",\r\n    \"password\": \"Passw!\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8081/account/login",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"account",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/account/register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"novi@gmail.com\",\r\n  \"first_name\": \"Novo\",\r\n  \"gender\": \"female\",\r\n  \"last_name\": \"Novic\",\r\n  \"password\": \"Password123!\",\r\n  \"phone_number\": \"0603189774\",\r\n  \"username\": \"lmehmedagi\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8081/account/register",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"account",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/account?id=",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJoZWhlbG9sbyIsImlhdCI6MTYxNjg3MDc3MywiZXhwIjoxNjE2OTY4ODAwfQ.lwy2oimoQbJndk4gCQPnU21oXlFgmH4t-kiCJjmlNeD2Vbt1uQgvV_nDWPU5gnGkIuhySf6msGtVk50-Ylqo_g",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8081/account?username=amandal",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"account"
+							],
+							"query": [
+								{
+									"key": "username",
+									"value": "amandal"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "RECIPE-SERVICE",
+			"item": [
+				{
+					"name": "categories",
+					"item": [
+						{
+							"name": "/categories",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\": \"novica\",\r\n    \"password\": \"Password123\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8082/categories",
+									"host": [
+										"localhost"
+									],
+									"port": "8082",
+									"path": [
+										"categories"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/categories?id=",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\": \"novica\",\r\n    \"password\": \"Password123\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8082/categories?id=fb244361-88cb-14eb-8ecd-0242ac130003",
+									"host": [
+										"localhost"
+									],
+									"port": "8082",
+									"path": [
+										"categories"
+									],
+									"query": [
+										{
+											"key": "id",
+											"value": "fb244361-88cb-14eb-8ecd-0242ac130003"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/categories",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"name\": \"Najnovija \"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8082/categories",
+									"host": [
+										"localhost"
+									],
+									"port": "8082",
+									"path": [
+										"categories"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/categories?id=",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"name\": \"PATCH ABJO MOJ\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8082/categories?id=17e216ec-87d4-4dc0-8458-da3625772d97",
+									"host": [
+										"localhost"
+									],
+									"port": "8082",
+									"path": [
+										"categories"
+									],
+									"query": [
+										{
+											"key": "id",
+											"value": "17e216ec-87d4-4dc0-8458-da3625772d97"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "PARTIAL /categories?id=",
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"content-type": true
+								}
+							},
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json-patch+json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "[\r\n    {\r\n        \"op\": \"replace\",\r\n        \"path\": \"/name\",\r\n        \"value\": \"P R E J A K O\"\r\n    }\r\n]",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8082/categories?id=17e216ec-87d4-4dc0-8458-da3625772d97",
+									"host": [
+										"localhost"
+									],
+									"port": "8082",
+									"path": [
+										"categories"
+									],
+									"query": [
+										{
+											"key": "id",
+											"value": "17e216ec-87d4-4dc0-8458-da3625772d97"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/categories?id=",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "localhost:8082/categories?id=17e216ec-87d4-4dc0-8458-da3625772d97",
+									"host": [
+										"localhost"
+									],
+									"port": "8082",
+									"path": [
+										"categories"
+									],
+									"query": [
+										{
+											"key": "id",
+											"value": "17e216ec-87d4-4dc0-8458-da3625772d97"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "ingredients",
+					"item": [
+						{
+							"name": "/ingredients",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:8082/ingredients",
+									"host": [
+										"localhost"
+									],
+									"port": "8082",
+									"path": [
+										"ingredients"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/ingredients?id=",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:8082/ingredients?id=79e8a3a4-d2ac-4816-a824-ca17ec43c9dc",
+									"host": [
+										"localhost"
+									],
+									"port": "8082",
+									"path": [
+										"ingredients"
+									],
+									"query": [
+										{
+											"key": "id",
+											"value": "79e8a3a4-d2ac-4816-a824-ca17ec43c9dc"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/ingredients",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"name\": \"Sastojcina\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8082/ingredients",
+									"host": [
+										"localhost"
+									],
+									"port": "8082",
+									"path": [
+										"ingredients"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/ingredients?id=",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"name\": \"Sastojcina najnovija\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8082/ingredients?id=b3ba010c-42b5-41a6-892f-afd86519c2a6",
+									"host": [
+										"localhost"
+									],
+									"port": "8082",
+									"path": [
+										"ingredients"
+									],
+									"query": [
+										{
+											"key": "id",
+											"value": "b3ba010c-42b5-41a6-892f-afd86519c2a6"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "PARTIAL /ingredients?id=",
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"content-type": true
+								}
+							},
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json-patch+json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "[\r\n    {\r\n        \"op\": \"replace\",\r\n        \"path\": \"/name\",\r\n        \"value\": \"P R E J A K O\"\r\n    }\r\n]",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8082/ingredients?id=b3ba010c-42b5-41a6-892f-afd86519c2a6",
+									"host": [
+										"localhost"
+									],
+									"port": "8082",
+									"path": [
+										"ingredients"
+									],
+									"query": [
+										{
+											"key": "id",
+											"value": "b3ba010c-42b5-41a6-892f-afd86519c2a6"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/ingredients?id=",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "localhost:8082/ingredients?id=b3ba010c-42b5-41a6-892f-afd86519c2a6",
+									"host": [
+										"localhost"
+									],
+									"port": "8082",
+									"path": [
+										"ingredients"
+									],
+									"query": [
+										{
+											"key": "id",
+											"value": "b3ba010c-42b5-41a6-892f-afd86519c2a6"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "recipes",
+					"item": [
+						{
+							"name": "/recipes",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\": \"novica\",\r\n    \"password\": \"Password123\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8082/recipes",
+									"host": [
+										"localhost"
+									],
+									"port": "8082",
+									"path": [
+										"recipes"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/recipes?id=",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJub3ZpY2EiLCJpYXQiOjE2MTY3MjE0MzQsImV4cCI6MTYxNjg4NjAwMH0.uQ83xwISOf-9XZQ85oErSfdtuSobq37QR9qc5M9blqxfrc-hOcvgTC1f4Gj9xMju1xiqX82yOqEYmDOfun5n4Q",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8082/recipes?id=fb244360-88cb-11eb-8dcd-0242ac130003",
+									"host": [
+										"localhost"
+									],
+									"port": "8082",
+									"path": [
+										"recipes"
+									],
+									"query": [
+										{
+											"key": "id",
+											"value": "fb244360-88cb-11eb-8dcd-0242ac130003"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/recipes",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"description\": \"Arrived totally in as between private. Favour of so as on pretty though elinor direct. Reasonable estimating be alteration we themselves entreaties me of reasonably. Direct wished so be expect polite valley. Whose asked stand it sense no spoil to. Prudent you too his conduct feeling limited and. Side he lose paid as hope so face upon be. Goodness did suitable learning put. \",\r\n  \"method\": \"sadaklhdawuhdajdoadja9wdhaudhapwdhaiopudha9dhnapiodaopdha9pdhauwdhpaudhapwdaipuwdhnpawuda\",\r\n  \"title\": \"LowDo\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8082/recipes",
+									"host": [
+										"localhost"
+									],
+									"port": "8082",
+									"path": [
+										"recipes"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/recipes?id=",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"description\": null,\r\n  \"method\": \"Fresh hehe Fresh hehe Fresh hehe Fresh hehe Fresh hehe Fresh hehe Fresh hehe\",\r\n  \"title\": \"LowDo\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8082/recipes?id=2a8e5e2f-3170-4f88-92ad-00dff8e84ae8",
+									"host": [
+										"localhost"
+									],
+									"port": "8082",
+									"path": [
+										"recipes"
+									],
+									"query": [
+										{
+											"key": "id",
+											"value": "2a8e5e2f-3170-4f88-92ad-00dff8e84ae8"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "PARTIAL /recipes?id=",
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {}
+							},
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json-patch+json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "[\r\n    {\r\n        \"op\": \"replace\",\r\n        \"path\": \"/title\",\r\n        \"value\": \"MUSAFA MI NAJNOVIJI TITLE\"\r\n    }\r\n]",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8082/recipes?id=2a8e5e2f-3170-4f88-92ad-00dff8e84ae8",
+									"host": [
+										"localhost"
+									],
+									"port": "8082",
+									"path": [
+										"recipes"
+									],
+									"query": [
+										{
+											"key": "id",
+											"value": "2a8e5e2f-3170-4f88-92ad-00dff8e84ae8"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/recipes?id=",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "localhost:8082/recipes?id=2a8e5e2f-3170-4f88-92ad-00dff8e84ae8",
+									"host": [
+										"localhost"
+									],
+									"port": "8082",
+									"path": [
+										"recipes"
+									],
+									"query": [
+										{
+											"key": "id",
+											"value": "2a8e5e2f-3170-4f88-92ad-00dff8e84ae8"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "diets",
+					"item": [
+						{
+							"name": "/diets",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:8082/diets",
+									"host": [
+										"localhost"
+									],
+									"port": "8082",
+									"path": [
+										"diets"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/diets?id=",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:8082/diets?id=bb244361-88cb-14eb-8ecd-0242ac130003",
+									"host": [
+										"localhost"
+									],
+									"port": "8082",
+									"path": [
+										"diets"
+									],
+									"query": [
+										{
+											"key": "id",
+											"value": "bb244361-88cb-14eb-8ecd-0242ac130003"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/diets",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"description\": \"string\",\r\n  \"duration\": 0,\r\n  \"is_private\": true,\r\n  \"title\": \"string\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8082/diets",
+									"host": [
+										"localhost"
+									],
+									"port": "8082",
+									"path": [
+										"diets"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/diets?id=",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"description\": \"Nema ga jaro\",\r\n  \"duration\": 33,\r\n  \"is_private\": true,\r\n  \"title\": \"SHA HEEEEESH\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8082/diets?id=dd09ff2d-155d-4d95-8bb3-806c0503926d",
+									"host": [
+										"localhost"
+									],
+									"port": "8082",
+									"path": [
+										"diets"
+									],
+									"query": [
+										{
+											"key": "id",
+											"value": "dd09ff2d-155d-4d95-8bb3-806c0503926d"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "PARTIAL /diets?id=",
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"content-type": true
+								}
+							},
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json-patch+json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "[\r\n    {\r\n        \"op\": \"replace\",\r\n        \"path\": \"/title\",\r\n        \"value\": \"P R E J A K O\"\r\n    }\r\n]",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8082/diets?id=dd09ff2d-155d-4d95-8bb3-806c0503926d",
+									"host": [
+										"localhost"
+									],
+									"port": "8082",
+									"path": [
+										"diets"
+									],
+									"query": [
+										{
+											"key": "id",
+											"value": "dd09ff2d-155d-4d95-8bb3-806c0503926d"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/diets?id=",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "localhost:8082/diets?id=dd09ff2d-155d-4d95-8bb3-806c0503926d",
+									"host": [
+										"localhost"
+									],
+									"port": "8082",
+									"path": [
+										"diets"
+									],
+									"query": [
+										{
+											"key": "id",
+											"value": "dd09ff2d-155d-4d95-8bb3-806c0503926d"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "REVIEW-SERVICE",
+			"item": [
+				{
+					"name": "/reviews",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8083/reviews",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"reviews"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/reviews?id=",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8083/reviews?id=bb244361-88cb-14eb-8ecd",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"reviews"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "bb244361-88cb-14eb-8ecd"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/reviews?userId=",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8083/reviews?userId=a28cafae-1868-4ce9-8d70-da943c7fe981",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"reviews"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "a28cafae-1868-4ce9-8d70-da943c7fe981"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/reviews?recipeId=",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8083/reviews?recipeId=7f0fa93f-54b2-49cf-a659-a44f803036f2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"reviews"
+							],
+							"query": [
+								{
+									"key": "recipeId",
+									"value": "7f0fa93f-54b2-49cf-a659-a44f803036f2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/reviews",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"comment\": \"Novi komentar\",\r\n  \"is_liked\": true,\r\n  \"rating\": 5,\r\n  \"recipe_id\": \"e3b461d0-96a9-4bcf-836f-35441f57a701\",\r\n  \"user_id\": \"e3b461d0-96a9-4bcf-836f-35441f57a702\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8083/reviews",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"reviews"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/reviews?id=",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"comment\": \"LOLOLO\",\r\n  \"is_liked\": false,\r\n  \"rating\": 1,\r\n  \"recipe_id\": \"71bd970f-1f0c-4662-9bba-d1514ec6d62a\",\r\n  \"user_id\": \"71bd970f-1f0c-4662-9bba-d1514e66d62b\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8083/reviews?id=a03c7a37-6f49-4e52-ab70-9c1e24bf5c96",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"reviews"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "a03c7a37-6f49-4e52-ab70-9c1e24bf5c96"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PARTIAL /reviews?id=",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json-patch+json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "[\r\n    {\r\n        \"op\": \"replace\",\r\n        \"path\": \"/comment\",\r\n        \"value\": \"P R E J A K O\"\r\n    }\r\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8083/reviews?id=a03c7a37-6f49-4e52-ab70-9c1e24bf5c96",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"reviews"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "a03c7a37-6f49-4e52-ab70-9c1e24bf5c96"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/reviews?id=",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json-patch+json",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8083/reviews?id=a03c7a37-6f49-4e52-ab70-9c1e24bf5c96",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"reviews"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "a03c7a37-6f49-4e52-ab70-9c1e24bf5c96"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "NOTIFICATION-SERVICE",
+			"item": [
+				{
+					"name": "/notifications",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8084/notifications",
+							"host": [
+								"localhost"
+							],
+							"port": "8084",
+							"path": [
+								"notifications"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/notifications?id=",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8084/notifications?id=3b9ceeb5-4099-49e0-beca-cc6b864c3707",
+							"host": [
+								"localhost"
+							],
+							"port": "8084",
+							"path": [
+								"notifications"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "3b9ceeb5-4099-49e0-beca-cc6b864c3707"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/notifications?userId=",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8084/notifications?userId=c76d0732-afb7-44ff-85b8-76e5120eedd6",
+							"host": [
+								"localhost"
+							],
+							"port": "8084",
+							"path": [
+								"notifications"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "c76d0732-afb7-44ff-85b8-76e5120eedd6"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/notifications",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"description\": \"Evo ga braca najnovija testXD\",\r\n  \"is_read\": true,\r\n  \"user_id\": \"7ada4a84-20cb-43cf-9b10-3c14a71afdb2\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8084/notifications",
+							"host": [
+								"localhost"
+							],
+							"port": "8084",
+							"path": [
+								"notifications"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/notifications?id=",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"description\": \"strinSDASADg\",\r\n  \"is_read\": false,\r\n  \"user_id\": \"50017881-0e82-47ca-bc2a-971624573e4c\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8084/notifications?id=3b9ceeb5-4099-49e0-beca-cc6b864c3707",
+							"host": [
+								"localhost"
+							],
+							"port": "8084",
+							"path": [
+								"notifications"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "3b9ceeb5-4099-49e0-beca-cc6b864c3707"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PARTIAL /notifications?id=",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json-patch+json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "[\r\n    {\r\n        \"op\":\"replace\",\r\n        \"path\":\"/is_read\",\r\n        \"value\": true\r\n    }\r\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8084/notifications?id=3b9ceeb5-4099-49e0-beca-cc6b864c3707",
+							"host": [
+								"localhost"
+							],
+							"port": "8084",
+							"path": [
+								"notifications"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "3b9ceeb5-4099-49e0-beca-cc6b864c3707"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/notifications?id=",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:8084/notifications?id=3b9ceeb5-4099-49e0-beca-cc6b864c3707",
+							"host": [
+								"localhost"
+							],
+							"port": "8084",
+							"path": [
+								"notifications"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "3b9ceeb5-4099-49e0-beca-cc6b864c3707"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
