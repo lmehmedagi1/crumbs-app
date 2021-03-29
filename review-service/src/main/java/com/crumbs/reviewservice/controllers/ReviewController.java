@@ -17,11 +17,14 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Nullable;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -38,7 +41,6 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 })
 public class ReviewController {
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
     private final ReviewService reviewService;
     private final ReviewModelAssembler reviewModelAssembler;
 
@@ -48,12 +50,21 @@ public class ReviewController {
         this.reviewModelAssembler = reviewModelAssembler;
     }
 
-    @GetMapping
     public CollectionModel<EntityModel<Review>> getAllReviews() {
         List<EntityModel<Review>> reviews = reviewService.getAllReviews().stream()
                 .map(reviewModelAssembler::toModel)
                 .collect(Collectors.toList());
+
         return CollectionModel.of(reviews, linkTo(methodOn(ReviewController.class).getAllReviews()).withSelfRel());
+    }
+
+    @GetMapping
+    public CollectionModel<EntityModel<Review>> getReviews(@RequestParam @Nullable Map<String, String> allRequestParams)
+            throws HttpRequestMethodNotSupportedException {
+        if (allRequestParams != null && !allRequestParams.isEmpty())
+            throw new HttpRequestMethodNotSupportedException("GET");
+
+        return getAllReviews();
     }
 
     @RequestMapping(params = "id", method = RequestMethod.GET)
@@ -98,10 +109,11 @@ public class ReviewController {
     public ResponseEntity<?> patchReview(@RequestParam("id") @NotNull UUID id, @RequestBody JsonPatch patch) {
         try {
             Review review = reviewService.getReview(id);
+            final ObjectMapper objectMapper = new ObjectMapper();
             JsonNode patched = patch.apply(objectMapper.convertValue(review, JsonNode.class));
             Review reviewPatched = objectMapper.treeToValue(patched, Review.class);
             reviewService.updateReview(reviewPatched);
-            return ResponseEntity.ok(reviewPatched);
+            return ResponseEntity.ok(reviewModelAssembler.toModel(reviewPatched));
         } catch (JsonPatchException | JsonProcessingException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }

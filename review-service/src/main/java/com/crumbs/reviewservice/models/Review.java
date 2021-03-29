@@ -39,14 +39,15 @@ public class Review implements Serializable {
     @JsonProperty("is_liked")
     private Boolean isLiked;
 
-    @Min(value = 1, message = "Rating must be between 1-5 inclusive")
-    @Max(value = 5, message = "Rating must be between 1-5 inclusive")
+    @Min(value = 1, message = "Rating must be between 1-5 inclusive!")
+    @Max(value = 5, message = "Rating must be between 1-5 inclusive!")
     private Integer rating;
 
     @NullOrNotBlank
+    @Size(min = 5, message = "Comment must contain at least 5 characters!")
     @Size(max = 1000, message = "Comment exceeds allowed limit of 1000 characters!")
-    @Pattern(regexp = "^[A-Za-z0-9 _.,!?\"'-/]*$", flags = Pattern.Flag.UNICODE_CASE,
-            message = "Comment can only contain letters, numbers, spaces, and punctuation")
+    @Pattern(regexp = "^[A-Za-z0-9 .,:;\\-_?!&%/'@()\"]*$", flags = {Pattern.Flag.MULTILINE, Pattern.Flag.UNICODE_CASE},
+            message = "Comment can only contain letters, numbers, spaces, and punctuation!")
     private String comment;
 
 }
