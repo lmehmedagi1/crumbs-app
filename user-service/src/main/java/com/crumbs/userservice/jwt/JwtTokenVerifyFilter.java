@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -22,11 +23,13 @@ public class JwtTokenVerifyFilter extends OncePerRequestFilter {
 
     private final CustomUserDetailsService customUserDetailsService;
     private final JwtConfigAndUtil jwtConfigAndUtil;
+    private final HandlerExceptionResolver handlerExceptionResolver;
 
     @Autowired
-    public JwtTokenVerifyFilter(CustomUserDetailsService customUserDetailsService, JwtConfigAndUtil jwtConfigAndUtil) {
+    public JwtTokenVerifyFilter(CustomUserDetailsService customUserDetailsService, JwtConfigAndUtil jwtConfigAndUtil, HandlerExceptionResolver handlerExceptionResolver) {
         this.customUserDetailsService = customUserDetailsService;
         this.jwtConfigAndUtil = jwtConfigAndUtil;
+        this.handlerExceptionResolver = handlerExceptionResolver;
     }
 
     @Override
@@ -54,13 +57,11 @@ public class JwtTokenVerifyFilter extends OncePerRequestFilter {
                     SecurityContextHolder.getContext().setAuthentication(upAuthToken);
                 }
             }
-        } catch (JwtException jwtException) {
-            System.out.println("Token cannot be trusted!");
-            // throw new IllegalStateException("Token cannot be trusted!");
-        } catch (UserNotFoundException userNotFoundException) {
-            System.out.println(userNotFoundException.getAltMessage());
-        } finally {
-            chain.doFilter(request, response);
+        } catch (JwtException | UserNotFoundException exception) {
+            handlerExceptionResolver.resolveException(request, response, null, new JwtException("Authorization failed"));
+            return;
         }
+
+        chain.doFilter(request, response);
     }
 }

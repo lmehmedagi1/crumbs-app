@@ -3,10 +3,17 @@ server:
   error:
     include-message: always
     include-stacktrace: never
+    whitelabel:
+      enabled: false
 spring:
   jpa:
     hibernate:
       ddl-auto: validate
+  mvc:
+    throw-exception-if-no-handler-found: true
+  jackson:
+    deserialization:
+      FAIL_ON_UNKNOWN_PROPERTIES: true
   datasource:
     url: jdbc:postgresql://ec2-54-155-226-153.eu-west-1.compute.amazonaws.com:5432/d75d4ailid467f
     username: tykptcfbkuiaxb

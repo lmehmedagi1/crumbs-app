@@ -12,12 +12,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
 @Service
+@Validated
 public class UserService {
 
     private final UserRepository userRepository;
@@ -30,7 +33,7 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public User getUserById(@NotNull UUID id) throws UserNotFoundException {
+    public User getUserById(@NotNull UUID id) {
         return userRepository.findById(id).orElseThrow(() ->
                 new UserNotFoundException("Specified ID does not exists!"));
     }
@@ -61,7 +64,8 @@ public class UserService {
         return user;
     }
 
-    public User registerUser(@NotNull RegisterRequest registerRequest) {
+    public User registerUser(@NotNull @Valid RegisterRequest registerRequest) {
+
         if (userRepository.findByUsername(registerRequest.getUsername()) != null)
             throw new UserAlreadyExistsException("Username is taken, try another one!");
         else if (userRepository.findByEmail(registerRequest.getEmail()) != null)
@@ -70,7 +74,7 @@ public class UserService {
         User user = new User();
         user.setUsername(registerRequest.getUsername());
         user.setEmail(registerRequest.getEmail());
-        user.setPassword((new BCryptPasswordEncoder()).encode(registerRequest.getPassword()));
+        user.setPassword((new BCryptPasswordEncoder(10)).encode(registerRequest.getPassword()));
 
         UserProfile userProfile = new UserProfile();
         userProfile.setFirstName(registerRequest.getFirst_name());

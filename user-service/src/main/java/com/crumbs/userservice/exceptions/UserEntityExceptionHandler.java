@@ -1,6 +1,7 @@
 package com.crumbs.userservice.exceptions;
 
 import com.crumbs.userservice.utility.apierror.ApiError;
+import io.jsonwebtoken.JwtException;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.core.Ordered;
@@ -11,7 +12,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.HttpMessageNotWritableException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -28,8 +31,40 @@ import static org.springframework.http.HttpStatus.*;
 @ControllerAdvice
 @Slf4j
 public class UserEntityExceptionHandler extends ResponseEntityExceptionHandler {
+
     private String getRequestUri(WebRequest request) {
         return ((ServletWebRequest) request).getRequest().getRequestURI();
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    protected ResponseEntity<Object> handleBadCredentialsException(BadCredentialsException ex, WebRequest request) {
+        ApiError apiError = new ApiError(UNAUTHORIZED, ex.getMessage(),
+                "Check the request and try again!", getRequestUri(request));
+        return new ResponseEntity<>(apiError, UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(JwtException.class)
+    protected ResponseEntity<Object> handleJwtException(JwtException ex, WebRequest request) {
+        ApiError apiError = new ApiError(UNAUTHORIZED, ex.getMessage(),
+                "Access is denied!", getRequestUri(request));
+        return new ResponseEntity<>(apiError, UNAUTHORIZED);
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleHttpRequestMethodNotSupported(HttpRequestMethodNotSupportedException ex,
+                                                                         HttpHeaders headers,
+                                                                         HttpStatus status,
+                                                                         WebRequest request) {
+        ApiError apiError = new ApiError(BAD_REQUEST, "Request method not supported",
+                "Check the request and try again!", getRequestUri(request));
+        return new ResponseEntity<>(apiError, BAD_REQUEST);
+    }
+
+    @ExceptionHandler(IllegalStateException.class)
+    protected ResponseEntity<Object> handleIllegalStateException(IllegalStateException exception, WebRequest request) {
+        ApiError apiError = new ApiError(BAD_REQUEST, "Requested operation caused an inappropriate state",
+                "Check the request and try again!", getRequestUri(request));
+        return new ResponseEntity<>(apiError, BAD_REQUEST);
     }
 
     /**
@@ -40,7 +75,7 @@ public class UserEntityExceptionHandler extends ResponseEntityExceptionHandler {
             MissingServletRequestParameterException ex, HttpHeaders headers,
             HttpStatus status, WebRequest request) {
         ApiError apiError = new ApiError(BAD_REQUEST, "Missing request parameter",
-                "Parameter " + ex.getParameterName() + " must not be empty!");
+                "Parameter " + ex.getParameterName() + " must be specified!");
         apiError.setPath(getRequestUri(request));
         return new ResponseEntity<>(apiError, BAD_REQUEST);
     }
@@ -64,7 +99,8 @@ public class UserEntityExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     /**
-     * Handle MethodArgumentNotValidException. Triggered when an object fails @Valid validation.
+     * Handle MethodArgumentNotValidException.
+     * Triggered when an object fails @Valid validation.
      */
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
@@ -72,19 +108,28 @@ public class UserEntityExceptionHandler extends ResponseEntityExceptionHandler {
             HttpHeaders headers,
             HttpStatus status,
             WebRequest request) {
-        ApiError apiError = new ApiError(BAD_REQUEST, "Validation error");
-        apiError.setPath(getRequestUri(request));
+        String message = null;
+        try {
+            message = ex.getBindingResult().getFieldErrors().get(0).getDefaultMessage();
+        } catch (Exception ignored) {
+        }
+        ApiError apiError = new ApiError(BAD_REQUEST, "Validation error", message, getRequestUri(request));
         apiError.addApiSubError(ex.getBindingResult().getFieldErrors());
         return new ResponseEntity<>(apiError, BAD_REQUEST);
     }
 
     /**
-     * Handles javax.validation.ConstraintViolationException. Thrown when @Validated fails.
+     * Handles javax.validation.ConstraintViolationException.
+     * Triggered when an object fails @Validated validation.
      */
     @ExceptionHandler(javax.validation.ConstraintViolationException.class)
     protected ResponseEntity<Object> handleConstraintViolation(javax.validation.ConstraintViolationException ex, WebRequest request) {
-        ApiError apiError = new ApiError(BAD_REQUEST, "Validation error");
-        apiError.setPath(getRequestUri(request));
+        String message = null;
+        try {
+            message = ex.getConstraintViolations().iterator().next().getMessage();
+        } catch (Exception ignored) {
+        }
+        ApiError apiError = new ApiError(BAD_REQUEST, "Validation error", message, getRequestUri(request));
         apiError.addApiSubError(ex.getConstraintViolations());
         return new ResponseEntity<>(apiError, BAD_REQUEST);
     }
@@ -106,7 +151,7 @@ public class UserEntityExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(UserAlreadyExistsException.class)
     protected ResponseEntity<Object> handleEntityNotFound(
             UserAlreadyExistsException ex, WebRequest request) {
-        ApiError apiError = new ApiError(CONFLICT, ex.getMessage(), ex.getAltMessage(), getRequestUri(request));
+        ApiError apiError = new ApiError(CONFLICT, ex.getMessage(), ex.getErrorMessage(), getRequestUri(request));
         return new ResponseEntity<>(apiError, CONFLICT);
     }
 
@@ -121,7 +166,8 @@ public class UserEntityExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     /**
-     * Handle HttpMessageNotReadableException. Happens when request JSON is malformed.
+     * Handle HttpMessageNotReadableException.
+     * Happens when request JSON is malformed.
      */
     @Override
     protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex,
@@ -137,7 +183,7 @@ public class UserEntityExceptionHandler extends ResponseEntityExceptionHandler {
     @Override
     protected ResponseEntity<Object> handleHttpMessageNotWritable(HttpMessageNotWritableException ex,
                                                                   HttpHeaders headers, HttpStatus status, WebRequest request) {
-        ApiError apiError = new ApiError(INTERNAL_SERVER_ERROR, "Conversion failed", "Error writing JSON output!");
+        ApiError apiError = new ApiError(INTERNAL_SERVER_ERROR, "Conversion failure", "Error writing JSON output!");
         apiError.setPath(getRequestUri(request));
         return new ResponseEntity<>(apiError, INTERNAL_SERVER_ERROR);
     }
