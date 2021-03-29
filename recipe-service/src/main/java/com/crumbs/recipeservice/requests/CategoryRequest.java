@@ -10,7 +10,7 @@ import javax.validation.constraints.NotBlank;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateCategoryRequest {
+public class CategoryRequest {
     @NonNull
     @NotBlank
     private String name;
