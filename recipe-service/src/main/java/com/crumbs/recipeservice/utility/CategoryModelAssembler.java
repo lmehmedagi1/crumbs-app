@@ -1,20 +1,19 @@
 package com.crumbs.recipeservice.utility;
 
+import com.crumbs.recipeservice.controllers.CategoryController;
 import com.crumbs.recipeservice.models.Category;
-import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.stereotype.Component;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 @Component
 public class CategoryModelAssembler implements RepresentationModelAssembler<Category, EntityModel<Category>> {
     @Override
-    public EntityModel<Category> toModel(Category entity) {
-        return null;
-    }
-
-    @Override
-    public CollectionModel<EntityModel<Category>> toCollectionModel(Iterable<? extends Category> entities) {
-        return null;
+    public EntityModel<Category> toModel(Category category) {
+        return EntityModel.of(category, linkTo(methodOn(CategoryController.class).getCategory(category.getId())).withSelfRel(),
+                linkTo(methodOn(CategoryController.class).getAllCategories()).withRel("categories"));
     }
 }

@@ -50,12 +50,12 @@ public class CategoryController {
     }
 
     public CollectionModel<EntityModel<Category>> getAllCategories() {
-        List<EntityModel<Category>> reviews = categoryService.getAllCategories()
+        List<EntityModel<Category>> categories = categoryService.getAllCategories()
                 .stream()
                 .map(categoryModelAssembler::toModel)
                 .collect(Collectors.toList());
 
-        return CollectionModel.of(reviews, linkTo(methodOn(CategoryController.class).getAllCategories()).withSelfRel());
+        return CollectionModel.of(categories, linkTo(methodOn(CategoryController.class).getAllCategories()).withSelfRel());
     }
 
     @GetMapping
@@ -92,9 +92,9 @@ public class CategoryController {
     @PatchMapping(consumes = "application/json-patch+json")
     public ResponseEntity<?> patchCategory(@RequestParam("id") @NotNull UUID id, @RequestBody JsonPatch patch) {
         try {
-            Category review = categoryService.getCategory(id);
+            Category category = categoryService.getCategory(id);
             final ObjectMapper objectMapper = new ObjectMapper();
-            JsonNode patched = patch.apply(objectMapper.convertValue(review, JsonNode.class));
+            JsonNode patched = patch.apply(objectMapper.convertValue(category, JsonNode.class));
             Category categoryPatched = objectMapper.treeToValue(patched, Category.class);
             categoryService.updateCategory(categoryPatched);
             return ResponseEntity.ok(categoryModelAssembler.toModel(categoryPatched));
@@ -108,5 +108,4 @@ public class CategoryController {
         categoryService.deleteCategory(id);
         return ResponseEntity.noContent().build();
     }
-
 }

@@ -1,27 +1,31 @@
 package com.crumbs.recipeservice.services;
 
+import com.crumbs.recipeservice.exceptions.CategoryNotFoundException;
 import com.crumbs.recipeservice.exceptions.DietNotFoundException;
 import com.crumbs.recipeservice.models.Diet;
 import com.crumbs.recipeservice.repositories.DietRepository;
-import com.crumbs.recipeservice.requests.CreateDietRequest;
-import com.crumbs.recipeservice.requests.UpdateDietRequest;
-import lombok.NonNull;
+import com.crumbs.recipeservice.requests.DietRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@Validated
 public class DietService {
 
+    private final DietRepository dietRepository;
+
     @Autowired
-    private DietRepository dietRepository;
+    public DietService(DietRepository dietRepository) {
+        this.dietRepository = dietRepository;
+    }
 
     @Transactional(readOnly = true)
     public List<Diet> getAllDiets() {
@@ -29,48 +33,44 @@ public class DietService {
     }
 
     @Transactional(readOnly = true)
-    public Diet getDiet(String id) {
-        final Optional<Diet> optionalDiet = dietRepository.findById(UUID.fromString(id));
-
-        if (optionalDiet.isEmpty())
-            throw new DietNotFoundException("The specified diet does not exist :(");
-
-        return optionalDiet.get();
+    public Diet getDiet(@NotNull UUID id) {
+        return dietRepository.findById(id).orElseThrow(DietNotFoundException::new);
     }
 
-    @Transactional(propagation = Propagation.REQUIRED)
-    public Diet saveDiet(@NonNull @Valid CreateDietRequest createDietRequest) {
-        Diet diet = new Diet();
-        diet.setTitle(createDietRequest.getTitle());
-        diet.setDescription(createDietRequest.getDescription());
-        diet.setDuration(createDietRequest.getDuration());
-        diet.setIsPrivate(createDietRequest.getIsPrivate());
+    private void modifyDiet(DietRequest dietRequest, Diet diet) {
+        diet.setTitle(dietRequest.getTitle());
+        diet.setDescription(dietRequest.getDescription());
+        diet.setDuration(dietRequest.getDuration());
+        diet.setIsPrivate(dietRequest.getIs_private());
         diet.setRecipes(new ArrayList<>());
+    }
+
+    @Transactional
+    public Diet saveDiet(@NotNull @Valid DietRequest dietRequest) {
+        Diet diet = new Diet();
+        modifyDiet(dietRequest, diet);
         dietRepository.save(diet);
         return diet;
     }
 
     @Transactional
-    public Diet updateDiet(@NonNull @Valid UpdateDietRequest updateDietRequest) {
-        Optional<Diet> optional = dietRepository.findById(UUID.fromString(updateDietRequest.getId()));
-        if (optional.isPresent()) {
-            Diet diet = optional.get();
-            diet.setTitle(updateDietRequest.getTitle());
-            diet.setDescription(updateDietRequest.getDescription());
-            diet.setDuration(updateDietRequest.getDuration());
-            diet.setIsPrivate(updateDietRequest.getIsPrivate());
-            dietRepository.save(diet);
-            return diet;
-        } else {
-            throw new DietNotFoundException("The specified diet does not exist :(");
-        }
+    public Diet updateDiet(@NotNull @Valid DietRequest dietRequest, @NotNull UUID id) {
+        return dietRepository.findById(id).map(diet -> {
+            modifyDiet(dietRequest, diet);
+            return dietRepository.save(diet);
+        }).orElseThrow(CategoryNotFoundException::new);
     }
 
     @Transactional
-    public void deleteDiet(@NonNull @Valid String id) {
-        if (!dietRepository.existsById(UUID.fromString(id)))
+    public void updateDiet(@NotNull @Valid Diet updatedDiet) {
+        dietRepository.save(updatedDiet);
+    }
+
+    @Transactional
+    public void deleteDiet(@NotNull UUID id) {
+        if (!dietRepository.existsById(id))
             throw new DietNotFoundException("The specified diet does not exist :(");
 
-        dietRepository.deleteById(UUID.fromString(id));
+        dietRepository.deleteById(id);
     }
 }

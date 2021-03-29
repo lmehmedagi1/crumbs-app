@@ -1,11 +1,15 @@
 server:
-  port: 8081
+  port: 8082
   error:
     include-message: always
+    whitelabel:
+      enabled: false
 spring:
   jpa:
     hibernate:
       ddl-auto: validate
+  mvc:
+    throw-exception-if-no-handler-found: true
   datasource:
     url: jdbc:postgresql://ec2-108-128-104-50.eu-west-1.compute.amazonaws.com:5432/dd4dq7jermb89o
     username: fwxejxypnubzjx

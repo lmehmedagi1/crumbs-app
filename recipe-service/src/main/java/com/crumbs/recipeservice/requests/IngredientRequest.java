@@ -3,7 +3,6 @@ package com.crumbs.recipeservice.requests;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
@@ -14,10 +13,9 @@ import javax.validation.constraints.Size;
 @AllArgsConstructor
 
 public class IngredientRequest {
-    @NonNull
     @NotBlank
-    @Size(min = 1, max = 50, message = "Ingredient exceeds allowed limit of 50 characters!")
-
-    @Pattern(regexp = "^[A-Za-z ]*$", flags = Pattern.Flag.UNICODE_CASE, message = "Ingredient can only contain letters and spaces.")
+    @Size(min = 5, message = "Ingredient name must be at least 5 characters long!")
+    @Size(max = 30, message = "Ingredient name exceeds allowed limit of 30 characters!")
+    @Pattern(regexp = "^[A-Za-z\\s]+$", flags = Pattern.Flag.UNICODE_CASE, message = "Ingredient name can only contain letters and whitespaces!")
     private String name;
 }

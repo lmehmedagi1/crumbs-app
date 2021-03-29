@@ -1,66 +1,111 @@
 package com.crumbs.recipeservice.controllers;
 
-import com.crumbs.recipeservice.exceptions.DietNotFoundException;
 import com.crumbs.recipeservice.models.Diet;
-import com.crumbs.recipeservice.requests.CreateDietRequest;
-import com.crumbs.recipeservice.requests.UpdateDietRequest;
-import com.crumbs.recipeservice.responses.DietResponse;
+import com.crumbs.recipeservice.requests.DietRequest;
 import com.crumbs.recipeservice.services.DietService;
+import com.crumbs.recipeservice.utility.DietModelAssembler;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.fge.jsonpatch.JsonPatch;
+import com.github.fge.jsonpatch.JsonPatchException;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
+@RequestMapping(value = "/diets")
+@ApiResponses(value = {
+        @ApiResponse(code = 200, message = "OK"),
+        @ApiResponse(code = 400, message = "Bad Request"),
+        @ApiResponse(code = 404, message = "Not Found"),
+        @ApiResponse(code = 500, message = "Internal Server Error")
+})
 public class DietController {
 
+    private final DietService dietService;
+    private final DietModelAssembler dietModelAssembler;
+
     @Autowired
-    private DietService dietService;
-
-    @GetMapping("/diets")
-    public ResponseEntity<List<Diet>> getAllDiets() {
-        return ResponseEntity.ok(dietService.getAllDiets());
+    public DietController(DietService dietService, DietModelAssembler dietModelAssembler) {
+        this.dietService = dietService;
+        this.dietModelAssembler = dietModelAssembler;
     }
 
-    @GetMapping("/diet")
-    public ResponseEntity<Diet> getDiet(@RequestParam @Valid String id) {
+    public CollectionModel<EntityModel<Diet>> getAllDiets() {
+        List<EntityModel<Diet>> diet = dietService.getAllDiets()
+                .stream()
+                .map(dietModelAssembler::toModel)
+                .collect(Collectors.toList());
+
+        return CollectionModel.of(diet, linkTo(methodOn(DietController.class).getAllDiets()).withSelfRel());
+    }
+
+    @GetMapping
+    public CollectionModel<EntityModel<Diet>> getDiets(@RequestParam Map<String, String> allRequestParams)
+            throws HttpRequestMethodNotSupportedException {
+        if (allRequestParams != null && !allRequestParams.isEmpty())
+            throw new HttpRequestMethodNotSupportedException("GET");
+
+        return getAllDiets();
+    }
+
+    @RequestMapping(params = "id", method = RequestMethod.GET)
+    public EntityModel<Diet> getDiet(@RequestParam("id") @NotNull UUID id) {
+        return dietModelAssembler.toModel(dietService.getDiet(id));
+    }
+
+    @PostMapping
+    public ResponseEntity<?> createDiet(@RequestBody @Valid DietRequest dietRequest) {
+        final Diet diet = dietService.saveDiet(dietRequest);
+        EntityModel<Diet> entityModel = dietModelAssembler.toModel(diet);
+        return ResponseEntity.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(entityModel);
+    }
+
+    @PatchMapping(consumes = "application/json")
+    public ResponseEntity<?> updateDiet(@RequestParam("id") @NotNull UUID id, @RequestBody @Valid DietRequest dietRequest) {
+        final Diet diet = dietService.updateDiet(dietRequest, id);
+        EntityModel<Diet> entityModel = dietModelAssembler.toModel(diet);
+        return ResponseEntity.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(entityModel);
+    }
+
+    /**
+     * PATCH method with partial update, based on JSON Patch
+     */
+    @PatchMapping(consumes = "application/json-patch+json")
+    public ResponseEntity<?> patchDiet(@RequestParam("id") @NotNull UUID id, @RequestBody JsonPatch patch) {
         try {
-            return ResponseEntity.ok(dietService.getDiet(id));
-        } catch (DietNotFoundException dietNotFoundException) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, dietNotFoundException.getMessage());
+            Diet diet = dietService.getDiet(id);
+            final ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode patched = patch.apply(objectMapper.convertValue(diet, JsonNode.class));
+            Diet dietPatched = objectMapper.treeToValue(patched, Diet.class);
+            dietService.updateDiet(dietPatched);
+            return ResponseEntity.ok(dietModelAssembler.toModel(dietPatched));
+        } catch (JsonPatchException | JsonProcessingException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
-    @PostMapping("/diet/create")
-    public ResponseEntity<DietResponse> createDiet(@RequestBody @Valid CreateDietRequest createDietRequest) {
-        try {
-            final Diet diet = dietService.saveDiet(createDietRequest);
-            return ResponseEntity.ok(new DietResponse(diet));
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
-        }
-    }
-
-    @PatchMapping("/diet/update")
-    public ResponseEntity<DietResponse> updateDiet(@RequestBody @Valid UpdateDietRequest updateDietRequest) {
-        try {
-            final Diet diet = dietService.updateDiet(updateDietRequest);
-            return ResponseEntity.ok(new DietResponse(diet));
-        } catch (DietNotFoundException dietNotFoundException) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, dietNotFoundException.getMessage());
-        }
-    }
-
-    @DeleteMapping("/diet/delete")
-    public void deleteDiet(@RequestParam @Valid String id) {
-        try {
-            dietService.deleteDiet(id);
-        } catch (DietNotFoundException dietNotFoundException) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, dietNotFoundException.getMessage());
-        }
+    @DeleteMapping
+    public ResponseEntity<?> deleteDiet(@RequestParam("id") @NotNull UUID id) {
+        dietService.deleteDiet(id);
+        return ResponseEntity.noContent().build();
     }
 }

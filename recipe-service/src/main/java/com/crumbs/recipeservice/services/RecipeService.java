@@ -3,69 +3,70 @@ package com.crumbs.recipeservice.services;
 import com.crumbs.recipeservice.exceptions.RecipeNotFoundException;
 import com.crumbs.recipeservice.models.Recipe;
 import com.crumbs.recipeservice.repositories.RecipeRepository;
-import com.crumbs.recipeservice.requests.CreateRecipeRequest;
-import com.crumbs.recipeservice.requests.UpdateRecipeRequest;
+import com.crumbs.recipeservice.requests.RecipeRequest;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@Validated
 public class RecipeService {
 
+    private final RecipeRepository recipeRepository;
+
     @Autowired
-    private RecipeRepository recipeRepository;
+    public RecipeService(RecipeRepository recipeRepository) {
+        this.recipeRepository = recipeRepository;
+    }
 
     @Transactional(readOnly = true)
-    public List<Recipe> getRecipes() {
+    public List<Recipe> getAllRecipes() {
         return recipeRepository.findAll();
     }
 
     @Transactional(readOnly = true)
-    public Recipe getRecipe(String id) {
-        final Optional<Recipe> optionalRecipe = recipeRepository.findById(UUID.fromString(id));
+    public Recipe getRecipe(@NotNull UUID id) {
+        return recipeRepository.findById(id).orElseThrow(RecipeNotFoundException::new);
+    }
 
-        if (optionalRecipe.isEmpty())
-            throw new RecipeNotFoundException("The specified recipe does not exist :(");
-
-        return optionalRecipe.get();
+    private void modifyRecipe(RecipeRequest recipeRequest, Recipe recipe) {
+        recipe.setTitle(recipeRequest.getTitle());
+        recipe.setDescription(recipeRequest.getDescription());
+        recipe.setMethod(recipeRequest.getMethod());
     }
 
     @Transactional
-    public Recipe saveRecipe(@NonNull @Valid CreateRecipeRequest createRecipeRequest) {
+    public Recipe saveRecipe(@NonNull @Valid RecipeRequest recipeRequest) {
         Recipe recipe = new Recipe();
-        recipe.setTitle(createRecipeRequest.getTitle());
-        recipe.setDescription(createRecipeRequest.getDescription());
-        recipe.setMethod(createRecipeRequest.getMethod());
-        recipeRepository.save(recipe);
-        return recipe;
+        modifyRecipe(recipeRequest, recipe);
+        return recipeRepository.save(recipe);
     }
 
     @Transactional
-    public Recipe updateRecipe(@NonNull @Valid UpdateRecipeRequest updateRecipeRequest) {
-        Optional<Recipe> optional = recipeRepository.findById(UUID.fromString(updateRecipeRequest.getId()));
-        if (optional.isPresent()) {
-            Recipe recipe = optional.get();
-            recipe.setTitle(updateRecipeRequest.getTitle());
-            recipe.setDescription(updateRecipeRequest.getDescription());
-            recipe.setMethod(updateRecipeRequest.getMethod());
-            recipeRepository.save(recipe);
-            return recipe;
-        } else {
-            throw new RecipeNotFoundException("The specified recipe does not exist :(");
-        }
+    public Recipe updateRecipe(@NotNull @Valid RecipeRequest recipeRequest, @NotNull UUID id) {
+        return recipeRepository.findById(id).map(recipe -> {
+            modifyRecipe(recipeRequest, recipe);
+            return recipeRepository.save(recipe);
+        }).orElseThrow(RecipeNotFoundException::new);
     }
 
     @Transactional
-    public void deleteRecipe(@NonNull @Valid String id) {
-        if (!recipeRepository.existsById(UUID.fromString(id)))
-            throw new RecipeNotFoundException("The specified recipe does not exist :(");
+    public void updateRecipe(@NotNull @Valid Recipe updatedRecipe) {
+        recipeRepository.save(updatedRecipe);
+    }
 
-        recipeRepository.deleteById(UUID.fromString(id));
+    @Transactional
+    public void deleteRecipe(@NonNull UUID id) {
+        if (!recipeRepository.existsById(id))
+            throw new RecipeNotFoundException();
+
+        recipeRepository.deleteById(id);
     }
 }
