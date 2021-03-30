@@ -5,6 +5,8 @@ server:
     whitelabel:
       enabled: false
 spring:
+  application:
+    name: notification-service
   jpa:
     hibernate:
       ddl-auto: validate
