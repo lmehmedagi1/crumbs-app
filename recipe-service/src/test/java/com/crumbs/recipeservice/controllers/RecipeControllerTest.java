@@ -42,7 +42,7 @@ class RecipeControllerTest {
         mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
 
         String id = "fb244360-88cb-11eb-8dcd-0242ac130003";
-        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get("/recipe")
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get("/recipes")
                 .param("id", id)).andReturn();
 
         assertEquals(HttpStatus.OK.value(), mvcResult.getResponse().getStatus());
@@ -53,7 +53,7 @@ class RecipeControllerTest {
         mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
 
         String id = "fb244360-88cb-11eb-8dcd-0242ac130009";
-        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get("/recipe")
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get("/recipes")
                 .param("id", id)).andReturn();
 
         assertEquals(HttpStatus.NOT_FOUND.value(), mvcResult.getResponse().getStatus());
@@ -62,23 +62,23 @@ class RecipeControllerTest {
     @Test
     void testCreateRecipeSuccess() throws Exception {
         mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-        String uri = "/recipes/create";
+        String uri = "/recipes";
         String inputJson = "{" +
                 "    \"description\": \"Test recipe\"," +
-                "    \"method\": \"Test recipe method\"," +
+                "    \"method\": \"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.\"," +
                 "    \"title\": \"Best title ever\"" +
                 "}";
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post(uri)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(inputJson)).andReturn();
 
-        assertEquals(HttpStatus.OK.value(), mvcResult.getResponse().getStatus());
+        assertEquals(HttpStatus.CREATED.value(), mvcResult.getResponse().getStatus());
     }
 
     @Test
     void testCreateRecipeNullTitle() throws Exception {
         mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-        String uri = "/recipes/create";
+        String uri = "/recipes";
         String inputJson = "{" +
                 "    \"description\": \"Test recipe\"," +
                 "    \"method\": \"Test recipe method\"," +
@@ -93,7 +93,7 @@ class RecipeControllerTest {
     @Test
     void testCreateRecipeNullMethod() throws Exception {
         mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-        String uri = "/recipes/create";
+        String uri = "/recipes";
         String inputJson = "{" +
                 "    \"description\": \"Test recipe\"," +
                 "    \"title\": \"Best title ever\"" +
@@ -108,14 +108,14 @@ class RecipeControllerTest {
     @Test
     void testUpdateRecipeInvalidId() throws Exception {
         mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-        String uri = "/recipes/update";
+        String uri = "/recipes";
         String inputJson = "{" +
-                "    \"id\": \"fb244360-88cb-11eb-8dcd-0242ac130009\"," +
                 "    \"description\": \"Test Update Description\"," +
-                "    \"method\": \"Test recipe method update\"," +
+                "    \"method\": \"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.\"," +
                 "    \"title\": \"Best title ever\"" +
                 "}";
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.patch(uri)
+                .param("id", "fb244360-88cb-11eb-8dcd-0242ac130009")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(inputJson)).andReturn();
 
@@ -125,14 +125,14 @@ class RecipeControllerTest {
     @Test
     void testUpdateRecipeValidId() throws Exception {
         mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-        String uri = "/recipes/update";
+        String uri = "/recipes";
         String inputJson = "{" +
-                "    \"id\": \"fb244360-88cb-11eb-8dcd-0242ac130003\"," +
                 "    \"description\": \"Test Update Description\"," +
-                "    \"method\": \"Test recipe method update\"," +
+                "    \"method\": \"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.\"," +
                 "    \"title\": \"Best title ever\"" +
                 "}";
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.patch(uri)
+                .param("id", "fb244360-88cb-11eb-8dcd-0242ac130003")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(inputJson)).andReturn();
 
@@ -142,13 +142,13 @@ class RecipeControllerTest {
     @Test
     void testUpdateRecipeNullMethod() throws Exception {
         mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-        String uri = "/recipes/update";
+        String uri = "/recipes";
         String inputJson = "{" +
-                "    \"id\": \"fb244360-88cb-11eb-8dcd-0242ac130003\"," +
                 "    \"description\": \"Test Update Description\"," +
                 "    \"title\": \"Best title ever\"" +
                 "}";
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.patch(uri)
+                .param("id", "fb244360-88cb-11eb-8dcd-0242ac130003")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(inputJson)).andReturn();
 
@@ -160,7 +160,7 @@ class RecipeControllerTest {
         mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
 
         String id = "fb244360-88cb-11eb-8dcd-0242ac130009";
-        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.delete("/recipes/delete")
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.delete("/recipes")
                 .param("id", id)).andReturn();
 
         assertEquals(HttpStatus.NOT_FOUND.value(), mvcResult.getResponse().getStatus());
@@ -171,9 +171,9 @@ class RecipeControllerTest {
         mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
 
         String id = "fb244360-88cb-11eb-8dcd-0242ac130003";
-        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.delete("/recipes/delete")
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.delete("/recipes")
                 .param("id", id)).andReturn();
 
-        assertEquals(HttpStatus.OK.value(), mvcResult.getResponse().getStatus());
+        assertEquals(HttpStatus.NO_CONTENT.value(), mvcResult.getResponse().getStatus());
     }
 }

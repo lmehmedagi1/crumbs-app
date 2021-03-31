@@ -1,5 +1,6 @@
 package com.crumbs.recipeservice.controllers;
 
+import com.crumbs.recipeservice.models.Category;
 import com.crumbs.recipeservice.models.Recipe;
 import com.crumbs.recipeservice.requests.RecipeRequest;
 import com.crumbs.recipeservice.services.RecipeService;
@@ -12,6 +13,7 @@ import com.github.fge.jsonpatch.JsonPatchException;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.*;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
@@ -56,15 +58,28 @@ public class RecipeController {
                 .collect(Collectors.toList());
 
         return CollectionModel.of(recipes, linkTo(methodOn(RecipeController.class).getAllRecipes()).withSelfRel());
+
     }
 
-    @GetMapping
-    public CollectionModel<EntityModel<Recipe>> getRecipes(@RequestParam Map<String, String> allRequestParams)
-            throws HttpRequestMethodNotSupportedException {
-        if (allRequestParams != null && !allRequestParams.isEmpty())
-            throw new HttpRequestMethodNotSupportedException("GET");
+//    @GetMapping
+//    public CollectionModel<EntityModel<Recipe>> getRecipes(@RequestParam Map<String, String> allRequestParams)
+//            throws HttpRequestMethodNotSupportedException {
+//        if (allRequestParams != null && !allRequestParams.isEmpty())
+//            throw new HttpRequestMethodNotSupportedException("GET");
+//
+//        return getAllRecipes();
+//    }
 
-        return getAllRecipes();
+    @GetMapping
+    public CollectionModel<EntityModel<Recipe>> getRecipes(
+            @RequestParam(defaultValue = "0") Integer pageNo,
+            @RequestParam(defaultValue = "25") Integer pageSize,
+            @RequestParam(defaultValue = "id") String sort) {
+
+        List<EntityModel<Recipe>> recipes = recipeService.getRecipes(pageNo, pageSize, sort)
+                .stream().map(recipeModelAssembler::toModel).collect(Collectors.toList());
+
+        return CollectionModel.of(recipes, linkTo(methodOn(RecipeController.class).getAllRecipes()).withSelfRel());
     }
 
     @RequestMapping(params = "id", method = RequestMethod.GET)
@@ -80,7 +95,8 @@ public class RecipeController {
     }
 
     @PatchMapping(consumes = "application/json")
-    public ResponseEntity<?> updateRecipe(@RequestParam("id") @NotNull UUID id, @RequestBody @Valid RecipeRequest recipeRequest) {
+    public ResponseEntity<?> updateRecipe(@RequestParam("id") @NotNull UUID id, @RequestBody @Valid RecipeRequest
+            recipeRequest) {
         final Recipe recipe = recipeService.updateRecipe(recipeRequest, id);
         EntityModel<Recipe> entityModel = recipeModelAssembler.toModel(recipe);
         return ResponseEntity.ok(entityModel);
