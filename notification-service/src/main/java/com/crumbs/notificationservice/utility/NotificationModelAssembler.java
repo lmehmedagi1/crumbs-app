@@ -16,7 +16,7 @@ public class NotificationModelAssembler implements RepresentationModelAssembler<
     @Override
     public EntityModel<Notification> toModel(Notification notification) {
         return EntityModel.of(notification,
-                linkTo(methodOn(NotificationController.class).getNotificationById(notification.getId())).withSelfRel(),
-                linkTo(methodOn(NotificationController.class).getAllNotifications()).withRel("notifications"));
+                linkTo(methodOn(NotificationController.class).getNotificationById(notification.getId())).withSelfRel()//,
+                /*linkTo(methodOn(NotificationController.class).getAllNotifications()).withRel("notifications")*/);
     }
 }

@@ -50,21 +50,22 @@ public class NotificationController {
         this.notificationModelAssembler = notificationModelAssembler;
     }
 
-    public CollectionModel<EntityModel<Notification>> getAllNotifications() {
-        List<EntityModel<Notification>> notifications = notificationService.getAllNotifications()
+    public CollectionModel<EntityModel<Notification>> getAllNotifications(Integer pageNo, Integer pageSize, String sortBy) {
+        List<EntityModel<Notification>> notifications = notificationService.getAllNotifications(pageNo, pageSize, sortBy)
                 .stream()
                 .map(notificationModelAssembler::toModel)
                 .collect(Collectors.toList());
-        return CollectionModel.of(notifications, linkTo(methodOn(NotificationController.class).getAllNotifications()).withSelfRel());
+        return CollectionModel.of(notifications, linkTo(methodOn(NotificationController.class).getAllNotifications(pageNo, pageSize, sortBy)).withSelfRel());
     }
 
-    @GetMapping
-    public CollectionModel<EntityModel<Notification>> getNotifications(@RequestParam @Nullable Map<String, String> allRequestParams) throws HttpRequestMethodNotSupportedException {
-        if (allRequestParams != null && !allRequestParams.isEmpty())
-            throw new HttpRequestMethodNotSupportedException("GET");
+//    @GetMapping
+//    public CollectionModel<EntityModel<Notification>> getNotifications(@RequestParam @Nullable Map<String, String> allRequestParams) throws HttpRequestMethodNotSupportedException {
+//        if (allRequestParams != null && !allRequestParams.isEmpty())
+//            throw new HttpRequestMethodNotSupportedException("GET");
+//
+//        return getAllNotifications();
+//    }
 
-        return getAllNotifications();
-    }
 
     @RequestMapping(params = "id", method = RequestMethod.GET)
     public EntityModel<Notification> getNotificationById(@RequestParam("id") @NotNull UUID id) {
@@ -72,12 +73,15 @@ public class NotificationController {
     }
 
     @RequestMapping(params = "userId", method = RequestMethod.GET)
-    public CollectionModel<EntityModel<Notification>> getNotificationsOfUser(@RequestParam("userId") @NotNull UUID userId) {
-        List<EntityModel<Notification>> reviews = notificationService.getNotificationsOfUser(userId)
+    public CollectionModel<EntityModel<Notification>> getNotificationsOfUser(@RequestParam("userId") @NotNull UUID userId,
+                                                                             @RequestParam(defaultValue = "0") Integer pageNo,
+                                                                             @RequestParam(defaultValue = "3") Integer pageSize,
+                                                                             @RequestParam(defaultValue = "createdAt") String sortBy ) {
+        List<EntityModel<Notification>> reviews = notificationService.getNotificationsOfUser(userId, pageNo, pageSize, sortBy)
                 .stream()
                 .map(notificationModelAssembler::toModel)
                 .collect(Collectors.toList());
-        return CollectionModel.of(reviews, linkTo(methodOn(NotificationController.class).getAllNotifications()).withSelfRel());
+        return CollectionModel.of(reviews, linkTo(methodOn(NotificationController.class).getAllNotifications(pageNo, pageSize, sortBy)).withSelfRel());
     }
 
     @PostMapping
@@ -91,6 +95,11 @@ public class NotificationController {
     public ResponseEntity<?> updateNotification(@RequestParam("id") @NotNull UUID id, @RequestBody @Valid NotificationRequest notificationRequest) {
         final Notification updatedNotification = notificationService.updateNotification(notificationRequest, id);
         return ResponseEntity.ok().body(notificationModelAssembler.toModel(updatedNotification));
+    }
+
+    @RequestMapping(value = "/update")
+    public int updateNotificationsForUser(@RequestParam("userId") @NotNull UUID id) {
+        return notificationService.updateNotificationMarkAllAsRead(id);
     }
 
     /**

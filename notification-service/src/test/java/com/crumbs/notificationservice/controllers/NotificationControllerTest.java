@@ -28,16 +28,6 @@ class NotificationControllerTest {
     WebApplicationContext webApplicationContext;
 
     @Test
-    void testGetAllNotificationsSuccess() throws Exception {
-        mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-        String uri = "/notifications";
-
-        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(uri)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)).andReturn();
-        assertEquals(HttpStatus.OK.value(), mvcResult.getResponse().getStatus());
-    }
-
-    @Test
     void testGetNotificationValidId() throws Exception {
         mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
 
@@ -47,6 +37,18 @@ class NotificationControllerTest {
 
         assertEquals(HttpStatus.OK.value(), mvcResult.getResponse().getStatus());
     }
+
+    @Test
+    void testGetNotificationForUserId() throws Exception {
+        mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+
+        String id = "9c76205a-afa0-4699-9ec3-0ce0f10c515e";
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get("/notifications")
+                .param("userId", id)).andReturn();
+
+        assertEquals(HttpStatus.OK.value(), mvcResult.getResponse().getStatus());
+    }
+
 
     @Test
     void testGetNotificationInalidId() throws Exception {

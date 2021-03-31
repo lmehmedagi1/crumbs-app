@@ -5,8 +5,13 @@ import com.crumbs.notificationservice.models.Notification;
 import com.crumbs.notificationservice.repositories.NotificationRepository;
 import com.crumbs.notificationservice.requests.NotificationRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -24,7 +29,7 @@ public class NotificationService {
     }
 
     @Transactional(readOnly = true)
-    public List<Notification> getAllNotifications() {
+    public List<Notification> getAllNotifications( Integer pageNo, Integer pageSize, String sortBy) {
         return notificationRepository.findAll();
     }
 
@@ -34,8 +39,11 @@ public class NotificationService {
     }
 
     @Transactional(readOnly = true)
-    public List<Notification> getNotificationsOfUser(@NotNull UUID userId) {
-        return notificationRepository.findByUserId(userId);
+    public List<Notification> getNotificationsOfUser(@NotNull UUID userId, Integer pageNo, Integer pageSize, String sortBy) {
+        Sort sorting = Sort.by(sortBy).descending();
+        Pageable paging = PageRequest.of(pageNo, pageSize, sorting);
+        Slice<Notification> slicedProducts = notificationRepository.findByUserId(userId, paging);
+        return slicedProducts.getContent();
     }
 
     private void modifyNotification(NotificationRequest notificationRequest, Notification notification) {
@@ -57,6 +65,11 @@ public class NotificationService {
             modifyNotification(notificationRequest, notification);
             return notificationRepository.save(notification);
         }).orElseThrow(NotificationNotFoundException::new);
+    }
+
+    @Transactional
+    public int updateNotificationMarkAllAsRead(@NotNull UUID userId) {
+        return notificationRepository.markAllAsRead(userId);
     }
 
     @Transactional
