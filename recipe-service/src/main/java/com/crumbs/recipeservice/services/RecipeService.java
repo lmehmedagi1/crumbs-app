@@ -6,6 +6,10 @@ import com.crumbs.recipeservice.repositories.RecipeRepository;
 import com.crumbs.recipeservice.requests.RecipeRequest;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -29,6 +33,13 @@ public class RecipeService {
     @Transactional(readOnly = true)
     public List<Recipe> getAllRecipes() {
         return recipeRepository.findAll();
+    }
+
+    @Transactional(readOnly = true)
+    public List<Recipe> getRecipes(Integer pageNo, Integer pageSize, String sort) {
+        Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sort).descending());
+        Slice<Recipe> slicedProducts = recipeRepository.findAll(paging);
+        return slicedProducts.getContent();
     }
 
     @Transactional(readOnly = true)
