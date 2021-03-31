@@ -1,21 +1,10 @@
 server:
   port: 8084
-  error:
-    include-message: always
-    whitelabel:
-      enabled: false
 spring:
-  jpa:
-    hibernate:
-      ddl-auto: validate
-  mvc:
-    throw-exception-if-no-handler-found: true
-  jackson:
-    deserialization:
-      FAIL_ON_UNKNOWN_PROPERTIES: true
-  datasource:
-    url: jdbc:postgresql://ec2-54-155-35-88.eu-west-1.compute.amazonaws.com:5432/d3biarmg7cj1si
-    username: svgipnnzkcfnyn
-    password: 413e0de4c3076a57c675c7eae5e9e4914083fadf8e6072ea3c10d5d3b7938131
-    initialization-mode: always
-    type: com.zaxxer.hikari.HikariDataSource
+  application:
+    name: notification-service
+  config:
+    import: optional:configserver:https://crumbs-config-server.herokuapp.com
+  cloud:
+    config:
+      uri: https://crumbs-config-server.herokuapp.com
