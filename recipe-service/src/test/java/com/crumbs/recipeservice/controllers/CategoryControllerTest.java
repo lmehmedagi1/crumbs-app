@@ -15,6 +15,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.util.UUID;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @WebAppConfiguration
@@ -43,7 +45,7 @@ class CategoryControllerTest {
     void testGetCategoryByIdSuccess() throws Exception {
         mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
         String id = "fb244361-88cb-14eb-8ecd-0242ac130003";
-        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get("/category")
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get("/categories")
                 .param("id", id)).andReturn();
 
         assertEquals(HttpStatus.OK.value(), mvcResult.getResponse().getStatus());
@@ -54,7 +56,7 @@ class CategoryControllerTest {
     void testGetCategoryByIdFailNotExist() throws Exception {
         mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
         String id = "fb244361-88cb-14eb-8ecd-0242ac130043";
-        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get("/category")
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get("/categories")
                 .param("id", id)).andReturn();
 
         assertEquals(HttpStatus.NOT_FOUND.value(), mvcResult.getResponse().getStatus());
@@ -63,21 +65,21 @@ class CategoryControllerTest {
     @Test
     void testCreateCategorySuccess() throws Exception {
         mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-        String uri = "/category/create";
+        String uri = "/categories";
         String inputJson = "{" +
-                "    \"name\": \"ImeKategorije\"" +
+                "\"name\": \"ImeKategorije\"" +
                 "}";
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post(uri)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(inputJson)).andReturn();
 
-        assertEquals(HttpStatus.OK.value(), mvcResult.getResponse().getStatus());
+        assertEquals(HttpStatus.CREATED.value(), mvcResult.getResponse().getStatus());
     }
 
     @Test
     void testCreateCategoryNullName() throws Exception {
         mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-        String uri = "/category/create";
+        String uri = "/categories";
         String inputJson = "{}";
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post(uri)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -89,14 +91,14 @@ class CategoryControllerTest {
     @Test
     void testUpdateCategoryInvalidId() throws Exception {
         mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-        String uri = "/category/update";
+        String uri = "/categories";
+
         String inputJson = "{" +
-                "    \"id\": \"fb244361-88cb-14eb-8ecd-0242ac130008\"," +
                 "    \"name\": \"CategoryName\"" +
                 "}";
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.patch(uri)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content(inputJson)).andReturn();
+                .param("id", "fb244361-88cb-14eb-8ecd-0242ac130007")
+                .contentType(MediaType.APPLICATION_JSON_VALUE).content(inputJson)).andReturn();
 
         assertEquals(HttpStatus.NOT_FOUND.value(), mvcResult.getResponse().getStatus());
     }
@@ -104,12 +106,12 @@ class CategoryControllerTest {
     @Test
     void testUpdateCategoryValidId() throws Exception {
         mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-        String uri = "/category/update";
+        String uri = "/categories";
         String inputJson = "{" +
-                "    \"id\": \"fb244361-88cb-14eb-8ecd-0242ac130003\"," +
                 "    \"name\": \"CategoryName\"" +
                 "}";
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.patch(uri)
+                .param("id", "fb244361-88cb-14eb-8ecd-0242ac130003")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(inputJson)).andReturn();
 
@@ -119,7 +121,7 @@ class CategoryControllerTest {
     @Test
     void testUpdateCategoryNullName() throws Exception {
         mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-        String uri = "/category/update";
+        String uri = "/categories";
         String inputJson = "{" +
                 "    \"id\": \"fb244361-88cb-14eb-8ecd-0242ac130003\"," +
                 "}";
@@ -135,7 +137,7 @@ class CategoryControllerTest {
         mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
 
         String id = "fb244361-88cb-14eb-8ecd-0242ac130008";
-        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.delete("/category/delete")
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.delete("/categories")
                 .param("id", id)).andReturn();
 
         assertEquals(HttpStatus.NOT_FOUND.value(), mvcResult.getResponse().getStatus());
@@ -146,9 +148,9 @@ class CategoryControllerTest {
         mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
 
         String id = "fb244361-88cb-14eb-8ecd-0242ac130003";
-        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.delete("/category/delete")
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.delete("/categories")
                 .param("id", id)).andReturn();
 
-        assertEquals(HttpStatus.OK.value(), mvcResult.getResponse().getStatus());
+        assertEquals(HttpStatus.NO_CONTENT.value(), mvcResult.getResponse().getStatus());
     }
 }

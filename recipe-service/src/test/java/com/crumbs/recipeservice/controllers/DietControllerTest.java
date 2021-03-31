@@ -43,18 +43,17 @@ class DietControllerTest {
     void testGetDietByIdSuccess() throws Exception {
         mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
         String id = "bb244361-88cb-14eb-8ecd-0242ac130003";
-        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get("/diet")
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get("/diets")
                 .param("id", id)).andReturn();
 
         assertEquals(HttpStatus.OK.value(), mvcResult.getResponse().getStatus());
     }
 
-
     @Test
     void testGetDietByIdFailNotExist() throws Exception {
         mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
         String id = "bb244361-88cb-14eb-8ecd-0242ac130007";
-        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get("/diet")
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get("/diets")
                 .param("id", id)).andReturn();
 
         assertEquals(HttpStatus.NOT_FOUND.value(), mvcResult.getResponse().getStatus());
@@ -63,64 +62,65 @@ class DietControllerTest {
     @Test
     void testCreateCategorySuccess() throws Exception {
         mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-        String uri = "/diet/create";
+        String uri = "/diets";
         String inputJson = "{" +
                 "    \"title\": \"Test title\"," +
                 "    \"description\": \"Test description\"," +
                 "    \"duration\": \"78\"," +
-                "    \"isPrivate\": \"false\"" +
+                "    \"is_private\": \"false\"" +
                 "}";
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post(uri)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(inputJson)).andReturn();
 
-        assertEquals(HttpStatus.OK.value(), mvcResult.getResponse().getStatus());
+        assertEquals(HttpStatus.CREATED.value(), mvcResult.getResponse().getStatus());
     }
 
     @Test
     void testCreateDietNullTitle() throws Exception {
         mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-        String uri = "/category/create";
+        String uri = "/category";
         String inputJson = "{" +
                 "    \"description\": \"Test description\"," +
                 "    \"duration\": \"78\"," +
-                "    \"isPrivate\": \"false\"" +
+                "    \"is_private\": \"false\"" +
                 "}";
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post(uri)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(inputJson)).andReturn();
 
-        assertEquals(HttpStatus.BAD_REQUEST.value(), mvcResult.getResponse().getStatus());
+        assertEquals(HttpStatus.NOT_FOUND.value(), mvcResult.getResponse().getStatus());
     }
 
     @Test
     void testCreateDietNullDescription() throws Exception {
         mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-        String uri = "/category/create";
+        String uri = "/category";
         String inputJson = "{" +
                 "    \"title\": \"Test title\"," +
                 "    \"duration\": \"78\"," +
-                "    \"isPrivate\": \"false\"" +
+                "    \"is_private\": \"false\"" +
                 "}";
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post(uri)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(inputJson)).andReturn();
 
-        assertEquals(HttpStatus.BAD_REQUEST.value(), mvcResult.getResponse().getStatus());
+        assertEquals(HttpStatus.NOT_FOUND.value(), mvcResult.getResponse().getStatus());
     }
 
     @Test
     void testUpdateDietInvalidId() throws Exception {
         mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-        String uri = "/diet/update";
+        String uri = "/diets";
         String inputJson = "{" +
-                "    \"id\": \"bb244361-88cb-14eb-8ecd-0242ac130007\"," +
                 "    \"title\": \"Test title\"," +
                 "    \"description\": \"Test description\"," +
                 "    \"duration\": \"78\"," +
-                "    \"isPrivate\": \"false\"" +
+                "    \"is_private\": \"false\"" +
                 "}";
+
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.patch(uri)
+                .param("id", "bb244361-88cb-14eb-8ecd-0242ac130007")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(inputJson)).andReturn();
 
@@ -130,32 +130,32 @@ class DietControllerTest {
     @Test
     void testUpdateDietValidId() throws Exception {
         mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-        String uri = "/diet/update";
+        String uri = "/diets";
         String inputJson = "{" +
-                "    \"id\": \"bb244361-88cb-14eb-8ecd-0242ac130003\"," +
                 "    \"title\": \"Test title11\"," +
                 "    \"description\": \"Test description\"," +
                 "    \"duration\": \"78\"," +
-                "    \"isPrivate\": \"false\"" +
+                "    \"is_private\": \"false\"" +
                 "}";
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.patch(uri)
+                .param("id", "bb244361-88cb-14eb-8ecd-0242ac130003")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(inputJson)).andReturn();
 
-        assertEquals(HttpStatus.OK.value(), mvcResult.getResponse().getStatus());
+        assertEquals(HttpStatus.CREATED.value(), mvcResult.getResponse().getStatus());
     }
 
     @Test
     void testUpdateDietNullTitle() throws Exception {
         mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-        String uri = "/diet/update";
+        String uri = "/diets";
         String inputJson = "{" +
-                "    \"id\": \"bb244361-88cb-14eb-8ecd-0242ac130003\"," +
                 "    \"description\": \"Test description\"," +
                 "    \"duration\": \"78\"," +
-                "    \"isPrivate\": \"false\"" +
+                "    \"is_private\": \"false\"" +
                 "}";
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.patch(uri)
+                .param("id", "bb244361-88cb-14eb-8ecd-0242ac130003")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(inputJson)).andReturn();
 
@@ -167,7 +167,7 @@ class DietControllerTest {
         mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
 
         String id = "bb244361-88cb-14eb-8ecd-0242ac130007";
-        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.delete("/diet/delete")
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.delete("/diets")
                 .param("id", id)).andReturn();
 
         assertEquals(HttpStatus.NOT_FOUND.value(), mvcResult.getResponse().getStatus());
@@ -178,9 +178,9 @@ class DietControllerTest {
         mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
 
         String id = "bb244361-88cb-14eb-8ecd-0242ac130003";
-        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.delete("/diet/delete")
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.delete("/diets")
                 .param("id", id)).andReturn();
 
-        assertEquals(HttpStatus.OK.value(), mvcResult.getResponse().getStatus());
+        assertEquals(HttpStatus.NO_CONTENT.value(), mvcResult.getResponse().getStatus());
     }
 }
