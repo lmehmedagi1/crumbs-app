@@ -1,29 +1,10 @@
 server:
   port: 8081
-  error:
-    include-message: always
-    include-stacktrace: never
-    whitelabel:
-      enabled: false
 spring:
   application:
     name: user-service
-  jpa:
-    hibernate:
-      ddl-auto: validate
-  mvc:
-    throw-exception-if-no-handler-found: true
-  jackson:
-    deserialization:
-      FAIL_ON_UNKNOWN_PROPERTIES: true
-  datasource:
-    url: jdbc:postgresql://ec2-54-155-226-153.eu-west-1.compute.amazonaws.com:5432/d75d4ailid467f
-    username: tykptcfbkuiaxb
-    password: bf9acf118d9ed1720f79bd30dde99b131dfd562dea86e934a93db201b833e1bc
-    initialization-mode: always
-    type: com.zaxxer.hikari.HikariDataSource
-application:
-  jwt:
-    secret-key: e94a08b7f23735dcc5a14af50ccb5ba1617d0c3f299c0b133cc1c7a3c2474342a54cb2179207868bcadb1ce812f9fc757bfcc243d153fe9740a345a1e167b6f0
-    token-expiration-after-days: 2
-    token-prefix: "Bearer "
+  config:
+    import: optional:configserver:https://crumbs-config-server.herokuapp.com
+  cloud:
+    config:
+      uri: https://crumbs-config-server.herokuapp.com
