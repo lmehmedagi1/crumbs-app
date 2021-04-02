@@ -2,9 +2,11 @@ package com.crumbs.recipeservice.controllers;
 
 import com.crumbs.recipeservice.models.Category;
 import com.crumbs.recipeservice.models.Recipe;
+import com.crumbs.recipeservice.projections.RecipeView;
 import com.crumbs.recipeservice.requests.RecipeRequest;
 import com.crumbs.recipeservice.services.RecipeService;
 import com.crumbs.recipeservice.utility.RecipeModelAssembler;
+import com.crumbs.recipeservice.utility.RecipeViewModelAssembler;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -44,11 +46,13 @@ public class RecipeController {
 
     private final RecipeService recipeService;
     private final RecipeModelAssembler recipeModelAssembler;
+    private final RecipeViewModelAssembler recipeViewModelAssembler;
 
     @Autowired
-    public RecipeController(RecipeService recipeService, RecipeModelAssembler recipeModelAssembler) {
+    public RecipeController(RecipeService recipeService, RecipeModelAssembler recipeModelAssembler, RecipeViewModelAssembler recipeViewModelAssembler) {
         this.recipeService = recipeService;
         this.recipeModelAssembler = recipeModelAssembler;
+        this.recipeViewModelAssembler = recipeViewModelAssembler;
     }
 
     public CollectionModel<EntityModel<Recipe>> getAllRecipes() {
@@ -81,6 +85,32 @@ public class RecipeController {
 
         return CollectionModel.of(recipes, linkTo(methodOn(RecipeController.class).getAllRecipes()).withSelfRel());
     }
+
+    @RequestMapping(params = "userId", method = RequestMethod.GET)
+    public CollectionModel<EntityModel<Recipe>> getRecipesForUser(@RequestParam("userId") @NotNull UUID userId,
+            @RequestParam(defaultValue = "0") Integer pageNo,
+            @RequestParam(defaultValue = "2") Integer pageSize,
+            @RequestParam(defaultValue = "id") String sort) {
+
+        List<EntityModel<Recipe>> recipes = recipeService.getRecipesForUser(userId, pageNo, pageSize, sort)
+                .stream().map(recipeModelAssembler::toModel).collect(Collectors.toList());
+
+        return CollectionModel.of(recipes);
+    }
+
+    @RequestMapping(params = "categoryId", method = RequestMethod.GET)
+    public CollectionModel<EntityModel<RecipeView>> getRecipesByCategory(@RequestParam("categoryId") @NotNull UUID userId,
+                                                                         @RequestParam(defaultValue = "0") Integer pageNo,
+                                                                         @RequestParam(defaultValue = "2") Integer pageSize,
+                                                                         @RequestParam(defaultValue = "id") String sort) {
+
+        List<EntityModel<RecipeView>> recipes = recipeService.getRecipesByCategoryPreview(userId, pageNo, pageSize, sort)
+                .stream().map(recipeViewModelAssembler::toModel).collect(Collectors.toList());
+
+        return CollectionModel.of(recipes);
+    }
+
+
 
     @RequestMapping(params = "id", method = RequestMethod.GET)
     public EntityModel<Recipe> getRecipe(@RequestParam("id") @NotNull UUID id) {

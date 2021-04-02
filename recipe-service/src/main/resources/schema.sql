@@ -10,6 +10,7 @@ DROP TABLE IF EXISTS diets;
 CREATE TABLE recipes
 (
     "id"          uuid,
+    "user_id"     uuid,
     "title"       TEXT NOT NULL,
     "description" TEXT,
     "method"      TEXT NOT NULL,

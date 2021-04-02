@@ -12,6 +12,9 @@ import javax.validation.constraints.Size;
 @AllArgsConstructor
 public class RecipeRequest {
 
+
+    private String user_id;
+
     @NotBlank
     @Size(min = 5, message = "Recipe title must be at least 5 characters long!")
     @Size(max = 50, message = "Recipe title exceeds allowed limit of 50 characters!")

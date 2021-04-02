@@ -2,6 +2,7 @@ package com.crumbs.recipeservice.services;
 
 import com.crumbs.recipeservice.exceptions.RecipeNotFoundException;
 import com.crumbs.recipeservice.models.Recipe;
+import com.crumbs.recipeservice.projections.RecipeView;
 import com.crumbs.recipeservice.repositories.RecipeRepository;
 import com.crumbs.recipeservice.requests.RecipeRequest;
 import lombok.NonNull;
@@ -16,6 +17,7 @@ import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -80,4 +82,17 @@ public class RecipeService {
 
         recipeRepository.deleteById(id);
     }
+
+    public  List<Recipe> getRecipesForUser(UUID userId, Integer pageNo, Integer pageSize, String sort) {
+        Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sort).descending());
+        Slice<Recipe> slicedProducts = recipeRepository.findByUserId(userId, paging);
+        return slicedProducts.getContent();
+    }
+
+    public  List<RecipeView> getRecipesByCategoryPreview(UUID userId, Integer pageNo, Integer pageSize, String sort) {
+        Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sort).descending());
+        Slice<RecipeView> slicedProducts = recipeRepository.findByCategories_Id(userId, paging);
+        return slicedProducts.getContent();
+    }
+
 }

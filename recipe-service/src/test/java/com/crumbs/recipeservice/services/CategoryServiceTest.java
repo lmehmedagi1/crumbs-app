@@ -65,4 +65,6 @@ class CategoryServiceTest {
         assertThrows(CategoryNotFoundException.class,
                 () -> categoryService.getCategory(UUID.fromString("fb244361-88cb-14eb-8ecd-0242ac130003")));
     }
+
+    */
 }

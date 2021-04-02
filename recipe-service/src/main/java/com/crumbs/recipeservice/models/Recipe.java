@@ -27,6 +27,9 @@ public class Recipe {
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     private UUID id;
 
+    @Column(name = "user_id")
+    private UUID userId;
+
     @NotBlank
     @Size(min = 5, message = "Recipe title must be at least 5 characters long!")
     @Size(max = 50, message = "Recipe title exceeds allowed limit of 50 characters!")
@@ -66,6 +69,6 @@ public class Recipe {
     private Set<Ingredient> ingredients;
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "recipe")
+    @OneToMany(mappedBy = "recipe", fetch = FetchType.EAGER)
     private List<Image> images;
 }
