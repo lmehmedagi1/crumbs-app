@@ -16,11 +16,11 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @Transactional
 class RecipeServiceTest {
-/*
     @Autowired
     private RecipeService recipeService;
 
-    //fb244360-88cb-11eb-8dcd-0242ac130003
+    //fb244360-88cb-11eb-8dcd-0242ac130003  - recipe id
+    //d913320a-baf1-43e0-b8b7-25f748e574ee  - user id
     @Test
     void testGetRecipeIncorrectId() {
         assertThrows(RecipeNotFoundException.class, () -> recipeService.getRecipe(UUID.fromString("fb244360-88cb-11eb-8dcd-0242ac130005")));
@@ -50,7 +50,7 @@ class RecipeServiceTest {
     @Test
     void testCreateRecipeSuccess() {
         String method = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.";
-        final RecipeRequest recipeRequest = new RecipeRequest("Lazanje", "Sir i Meso", method);
+        final RecipeRequest recipeRequest = new RecipeRequest("d913320a-baf1-43e0-b8b7-25f748e574ee", "Lazanje", "Sir i Meso", method);
         final Recipe recipe = recipeService.saveRecipe(recipeRequest);
         assertAll(
                 () -> assertEquals("Lazanje", recipe.getTitle()),
@@ -60,15 +60,14 @@ class RecipeServiceTest {
 
     @Test
     void testCreateRecipeShortMethod() {
-        final RecipeRequest recipeRequest = new RecipeRequest("Lazanje", "Sir i Meso", "MMMMM");
+        final RecipeRequest recipeRequest = new RecipeRequest("d913320a-baf1-43e0-b8b7-25f748e574ee", "Lazanje", "Sir i Meso", "MMMMM");
         assertThrows(ConstraintViolationException.class, () -> recipeService.saveRecipe(recipeRequest));
     }
-
 
     @Test
     void testUpdateRecipeSuccess() {
         String method = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.";
-        final RecipeRequest recipeRequest = new RecipeRequest("Lazanje nakon apdejta", "Sir", method);
+        final RecipeRequest recipeRequest = new RecipeRequest("d913320a-baf1-43e0-b8b7-25f748e574ee", "Lazanje nakon apdejta", "Sir", method);
         final Recipe recipe = recipeService.updateRecipe(recipeRequest, UUID.fromString("fb244360-88cb-11eb-8dcd-0242ac130003"));
         assertAll(
                 () -> assertEquals("Lazanje nakon apdejta", recipe.getTitle()),
@@ -81,5 +80,4 @@ class RecipeServiceTest {
         recipeService.deleteRecipe(UUID.fromString("fb244360-88cb-11eb-8dcd-0242ac130003"));
         assertThrows(RecipeNotFoundException.class, () -> recipeService.getRecipe(UUID.fromString("fb244360-88cb-11eb-8dcd-0242ac130003")));
     }
-    */
 }

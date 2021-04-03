@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "5399b26a-1c68-4cd7-b5b8-96a9d255da53",
+		"_postman_id": "079f2c50-788a-47b0-8e10-a91339e8e55e",
 		"name": "CRUMBS-APP",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -9,106 +9,235 @@
 			"name": "USER-SERVICE",
 			"item": [
 				{
-					"name": "/account/login",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"username\": \"lmehmedagi\",\r\n    \"password\": \"Passw!\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
+					"name": "user-details",
+					"item": [
+						{
+							"name": "/profile?id=",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8081/profile?id=d913320a-baf1-43e0-b8b7-25f748e574ee",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8081",
+									"path": [
+										"profile"
+									],
+									"query": [
+										{
+											"key": "id",
+											"value": "d913320a-baf1-43e0-b8b7-25f748e574ee"
+										}
+									]
 								}
-							}
+							},
+							"response": []
 						},
-						"url": {
-							"raw": "localhost:8081/account/login",
-							"host": [
-								"localhost"
-							],
-							"port": "8081",
-							"path": [
-								"account",
-								"login"
-							]
+						{
+							"name": "/profile",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"firstName\": \"Medo\",\r\n  \"lastName\": \"Medici\",\r\n  \"gender\": \"female\",\r\n  \"phoneNumber\": \"123456789\",\r\n  \"avatar\": \"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8081/profile?id=d913320a-baf1-43e0-b8b7-25f748e574ee",
+									"host": [
+										"localhost"
+									],
+									"port": "8081",
+									"path": [
+										"profile"
+									],
+									"query": [
+										{
+											"key": "id",
+											"value": "d913320a-baf1-43e0-b8b7-25f748e574ee"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "PARTIAL /profile?id=",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json-patch+json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "[\r\n    {\r\n        \"op\": \"replace\",\r\n        \"path\": \"/gender\",\r\n        \"value\": \"male\"\r\n    }\r\n]",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8081/profile?id=d913320a-baf1-43e0-b8b7-25f748e574ee",
+									"host": [
+										"localhost"
+									],
+									"port": "8081",
+									"path": [
+										"profile"
+									],
+									"query": [
+										{
+											"key": "id",
+											"value": "d913320a-baf1-43e0-b8b7-25f748e574ee"
+										}
+									]
+								}
+							},
+							"response": []
 						}
-					},
-					"response": []
+					]
 				},
 				{
-					"name": "/account/register",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n  \"email\": \"novi@gmail.com\",\r\n  \"first_name\": \"Novo\",\r\n  \"gender\": \"female\",\r\n  \"last_name\": \"Novic\",\r\n  \"password\": \"Password123!\",\r\n  \"phone_number\": \"0603189774\",\r\n  \"username\": \"lmehmedagi\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
+					"name": "user",
+					"item": [
+						{
+							"name": "/account/register",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"email\": \"novi@gmail.com\",\r\n  \"first_name\": \"Novo\",\r\n  \"gender\": \"female\",\r\n  \"last_name\": \"Novic\",\r\n  \"password\": \"Password123!\",\r\n  \"phone_number\": \"0603189774\",\r\n  \"username\": \"lmehmedagi\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8081/account/register",
+									"host": [
+										"localhost"
+									],
+									"port": "8081",
+									"path": [
+										"account",
+										"register"
+									]
 								}
-							}
+							},
+							"response": []
 						},
-						"url": {
-							"raw": "localhost:8081/account/register",
-							"host": [
-								"localhost"
-							],
-							"port": "8081",
-							"path": [
-								"account",
-								"register"
-							]
+						{
+							"name": "/account/login",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\": \"lmehmedagi\",\r\n    \"password\": \"Passw!\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8081/account/login",
+									"host": [
+										"localhost"
+									],
+									"port": "8081",
+									"path": [
+										"account",
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/account?id=",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJoZWhlbG9sbyIsImlhdCI6MTYxNjg3MDc3MywiZXhwIjoxNjE2OTY4ODAwfQ.lwy2oimoQbJndk4gCQPnU21oXlFgmH4t-kiCJjmlNeD2Vbt1uQgvV_nDWPU5gnGkIuhySf6msGtVk50-Ylqo_g",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8081/profile?id=d913320a-baf1-43e0-b8b7-25f748e574ee",
+									"host": [
+										"localhost"
+									],
+									"port": "8081",
+									"path": [
+										"profile"
+									],
+									"query": [
+										{
+											"key": "id",
+											"value": "d913320a-baf1-43e0-b8b7-25f748e574ee"
+										}
+									]
+								}
+							},
+							"response": []
 						}
-					},
-					"response": []
-				},
-				{
-					"name": "/account?id=",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJoZWhlbG9sbyIsImlhdCI6MTYxNjg3MDc3MywiZXhwIjoxNjE2OTY4ODAwfQ.lwy2oimoQbJndk4gCQPnU21oXlFgmH4t-kiCJjmlNeD2Vbt1uQgvV_nDWPU5gnGkIuhySf6msGtVk50-Ylqo_g",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "localhost:8081/account?username=amandal",
-							"host": [
-								"localhost"
-							],
-							"port": "8081",
-							"path": [
-								"account"
-							],
-							"query": [
-								{
-									"key": "username",
-									"value": "amandal"
-								}
-							]
-						}
-					},
-					"response": []
+					]
 				}
 			]
 		},
