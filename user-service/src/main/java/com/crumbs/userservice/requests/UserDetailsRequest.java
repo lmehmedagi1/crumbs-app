@@ -31,9 +31,5 @@ public class UserDetailsRequest {
     @Pattern(regexp = "^[0-9]+$", message = "Invalid phone number format!")
     private String phoneNumber;
 
-    @NotNull
-    private String userId;
-
     private byte[] avatar;
-
 }

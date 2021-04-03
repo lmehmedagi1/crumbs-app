@@ -1,11 +1,9 @@
 package com.crumbs.userservice.services;
 
 import com.crumbs.userservice.exceptions.UserNotFoundException;
-import com.crumbs.userservice.models.User;
 import com.crumbs.userservice.models.UserDetails;
 import com.crumbs.userservice.repositories.UserDetailsRepository;
 import com.crumbs.userservice.requests.UserDetailsRequest;
-import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,26 +28,22 @@ public class UserDetailsService {
 
     @Transactional(readOnly = true)
     public UserDetails getUserDetails(@NotNull UUID id) {
-        UserDetails userDetails = userDetailsRepository.findById(id).orElseThrow(UserNotFoundException::new);
-        User user = userService.getUserById(id);
-        userDetails.setUser(user);
-        user.setUserDetails(userDetails);
-        return userDetails;
+        return userDetailsRepository.findById(id).orElseThrow(UserNotFoundException::new);
     }
 
-    private void modifyUserDetails(UserDetailsRequest userDetailsRequest, UserDetails userDetails) {
+    private void modifyUserDetails(UserDetailsRequest userDetailsRequest, UserDetails userDetails, UUID id) {
         userDetails.setFirstName(userDetailsRequest.getFirstName());
         userDetails.setLastName(userDetailsRequest.getLastName());
         userDetails.setGender(userDetailsRequest.getGender());
         userDetails.setPhoneNumber(userDetailsRequest.getPhoneNumber());
         userDetails.setAvatar(userDetailsRequest.getAvatar());
-        userDetails.setUser(userService.getUserById(UUID.fromString(userDetailsRequest.getUserId())));
+        userDetails.setUser(userService.getUserById(id));
     }
 
     @Transactional
     public UserDetails updateUserDetails(@NotNull @Valid UserDetailsRequest userDetailsRequest, @NotNull UUID id) {
         return userDetailsRepository.findById(id).map(userDetails -> {
-            modifyUserDetails(userDetailsRequest, userDetails);
+            modifyUserDetails(userDetailsRequest, userDetails, id);
             return userDetailsRepository.save(userDetails);
         }).orElseThrow(UserNotFoundException::new);
     }
