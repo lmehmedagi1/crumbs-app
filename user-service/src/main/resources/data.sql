@@ -5,7 +5,7 @@ DO
 DECLARE
     lela_id UUID := uuid_generate_v4();
     manda_id UUID := uuid_generate_v4();
-    medo_id UUID := uuid_generate_v4();
+    medo_id UUID := ''d913320a-baf1-43e0-b8b7-25f748e574ee'';
     aki_id UUID := uuid_generate_v4();
 BEGIN
 INSERT INTO users

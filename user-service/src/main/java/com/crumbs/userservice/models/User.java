@@ -46,7 +46,7 @@ public class User {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn
     @NotNull
-    private UserProfile userProfile;
+    private UserDetails userDetails;
 
     @JsonIgnore
     @ManyToMany
