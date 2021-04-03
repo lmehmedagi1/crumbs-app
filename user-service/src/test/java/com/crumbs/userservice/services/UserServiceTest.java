@@ -69,8 +69,8 @@ class UserServiceTest {
         final User user = userService.getUserByCredentials("lmehmedagi", "Password123");
         assertAll(
                 () -> assertEquals("lmehmedagi1@etf.unsa.ba", user.getEmail()),
-                () -> assertEquals("Lejla", user.getUserProfile().getFirstName()),
-                () -> assertEquals("Mehmedagic", user.getUserProfile().getLastName()));
+                () -> assertEquals("Lejla", user.getUserDetails().getFirstName()),
+                () -> assertEquals("Mehmedagic", user.getUserDetails().getLastName()));
     }
 
     @Test
@@ -95,8 +95,8 @@ class UserServiceTest {
         final User user = userService.getUserByUsername("lmehmedagi");
         assertAll(
                 () -> assertEquals("lmehmedagi1@etf.unsa.ba", user.getEmail()),
-                () -> assertEquals("Lejla", user.getUserProfile().getFirstName()),
-                () -> assertEquals("Mehmedagic", user.getUserProfile().getLastName()));
+                () -> assertEquals("Lejla", user.getUserDetails().getFirstName()),
+                () -> assertEquals("Mehmedagic", user.getUserDetails().getLastName()));
     }
 
     @Test
@@ -113,8 +113,8 @@ class UserServiceTest {
 
         assertAll(
                 () -> assertEquals("lejlameh@etf.unsa.ba", user.getEmail()),
-                () -> assertEquals("lejla", user.getUserProfile().getFirstName()),
-                () -> assertEquals("mehmedagic", user.getUserProfile().getLastName()));
+                () -> assertEquals("lejla", user.getUserDetails().getFirstName()),
+                () -> assertEquals("mehmedagic", user.getUserDetails().getLastName()));
     }
 
     @Test
