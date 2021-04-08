@@ -28,8 +28,7 @@ import org.springframework.web.servlet.HandlerExceptionResolver;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     public static final String[] PUBLIC_ROUTES = {
-            "/account/login",
-            "/account/register",
+            "/account/**",
             "/swagger-ui/",
             "/swagger-ui/**",
             "/v2/api-docs",
@@ -57,15 +56,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable()
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .addFilter(new JwtAuthenticationFilter(authenticationManager(), jwtConfigAndUtil, handlerExceptionResolver))
-                .addFilterAfter(new JwtTokenVerifyFilter(customUserDetailsService, jwtConfigAndUtil, handlerExceptionResolver), JwtAuthenticationFilter.class)
-                .authorizeRequests()
-                .antMatchers(PUBLIC_ROUTES).permitAll().anyRequest()
-                .authenticated();
+        http.csrf().disable().authorizeRequests().anyRequest().permitAll();
+
+//        http.csrf().disable()
+//                .sessionManagement()
+//                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+//                .and()
+//                .addFilter(new JwtAuthenticationFilter(authenticationManager(), jwtConfigAndUtil, handlerExceptionResolver))
+//                .addFilterAfter(new JwtTokenVerifyFilter(customUserDetailsService, jwtConfigAndUtil, handlerExceptionResolver), JwtAuthenticationFilter.class)
+//                .authorizeRequests()
+//                .antMatchers(PUBLIC_ROUTES).permitAll().anyRequest()
+//                .authenticated();
     }
 
     @Override

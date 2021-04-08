@@ -46,8 +46,9 @@ public class UserController {
 
     @RequestMapping(params = "id", method = RequestMethod.GET)
     public EntityModel<User> getUserById(@RequestParam("id") @NotNull UUID id) {
-
-        return userModelAssembler.toModel(userService.getUserById(id));
+        EntityModel<User> user = userModelAssembler.toModel(userService.getUserById(id));
+        System.out.println("LInks: " + user.getLinks());
+        return user;
     }
 
     @RequestMapping(params = "username", method = RequestMethod.GET)
