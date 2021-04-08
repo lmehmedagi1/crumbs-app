@@ -1,5 +1,6 @@
 package com.crumbs.recipeservice.controllers;
 
+import com.crumbs.recipeservice.exceptions.RecipeNotFoundException;
 import com.crumbs.recipeservice.exceptions.UserNotFoundException;
 import com.crumbs.recipeservice.models.Recipe;
 import com.crumbs.recipeservice.models.User;
@@ -129,41 +130,34 @@ public class RecipeController {
         else {
             Recipe recipe = recipeService.getRecipe(id);
             EntityModel<User> author = getRecipeAuthor(recipe.getUserId());
-            System.out.println("Linkovi: " + author.getLinks());
-            // Double rating = getRecipeRating(recipe.getId());
-
-            return EntityModel.of(new RecipeWithDetails(recipeModelAssembler.toModel(recipe), author, 3.14));
+            return EntityModel.of(new RecipeWithDetails(recipeModelAssembler.toModel(recipe), author, getRecipeRating(recipe.getId())));
         }
     }
 
-    private EntityModel<User> getRecipeAuthor(UUID userId) {
+    private EntityModel<User> getRecipeAuthor(UUID authorId) {
         return webClientBuilder.baseUrl("http://user-service").build().get()
                 .uri(uriBuilder -> uriBuilder
                         .path("/account")
-                        .queryParam("id", userId)
+                        .queryParam("id", authorId)
                         .build())
                 .accept(MediaTypes.HAL_JSON)
                 .retrieve()
-                .onStatus(HttpStatus::is4xxClientError, response -> {
-                    return Mono.error(new UserNotFoundException());
-                })
+                .onStatus(HttpStatus::is4xxClientError, response -> Mono.error(new UserNotFoundException()))
                 .bodyToMono(new TypeReferences.EntityModelType<User>())
                 .block();
     }
 
-    /*    private Double getRecipeRating(UUID recipeId) {
+    private Double getRecipeRating(UUID recipeId) {
         return webClientBuilder.baseUrl("http://review-service").build().get()
                 .uri(uriBuilder -> uriBuilder
-                        .path("/account")
-                        .queryParam("id", recipeId)
+                        .path("/reviews/rating")
+                        .queryParam("recipeId", recipeId)
                         .build())
                 .retrieve()
-                .onStatus(HttpStatus::is4xxClientError, response -> {
-                    return Mono.error(new UserNotFoundException());
-                })
+                .onStatus(HttpStatus::is4xxClientError, response -> Mono.error(new RecipeNotFoundException()))
                 .bodyToMono(Double.class)
                 .block();
-    } */
+    }
 
     @PostMapping
     public ResponseEntity<?> createRecipe(@RequestBody @Valid RecipeRequest recipeRequest) {
