@@ -151,8 +151,7 @@ public class RecipeController {
                 .block();
     }
 
-    /*
-    private Double getRecipeRating(UUID recipeId) {
+    /*    private Double getRecipeRating(UUID recipeId) {
         return webClientBuilder.baseUrl("http://review-service").build().get()
                 .uri(uriBuilder -> uriBuilder
                         .path("/account")
@@ -168,6 +167,9 @@ public class RecipeController {
 
     @PostMapping
     public ResponseEntity<?> createRecipe(@RequestBody @Valid RecipeRequest recipeRequest) {
+
+        checkIfUserExists(UUID.fromString(recipeRequest.getUser_id()));
+
         final Recipe recipe = recipeService.saveRecipe(recipeRequest);
         EntityModel<Recipe> entityModel = recipeModelAssembler.toModel(recipe);
         return ResponseEntity.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(entityModel);
@@ -176,6 +178,9 @@ public class RecipeController {
     @PatchMapping(consumes = "application/json")
     public ResponseEntity<?> updateRecipe(@RequestParam("id") @NotNull UUID id, @RequestBody @Valid RecipeRequest
             recipeRequest) {
+
+        checkIfUserExists(UUID.fromString(recipeRequest.getUser_id()));
+
         final Recipe recipe = recipeService.updateRecipe(recipeRequest, id);
         EntityModel<Recipe> entityModel = recipeModelAssembler.toModel(recipe);
         return ResponseEntity.ok(entityModel);
@@ -202,5 +207,16 @@ public class RecipeController {
     public ResponseEntity<?> deleteIngredient(@RequestParam("id") @NotNull UUID id) {
         recipeService.deleteRecipe(id);
         return ResponseEntity.noContent().build();
+    }
+
+    private User checkIfUserExists(UUID userId) {
+        return webClientBuilder.baseUrl("http://user-service").build().get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/account")
+                        .queryParam("id", userId)
+                        .build())
+                .retrieve()
+                .onStatus(HttpStatus::is4xxClientError, response -> Mono.error(new UserNotFoundException()))
+                .bodyToMono(User.class).block();
     }
 }

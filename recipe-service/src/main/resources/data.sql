@@ -53,6 +53,7 @@ INSERT INTO categories VALUES (veget_cat, ''Vegetarijanska'');
 INSERT INTO ingredients VALUES (slag_ing, ''Šlag'');
 INSERT INTO ingredients VALUES (visnja_ing, ''Visnja'');
 INSERT INTO ingredients VALUES (sir_ing, ''Sir'');
+INSERT INTO ingredients VALUES (jaja_ing, ''Jaja'');
 
 INSERT INTO recipe_categories VALUES (sampita_id, kolac_cat);
 INSERT INTO recipe_categories VALUES (monchay_id, kolac_cat);

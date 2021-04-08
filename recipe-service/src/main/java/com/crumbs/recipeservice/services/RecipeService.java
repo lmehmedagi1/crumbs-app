@@ -53,6 +53,7 @@ public class RecipeService {
         recipe.setTitle(recipeRequest.getTitle());
         recipe.setDescription(recipeRequest.getDescription());
         recipe.setMethod(recipeRequest.getMethod());
+        recipe.setUserId(UUID.fromString(recipeRequest.getUser_id()));
     }
 
     @Transactional
