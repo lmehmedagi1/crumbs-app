@@ -100,6 +100,28 @@ public class ReviewEntityExceptionHandler extends ResponseEntityExceptionHandler
     }
 
     /**
+     * Handles UserNotFoundException.
+     * Created to encapsulate errors with more detail than javax.persistence.EntityNotFoundException.
+     */
+    @ExceptionHandler(UserNotFoundException.class)
+    protected ResponseEntity<Object> handleEntityNotFound(
+            UserNotFoundException ex, WebRequest request) {
+        ApiError apiError = new ApiError(NOT_FOUND, ex.getMessage(), ex.getAltMessage(), getRequestUri(request));
+        return new ResponseEntity<>(apiError, NOT_FOUND);
+    }
+
+    /**
+     * Handles RecipeNotFoundException.
+     * Created to encapsulate errors with more detail than javax.persistence.EntityNotFoundException.
+     */
+    @ExceptionHandler(RecipeNotFoundException.class)
+    protected ResponseEntity<Object> handleRecipeNotFound(
+            RecipeNotFoundException ex, WebRequest request) {
+        ApiError apiError = new ApiError(NOT_FOUND, ex.getMessage(), "Recipe with specified parameters does not exist!", getRequestUri(request));
+        return new ResponseEntity<>(apiError, NOT_FOUND);
+    }
+
+    /**
      * Handles javax.validation.ConstraintViolationException.
      * Triggered when an object fails @Validated validation.
      */

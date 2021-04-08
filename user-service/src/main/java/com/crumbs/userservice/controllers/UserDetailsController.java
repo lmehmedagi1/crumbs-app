@@ -17,6 +17,7 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -35,14 +36,17 @@ public class UserDetailsController {
     private final UserDetailsService userDetailsService;
     private final UserDetailsModelAssembler userDetailsModelAssembler;
     private final UserService userService;
+    private final WebClient.Builder webClientBuilder;
 
     @Autowired
     public UserDetailsController(UserDetailsService userDetailsService,
                                  UserDetailsModelAssembler userDetailsModelAssembler,
-                                 UserService userService) {
+                                 UserService userService,
+                                 WebClient.Builder webClientBuilder) {
         this.userDetailsService = userDetailsService;
         this.userDetailsModelAssembler = userDetailsModelAssembler;
         this.userService = userService;
+        this.webClientBuilder = webClientBuilder;
     }
 
     @RequestMapping(params = "id", method = RequestMethod.GET)

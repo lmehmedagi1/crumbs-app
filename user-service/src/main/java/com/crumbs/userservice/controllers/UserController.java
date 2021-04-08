@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
@@ -28,11 +29,13 @@ public class UserController {
 
     private final UserService userService;
     private final UserModelAssembler userModelAssembler;
+    private final WebClient.Builder webClientBuilder;
 
     @Autowired
-    public UserController(UserService userService, UserModelAssembler userModelAssembler) {
+    public UserController(UserService userService, UserModelAssembler userModelAssembler, WebClient.Builder webClientBuilder) {
         this.userService = userService;
         this.userModelAssembler = userModelAssembler;
+        this.webClientBuilder = webClientBuilder;
     }
 
     @PostMapping("/register")
@@ -43,6 +46,7 @@ public class UserController {
 
     @RequestMapping(params = "id", method = RequestMethod.GET)
     public EntityModel<User> getUserById(@RequestParam("id") @NotNull UUID id) {
+
         return userModelAssembler.toModel(userService.getUserById(id));
     }
 

@@ -8,3 +8,6 @@ spring:
   cloud:
     config:
       uri: https://crumbs-config-server.herokuapp.com
+eureka:
+  instance:
+    preferIpAddress: true

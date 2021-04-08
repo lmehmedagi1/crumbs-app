@@ -23,6 +23,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -47,12 +48,15 @@ public class RecipeController {
     private final RecipeService recipeService;
     private final RecipeModelAssembler recipeModelAssembler;
     private final RecipeViewModelAssembler recipeViewModelAssembler;
+    private final WebClient.Builder webClientBuilder;
 
     @Autowired
-    public RecipeController(RecipeService recipeService, RecipeModelAssembler recipeModelAssembler, RecipeViewModelAssembler recipeViewModelAssembler) {
+    public RecipeController(RecipeService recipeService, RecipeModelAssembler recipeModelAssembler,
+                            RecipeViewModelAssembler recipeViewModelAssembler, WebClient.Builder webClientBuilder) {
         this.recipeService = recipeService;
         this.recipeModelAssembler = recipeModelAssembler;
         this.recipeViewModelAssembler = recipeViewModelAssembler;
+        this.webClientBuilder = webClientBuilder;
     }
 
     public CollectionModel<EntityModel<Recipe>> getAllRecipes() {
