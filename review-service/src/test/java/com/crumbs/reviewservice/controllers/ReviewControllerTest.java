@@ -5,10 +5,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -18,14 +20,19 @@ import org.springframework.web.context.WebApplicationContext;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@WebAppConfiguration
+//@WebAppConfiguration
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@SpringBootTest(classes = {ReviewServiceApplication.class})
+@SpringBootTest(classes = {ReviewServiceApplication.class}, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
+@AutoConfigureWebTestClient
+//@WebFluxTest(MyControllerTest.class)
 class ReviewControllerTest {
 
     @Autowired
     WebApplicationContext webApplicationContext;
+
+    @Autowired
+    private WebTestClient webTestClient;
 
     private MockMvc mvc;
 
@@ -59,6 +66,27 @@ class ReviewControllerTest {
                 .param("id", id)).andReturn();
 
         assertEquals(HttpStatus.NOT_FOUND.value(), mvcResult.getResponse().getStatus());
+    }
+
+    @Test
+    void testGetReviewsByRecipeIdSuccess() throws Exception {
+        webTestClient
+                .get()
+                .uri(uriBuilder ->
+                        uriBuilder
+                                .path("/reviews")
+                                .queryParam("recipeId", "fb244360-88cb-11eb-8dcd-0242ac130003")
+                                .build())
+                .exchange()
+                .expectStatus()
+                .is2xxSuccessful();
+//                .expectHeader()
+//                .contentType(APPLICATION_JSON)
+//                .expectBody()
+//                .jsonPath("$.length()").isEqualTo(3)
+//                .jsonPath("$[0].id").isEqualTo(1)
+//                .jsonPath("$[0].name").isEqualTo("duke")
+//                .jsonPath("$[0].tags").isNotEmpty();
     }
 
     @Test
