@@ -25,6 +25,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 import javax.validation.Valid;
@@ -49,11 +50,13 @@ public class DietController {
 
     private final DietService dietService;
     private final DietModelAssembler dietModelAssembler;
+    private final WebClient.Builder webClientBuilder;
 
     @Autowired
-    public DietController(DietService dietService, DietModelAssembler dietModelAssembler) {
+    public DietController(DietService dietService, DietModelAssembler dietModelAssembler, WebClient.Builder webClientBuilder) {
         this.dietService = dietService;
         this.dietModelAssembler = dietModelAssembler;
+        this.webClientBuilder = webClientBuilder;
     }
 
     public CollectionModel<EntityModel<Diet>> getAllDiets() {
@@ -105,6 +108,8 @@ public class DietController {
 
     @PostMapping
     public ResponseEntity<?> createDiet(@RequestBody @Valid DietRequest dietRequest) {
+        checkIfUserExists(UUID.fromString(dietRequest.getUser_id()));
+
         final Diet diet = dietService.saveDiet(dietRequest);
         EntityModel<Diet> entityModel = dietModelAssembler.toModel(diet);
         return ResponseEntity.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(entityModel);
@@ -112,6 +117,8 @@ public class DietController {
 
     @PatchMapping(consumes = "application/json")
     public ResponseEntity<?> updateDiet(@RequestParam("id") @NotNull UUID id, @RequestBody @Valid DietRequest dietRequest) {
+        checkIfUserExists(UUID.fromString(dietRequest.getUser_id()));
+
         final Diet diet = dietService.updateDiet(dietRequest, id);
         EntityModel<Diet> entityModel = dietModelAssembler.toModel(diet);
         return ResponseEntity.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(entityModel);
@@ -138,5 +145,16 @@ public class DietController {
     public ResponseEntity<?> deleteDiet(@RequestParam("id") @NotNull UUID id) {
         dietService.deleteDiet(id);
         return ResponseEntity.noContent().build();
+    }
+
+    private User checkIfUserExists(UUID userId) {
+        return webClientBuilder.baseUrl("http://user-service").build().get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/account")
+                        .queryParam("id", userId)
+                        .build())
+                .retrieve()
+                .onStatus(HttpStatus::is4xxClientError, response -> Mono.error(new UserNotFoundException()))
+                .bodyToMono(User.class).block();
     }
 }
