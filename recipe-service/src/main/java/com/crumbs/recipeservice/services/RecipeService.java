@@ -92,8 +92,7 @@ public class RecipeService {
 
     public  List<RecipeView> getRecipesByCategoryPreview(UUID userId, Integer pageNo, Integer pageSize, String sort) {
         Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sort).descending());
-        Slice<RecipeView> slicedProducts = recipeRepository.findByCategories_Id(userId, paging);
+        Slice<RecipeView> slicedProducts = recipeRepository.findRecipesByCategory(userId, paging);
         return slicedProducts.getContent();
     }
-
 }

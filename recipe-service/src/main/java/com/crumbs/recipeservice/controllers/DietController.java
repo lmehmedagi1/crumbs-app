@@ -82,18 +82,20 @@ public class DietController {
         return dietModelAssembler.toModel(dietService.getDiet(id));
     }
 
-    @RequestMapping(params = {"id", "details"}, method = RequestMethod.GET)
-    public EntityModel<?> getDietWithDetails(@RequestParam("id") @NotNull UUID id, @RequestParam(value = "details", defaultValue = "false") @NotNull Boolean details) {
-        if (!details)
-            return getDiet(id);
-        else {
-            Diet diet = dietService.getDiet(id);
-            EntityModel<User> author = getDietAuthor(diet.get);
-            return EntityModel.of(new RecipeWithDetails(recipeModelAssembler.toModel(recipe), author, getRecipeRating(recipe.getId())));
-        }
-    }
+//    @RequestMapping(params = {"id", "details"}, method = RequestMethod.GET)
+//    public EntityModel<?> getDietWithDetails(@RequestParam("id") @NotNull UUID id, @RequestParam(value = "details", defaultValue = "false") @NotNull Boolean details) {
+//        if (!details)
+//            return getDiet(id);
+//        else {
+//            Diet diet = dietService.getDiet(id);
+//
+//            EntityModel<User> author = getAuthorIfExists(diet.getId());
+//            return EntityModel.of();
+//            //
+//        }
+//    }
 
-    private EntityModel<User> getRecipeAuthor(UUID authorId) {
+    private EntityModel<User> getAuthorIfExists(UUID authorId) {
         return webClientBuilder.baseUrl("http://user-service").build().get()
                 .uri(uriBuilder -> uriBuilder
                         .path("/account")
@@ -108,7 +110,7 @@ public class DietController {
 
     @PostMapping
     public ResponseEntity<?> createDiet(@RequestBody @Valid DietRequest dietRequest) {
-        checkIfUserExists(UUID.fromString(dietRequest.getUser_id()));
+        getAuthorIfExists(UUID.fromString(dietRequest.getUser_id()));
 
         final Diet diet = dietService.saveDiet(dietRequest);
         EntityModel<Diet> entityModel = dietModelAssembler.toModel(diet);
@@ -117,7 +119,7 @@ public class DietController {
 
     @PatchMapping(consumes = "application/json")
     public ResponseEntity<?> updateDiet(@RequestParam("id") @NotNull UUID id, @RequestBody @Valid DietRequest dietRequest) {
-        checkIfUserExists(UUID.fromString(dietRequest.getUser_id()));
+        getAuthorIfExists(UUID.fromString(dietRequest.getUser_id()));
 
         final Diet diet = dietService.updateDiet(dietRequest, id);
         EntityModel<Diet> entityModel = dietModelAssembler.toModel(diet);
@@ -145,16 +147,5 @@ public class DietController {
     public ResponseEntity<?> deleteDiet(@RequestParam("id") @NotNull UUID id) {
         dietService.deleteDiet(id);
         return ResponseEntity.noContent().build();
-    }
-
-    private User checkIfUserExists(UUID userId) {
-        return webClientBuilder.baseUrl("http://user-service").build().get()
-                .uri(uriBuilder -> uriBuilder
-                        .path("/account")
-                        .queryParam("id", userId)
-                        .build())
-                .retrieve()
-                .onStatus(HttpStatus::is4xxClientError, response -> Mono.error(new UserNotFoundException()))
-                .bodyToMono(User.class).block();
     }
 }

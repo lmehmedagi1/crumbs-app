@@ -5,6 +5,7 @@ import com.crumbs.recipeservice.exceptions.UserNotFoundException;
 import com.crumbs.recipeservice.models.Recipe;
 import com.crumbs.recipeservice.models.User;
 import com.crumbs.recipeservice.projections.RecipeView;
+import com.crumbs.recipeservice.projections.UserView;
 import com.crumbs.recipeservice.requests.RecipeRequest;
 import com.crumbs.recipeservice.responses.RecipeWithDetails;
 import com.crumbs.recipeservice.services.RecipeService;
@@ -110,10 +111,15 @@ public class RecipeController {
                                                                          @RequestParam(defaultValue = "2") Integer pageSize,
                                                                          @RequestParam(defaultValue = "id") String sort) {
 
-        List<EntityModel<RecipeView>> recipes = recipeService.getRecipesByCategoryPreview(userId, pageNo, pageSize, sort)
-                .stream().map(recipeViewModelAssembler::toModel).collect(Collectors.toList());
+        List<RecipeView> recipes = recipeService.getRecipesByCategoryPreview(userId, pageNo, pageSize, sort);
+        for (RecipeView recipe : recipes) {
+            UUID authorId = recipe.getAuthor().getUserId();
+            User user = checkIfUserExists(authorId);
+            recipe.setAuthor(new UserView(user.getId(), user.getUsername(), user.getUserDetails().getAvatar()));
+        }
 
-        return CollectionModel.of(recipes);
+        return CollectionModel.of(recipeService.getRecipesByCategoryPreview(userId, pageNo, pageSize, sort)
+                .stream().map(recipeViewModelAssembler::toModel).collect(Collectors.toList()));
     }
 
 
