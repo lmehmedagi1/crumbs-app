@@ -43,6 +43,10 @@ public class ReviewService {
         return reviewRepository.findByRecipeId(recipeId);
     }
 
+    @Transactional(readOnly = true)
+    public Double getRecipeRating(@NotNull UUID recipeId){
+        return reviewRepository.getAvgRatingOfRecipe(recipeId);
+    }
     private void modifyReview(ReviewRequest reviewRequest, Review review) {
         review.setUserId(UUID.fromString(reviewRequest.getUser_id()));
         review.setRecipeId(UUID.fromString(reviewRequest.getRecipe_id()));

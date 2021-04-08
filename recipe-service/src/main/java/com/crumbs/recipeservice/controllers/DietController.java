@@ -1,7 +1,11 @@
 package com.crumbs.recipeservice.controllers;
 
+import com.crumbs.recipeservice.exceptions.UserNotFoundException;
 import com.crumbs.recipeservice.models.Diet;
+import com.crumbs.recipeservice.models.Recipe;
+import com.crumbs.recipeservice.models.User;
 import com.crumbs.recipeservice.requests.DietRequest;
+import com.crumbs.recipeservice.responses.RecipeWithDetails;
 import com.crumbs.recipeservice.services.DietService;
 import com.crumbs.recipeservice.utility.DietModelAssembler;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -15,10 +19,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
+import org.springframework.hateoas.MediaTypes;
+import org.springframework.hateoas.server.core.TypeReferences;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Mono;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -70,6 +77,30 @@ public class DietController {
     @RequestMapping(params = "id", method = RequestMethod.GET)
     public EntityModel<Diet> getDiet(@RequestParam("id") @NotNull UUID id) {
         return dietModelAssembler.toModel(dietService.getDiet(id));
+    }
+
+    @RequestMapping(params = {"id", "details"}, method = RequestMethod.GET)
+    public EntityModel<?> getDietWithDetails(@RequestParam("id") @NotNull UUID id, @RequestParam(value = "details", defaultValue = "false") @NotNull Boolean details) {
+        if (!details)
+            return getDiet(id);
+        else {
+            Diet diet = dietService.getDiet(id);
+            EntityModel<User> author = getDietAuthor(diet.get);
+            return EntityModel.of(new RecipeWithDetails(recipeModelAssembler.toModel(recipe), author, getRecipeRating(recipe.getId())));
+        }
+    }
+
+    private EntityModel<User> getRecipeAuthor(UUID authorId) {
+        return webClientBuilder.baseUrl("http://user-service").build().get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/account")
+                        .queryParam("id", authorId)
+                        .build())
+                .accept(MediaTypes.HAL_JSON)
+                .retrieve()
+                .onStatus(HttpStatus::is4xxClientError, response -> Mono.error(new UserNotFoundException()))
+                .bodyToMono(new TypeReferences.EntityModelType<User>())
+                .block();
     }
 
     @PostMapping

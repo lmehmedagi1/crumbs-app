@@ -103,6 +103,11 @@ public class ReviewController {
         return CollectionModel.of(reviews, linkTo(methodOn(ReviewController.class).getAllReviews()).withSelfRel());
     }
 
+    @RequestMapping(value = "/rating", params = "recipeId", method = RequestMethod.GET)
+    public Double getRecipeRating(@RequestParam("recipeId") @NotNull UUID recipeId){
+        return reviewService.getRecipeRating(recipeId);
+    }
+
     @PostMapping
     public ResponseEntity<?> createReview(@RequestBody @Valid ReviewRequest reviewRequest,
                                           @RequestHeader("Authorization") String token) {

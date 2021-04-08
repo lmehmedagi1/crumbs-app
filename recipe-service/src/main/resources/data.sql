@@ -41,7 +41,7 @@ DECLARE
     aki_id UUID := ''fc98612b-c0c2-4792-b2ac-acb7dd6555c1'';
 BEGIN
 INSERT INTO recipes VALUES (sampita_id, lela_id, ''Šampita'', ''Najgori kolac u istoriji'', ''1. Kupite sampitu; 2. Bacite je'');
-INSERT INTO recipes VALUES (krempita_id, manda_id, ''Mon Chay'', ''Malo bolji od Šampite'', ''1. Kupite Krempitu; 2. Probajte malo; 3. Bacite je'');
+INSERT INTO recipes VALUES (krempita_id, manda_id, ''Krempita'', ''Malo bolji od Šampite'', ''1. Kupite Krempitu; 2. Probajte malo; 3. Bacite je'');
 INSERT INTO recipes VALUES (monchay_id, aki_id, ''Mon Chay'', ''Najjaci kolac u istoriji'', ''1. Kupite Mon Chay u Metropolisu; 2. Dajte Anelu'');
 INSERT INTO recipes VALUES (omlet_id, medo_id, ''Omlet s gljivama'', ''Energetican dorucak'', ''1. Kupite jaja; 2. Kupite gljive; 3. Ispecite; 4. Profit?'');
 
@@ -53,6 +53,7 @@ INSERT INTO categories VALUES (veget_cat, ''Vegetarijanska'');
 INSERT INTO ingredients VALUES (slag_ing, ''Šlag'');
 INSERT INTO ingredients VALUES (visnja_ing, ''Visnja'');
 INSERT INTO ingredients VALUES (sir_ing, ''Sir'');
+INSERT INTO ingredients VALUES (jaja_ing, ''Jaja'');
 
 INSERT INTO recipe_categories VALUES (sampita_id, kolac_cat);
 INSERT INTO recipe_categories VALUES (monchay_id, kolac_cat);
@@ -61,6 +62,7 @@ INSERT INTO recipe_categories VALUES (krempita_id, dorucak_cat);
 INSERT INTO recipe_categories VALUES (omlet_id, dorucak_cat);
 
 INSERT INTO recipe_ingredients VALUES (sampita_id, slag_ing);
+INSERT INTO recipe_ingredients VALUES (krempita_id, visnja_ing);
 INSERT INTO recipe_ingredients VALUES (monchay_id, sir_ing);
 INSERT INTO recipe_ingredients VALUES (monchay_id, visnja_ing);
 INSERT INTO recipe_ingredients VALUES (omlet_id, jaja_ing);
