@@ -3,10 +3,10 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 DO
 '
 DECLARE
-    lela_id UUID := uuid_generate_v4();
-    manda_id UUID := uuid_generate_v4();
+    lela_id UUID := ''3e8ec94c-3edf-49e0-b548-425088881f60'';
+    manda_id UUID := ''75a8f34b-2539-452a-9325-b432dbe3b995'';
     medo_id UUID := ''d913320a-baf1-43e0-b8b7-25f748e574ee'';
-    aki_id UUID := uuid_generate_v4();
+    aki_id UUID := ''fc98612b-c0c2-4792-b2ac-acb7dd6555c1'';
 BEGIN
 INSERT INTO users
 VALUES (lela_id, ''lmehmedagi'', ''lmehmedagi1@etf.unsa.ba'',
