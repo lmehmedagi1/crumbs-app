@@ -1,9 +1,11 @@
 package com.crumbs.recipeservice.controllers;
 
-import com.crumbs.recipeservice.models.Category;
+import com.crumbs.recipeservice.exceptions.UserNotFoundException;
 import com.crumbs.recipeservice.models.Recipe;
+import com.crumbs.recipeservice.models.User;
 import com.crumbs.recipeservice.projections.RecipeView;
 import com.crumbs.recipeservice.requests.RecipeRequest;
+import com.crumbs.recipeservice.responses.RecipeWithDetails;
 import com.crumbs.recipeservice.services.RecipeService;
 import com.crumbs.recipeservice.utility.RecipeModelAssembler;
 import com.crumbs.recipeservice.utility.RecipeViewModelAssembler;
@@ -15,20 +17,20 @@ import com.github.fge.jsonpatch.JsonPatchException;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.*;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
+import org.springframework.hateoas.MediaTypes;
+import org.springframework.hateoas.server.core.TypeReferences;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -66,7 +68,6 @@ public class RecipeController {
                 .collect(Collectors.toList());
 
         return CollectionModel.of(recipes, linkTo(methodOn(RecipeController.class).getAllRecipes()).withSelfRel());
-
     }
 
 //    @GetMapping
@@ -92,9 +93,9 @@ public class RecipeController {
 
     @RequestMapping(params = "userId", method = RequestMethod.GET)
     public CollectionModel<EntityModel<Recipe>> getRecipesForUser(@RequestParam("userId") @NotNull UUID userId,
-            @RequestParam(defaultValue = "0") Integer pageNo,
-            @RequestParam(defaultValue = "2") Integer pageSize,
-            @RequestParam(defaultValue = "id") String sort) {
+                                                                  @RequestParam(defaultValue = "0") Integer pageNo,
+                                                                  @RequestParam(defaultValue = "2") Integer pageSize,
+                                                                  @RequestParam(defaultValue = "id") String sort) {
 
         List<EntityModel<Recipe>> recipes = recipeService.getRecipesForUser(userId, pageNo, pageSize, sort)
                 .stream().map(recipeModelAssembler::toModel).collect(Collectors.toList());
@@ -115,11 +116,55 @@ public class RecipeController {
     }
 
 
-
     @RequestMapping(params = "id", method = RequestMethod.GET)
     public EntityModel<Recipe> getRecipe(@RequestParam("id") @NotNull UUID id) {
         return recipeModelAssembler.toModel(recipeService.getRecipe(id));
     }
+
+    @RequestMapping(params = {"id", "details"}, method = RequestMethod.GET)
+    public EntityModel<?> getRecipe(@RequestParam("id") @NotNull UUID id,
+                                    @RequestParam(value = "details", defaultValue = "false") @NotNull Boolean details) {
+        if (!details)
+            return getRecipe(id);
+        else {
+            Recipe recipe = recipeService.getRecipe(id);
+            EntityModel<User> author = getRecipeAuthor(recipe.getUserId());
+            System.out.println("Linkovi: " + author.getLinks());
+            // Double rating = getRecipeRating(recipe.getId());
+
+            return EntityModel.of(new RecipeWithDetails(recipeModelAssembler.toModel(recipe), author, 3.14));
+        }
+    }
+
+    private EntityModel<User> getRecipeAuthor(UUID userId) {
+        return webClientBuilder.baseUrl("http://user-service").build().get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/account")
+                        .queryParam("id", userId)
+                        .build())
+                .accept(MediaTypes.HAL_JSON)
+                .retrieve()
+                .onStatus(HttpStatus::is4xxClientError, response -> {
+                    return Mono.error(new UserNotFoundException());
+                })
+                .bodyToMono(new TypeReferences.EntityModelType<User>())
+                .block();
+    }
+
+    /*
+    private Double getRecipeRating(UUID recipeId) {
+        return webClientBuilder.baseUrl("http://review-service").build().get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/account")
+                        .queryParam("id", recipeId)
+                        .build())
+                .retrieve()
+                .onStatus(HttpStatus::is4xxClientError, response -> {
+                    return Mono.error(new UserNotFoundException());
+                })
+                .bodyToMono(Double.class)
+                .block();
+    } */
 
     @PostMapping
     public ResponseEntity<?> createRecipe(@RequestBody @Valid RecipeRequest recipeRequest) {

@@ -4,7 +4,7 @@ DO
 '
 DECLARE
     lela_id UUID := uuid_generate_v4();
-    manda_id UUID := uuid_generate_v4();
+    manda_id UUID := ''bb244360-88cb-11eb-8dcd-0242ac130003'';
     medo_id UUID := ''d913320a-baf1-43e0-b8b7-25f748e574ee'';
     aki_id UUID := uuid_generate_v4();
 BEGIN

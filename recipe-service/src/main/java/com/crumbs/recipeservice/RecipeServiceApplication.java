@@ -5,6 +5,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.context.annotation.Bean;
+import org.springframework.hateoas.config.HypermediaRestTemplateConfigurer;
+import org.springframework.hateoas.config.HypermediaWebClientConfigurer;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -16,15 +18,9 @@ public class RecipeServiceApplication {
         SpringApplication.run(RecipeServiceApplication.class, args);
     }
 
-    @LoadBalanced
-    @Bean
-    public RestTemplate getRestTemplate() {
-        return new RestTemplate();
-    }
-
     @Bean
     @LoadBalanced
-    public WebClient.Builder getWebClientBuilder() {
-        return WebClient.builder();
+    WebClient.Builder webClientBuilder(HypermediaWebClientConfigurer configurer) {
+        return configurer.registerHypermediaTypes(WebClient.builder());
     }
 }
