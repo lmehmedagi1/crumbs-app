@@ -1,32 +1,40 @@
 package com.crumbs.recipeservice.controllers;
 
 import com.crumbs.recipeservice.RecipeServiceApplication;
+import com.crumbs.recipeservice.requests.DietRequest;
+import com.crumbs.recipeservice.requests.RecipeRequest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.reactive.function.BodyInserters;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@WebAppConfiguration
+//@WebAppConfiguration
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@SpringBootTest(classes = {RecipeServiceApplication.class})
+@SpringBootTest(classes = {RecipeServiceApplication.class}, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
+@AutoConfigureWebTestClient
 class DietControllerTest {
 
     private MockMvc mvc;
 
     @Autowired
     WebApplicationContext webApplicationContext;
+    @Autowired
+    private WebTestClient webTestClient;
 
     //bb244361-88cb-14eb-8ecd-0242ac130003
     @Test
@@ -182,5 +190,77 @@ class DietControllerTest {
                 .param("id", id)).andReturn();
 
         assertEquals(HttpStatus.NO_CONTENT.value(), mvcResult.getResponse().getStatus());
+    }
+
+    @Test
+    void testCreateDietValidUser() throws Exception {
+        String medo_id = "d913320a-baf1-43e0-b8b7-25f748e574ee";
+        DietRequest dietRequest = new DietRequest(medo_id, "LowDo",
+                "Arrived totally in as between private. Favour of so as on pretty though elinor direct. Reasonable estimating be alteration we themselves entreaties me of reasonably",
+                7, true);
+        String sport_diet = "87940ca7-807d-4d1b-af2e-f6a0c22ed2c8";
+
+        webTestClient.patch()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/diets")
+                        .queryParam("id", sport_diet)
+                        .build()).contentType(MediaType.APPLICATION_JSON).body(BodyInserters.fromObject(dietRequest))
+                .exchange()
+                .expectStatus()
+                .is2xxSuccessful();
+    }
+
+    @Test
+    void testCreateDietInvalidUser() throws Exception {
+        String medo_id = "d913320a-baf1-43e0-b8b7-25f748e574bb";
+        DietRequest dietRequest = new DietRequest(medo_id, "LowDo",
+                "Arrived totally in as between private. Favour of so as on pretty though elinor direct. Reasonable estimating be alteration we themselves entreaties me of reasonably",
+                7, true);
+        String sport_diet = "87940ca7-807d-4d1b-af2e-f6a0c22ed2c8";
+
+        webTestClient.patch()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/diets")
+                        .queryParam("id", sport_diet)
+                        .build()).contentType(MediaType.APPLICATION_JSON).body(BodyInserters.fromObject(dietRequest))
+                .exchange()
+                .expectStatus()
+                .is5xxServerError();
+    }
+
+    @Test
+    void testUpdateDietInvalidUser() throws Exception {
+        String medo_id = "d913320a-baf1-43e0-b8b7-25f748e574bb";
+        DietRequest dietRequest = new DietRequest(medo_id, "LowDo",
+                "Arrived totally in as between private. Favour of so as on pretty though elinor direct. Reasonable estimating be alteration we themselves entreaties me of reasonably",
+                7, true);
+        String sport_diet = "87940ca7-807d-4d1b-af2e-f6a0c22ed2c8";
+
+        webTestClient.patch()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/diets")
+                        .queryParam("id", sport_diet)
+                        .build()).contentType(MediaType.APPLICATION_JSON).body(BodyInserters.fromObject(dietRequest))
+                .exchange()
+                .expectStatus()
+                .is5xxServerError();
+    }
+
+    @Test
+    void testUpdateDietValidUser() throws Exception {
+        String medo_id = "d913320a-baf1-43e0-b8b7-25f748e574ee";
+        DietRequest dietRequest = new DietRequest(medo_id, "LowDo",
+                "Arrived totally in as between private. Favour of so as on pretty though elinor direct. Reasonable estimating be alteration we themselves entreaties me of reasonably",
+                7, true);
+        String sport_diet = "87940ca7-807d-4d1b-af2e-f6a0c22ed2c8";
+
+        webTestClient.patch()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/diets")
+                        .queryParam("id", sport_diet)
+                        .build()).contentType(MediaType.APPLICATION_JSON).body(BodyInserters.fromObject(dietRequest))
+                .exchange()
+                .expectStatus()
+                .is2xxSuccessful();
     }
 }
