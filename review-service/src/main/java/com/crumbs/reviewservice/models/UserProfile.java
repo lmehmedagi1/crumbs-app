@@ -1,4 +1,4 @@
-package com.crumbs.recipeservice.models;
+package com.crumbs.reviewservice.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -16,9 +16,10 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDetails {
+public class UserProfile {
 
-    private UUID id;
+    @JsonProperty("user_id")
+    private UUID userId;
 
     @JsonProperty("first_name")
     @NotBlank

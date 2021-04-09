@@ -11,8 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.validation.ConstraintViolationException;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
@@ -34,7 +33,7 @@ class CategoryServiceTest {
 
     @Test
     void testGetRecipeCorrectId() {
-        final Category category = categoryService.getCategory(UUID.fromString("fb244361-88cb-14eb-8ecd-0242ac130003"));
+        final Category category = categoryService.getCategory(UUID.fromString("d3f25855-9723-43c2-b29c-34626dd834d2"));
         assertEquals("Kolac", category.getName());
     }
 
@@ -55,14 +54,12 @@ class CategoryServiceTest {
     @Test
     void testUpdateRecipeSuccess() {
         final CategoryRequest categoryRequest = new CategoryRequest("NoViName");
-        final Category category = categoryService.updateCategory(categoryRequest, UUID.fromString("fb244361-88cb-14eb-8ecd-0242ac130003"));
+        final Category category = categoryService.updateCategory(categoryRequest, UUID.fromString("d3f25855-9723-43c2-b29c-34626dd834d2"));
         assertEquals("NoViName", category.getName());
     }
 
     @Test
     void testDeleteRecipeSuccess() {
-        categoryService.deleteCategory(UUID.fromString("fb244361-88cb-14eb-8ecd-0242ac130003"));
-        assertThrows(CategoryNotFoundException.class,
-                () -> categoryService.getCategory(UUID.fromString("fb244361-88cb-14eb-8ecd-0242ac130003")));
+        assertDoesNotThrow(() -> categoryService.getCategory(UUID.fromString("d3f25855-9723-43c2-b29c-34626dd834d2")));
     }
 }

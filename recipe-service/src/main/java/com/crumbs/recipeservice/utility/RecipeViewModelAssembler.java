@@ -14,7 +14,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 public class RecipeViewModelAssembler implements RepresentationModelAssembler<RecipeView, EntityModel<RecipeView>> {
     @Override
     public EntityModel<RecipeView> toModel(RecipeView recipeView) {
-        return EntityModel.of(recipeView, linkTo(methodOn(RecipeController.class).getRecipe(recipeView.getId())).withSelfRel(),
+        return EntityModel.of(recipeView, linkTo(methodOn(RecipeController.class).getRecipe(recipeView.getRecipeId())).withSelfRel(),
                 linkTo(methodOn(RecipeController.class).getAllRecipes()).withRel("recipes"));
     }
 }

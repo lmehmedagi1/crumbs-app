@@ -30,7 +30,6 @@ class CategoryControllerTest {
     @Autowired
     WebApplicationContext webApplicationContext;
 
-    //fb244361-88cb-14eb-8ecd-0242ac130003
     @Test
     void testGetAllCategories() throws Exception {
         mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
@@ -44,7 +43,7 @@ class CategoryControllerTest {
     @Test
     void testGetCategoryByIdSuccess() throws Exception {
         mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-        String id = "fb244361-88cb-14eb-8ecd-0242ac130003";
+        String id = "d3f25855-9723-43c2-b29c-34626dd834d2";
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get("/categories")
                 .param("id", id)).andReturn();
 
@@ -111,7 +110,7 @@ class CategoryControllerTest {
                 "    \"name\": \"CategoryName\"" +
                 "}";
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.patch(uri)
-                .param("id", "fb244361-88cb-14eb-8ecd-0242ac130003")
+                .param("id", "943c8274-d329-4d78-92b9-e2f3407a91a4")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(inputJson)).andReturn();
 
@@ -147,7 +146,7 @@ class CategoryControllerTest {
     void deleteCategoryValidId() throws Exception {
         mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
 
-        String id = "fb244361-88cb-14eb-8ecd-0242ac130003";
+        String id = "249cf0f8-c344-4b56-8eda-01ceb4ebfceb";
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.delete("/categories")
                 .param("id", id)).andReturn();
 

@@ -26,6 +26,9 @@ public class Diet {
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     private UUID id;
 
+    @NotNull
+    private UUID user_id;
+
     @NotBlank
     @Size(min = 5, message = "Diet title must be at least 5 characters long!")
     @Size(max = 50, message = "Diet title exceeds allowed limit of 50 characters!")

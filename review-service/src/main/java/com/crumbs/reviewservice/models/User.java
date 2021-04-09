@@ -3,6 +3,7 @@ package com.crumbs.reviewservice.models;
 import com.crumbs.reviewservice.utility.ValidEmail;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -37,7 +38,8 @@ public class User {
 
     @JsonManagedReference
     @NotNull
-    private UserDetails userDetails;
+    @JsonProperty("user_profile")
+    private UserProfile userProfile;
 
     @JsonIgnore
     private List<User> subscriptions;

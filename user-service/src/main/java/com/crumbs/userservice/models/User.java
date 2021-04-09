@@ -3,6 +3,7 @@ package com.crumbs.userservice.models;
 import com.crumbs.userservice.utility.annotation.ValidEmail;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -43,10 +44,11 @@ public class User {
     private String password;
 
     @JsonManagedReference
+    @NotNull
+    @JsonProperty("user_profile")
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn
-    @NotNull
-    private UserDetails userDetails;
+    private UserProfile userProfile;
 
     @JsonIgnore
     @ManyToMany

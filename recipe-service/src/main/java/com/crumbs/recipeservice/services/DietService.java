@@ -42,6 +42,7 @@ public class DietService {
         diet.setDescription(dietRequest.getDescription());
         diet.setDuration(dietRequest.getDuration());
         diet.setIsPrivate(dietRequest.getIs_private());
+        diet.setUser_id(UUID.fromString(dietRequest.getUser_id()));
         diet.setRecipes(new ArrayList<>());
     }
 

@@ -5,6 +5,7 @@ import com.crumbs.recipeservice.exceptions.UserNotFoundException;
 import com.crumbs.recipeservice.models.Recipe;
 import com.crumbs.recipeservice.models.User;
 import com.crumbs.recipeservice.projections.RecipeView;
+import com.crumbs.recipeservice.projections.UserView;
 import com.crumbs.recipeservice.requests.RecipeRequest;
 import com.crumbs.recipeservice.responses.RecipeWithDetails;
 import com.crumbs.recipeservice.services.RecipeService;
@@ -110,10 +111,14 @@ public class RecipeController {
                                                                          @RequestParam(defaultValue = "2") Integer pageSize,
                                                                          @RequestParam(defaultValue = "id") String sort) {
 
-        List<EntityModel<RecipeView>> recipes = recipeService.getRecipesByCategoryPreview(userId, pageNo, pageSize, sort)
-                .stream().map(recipeViewModelAssembler::toModel).collect(Collectors.toList());
+        List<RecipeView> recipes = recipeService.getRecipesByCategoryPreview(userId, pageNo, pageSize, sort);
+        for (RecipeView recipe : recipes) {
+            UUID authorId = recipe.getAuthor().getUserId();
+            User user = checkIfUserExists(authorId);
+            recipe.setAuthor(new UserView(user.getId(), user.getUsername(), user.getUserProfile().getAvatar()));
+        }
 
-        return CollectionModel.of(recipes);
+        return CollectionModel.of(recipes.stream().map(recipeViewModelAssembler::toModel).collect(Collectors.toList()));
     }
 
 
@@ -129,12 +134,13 @@ public class RecipeController {
             return getRecipe(id);
         else {
             Recipe recipe = recipeService.getRecipe(id);
-            EntityModel<User> author = getRecipeAuthor(recipe.getUserId());
+            User author = getRecipeAuthor(recipe.getUserId());
+            System.out.println(author.getUsername());
             return EntityModel.of(new RecipeWithDetails(recipeModelAssembler.toModel(recipe), author, getRecipeRating(recipe.getId())));
         }
     }
 
-    private EntityModel<User> getRecipeAuthor(UUID authorId) {
+    private User getRecipeAuthor(UUID authorId) {
         return webClientBuilder.baseUrl("http://user-service").build().get()
                 .uri(uriBuilder -> uriBuilder
                         .path("/account")
@@ -143,7 +149,7 @@ public class RecipeController {
                 .accept(MediaTypes.HAL_JSON)
                 .retrieve()
                 .onStatus(HttpStatus::is4xxClientError, response -> Mono.error(new UserNotFoundException()))
-                .bodyToMono(new TypeReferences.EntityModelType<User>())
+                .bodyToMono(User.class)
                 .block();
     }
 
