@@ -51,7 +51,7 @@ class ReviewControllerTest {
 
     @Test
     void testGetReviewByIdSuccess() throws Exception {
-        String id = "5ccafc30-b1b3-4f74-ba3c-79583a3129c5";
+        String id = "9469a486-1e50-4aaf-a760-1daf770a2147";
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get("/reviews")
                 .param("id", id)).andReturn();
 
@@ -75,18 +75,11 @@ class ReviewControllerTest {
                 .uri(uriBuilder ->
                         uriBuilder
                                 .path("/reviews")
-                                .queryParam("recipeId", "fb244360-88cb-11eb-8dcd-0242ac130003")
+                                .queryParam("recipeId", "ac8ff8ff-7193-4c45-90bd-9c662cc0494a")
                                 .build())
                 .exchange()
                 .expectStatus()
                 .is2xxSuccessful();
-//                .expectHeader()
-//                .contentType(APPLICATION_JSON)
-//                .expectBody()
-//                .jsonPath("$.length()").isEqualTo(3)
-//                .jsonPath("$[0].id").isEqualTo(1)
-//                .jsonPath("$[0].name").isEqualTo("duke")
-//                .jsonPath("$[0].tags").isNotEmpty();
     }
 
     @Test
@@ -96,8 +89,8 @@ class ReviewControllerTest {
                 "  \"comment\": \"Novi komentar\",\n" +
                 "  \"is_liked\": true,\n" +
                 "  \"rating\": 5,\n" +
-                "  \"recipe_id\": \"e3b461d0-96a9-4bcf-836f-35441f57a701\",\n" +
-                "  \"user_id\": \"7ab5c6ee-3a70-4d15-a2c4-e11c5ec74095\"\n" +
+                "  \"recipe_id\": \"d3cd7d6f-b9c5-40aa-bbd0-487c47411b8a\",\n" +
+                "  \"user_id\": \"3e8ec94c-3edf-49e0-b548-425088881f60\"\n" +
                 "}";
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post(uri)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -176,11 +169,11 @@ class ReviewControllerTest {
 
     @Test
     void testUpdateReviewValidId() throws Exception {
-        String id = "5ccafc30-b1b3-4f74-ba3c-79583a3129c5";
+        String id = "53f5e7d3-1942-4ff4-85cf-401a4b7b1334";
         String uri = "/reviews";
         String inputJson = "{" +
-                "    \"user_id\": \"5ccafc30-b1b3-4f74-ba3c-79583a3129c6\"," +
-                "    \"recipe_id\": \"5ccafc30-b1b3-4f74-ba3c-79583a3129c7\"," +
+                "    \"user_id\": \"3e8ec94c-3edf-49e0-b548-425088881f60\"," +
+                "    \"recipe_id\": \"ac8ff8ff-7193-4c45-90bd-9c662cc0494a\"," +
                 "    \"is_liked\": true," +
                 "    \"rating\": 4," +
                 "    \"comment\": \"neki komentar\"" +
@@ -222,7 +215,7 @@ class ReviewControllerTest {
 
     @Test
     void deleteReviewValidId() throws Exception {
-        String id = "5ccafc30-b1b3-4f74-ba3c-79583a3129c5";
+        String id = "22b01334-417b-4a8f-8fb6-79bf003fdf4d";
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.delete("/reviews")
                 .param("id", id)).andReturn();
 

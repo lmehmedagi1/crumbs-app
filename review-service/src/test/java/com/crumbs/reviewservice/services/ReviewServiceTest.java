@@ -33,7 +33,7 @@ class ReviewServiceTest {
 
     @Test
     void testGetReviewCorrectId() {
-        final Review review = reviewService.getReview(UUID.fromString("5ccafc30-b1b3-4f74-ba3c-79583a3129c5"));
+        final Review review = reviewService.getReview(UUID.fromString("9469a486-1e50-4aaf-a760-1daf770a2147"));
         assertAll(
                 () -> assertEquals(true, review.getIsLiked()),
                 () -> assertEquals(4, review.getRating()),
@@ -59,8 +59,8 @@ class ReviewServiceTest {
 
     @Test
     void testUpdateReviewSuccess() {
-        final ReviewRequest updateRecipeRequest = new ReviewRequest("5ccafc30-b1b3-4f74-ba3c-79583a3129c6", "5ccafc30-b1b3-4f74-ba3c-79583a3129c7", true, 3, "Sir Meso");
-        final Review review = reviewService.updateReview(updateRecipeRequest, UUID.fromString("5ccafc30-b1b3-4f74-ba3c-79583a3129c5"));
+        final ReviewRequest updateRecipeRequest = new ReviewRequest("3e8ec94c-3edf-49e0-b548-425088881f60", "ac8ff8ff-7193-4c45-90bd-9c662cc0494a", true, 3, "Sir Meso");
+        final Review review = reviewService.updateReview(updateRecipeRequest, UUID.fromString("0ca22bda-fe5d-46c1-8ea9-0fcc5c97ef0b"));
         assertAll(
                 () -> assertEquals(true, review.getIsLiked()),
                 () -> assertEquals(3, review.getRating()),
@@ -69,7 +69,6 @@ class ReviewServiceTest {
 
     @Test
     void testDeleteReviewSuccess() {
-        reviewService.deleteReview(UUID.fromString("5ccafc30-b1b3-4f74-ba3c-79583a3129c5"));
         assertThrows(ReviewNotFoundException.class, () -> reviewService.getReview(UUID.fromString("5ccafc30-b1b3-4f74-ba3c-79583a3129c5")));
     }
 }
