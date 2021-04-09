@@ -4,8 +4,10 @@ import com.crumbs.recipeservice.exceptions.UserNotFoundException;
 import com.crumbs.recipeservice.models.Diet;
 import com.crumbs.recipeservice.models.Recipe;
 import com.crumbs.recipeservice.models.User;
+import com.crumbs.recipeservice.projections.RecipeView;
+import com.crumbs.recipeservice.projections.UserView;
 import com.crumbs.recipeservice.requests.DietRequest;
-import com.crumbs.recipeservice.responses.RecipeWithDetails;
+import com.crumbs.recipeservice.responses.DietWithDetails;
 import com.crumbs.recipeservice.services.DietService;
 import com.crumbs.recipeservice.utility.DietModelAssembler;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -20,7 +22,6 @@ import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.hateoas.MediaTypes;
-import org.springframework.hateoas.server.core.TypeReferences;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -82,20 +83,33 @@ public class DietController {
         return dietModelAssembler.toModel(dietService.getDiet(id));
     }
 
-//    @RequestMapping(params = {"id", "details"}, method = RequestMethod.GET)
-//    public EntityModel<?> getDietWithDetails(@RequestParam("id") @NotNull UUID id, @RequestParam(value = "details", defaultValue = "false") @NotNull Boolean details) {
-//        if (!details)
-//            return getDiet(id);
-//        else {
-//            Diet diet = dietService.getDiet(id);
-//
-//            EntityModel<User> author = getAuthorIfExists(diet.getId());
-//            return EntityModel.of();
-//            //
-//        }
-//    }
+    @RequestMapping(params = {"id", "details"}, method = RequestMethod.GET)
+    public EntityModel<?> getDietWithDetails(@RequestParam("id") @NotNull UUID id, @RequestParam(value = "details", defaultValue = "false") @NotNull Boolean details) {
+        if (!details)
+            return getDiet(id);
+        else {
+            Diet diet = dietService.getDiet(id);
 
-    private EntityModel<User> getAuthorIfExists(UUID authorId) {
+            User author = getAuthorIfExists(diet.getUser_id());
+            System.out.println("User je: " + author.getUsername());
+            DietWithDetails dietWithDetails = new DietWithDetails(diet.getTitle(), diet.getDescription(), diet.getDuration());
+            dietWithDetails.setAuthor(new UserView(author.getId(), author.getUsername(), author.getUserProfile().getAvatar()));
+            dietWithDetails.setRecipes(diet.getRecipes().stream().map(recipe -> {
+                        RecipeView recipeView = new RecipeView(recipe.getId(), recipe.getTitle(), recipe.getDescription(), recipe.getId());
+                        if (!recipe.getImages().isEmpty())
+                            recipeView.setImage(recipe.getImages().get(0).getImage());
+
+                        User recipeAuthor = getRecipeAuthor(recipe.getUserId());
+                        recipeView.setAuthor(new UserView(recipeAuthor.getId(), recipeAuthor.getUsername(), recipeAuthor.getUserProfile().getAvatar()));
+                        return recipeView;
+                    }
+            ).collect(Collectors.toList()));
+
+            return EntityModel.of(dietWithDetails);
+        }
+    }
+
+    private User getAuthorIfExists(UUID authorId) {
         return webClientBuilder.baseUrl("http://user-service").build().get()
                 .uri(uriBuilder -> uriBuilder
                         .path("/account")
@@ -104,7 +118,20 @@ public class DietController {
                 .accept(MediaTypes.HAL_JSON)
                 .retrieve()
                 .onStatus(HttpStatus::is4xxClientError, response -> Mono.error(new UserNotFoundException()))
-                .bodyToMono(new TypeReferences.EntityModelType<User>())
+                .bodyToMono(User.class)
+                .block();
+    }
+
+    private User getRecipeAuthor(UUID authorId) {
+        return webClientBuilder.baseUrl("http://user-service").build().get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/account")
+                        .queryParam("id", authorId)
+                        .build())
+                .accept(MediaTypes.HAL_JSON)
+                .retrieve()
+                .onStatus(HttpStatus::is4xxClientError, response -> Mono.error(new UserNotFoundException()))
+                .bodyToMono(User.class)
                 .block();
     }
 

@@ -1,10 +1,11 @@
-package com.crumbs.reviewservice.models;
+package com.crumbs.userservice.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -16,15 +17,22 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDetails {
+@Entity
+@Table(name = "user_profile")
+public class UserProfile {
 
-    private UUID id;
+    @Id
+    @Column(name = "user_id")
+    @JsonProperty("user_id")
+    private UUID userId;
 
+    @Column(name = "first_name")
     @JsonProperty("first_name")
     @NotBlank
     @Pattern(regexp = "^[A-Za-z]+$", flags = Pattern.Flag.UNICODE_CASE, message = "First name can only contain letters!")
     private String firstName;
 
+    @Column(name = "last_name")
     @JsonProperty("last_name")
     @NotBlank
     @Pattern(regexp = "^[A-Za-z]+$", flags = Pattern.Flag.UNICODE_CASE, message = "Last name can only contain letters!")
@@ -34,6 +42,7 @@ public class UserDetails {
     @Pattern(regexp = "^(male|female|other)$", message = "Gender can only be male, female or other!")
     private String gender;
 
+    @Column(name = "phone_number")
     @JsonProperty("phone_number")
     @NotBlank
     @Size(min = 3, max = 15, message = "Phone number must be between 3 and 15 numbers!")
@@ -42,6 +51,9 @@ public class UserDetails {
 
     @JsonBackReference
     @NotNull
+    @OneToOne
+    @MapsId
+    @JoinColumn(name = "user_id")
     private User user;
 
     private byte[] avatar;

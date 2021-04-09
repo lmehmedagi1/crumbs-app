@@ -74,6 +74,10 @@ INSERT INTO diets VALUES (kolac_diet, ''Kolac ishrana'', ''Samo kolaci fakat'', 
 INSERT INTO diet_recipes VALUES (sport_diet, omlet_id);
 INSERT INTO diet_recipes VALUES (veget_diet, omlet_id);
 INSERT INTO diet_recipes VALUES (veget_diet, krempita_id);
+INSERT INTO diet_recipes VALUES (kolac_diet, krempita_id);
+INSERT INTO diet_recipes VALUES (kolac_diet, sampita_id);
+INSERT INTO diet_recipes VALUES (kolac_diet, monchay_id);
+
 
 INSERT INTO images VALUES (sampita_slika1,
     decode(''iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z/C/HgAGgwJ/lK3Q6wAAAABJRU5ErkJggg=='',

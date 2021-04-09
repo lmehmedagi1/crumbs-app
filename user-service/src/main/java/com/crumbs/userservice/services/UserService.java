@@ -4,8 +4,8 @@ import com.crumbs.userservice.exceptions.IncorrectPasswordException;
 import com.crumbs.userservice.exceptions.UserAlreadyExistsException;
 import com.crumbs.userservice.exceptions.UserNotFoundException;
 import com.crumbs.userservice.models.User;
-import com.crumbs.userservice.models.UserDetails;
-import com.crumbs.userservice.repositories.UserDetailsRepository;
+import com.crumbs.userservice.models.UserProfile;
+import com.crumbs.userservice.repositories.UserProfileRepository;
 import com.crumbs.userservice.repositories.UserRepository;
 import com.crumbs.userservice.requests.RegisterRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,12 +24,12 @@ import java.util.UUID;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final UserDetailsRepository userDetailsRepository;
+    private final UserProfileRepository userProfileRepository;
 
     @Autowired
-    public UserService(UserRepository userRepository, UserDetailsRepository userDetailsRepository) {
+    public UserService(UserRepository userRepository, UserProfileRepository userProfileRepository) {
         this.userRepository = userRepository;
-        this.userDetailsRepository = userDetailsRepository;
+        this.userProfileRepository = userProfileRepository;
     }
 
     @Transactional(readOnly = true)
@@ -76,17 +76,17 @@ public class UserService {
         user.setEmail(registerRequest.getEmail());
         user.setPassword((new BCryptPasswordEncoder(10)).encode(registerRequest.getPassword()));
 
-        UserDetails userDetails = new UserDetails();
-        userDetails.setFirstName(registerRequest.getFirst_name());
-        userDetails.setLastName(registerRequest.getLast_name());
-        userDetails.setPhoneNumber(registerRequest.getPhone_number());
-        userDetails.setGender(registerRequest.getGender());
+        UserProfile userProfile = new UserProfile();
+        userProfile.setFirstName(registerRequest.getFirst_name());
+        userProfile.setLastName(registerRequest.getLast_name());
+        userProfile.setPhoneNumber(registerRequest.getPhone_number());
+        userProfile.setGender(registerRequest.getGender());
 
-        user.setUserDetails(userDetails);
-        userDetails.setUser(user);
+        user.setUserProfile(userProfile);
+        userProfile.setUser(user);
 
         final User newUser = userRepository.save(user);
-        userDetailsRepository.save(userDetails);
+        userProfileRepository.save(userProfile);
 
         return newUser;
     }

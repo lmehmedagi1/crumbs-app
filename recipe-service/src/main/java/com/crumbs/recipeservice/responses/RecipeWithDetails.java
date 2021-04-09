@@ -12,6 +12,6 @@ import org.springframework.hateoas.EntityModel;
 @AllArgsConstructor
 public class RecipeWithDetails {
     private EntityModel<Recipe> recipe;
-    private EntityModel<User> author;
+    private User author;
     private Double rating;
 }

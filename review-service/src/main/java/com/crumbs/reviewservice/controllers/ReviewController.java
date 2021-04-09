@@ -81,10 +81,9 @@ public class ReviewController {
     }
 
     @RequestMapping(params = "userId", method = RequestMethod.GET)
-    public CollectionModel<EntityModel<Review>> getReviewsOfUser(@RequestParam("userId") @NotNull UUID userId,
-                                                                 @RequestHeader("Authorization") String token) {
+    public CollectionModel<EntityModel<Review>> getReviewsOfUser(@RequestParam("userId") @NotNull UUID userId) {
 
-        checkIfUserExists(userId, token);
+        checkIfUserExists(userId);
 
         List<EntityModel<Review>> reviews = reviewService.getReviewsOfUser(userId).stream()
                 .map(reviewModelAssembler::toModel)
@@ -109,11 +108,10 @@ public class ReviewController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createReview(@RequestBody @Valid ReviewRequest reviewRequest,
-                                          @RequestHeader("Authorization") String token) {
+    public ResponseEntity<?> createReview(@RequestBody @Valid ReviewRequest reviewRequest) {
 
         checkIfRecipeExists(UUID.fromString(reviewRequest.getRecipe_id()));
-        checkIfUserExists(UUID.fromString(reviewRequest.getUser_id()), token);
+        checkIfUserExists(UUID.fromString(reviewRequest.getUser_id()));
 
         final Review newReview = reviewService.saveReview(reviewRequest);
         EntityModel<Review> entityModel = reviewModelAssembler.toModel(newReview);
@@ -122,11 +120,10 @@ public class ReviewController {
 
     @PatchMapping(consumes = "application/json")
     public ResponseEntity<?> updateReview(@RequestParam("id") @NotNull UUID id,
-                                          @RequestBody @Valid ReviewRequest reviewRequest,
-                                          @RequestHeader("Authorization") String token) {
+                                          @RequestBody @Valid ReviewRequest reviewRequest) {
 
         checkIfRecipeExists(UUID.fromString(reviewRequest.getRecipe_id()));
-        checkIfUserExists(UUID.fromString(reviewRequest.getUser_id()), token);
+        checkIfUserExists(UUID.fromString(reviewRequest.getUser_id()));
 
         final Review updatedReview = reviewService.updateReview(reviewRequest, id);
         EntityModel<Review> entityModel = reviewModelAssembler.toModel(updatedReview);
@@ -156,13 +153,12 @@ public class ReviewController {
         return ResponseEntity.noContent().build();
     }
 
-    private User checkIfUserExists(UUID userId, String token) {
+    private User checkIfUserExists(UUID userId) {
         return webClientBuilder.baseUrl("http://user-service").build().get()
                 .uri(uriBuilder -> uriBuilder
                         .path("/account")
                         .queryParam("id", userId)
                         .build())
-                .header("Authorization", token)
                 .retrieve()
                 .onStatus(HttpStatus::is4xxClientError, response -> {
                     return Mono.error(new UserNotFoundException());

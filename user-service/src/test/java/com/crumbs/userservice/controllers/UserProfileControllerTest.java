@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @SpringBootTest(classes = {UserServiceApplication.class})
 @Transactional
-class UserDetailsControllerTest {
+class UserProfileControllerTest {
 
     @Autowired
     WebApplicationContext webApplicationContext;

@@ -115,11 +115,10 @@ public class RecipeController {
         for (RecipeView recipe : recipes) {
             UUID authorId = recipe.getAuthor().getUserId();
             User user = checkIfUserExists(authorId);
-            recipe.setAuthor(new UserView(user.getId(), user.getUsername(), user.getUserDetails().getAvatar()));
+            recipe.setAuthor(new UserView(user.getId(), user.getUsername(), user.getUserProfile().getAvatar()));
         }
 
-        return CollectionModel.of(recipeService.getRecipesByCategoryPreview(userId, pageNo, pageSize, sort)
-                .stream().map(recipeViewModelAssembler::toModel).collect(Collectors.toList()));
+        return CollectionModel.of(recipes.stream().map(recipeViewModelAssembler::toModel).collect(Collectors.toList()));
     }
 
 
@@ -135,12 +134,13 @@ public class RecipeController {
             return getRecipe(id);
         else {
             Recipe recipe = recipeService.getRecipe(id);
-            EntityModel<User> author = getRecipeAuthor(recipe.getUserId());
+            User author = getRecipeAuthor(recipe.getUserId());
+            System.out.println(author.getUsername());
             return EntityModel.of(new RecipeWithDetails(recipeModelAssembler.toModel(recipe), author, getRecipeRating(recipe.getId())));
         }
     }
 
-    private EntityModel<User> getRecipeAuthor(UUID authorId) {
+    private User getRecipeAuthor(UUID authorId) {
         return webClientBuilder.baseUrl("http://user-service").build().get()
                 .uri(uriBuilder -> uriBuilder
                         .path("/account")
@@ -149,7 +149,7 @@ public class RecipeController {
                 .accept(MediaTypes.HAL_JSON)
                 .retrieve()
                 .onStatus(HttpStatus::is4xxClientError, response -> Mono.error(new UserNotFoundException()))
-                .bodyToMono(new TypeReferences.EntityModelType<User>())
+                .bodyToMono(User.class)
                 .block();
     }
 

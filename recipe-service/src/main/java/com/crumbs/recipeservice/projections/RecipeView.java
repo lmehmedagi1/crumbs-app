@@ -15,7 +15,7 @@ public class RecipeView {
     private UUID recipeId;
     private String title;
     private String description;
-    private List<Image> images;
+    private byte[] image;
     private UserView author;
 
     public RecipeView(UUID recipeId, String title, String description, UUID authorId) {

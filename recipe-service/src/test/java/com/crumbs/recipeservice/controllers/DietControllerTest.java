@@ -50,7 +50,7 @@ class DietControllerTest {
     @Test
     void testGetDietByIdSuccess() throws Exception {
         mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-        String id = "bb244361-88cb-14eb-8ecd-0242ac130003";
+        String id = "87940ca7-807d-4d1b-af2e-f6a0c22ed2c8";
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get("/diets")
                 .param("id", id)).andReturn();
 
@@ -75,7 +75,8 @@ class DietControllerTest {
                 "    \"title\": \"Test title\"," +
                 "    \"description\": \"Test description\"," +
                 "    \"duration\": \"78\"," +
-                "    \"is_private\": \"false\"" +
+                "    \"is_private\": \"false\"," +
+                "    \"user_id\": \"75a8f34b-2539-452a-9325-b432dbe3b995\"" +
                 "}";
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post(uri)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -91,7 +92,8 @@ class DietControllerTest {
         String inputJson = "{" +
                 "    \"description\": \"Test description\"," +
                 "    \"duration\": \"78\"," +
-                "    \"is_private\": \"false\"" +
+                "    \"is_private\": \"false\"," +
+                "    \"user_id\": \"75a8f34b-2539-452a-9325-b432dbe3b995\"" +
                 "}";
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post(uri)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -107,8 +109,9 @@ class DietControllerTest {
         String inputJson = "{" +
                 "    \"title\": \"Test title\"," +
                 "    \"duration\": \"78\"," +
-                "    \"is_private\": \"false\"" +
-                "}";
+                "    \"is_private\": \"false\"," +
+                "    \"user_id\": \"75a8f34b-2539-452a-9325-b432dbe3b995\"" +
+                "}";;
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post(uri)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(inputJson)).andReturn();
@@ -124,11 +127,12 @@ class DietControllerTest {
                 "    \"title\": \"Test title\"," +
                 "    \"description\": \"Test description\"," +
                 "    \"duration\": \"78\"," +
-                "    \"is_private\": \"false\"" +
+                "    \"is_private\": \"false\"," +
+                "    \"user_id\": \"75a8f34b-2539-452a-9325-b432dbe3b995\"" +
                 "}";
 
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.patch(uri)
-                .param("id", "bb244361-88cb-14eb-8ecd-0242ac130007")
+                .param("id", "75a8f34b-2539-452a-9325-b432dbe3b995")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(inputJson)).andReturn();
 
@@ -143,10 +147,11 @@ class DietControllerTest {
                 "    \"title\": \"Test title11\"," +
                 "    \"description\": \"Test description\"," +
                 "    \"duration\": \"78\"," +
-                "    \"is_private\": \"false\"" +
+                "    \"is_private\": \"false\"," +
+                "    \"user_id\": \"75a8f34b-2539-452a-9325-b432dbe3b995\"" +
                 "}";
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.patch(uri)
-                .param("id", "bb244361-88cb-14eb-8ecd-0242ac130003")
+                .param("id", "add537e6-12a6-410a-83f3-7c9cc95c2d7a")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(inputJson)).andReturn();
 
@@ -160,7 +165,8 @@ class DietControllerTest {
         String inputJson = "{" +
                 "    \"description\": \"Test description\"," +
                 "    \"duration\": \"78\"," +
-                "    \"is_private\": \"false\"" +
+                "    \"is_private\": \"false\"," +
+                "    \"user_id\": \"75a8f34b-2539-452a-9325-b432dbe3b995\"" +
                 "}";
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.patch(uri)
                 .param("id", "bb244361-88cb-14eb-8ecd-0242ac130003")
@@ -185,7 +191,7 @@ class DietControllerTest {
     void deleteDietValidId() throws Exception {
         mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
 
-        String id = "bb244361-88cb-14eb-8ecd-0242ac130003";
+        String id = "87940ca7-807d-4d1b-af2e-f6a0c22ed2c8";
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.delete("/diets")
                 .param("id", id)).andReturn();
 
@@ -249,8 +255,10 @@ class DietControllerTest {
     @Test
     void testUpdateDietValidUser() throws Exception {
         String medo_id = "d913320a-baf1-43e0-b8b7-25f748e574ee";
-        DietRequest dietRequest = new DietRequest(medo_id, "LowDo",
-                "Arrived totally in as between private. Favour of so as on pretty though elinor direct. Reasonable estimating be alteration we themselves entreaties me of reasonably",
+        DietRequest dietRequest =
+                new DietRequest(medo_id, "LowDo",
+                "Arrived totally in as between private. Favour of so as on pretty though elinor direct. " +
+                        "Reasonable estimating be alteration we themselves entreaties me of reasonably",
                 7, true);
         String sport_diet = "87940ca7-807d-4d1b-af2e-f6a0c22ed2c8";
 

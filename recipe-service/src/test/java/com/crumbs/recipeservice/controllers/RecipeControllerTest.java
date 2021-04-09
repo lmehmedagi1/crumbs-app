@@ -50,7 +50,7 @@ class RecipeControllerTest {
     void testGetRecipeValidId() throws Exception {
         mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
 
-        String id = "fb244360-88cb-11eb-8dcd-0242ac130003";
+        String id = "d3cd7d6f-b9c5-40aa-bbd0-487c47411b8a";
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get("/recipes")
                 .param("id", id)).andReturn();
 
@@ -75,7 +75,8 @@ class RecipeControllerTest {
         String inputJson = "{" +
                 "    \"description\": \"Test recipe\"," +
                 "    \"method\": \"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.\"," +
-                "    \"title\": \"Best title ever\"" +
+                "    \"title\": \"Best title ever\"," +
+                "    \"user_id\": \"fc98612b-c0c2-4792-b2ac-acb7dd6555c1\"" +
                 "}";
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post(uri)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -121,7 +122,8 @@ class RecipeControllerTest {
         String inputJson = "{" +
                 "    \"description\": \"Test Update Description\"," +
                 "    \"method\": \"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.\"," +
-                "    \"title\": \"Best title ever\"" +
+                "    \"title\": \"Best title ever\"," +
+                "    \"user_id\": \"fc98612b-c0c2-4792-b2ac-acb7dd6555c1\"" +
                 "}";
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.patch(uri)
                 .param("id", "fb244360-88cb-11eb-8dcd-0242ac130009")
@@ -138,10 +140,11 @@ class RecipeControllerTest {
         String inputJson = "{" +
                 "    \"description\": \"Test Update Description\"," +
                 "    \"method\": \"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.\"," +
-                "    \"title\": \"Best title ever\"" +
+                "    \"title\": \"Best title ever\"," +
+                "    \"user_id\": \"fc98612b-c0c2-4792-b2ac-acb7dd6555c1\"" +
                 "}";
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.patch(uri)
-                .param("id", "fb244360-88cb-11eb-8dcd-0242ac130003")
+                .param("id", "2e0233d2-6e01-455c-8724-2117ad252ced")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(inputJson)).andReturn();
 
@@ -179,7 +182,7 @@ class RecipeControllerTest {
     void deleteRecipeValidId() throws Exception {
         mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
 
-        String id = "fb244360-88cb-11eb-8dcd-0242ac130003";
+        String id = "2e0233d2-6e01-455c-8724-2117ad252ced";
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.delete("/recipes")
                 .param("id", id)).andReturn();
 
