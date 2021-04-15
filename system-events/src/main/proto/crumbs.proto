@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.crumbs.systemevents.grpc";
+
+message ActionRequest {
+    string serviceName = 1;
+    string timestamp = 2;
+    string resourceName = 3;
+    string actionType = 4;
+    string responseType = 5;
+}
+
+message ActionResponse {
+    string responseMessage = 1;
+}
+
+service LogAction {
+    rpc log(ActionRequest) returns (ActionResponse);
+}
