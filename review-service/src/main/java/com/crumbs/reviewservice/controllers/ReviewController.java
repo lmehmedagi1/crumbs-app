@@ -2,6 +2,7 @@ package com.crumbs.reviewservice.controllers;
 
 import com.crumbs.reviewservice.exceptions.RecipeNotFoundException;
 import com.crumbs.reviewservice.exceptions.UserNotFoundException;
+import com.crumbs.reviewservice.grpc.ReviewGrpcClient;
 import com.crumbs.reviewservice.models.Recipe;
 import com.crumbs.reviewservice.models.Review;
 import com.crumbs.reviewservice.models.User;
@@ -50,12 +51,14 @@ public class ReviewController {
     private final ReviewService reviewService;
     private final ReviewModelAssembler reviewModelAssembler;
     private final WebClient.Builder webClientBuilder;
+    private final ReviewGrpcClient reviewGrpcClient;
 
     @Autowired
-    ReviewController(ReviewService reviewService, ReviewModelAssembler reviewModelAssembler, WebClient.Builder webClientBuilder) {
+    ReviewController(ReviewService reviewService, ReviewModelAssembler reviewModelAssembler, WebClient.Builder webClientBuilder, ReviewGrpcClient reviewGrpcClient) {
         this.reviewService = reviewService;
         this.reviewModelAssembler = reviewModelAssembler;
         this.webClientBuilder = webClientBuilder;
+        this.reviewGrpcClient = reviewGrpcClient;
     }
 
     public CollectionModel<EntityModel<Review>> getAllReviews() {
