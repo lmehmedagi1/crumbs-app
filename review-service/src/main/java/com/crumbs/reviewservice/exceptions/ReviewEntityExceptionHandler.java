@@ -17,9 +17,11 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
@@ -121,6 +123,11 @@ public class ReviewEntityExceptionHandler extends ResponseEntityExceptionHandler
         return new ResponseEntity<>(apiError, NOT_FOUND);
     }
 
+    @ExceptionHandler(HttpStatusCodeException.class)
+    public final ResponseEntity<String> handleNotFoundExceptions(HttpStatusCodeException ex, WebRequest request) {
+        return new ResponseEntity<String>(ex.getResponseBodyAsString(), ex.getResponseHeaders(), ex.getStatusCode());
+    }
+
     /**
      * Handles javax.validation.ConstraintViolationException.
      * Triggered when an object fails @Validated validation.
@@ -143,6 +150,12 @@ public class ReviewEntityExceptionHandler extends ResponseEntityExceptionHandler
      */
     @ExceptionHandler(ReviewNotFoundException.class)
     protected ResponseEntity<Object> handleEntityNotFound(ReviewNotFoundException ex, WebRequest request) {
+        ApiError apiError = new ApiError(NOT_FOUND, ex.getMessage(), "Review with specified parameters does not exist!", getRequestUri(request));
+        return new ResponseEntity<>(apiError, NOT_FOUND);
+    }
+
+    @ExceptionHandler(WebClientResponseException.class)
+    protected ResponseEntity<Object> handleWebClientResponseException(WebClientResponseException ex, WebRequest request) {
         ApiError apiError = new ApiError(NOT_FOUND, ex.getMessage(), "Review with specified parameters does not exist!", getRequestUri(request));
         return new ResponseEntity<>(apiError, NOT_FOUND);
     }

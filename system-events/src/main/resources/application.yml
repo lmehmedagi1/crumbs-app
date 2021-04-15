@@ -1,18 +1,16 @@
 server:
-  port: 8083
+  port: 8087
 spring:
   application:
-    name: review-service
+    name: system-events
   config:
     import: optional:configserver:https://crumbs-config-server.herokuapp.com
   cloud:
     config:
       uri: https://crumbs-config-server.herokuapp.com
-eureka.client.register-with-eureka: true
-eureka.client.fetch-registry: true
 eureka:
   instance:
     preferIpAddress: true
 grpc:
-  server:
-    port: 9093
+  port: 9090
+  enableReflection: true
