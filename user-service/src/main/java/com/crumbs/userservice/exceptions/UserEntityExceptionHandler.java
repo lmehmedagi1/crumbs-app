@@ -19,6 +19,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
@@ -234,5 +235,10 @@ public class UserEntityExceptionHandler extends ResponseEntityExceptionHandler {
                 ex.getName(), ex.getValue()));
         apiError.setPath(getRequestUri(request));
         return new ResponseEntity<>(apiError, BAD_REQUEST);
+    }
+
+    @ExceptionHandler(HttpStatusCodeException.class)
+    public final ResponseEntity<String> handleNotFoundExceptions(HttpStatusCodeException ex, WebRequest request) {
+        return new ResponseEntity<String>(ex.getResponseBodyAsString(), ex.getResponseHeaders(), ex.getStatusCode());
     }
 }
