@@ -11,3 +11,6 @@ spring:
 eureka:
   instance:
     preferIpAddress: true
+grpc:
+  server:
+    port: 9091
