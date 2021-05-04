@@ -10,10 +10,10 @@ DO
     sysevent_5_id UUID := ''39490cb7-2a4c-4326-9b7f-8ee32de2aab6'';
 
 BEGIN
-    INSERT INTO system_events VALUES (sysevent_1_id, current_timestamp, ''Recipe service'', ''GET'', ''R1'', ''OK'');
-    INSERT INTO system_events VALUES (sysevent_2_id, current_timestamp, ''Review service'', ''DELETE'', ''R2'', ''Neutral'');
-    INSERT INTO system_events VALUES (sysevent_3_id, current_timestamp, ''Notification service'', ''GET'', ''R3'', ''Fail'');
-    INSERT INTO system_events VALUES (sysevent_4_id, current_timestamp, ''User service'', ''POST'', ''R4'', ''Error'');
-    INSERT INTO system_events VALUES (sysevent_5_id, current_timestamp, ''Recipe service'', ''POST'', ''R5'', ''OK'');
+    INSERT INTO system_events VALUES (sysevent_1_id, current_timestamp, ''Recipe service'', ''GET'', ''Recipe'', ''OK 200'');
+    INSERT INTO system_events VALUES (sysevent_2_id, current_timestamp, ''Review service'', ''DELETE'', ''Review'', ''NOT_FOUND 404'');
+    INSERT INTO system_events VALUES (sysevent_3_id, current_timestamp, ''Notification service'', ''GET'', ''Notification'', ''NOT_FOUND 404'');
+    INSERT INTO system_events VALUES (sysevent_4_id, current_timestamp, ''User service'', ''POST'', ''User'', ''CREATED 201'');
+    INSERT INTO system_events VALUES (sysevent_5_id, current_timestamp, ''Recipe service'', ''POST'', ''Recipe'', ''CREATED 201'');
 END;
 ' LANGUAGE PLPGSQL;

@@ -38,4 +38,7 @@ public class SystemEvent implements Serializable {
 
     @Column(name = "response_type")
     private String responseType;
+
+    @Column(name = "message")
+    private String message;
 }

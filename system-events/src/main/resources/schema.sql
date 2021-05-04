@@ -7,5 +7,6 @@ CREATE TABLE system_events
     "action_type"   TEXT      NOT NULL,
     "resource_name" TEXT      NOT NULL,
     "response_type" TEXT      NOT NULL,
+    "message"       TEXT,
     PRIMARY KEY ("id")
 );

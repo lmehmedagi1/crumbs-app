@@ -1,27 +1,22 @@
 package com.crumbs.systemevents.grpc;
 
+import com.crumbs.systemevents.models.SystemEvent;
 import com.crumbs.systemevents.repositories.SystemEventsRepository;
 import io.grpc.stub.StreamObserver;
 import org.lognet.springboot.grpc.GRpcService;
-
-import com.crumbs.systemevents.models.SystemEvent;
-import com.crumbs.systemevents.repositories.SystemEventsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.UUID;
 
 @GRpcService
 public class LogServiceImpl extends LogServiceGrpc.LogServiceImplBase {
 
-    @Autowired
-    private SystemEventsRepository systemEventsRepository;
+    private final SystemEventsRepository systemEventsRepository;
 
-    @Override
-    public void hello(HelloRequest request, StreamObserver<HelloResponse> responseObserver) {
-        responseObserver.onNext(HelloResponse.newBuilder().setGreeting("Sup " + request.getFirstName()).build());
-        responseObserver.onCompleted();
+    @Autowired
+    public LogServiceImpl(SystemEventsRepository systemEventsRepository) {
+        this.systemEventsRepository = systemEventsRepository;
     }
 
     @Override
@@ -32,6 +27,7 @@ public class LogServiceImpl extends LogServiceGrpc.LogServiceImplBase {
         systemEvent.setTimestamp(LocalDateTime.now(ZoneId.of("UTC")));
         systemEvent.setResourceName(request.getResourceName());
         systemEvent.setResponseType(request.getResponseType());
+        systemEvent.setMessage(request.getMessage());
 
         systemEventsRepository.save(systemEvent);
 
