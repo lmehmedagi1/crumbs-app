@@ -4,7 +4,6 @@ option java_multiple_files = true;
 option java_package = "com.crumbs.systemevents.grpc";
 
 service LogService {
-  rpc hello(HelloRequest) returns (HelloResponse);
   rpc log(ActionRequest) returns (ActionResponse);
 }
 
@@ -14,17 +13,9 @@ message ActionRequest {
   string resourceName = 3;
   string actionType = 4;
   string responseType = 5;
+  string message = 6;
 }
 
 message ActionResponse {
   string responseMessage = 1;
-}
-
-message HelloRequest {
-  string firstName = 1;
-  string lastName = 2;
-}
-
-message HelloResponse {
-  string greeting = 1;
 }
