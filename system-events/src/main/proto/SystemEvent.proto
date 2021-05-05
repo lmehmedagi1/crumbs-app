@@ -9,11 +9,9 @@ service LogService {
 
 message ActionRequest {
   string serviceName = 1;
-  string timestamp = 2;
-  string resourceName = 3;
-  string actionType = 4;
-  string responseType = 5;
-  string message = 6;
+  string resourceName = 2;
+  string method = 3;
+  string responseStatus = 4;
 }
 
 message ActionResponse {

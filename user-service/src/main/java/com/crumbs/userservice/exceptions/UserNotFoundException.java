@@ -16,9 +16,4 @@ public class UserNotFoundException extends RuntimeException {
     public String getAltMessage() {
         return altMessage;
     }
-
-    public void setAltMessage(String altMessage) {
-        this.altMessage = altMessage;
-    }
-
 }

@@ -21,9 +21,11 @@ import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
-import org.springframework.web.reactive.function.client.WebClientResponseException;
+import org.springframework.web.reactive.function.client.WebClientException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+
+import java.net.ConnectException;
 
 import static org.springframework.http.HttpStatus.*;
 
@@ -37,7 +39,9 @@ public class ReviewEntityExceptionHandler extends ResponseEntityExceptionHandler
     }
 
     @Override
-    protected ResponseEntity<Object> handleHttpRequestMethodNotSupported(HttpRequestMethodNotSupportedException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+    protected ResponseEntity<Object> handleHttpRequestMethodNotSupported(HttpRequestMethodNotSupportedException ex,
+                                                                         HttpHeaders headers,
+                                                                         HttpStatus status, WebRequest request) {
         ApiError apiError = new ApiError(BAD_REQUEST, "Request method not supported",
                 "Check the request and try again!", getRequestUri(request));
         return new ResponseEntity<>(apiError, BAD_REQUEST);
@@ -106,7 +110,7 @@ public class ReviewEntityExceptionHandler extends ResponseEntityExceptionHandler
      * Created to encapsulate errors with more detail than javax.persistence.EntityNotFoundException.
      */
     @ExceptionHandler(UserNotFoundException.class)
-    protected ResponseEntity<Object> handleEntityNotFound(
+    protected ResponseEntity<Object> handleUserNotFoundException(
             UserNotFoundException ex, WebRequest request) {
         ApiError apiError = new ApiError(NOT_FOUND, ex.getMessage(), ex.getAltMessage(), getRequestUri(request));
         return new ResponseEntity<>(apiError, NOT_FOUND);
@@ -117,15 +121,34 @@ public class ReviewEntityExceptionHandler extends ResponseEntityExceptionHandler
      * Created to encapsulate errors with more detail than javax.persistence.EntityNotFoundException.
      */
     @ExceptionHandler(RecipeNotFoundException.class)
-    protected ResponseEntity<Object> handleRecipeNotFound(
+    protected ResponseEntity<Object> handleRecipeNotFoundException(
             RecipeNotFoundException ex, WebRequest request) {
         ApiError apiError = new ApiError(NOT_FOUND, ex.getMessage(), "Recipe with specified parameters does not exist!", getRequestUri(request));
         return new ResponseEntity<>(apiError, NOT_FOUND);
     }
 
+    /**
+     * Handles ReviewNotFoundException.
+     * Created to encapsulate errors with more detail than javax.persistence.EntityNotFoundException.
+     */
+    @ExceptionHandler(ReviewNotFoundException.class)
+    protected ResponseEntity<Object> handleReviewNotFoundException(ReviewNotFoundException ex, WebRequest request) {
+        ApiError apiError = new ApiError(NOT_FOUND, ex.getMessage(), "Review with specified parameters does not exist!", getRequestUri(request));
+        return new ResponseEntity<>(apiError, NOT_FOUND);
+    }
+
+    /**
+     * Handle javax.persistence.EntityNotFoundException
+     */
+    @ExceptionHandler(javax.persistence.EntityNotFoundException.class)
+    protected ResponseEntity<Object> handleEntityNotFound(javax.persistence.EntityNotFoundException ex, WebRequest request) {
+        ApiError apiError = new ApiError(NOT_FOUND, "Database error", "Entity does not exist!", getRequestUri(request));
+        return new ResponseEntity<>(apiError, NOT_FOUND);
+    }
+
     @ExceptionHandler(HttpStatusCodeException.class)
-    public final ResponseEntity<String> handleNotFoundExceptions(HttpStatusCodeException ex, WebRequest request) {
-        return new ResponseEntity<String>(ex.getResponseBodyAsString(), ex.getResponseHeaders(), ex.getStatusCode());
+    public final ResponseEntity<String> handleHttpStatusCodeException(HttpStatusCodeException ex, WebRequest request) {
+        return new ResponseEntity<>(ex.getResponseBodyAsString(), ex.getResponseHeaders(), ex.getStatusCode());
     }
 
     /**
@@ -144,20 +167,16 @@ public class ReviewEntityExceptionHandler extends ResponseEntityExceptionHandler
         return new ResponseEntity<>(apiError, BAD_REQUEST);
     }
 
-    /**
-     * Handles ReviewNotFoundException.
-     * Created to encapsulate errors with more detail than javax.persistence.EntityNotFoundException.
-     */
-    @ExceptionHandler(ReviewNotFoundException.class)
-    protected ResponseEntity<Object> handleEntityNotFound(ReviewNotFoundException ex, WebRequest request) {
-        ApiError apiError = new ApiError(NOT_FOUND, ex.getMessage(), "Review with specified parameters does not exist!", getRequestUri(request));
-        return new ResponseEntity<>(apiError, NOT_FOUND);
+    @ExceptionHandler(ConnectException.class)
+    protected ResponseEntity<Object> handleConnectException(ConnectException ex, WebRequest request) {
+        ApiError apiError = new ApiError(SERVICE_UNAVAILABLE, "Connect exception", "Failed to establish a connection!", getRequestUri(request));
+        return new ResponseEntity<>(apiError, SERVICE_UNAVAILABLE);
     }
 
-    @ExceptionHandler(WebClientResponseException.class)
-    protected ResponseEntity<Object> handleWebClientResponseException(WebClientResponseException ex, WebRequest request) {
-        ApiError apiError = new ApiError(NOT_FOUND, ex.getMessage(), "Review with specified parameters does not exist!", getRequestUri(request));
-        return new ResponseEntity<>(apiError, NOT_FOUND);
+    @ExceptionHandler(WebClientException.class)
+    protected ResponseEntity<Object> handleWebClientException(WebClientException ex, WebRequest request) {
+        ApiError apiError = new ApiError(SERVICE_UNAVAILABLE, "Exception during a web request", "Failed to contact service!", getRequestUri(request));
+        return new ResponseEntity<>(apiError, SERVICE_UNAVAILABLE);
     }
 
     /**
@@ -191,15 +210,6 @@ public class ReviewEntityExceptionHandler extends ResponseEntityExceptionHandler
         ApiError apiError = new ApiError(BAD_REQUEST, "No handler found", String.format("Could not find the %s method for URL %s!",
                 ex.getHttpMethod(), ex.getRequestURL()), getRequestUri(request));
         return new ResponseEntity<>(apiError, BAD_REQUEST);
-    }
-
-    /**
-     * Handle javax.persistence.EntityNotFoundException
-     */
-    @ExceptionHandler(javax.persistence.EntityNotFoundException.class)
-    protected ResponseEntity<Object> handleEntityNotFound(javax.persistence.EntityNotFoundException ex, WebRequest request) {
-        ApiError apiError = new ApiError(NOT_FOUND, "Database error", "Entity does not exist!", getRequestUri(request));
-        return new ResponseEntity<>(apiError, NOT_FOUND);
     }
 
     /**

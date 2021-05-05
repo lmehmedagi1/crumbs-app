@@ -2,7 +2,6 @@ package com.crumbs.recipeservice.repositories;
 
 import com.crumbs.recipeservice.models.Recipe;
 import com.crumbs.recipeservice.projections.RecipeView;
-import org.hibernate.sql.Select;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,14 +13,15 @@ import java.util.UUID;
 @Repository
 public interface RecipeRepository extends JpaRepository<Recipe, UUID> {
 
-    Slice<Recipe> findByUserId(UUID uuid, Pageable pageable);
-
-    //@Query("SELECT r.id as id, r.title as title, r.description as description from Recipe r WHERE ?1 in (SELECT c.id FROM r.categories c)")
-    Slice<RecipeView> findByCategories_Id(UUID uuid, Pageable pageable);
-
+    @Query("SELECT new com.crumbs.recipeservice.projections.RecipeView(r.id, r.title, r.description, r.userId) " +
+            "FROM Recipe r")
+    Slice<RecipeView> findAllPreviews(Pageable pageable);
 
     @Query("SELECT new com.crumbs.recipeservice.projections.RecipeView(r.id, r.title, r.description, r.userId) " +
-            "from Recipe r " +
-            "WHERE ?1 in (SELECT c.id FROM r.categories c)")
-    Slice<RecipeView> findRecipesByCategory(UUID uuid, Pageable pageable);
+            "FROM Recipe r WHERE r.userId = ?1")
+    Slice<RecipeView> findRecipesForUserId(UUID uuid, Pageable pageable);
+
+    @Query("SELECT new com.crumbs.recipeservice.projections.RecipeView(r.id, r.title, r.description, r.userId) " +
+            "FROM Recipe r WHERE ?1 IN (SELECT c.id FROM r.categories c)")
+    Slice<RecipeView> findRecipesInCategory(UUID uuid, Pageable pageable);
 }

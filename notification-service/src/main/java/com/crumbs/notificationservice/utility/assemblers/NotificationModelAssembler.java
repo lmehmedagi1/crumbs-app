@@ -1,8 +1,7 @@
-package com.crumbs.notificationservice.utility;
+package com.crumbs.notificationservice.utility.assemblers;
 
 import com.crumbs.notificationservice.controllers.NotificationController;
 import com.crumbs.notificationservice.models.Notification;
-import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.stereotype.Component;
@@ -16,7 +15,6 @@ public class NotificationModelAssembler implements RepresentationModelAssembler<
     @Override
     public EntityModel<Notification> toModel(Notification notification) {
         return EntityModel.of(notification,
-                linkTo(methodOn(NotificationController.class).getNotificationById(notification.getId())).withSelfRel()//,
-                /*linkTo(methodOn(NotificationController.class).getAllNotifications()).withRel("notifications")*/);
+                linkTo(methodOn(NotificationController.class).getNotificationById(notification.getId())).withSelfRel());
     }
 }

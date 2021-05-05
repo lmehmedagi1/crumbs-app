@@ -10,12 +10,11 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserView {
+    private UUID userId;
+    private String username;
+    private byte[] avatar;
 
     public UserView(UUID userId) {
         this.userId = userId;
     }
-
-    private UUID userId;
-    private String username;
-    private byte[] avatar;
 }

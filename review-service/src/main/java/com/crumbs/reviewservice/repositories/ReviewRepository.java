@@ -14,6 +14,6 @@ public interface ReviewRepository extends JpaRepository<Review, UUID> {
 
     List<Review> findByRecipeId(UUID uuid);
 
-    @Query("SELECT ROUND(AVG(r.rating), 2) FROM Review r WHERE r.recipeId = ?1")
+    @Query(value = "SELECT AVG(r.rating), 2 FROM Review r WHERE r.recipeId = ?1")
     Double getAvgRatingOfRecipe(UUID uuid);
 }

@@ -17,7 +17,6 @@ import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -33,14 +32,21 @@ public class RecipeService {
     }
 
     @Transactional(readOnly = true)
-    public List<Recipe> getAllRecipes() {
-        return recipeRepository.findAll();
+    public List<RecipeView> getRecipePreviews(Integer pageNo, Integer pageSize, String sort) {
+        Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sort).ascending());
+        Slice<RecipeView> slicedProducts = recipeRepository.findAllPreviews(paging);
+        return slicedProducts.getContent();
     }
 
-    @Transactional(readOnly = true)
-    public List<Recipe> getRecipes(Integer pageNo, Integer pageSize, String sort) {
-        Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sort).descending());
-        Slice<Recipe> slicedProducts = recipeRepository.findAll(paging);
+    public List<RecipeView> getRecipePreviewsForUser(UUID userId, Integer pageNo, Integer pageSize, String sort) {
+        Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sort).ascending());
+        Slice<RecipeView> slicedProducts = recipeRepository.findRecipesForUserId(userId, paging);
+        return slicedProducts.getContent();
+    }
+
+    public List<RecipeView> getRecipePreviewsForCategory(UUID userId, Integer pageNo, Integer pageSize, String sort) {
+        Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sort).ascending());
+        Slice<RecipeView> slicedProducts = recipeRepository.findRecipesInCategory(userId, paging);
         return slicedProducts.getContent();
     }
 
@@ -82,17 +88,5 @@ public class RecipeService {
             throw new RecipeNotFoundException();
 
         recipeRepository.deleteById(id);
-    }
-
-    public  List<Recipe> getRecipesForUser(UUID userId, Integer pageNo, Integer pageSize, String sort) {
-        Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sort).descending());
-        Slice<Recipe> slicedProducts = recipeRepository.findByUserId(userId, paging);
-        return slicedProducts.getContent();
-    }
-
-    public  List<RecipeView> getRecipesByCategoryPreview(UUID userId, Integer pageNo, Integer pageSize, String sort) {
-        Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sort).descending());
-        Slice<RecipeView> slicedProducts = recipeRepository.findRecipesByCategory(userId, paging);
-        return slicedProducts.getContent();
     }
 }

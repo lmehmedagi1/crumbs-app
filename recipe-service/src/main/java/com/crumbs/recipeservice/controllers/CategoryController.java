@@ -3,7 +3,7 @@ package com.crumbs.recipeservice.controllers;
 import com.crumbs.recipeservice.models.Category;
 import com.crumbs.recipeservice.requests.CategoryRequest;
 import com.crumbs.recipeservice.services.CategoryService;
-import com.crumbs.recipeservice.utility.CategoryModelAssembler;
+import com.crumbs.recipeservice.utility.assemblers.CategoryModelAssembler;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -17,13 +17,11 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -49,23 +47,18 @@ public class CategoryController {
         this.categoryModelAssembler = categoryModelAssembler;
     }
 
-    public CollectionModel<EntityModel<Category>> getAllCategories() {
-        List<EntityModel<Category>> categories = categoryService.getAllCategories()
-                .stream()
-                .map(categoryModelAssembler::toModel)
-                .collect(Collectors.toList());
-
-        return CollectionModel.of(categories, linkTo(methodOn(CategoryController.class).getAllCategories()).withSelfRel());
-    }
-
     @GetMapping
-    public CollectionModel<EntityModel<Category>> getCategories(@RequestParam Map<String, String> allRequestParams)
-            throws HttpRequestMethodNotSupportedException {
-        if (allRequestParams != null && !allRequestParams.isEmpty())
-            throw new HttpRequestMethodNotSupportedException("GET");
+    public CollectionModel<EntityModel<Category>> getCategories(
+            @RequestParam(defaultValue = "0") Integer pageNo,
+            @RequestParam(defaultValue = "5") Integer pageSize,
+            @RequestParam(defaultValue = "name") String sort) {
 
-        return getAllCategories();
+        List<EntityModel<Category>> categories = categoryService.getCategories(pageNo, pageSize, sort)
+                .stream().map(categoryModelAssembler::toModel).collect(Collectors.toList());
+
+        return CollectionModel.of(categories, linkTo(methodOn(CategoryController.class).getCategories(pageNo, pageSize, sort)).withSelfRel());
     }
+
 
     @RequestMapping(params = "id", method = RequestMethod.GET)
     public EntityModel<Category> getCategory(@RequestParam("id") @NotNull UUID id) {

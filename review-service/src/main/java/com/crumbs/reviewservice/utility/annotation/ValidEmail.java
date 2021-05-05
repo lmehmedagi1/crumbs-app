@@ -1,4 +1,4 @@
-package com.crumbs.reviewservice.utility;
+package com.crumbs.reviewservice.utility.annotation;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;

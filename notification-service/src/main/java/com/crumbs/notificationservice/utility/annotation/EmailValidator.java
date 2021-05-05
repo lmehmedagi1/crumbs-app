@@ -1,4 +1,4 @@
-package com.crumbs.notificationservice.utility;
+package com.crumbs.notificationservice.utility.annotation;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

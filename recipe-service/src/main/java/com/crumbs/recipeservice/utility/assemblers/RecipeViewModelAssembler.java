@@ -1,7 +1,6 @@
-package com.crumbs.recipeservice.utility;
+package com.crumbs.recipeservice.utility.assemblers;
 
 import com.crumbs.recipeservice.controllers.RecipeController;
-import com.crumbs.recipeservice.models.Recipe;
 import com.crumbs.recipeservice.projections.RecipeView;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
@@ -14,7 +13,6 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 public class RecipeViewModelAssembler implements RepresentationModelAssembler<RecipeView, EntityModel<RecipeView>> {
     @Override
     public EntityModel<RecipeView> toModel(RecipeView recipeView) {
-        return EntityModel.of(recipeView, linkTo(methodOn(RecipeController.class).getRecipe(recipeView.getRecipeId())).withSelfRel(),
-                linkTo(methodOn(RecipeController.class).getAllRecipes()).withRel("recipes"));
+        return EntityModel.of(recipeView, linkTo(methodOn(RecipeController.class).getRecipe(recipeView.getRecipeId())).withSelfRel());
     }
 }

@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -49,8 +48,8 @@ public class UserProfile {
     @Pattern(regexp = "^[0-9]+$", message = "Invalid phone number format!")
     private String phoneNumber;
 
-    @JsonBackReference
     @NotNull
+    @JsonBackReference
     @OneToOne
     @MapsId
     @JoinColumn(name = "user_id")

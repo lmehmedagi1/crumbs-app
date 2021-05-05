@@ -1,4 +1,4 @@
-package com.crumbs.recipeservice.utility;
+package com.crumbs.recipeservice.utility.assemblers;
 
 import com.crumbs.recipeservice.controllers.CategoryController;
 import com.crumbs.recipeservice.models.Category;
@@ -13,7 +13,6 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 public class CategoryModelAssembler implements RepresentationModelAssembler<Category, EntityModel<Category>> {
     @Override
     public EntityModel<Category> toModel(Category category) {
-        return EntityModel.of(category, linkTo(methodOn(CategoryController.class).getCategory(category.getId())).withSelfRel(),
-                linkTo(methodOn(CategoryController.class).getAllCategories()).withRel("categories"));
+        return EntityModel.of(category, linkTo(methodOn(CategoryController.class).getCategory(category.getId())).withSelfRel());
     }
 }
