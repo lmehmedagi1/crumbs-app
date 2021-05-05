@@ -3,14 +3,13 @@ package com.crumbs.userservice.controllers;
 import com.crumbs.userservice.models.User;
 import com.crumbs.userservice.requests.RegisterRequest;
 import com.crumbs.userservice.services.UserService;
-import com.crumbs.userservice.utility.UserModelAssembler;
+import com.crumbs.userservice.utility.assemblers.UserModelAssembler;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.reactive.function.client.WebClient;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
@@ -29,13 +28,11 @@ public class UserController {
 
     private final UserService userService;
     private final UserModelAssembler userModelAssembler;
-    private final WebClient.Builder webClientBuilder;
 
     @Autowired
-    public UserController(UserService userService, UserModelAssembler userModelAssembler, WebClient.Builder webClientBuilder) {
+    public UserController(UserService userService, UserModelAssembler userModelAssembler) {
         this.userService = userService;
         this.userModelAssembler = userModelAssembler;
-        this.webClientBuilder = webClientBuilder;
     }
 
     @PostMapping("/register")
@@ -46,9 +43,7 @@ public class UserController {
 
     @RequestMapping(params = "id", method = RequestMethod.GET)
     public EntityModel<User> getUserById(@RequestParam("id") @NotNull UUID id) {
-        EntityModel<User> user = userModelAssembler.toModel(userService.getUserById(id));
-        System.out.println("LInks: " + user.getLinks());
-        return user;
+        return userModelAssembler.toModel(userService.getUserById(id));
     }
 
     @RequestMapping(params = "username", method = RequestMethod.GET)
@@ -62,7 +57,7 @@ public class UserController {
     }
 
     @RequestMapping(params = "id", method = RequestMethod.DELETE)
-    public ResponseEntity<?> deleteUserById(@RequestParam("id") @NotBlank String id) {
+    public ResponseEntity<?> deleteUserById(@RequestParam("id") @NotNull UUID id) {
         userService.deleteUserById(id);
         return ResponseEntity.noContent().build();
     }

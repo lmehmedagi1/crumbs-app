@@ -11,5 +11,4 @@ public class SystemEventsServiceApplication {
     public static void main(String[] args) {
         SpringApplication.run(SystemEventsServiceApplication.class, args);
     }
-
 }

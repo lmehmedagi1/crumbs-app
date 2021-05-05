@@ -1,4 +1,4 @@
-package com.crumbs.reviewservice.utility;
+package com.crumbs.reviewservice.utility.assemblers;
 
 import com.crumbs.reviewservice.controllers.ReviewController;
 import com.crumbs.reviewservice.models.Review;
@@ -14,7 +14,6 @@ public class ReviewModelAssembler implements RepresentationModelAssembler<Review
     @Override
     public EntityModel<Review> toModel(Review review) {
         return EntityModel.of(review,
-                linkTo(methodOn(ReviewController.class).getReviewById(review.getId())).withSelfRel(),
-                linkTo(methodOn(ReviewController.class).getAllReviews()).withRel("reviews"));
+                linkTo(methodOn(ReviewController.class).getReviewById(review.getId())).withSelfRel());
     }
 }

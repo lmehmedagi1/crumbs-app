@@ -11,7 +11,7 @@ import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
+@Validated
 public class NotificationService {
 
     private final NotificationRepository notificationRepository;
@@ -26,11 +27,6 @@ public class NotificationService {
     @Autowired
     public NotificationService(NotificationRepository notificationRepository) {
         this.notificationRepository = notificationRepository;
-    }
-
-    @Transactional(readOnly = true)
-    public List<Notification> getAllNotifications( Integer pageNo, Integer pageSize, String sortBy) {
-        return notificationRepository.findAll();
     }
 
     @Transactional(readOnly = true)
@@ -60,16 +56,16 @@ public class NotificationService {
     }
 
     @Transactional
+    public int markAllAsReadForUser(@NotNull UUID userId) {
+        return notificationRepository.markAllAsRead(userId);
+    }
+
+    @Transactional
     public Notification updateNotification(@NotNull @Valid NotificationRequest notificationRequest, @NotNull UUID id) {
         return notificationRepository.findById(id).map(notification -> {
             modifyNotification(notificationRequest, notification);
             return notificationRepository.save(notification);
         }).orElseThrow(NotificationNotFoundException::new);
-    }
-
-    @Transactional
-    public int updateNotificationMarkAllAsRead(@NotNull UUID userId) {
-        return notificationRepository.markAllAsRead(userId);
     }
 
     @Transactional

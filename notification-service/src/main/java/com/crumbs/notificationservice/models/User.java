@@ -1,6 +1,6 @@
 package com.crumbs.notificationservice.models;
 
-import com.crumbs.notificationservice.utility.ValidEmail;
+import com.crumbs.notificationservice.utility.annotation.ValidEmail;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
@@ -37,7 +37,7 @@ public class User {
 
     @JsonManagedReference
     @NotNull
-    private UserDetails userDetails;
+    private UserProfile userProfile;
 
     @JsonIgnore
     private List<User> subscriptions;

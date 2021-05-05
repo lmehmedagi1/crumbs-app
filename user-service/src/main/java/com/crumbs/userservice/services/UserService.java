@@ -43,7 +43,6 @@ public class UserService {
         final User user = userRepository.findByEmail(email);
         if (user == null)
             throw new UserNotFoundException("Specified email does not exists!");
-
         return user;
     }
 
@@ -65,11 +64,10 @@ public class UserService {
     }
 
     public User registerUser(@NotNull @Valid RegisterRequest registerRequest) {
-
         if (userRepository.findByUsername(registerRequest.getUsername()) != null)
-            throw new UserAlreadyExistsException("Username is taken, try another one!");
+            throw new UserAlreadyExistsException("Username already taken, try another one!");
         else if (userRepository.findByEmail(registerRequest.getEmail()) != null)
-            throw new UserAlreadyExistsException("Email is taken, try another one!");
+            throw new UserAlreadyExistsException("Email already taken, try another one!");
 
         User user = new User();
         user.setUsername(registerRequest.getUsername());
@@ -85,17 +83,16 @@ public class UserService {
         user.setUserProfile(userProfile);
         userProfile.setUser(user);
 
-        final User newUser = userRepository.save(user);
+        userRepository.save(user);
         userProfileRepository.save(userProfile);
-
-        return newUser;
+        return user;
     }
 
     @Transactional
-    public void deleteUserById(@NotBlank String id) {
-        if (!userRepository.existsById(UUID.fromString(id)))
+    public void deleteUserById(@NotNull UUID id) {
+        if (!userRepository.existsById(id))
             throw new UserNotFoundException("Specified ID does not exists!");
 
-        userRepository.deleteById(UUID.fromString(id));
+        userRepository.deleteById(id);
     }
 }

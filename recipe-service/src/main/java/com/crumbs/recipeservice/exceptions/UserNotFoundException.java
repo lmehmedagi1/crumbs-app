@@ -2,23 +2,15 @@ package com.crumbs.recipeservice.exceptions;
 
 public class UserNotFoundException extends RuntimeException {
 
-    private String altMessage;
-
     public UserNotFoundException() {
         super("User not found");
     }
 
-    public UserNotFoundException(String altMessage) {
-        this();
-        this.altMessage = altMessage;
+    public UserNotFoundException(String message) {
+        super(message);
     }
 
     public String getAltMessage() {
-        return altMessage;
+        return "User with specified parameters does not exist!";
     }
-
-    public void setAltMessage(String altMessage) {
-        this.altMessage = altMessage;
-    }
-
 }

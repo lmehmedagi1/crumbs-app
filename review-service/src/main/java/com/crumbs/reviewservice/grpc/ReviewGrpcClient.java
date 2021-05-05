@@ -1,31 +1,25 @@
 package com.crumbs.reviewservice.grpc;
 
-import com.crumbs.systemevents.grpc.ActionRequest;
-import com.crumbs.systemevents.grpc.ActionResponse;
-import com.crumbs.systemevents.grpc.LogServiceGrpc;
-import io.grpc.ManagedChannel;
-import io.grpc.ManagedChannelBuilder;
+import net.devh.boot.grpc.client.inject.GrpcClient;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 
 @Service
 public class ReviewGrpcClient {
 
-    public String log(String microservice, String actionType, String resourceName, String responseType) {
-        ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", 9090)
-                .usePlaintext()
-                .build();
-        LogServiceGrpc.LogServiceBlockingStub stub = LogServiceGrpc.newBlockingStub(channel);
-        ActionResponse helloResponse = stub.log(ActionRequest.newBuilder()
-                .setTimestamp(LocalDateTime.now(ZoneId.of("UTC")).toString())
-                .setServiceName(microservice)
-                .setActionType(actionType)
-                .setResourceName(resourceName)
-                .setResponseType(responseType)
-                .build());
-        channel.shutdown();
-        return helloResponse.getResponseMessage();
+    @GrpcClient("review-service-grpc")
+    private LogServiceGrpc.LogServiceBlockingStub logServiceBlockingStub;
+
+    public String log(String serviceName, String resourceName, String method, String responseStatus) {
+        try {
+            ActionResponse helloResponse = logServiceBlockingStub.log(ActionRequest.newBuilder()
+                    .setServiceName(serviceName)
+                    .setResourceName(resourceName)
+                    .setMethod(method)
+                    .setResponseStatus(responseStatus)
+                    .build());
+            return helloResponse.getResponseMessage();
+        } catch (Exception ignored) {
+            return "Exception during gRPC request";
+        }
     }
 }

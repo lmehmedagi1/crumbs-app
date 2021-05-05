@@ -5,6 +5,10 @@ import com.crumbs.recipeservice.models.Ingredient;
 import com.crumbs.recipeservice.repositories.IngredientRepository;
 import com.crumbs.recipeservice.requests.IngredientRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -22,8 +26,10 @@ public class IngredientService {
     private IngredientRepository ingredientRepository;
 
     @Transactional(readOnly = true)
-    public List<Ingredient> getAllIngredients() {
-        return ingredientRepository.findAll();
+    public List<Ingredient> getIngredients(Integer pageNo, Integer pageSize, String sort) {
+        Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sort).ascending());
+        Slice<Ingredient> slicedProducts = ingredientRepository.findAll(paging);
+        return slicedProducts.getContent();
     }
 
     @Transactional(readOnly = true)

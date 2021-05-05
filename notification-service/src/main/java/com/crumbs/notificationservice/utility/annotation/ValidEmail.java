@@ -1,6 +1,4 @@
-package com.crumbs.notificationservice.utility;
-
-import com.crumbs.notificationservice.utility.EmailValidator;
+package com.crumbs.notificationservice.utility.annotation;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;

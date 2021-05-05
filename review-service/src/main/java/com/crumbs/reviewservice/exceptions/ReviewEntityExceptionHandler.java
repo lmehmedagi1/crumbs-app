@@ -21,9 +21,11 @@ import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
-import org.springframework.web.reactive.function.client.WebClientResponseException;
+import org.springframework.web.reactive.function.client.WebClientException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+
+import java.net.ConnectException;
 
 import static org.springframework.http.HttpStatus.*;
 
@@ -125,7 +127,7 @@ public class ReviewEntityExceptionHandler extends ResponseEntityExceptionHandler
 
     @ExceptionHandler(HttpStatusCodeException.class)
     public final ResponseEntity<String> handleNotFoundExceptions(HttpStatusCodeException ex, WebRequest request) {
-        return new ResponseEntity<String>(ex.getResponseBodyAsString(), ex.getResponseHeaders(), ex.getStatusCode());
+        return new ResponseEntity<>(ex.getResponseBodyAsString(), ex.getResponseHeaders(), ex.getStatusCode());
     }
 
     /**
@@ -154,10 +156,16 @@ public class ReviewEntityExceptionHandler extends ResponseEntityExceptionHandler
         return new ResponseEntity<>(apiError, NOT_FOUND);
     }
 
-    @ExceptionHandler(WebClientResponseException.class)
-    protected ResponseEntity<Object> handleWebClientResponseException(WebClientResponseException ex, WebRequest request) {
-        ApiError apiError = new ApiError(NOT_FOUND, ex.getMessage(), "Review with specified parameters does not exist!", getRequestUri(request));
-        return new ResponseEntity<>(apiError, NOT_FOUND);
+    @ExceptionHandler(ConnectException.class)
+    protected ResponseEntity<Object> handleConnectException(ConnectException ex, WebRequest request) {
+        ApiError apiError = new ApiError(SERVICE_UNAVAILABLE, "Connect exception", "Failed to establish a connection!", getRequestUri(request));
+        return new ResponseEntity<>(apiError, SERVICE_UNAVAILABLE);
+    }
+
+    @ExceptionHandler(WebClientException.class)
+    protected ResponseEntity<Object> handleWebClientException(WebClientException ex, WebRequest request) {
+        ApiError apiError = new ApiError(SERVICE_UNAVAILABLE, "Exception during a web request", "Failed to contact service!", getRequestUri(request));
+        return new ResponseEntity<>(apiError, SERVICE_UNAVAILABLE);
     }
 
     /**

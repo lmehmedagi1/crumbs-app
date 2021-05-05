@@ -1,6 +1,6 @@
 package com.crumbs.reviewservice.models;
 
-import com.crumbs.reviewservice.utility.ValidEmail;
+import com.crumbs.reviewservice.utility.annotation.ValidEmail;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;

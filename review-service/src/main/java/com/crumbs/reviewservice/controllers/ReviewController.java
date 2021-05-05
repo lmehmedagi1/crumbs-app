@@ -1,14 +1,10 @@
 package com.crumbs.reviewservice.controllers;
 
-import com.crumbs.reviewservice.exceptions.RecipeNotFoundException;
-import com.crumbs.reviewservice.exceptions.UserNotFoundException;
-import com.crumbs.reviewservice.grpc.ReviewGrpcClient;
-import com.crumbs.reviewservice.models.Recipe;
 import com.crumbs.reviewservice.models.Review;
-import com.crumbs.reviewservice.models.User;
 import com.crumbs.reviewservice.requests.ReviewRequest;
+import com.crumbs.reviewservice.requests.ReviewWebClientRequest;
 import com.crumbs.reviewservice.services.ReviewService;
-import com.crumbs.reviewservice.utility.ReviewModelAssembler;
+import com.crumbs.reviewservice.utility.assemblers.ReviewModelAssembler;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -22,16 +18,11 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
 
-import javax.annotation.Nullable;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -50,32 +41,14 @@ public class ReviewController {
 
     private final ReviewService reviewService;
     private final ReviewModelAssembler reviewModelAssembler;
-    private final WebClient.Builder webClientBuilder;
-    private final ReviewGrpcClient reviewGrpcClient;
+    private final ReviewWebClientRequest reviewWebClientRequest;
 
     @Autowired
-    ReviewController(ReviewService reviewService, ReviewModelAssembler reviewModelAssembler, WebClient.Builder webClientBuilder, ReviewGrpcClient reviewGrpcClient) {
+    ReviewController(ReviewService reviewService, ReviewModelAssembler reviewModelAssembler,
+                     ReviewWebClientRequest reviewWebClientRequest) {
         this.reviewService = reviewService;
         this.reviewModelAssembler = reviewModelAssembler;
-        this.webClientBuilder = webClientBuilder;
-        this.reviewGrpcClient = reviewGrpcClient;
-    }
-
-    public CollectionModel<EntityModel<Review>> getAllReviews() {
-        List<EntityModel<Review>> reviews = reviewService.getAllReviews().stream()
-                .map(reviewModelAssembler::toModel)
-                .collect(Collectors.toList());
-
-        return CollectionModel.of(reviews, linkTo(methodOn(ReviewController.class).getAllReviews()).withSelfRel());
-    }
-
-    @GetMapping
-    public CollectionModel<EntityModel<Review>> getReviews(@RequestParam @Nullable Map<String, String> allRequestParams)
-            throws HttpRequestMethodNotSupportedException {
-        if (allRequestParams != null && !allRequestParams.isEmpty())
-            throw new HttpRequestMethodNotSupportedException("GET");
-
-        return getAllReviews();
+        this.reviewWebClientRequest = reviewWebClientRequest;
     }
 
     @RequestMapping(params = "id", method = RequestMethod.GET)
@@ -86,35 +59,38 @@ public class ReviewController {
     @RequestMapping(params = "userId", method = RequestMethod.GET)
     public CollectionModel<EntityModel<Review>> getReviewsOfUser(@RequestParam("userId") @NotNull UUID userId) {
 
-        checkIfUserExists(userId);
+        reviewWebClientRequest.checkIfUserExists(userId);
 
         List<EntityModel<Review>> reviews = reviewService.getReviewsOfUser(userId).stream()
                 .map(reviewModelAssembler::toModel)
                 .collect(Collectors.toList());
-        return CollectionModel.of(reviews, linkTo(methodOn(ReviewController.class).getAllReviews()).withSelfRel());
+        return CollectionModel.of(reviews,
+                linkTo(methodOn(ReviewController.class).getReviewsOfUser(userId)).withSelfRel());
     }
 
     @RequestMapping(params = "recipeId", method = RequestMethod.GET)
     public CollectionModel<EntityModel<Review>> getReviewsOfRecipe(@RequestParam("recipeId") @NotNull UUID recipeId) {
 
-        checkIfRecipeExists(recipeId);
+        reviewWebClientRequest.checkIfRecipeExists(recipeId);
 
         List<EntityModel<Review>> reviews = reviewService.getReviewsOfRecipe(recipeId).stream()
                 .map(reviewModelAssembler::toModel)
                 .collect(Collectors.toList());
-        return CollectionModel.of(reviews, linkTo(methodOn(ReviewController.class).getAllReviews()).withSelfRel());
+        return CollectionModel.of(reviews,
+                linkTo(methodOn(ReviewController.class).getReviewsOfRecipe(recipeId)).withSelfRel());
     }
 
     @RequestMapping(value = "/rating", params = "recipeId", method = RequestMethod.GET)
-    public Double getRecipeRating(@RequestParam("recipeId") @NotNull UUID recipeId){
+    public Double getRecipeRating(@RequestParam("recipeId") @NotNull UUID recipeId) {
+        reviewWebClientRequest.checkIfRecipeExists(recipeId);
         return reviewService.getRecipeRating(recipeId);
     }
 
     @PostMapping
     public ResponseEntity<?> createReview(@RequestBody @Valid ReviewRequest reviewRequest) {
 
-        checkIfRecipeExists(UUID.fromString(reviewRequest.getRecipe_id()));
-        checkIfUserExists(UUID.fromString(reviewRequest.getUser_id()));
+        reviewWebClientRequest.checkIfRecipeExists(UUID.fromString(reviewRequest.getRecipe_id()));
+        reviewWebClientRequest.checkIfUserExists(UUID.fromString(reviewRequest.getUser_id()));
 
         final Review newReview = reviewService.saveReview(reviewRequest);
         EntityModel<Review> entityModel = reviewModelAssembler.toModel(newReview);
@@ -125,8 +101,8 @@ public class ReviewController {
     public ResponseEntity<?> updateReview(@RequestParam("id") @NotNull UUID id,
                                           @RequestBody @Valid ReviewRequest reviewRequest) {
 
-        checkIfRecipeExists(UUID.fromString(reviewRequest.getRecipe_id()));
-        checkIfUserExists(UUID.fromString(reviewRequest.getUser_id()));
+        reviewWebClientRequest.checkIfRecipeExists(UUID.fromString(reviewRequest.getRecipe_id()));
+        reviewWebClientRequest.checkIfUserExists(UUID.fromString(reviewRequest.getUser_id()));
 
         final Review updatedReview = reviewService.updateReview(reviewRequest, id);
         EntityModel<Review> entityModel = reviewModelAssembler.toModel(updatedReview);
@@ -154,33 +130,5 @@ public class ReviewController {
     public ResponseEntity<?> deleteReview(@RequestParam("id") @NotNull UUID id) {
         reviewService.deleteReview(id);
         return ResponseEntity.noContent().build();
-    }
-
-    private User checkIfUserExists(UUID userId) {
-        return webClientBuilder.baseUrl("http://user-service").build().get()
-                .uri(uriBuilder -> uriBuilder
-                        .path("/account")
-                        .queryParam("id", userId)
-                        .build())
-                .retrieve()
-                .onStatus(HttpStatus::is4xxClientError, response -> {
-                    return Mono.error(new UserNotFoundException());
-                })
-                .bodyToMono(User.class)
-                .block();
-    }
-
-    private Recipe checkIfRecipeExists(UUID recipeId) {
-        return webClientBuilder.baseUrl("http://recipe-service").build().get()
-                .uri(uriBuilder -> uriBuilder
-                        .path("/recipes")
-                        .queryParam("id", recipeId)
-                        .build())
-                .retrieve()
-                .onStatus(HttpStatus::is4xxClientError, response -> {
-                    return Mono.error(new RecipeNotFoundException());
-                })
-                .bodyToMono(Recipe.class)
-                .block();
     }
 }

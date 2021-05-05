@@ -1,12 +1,12 @@
-package com.crumbs.recipeservice.grpc;
+package com.crumbs.notificationservice.grpc;
 
 import net.devh.boot.grpc.client.inject.GrpcClient;
 import org.springframework.stereotype.Service;
 
 @Service
-public class RecipeGrpcClient {
+public class NotificationGrpcClient {
 
-    @GrpcClient("recipe-service-grpc")
+    @GrpcClient("notification-service-grpc")
     private LogServiceGrpc.LogServiceBlockingStub logServiceBlockingStub;
 
     public String log(String serviceName, String resourceName, String method, String responseStatus) {

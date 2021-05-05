@@ -5,6 +5,10 @@ import com.crumbs.recipeservice.models.Category;
 import com.crumbs.recipeservice.repositories.CategoryRepository;
 import com.crumbs.recipeservice.requests.CategoryRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -26,8 +30,10 @@ public class CategoryService {
     }
 
     @Transactional(readOnly = true)
-    public List<Category> getAllCategories() {
-        return categoryRepository.findAll();
+    public List<Category> getCategories(Integer pageNo, Integer pageSize, String sort) {
+        Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sort).ascending());
+        Slice<Category> slicedProducts = categoryRepository.findAll(paging);
+        return slicedProducts.getContent();
     }
 
     @Transactional(readOnly = true)
@@ -66,4 +72,5 @@ public class CategoryService {
 
         categoryRepository.deleteById(id);
     }
+
 }
