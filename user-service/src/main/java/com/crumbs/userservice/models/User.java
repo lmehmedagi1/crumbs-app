@@ -43,8 +43,8 @@ public class User {
             "There must be at least one digit, one lowercase and one uppercase letter, one special character and no whitespaces!")
     private String password;
 
-    @JsonManagedReference
     @NotNull
+    @JsonManagedReference
     @JsonProperty("user_profile")
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn

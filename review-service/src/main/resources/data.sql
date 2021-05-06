@@ -20,7 +20,6 @@ DO
     manda_id UUID := ''75a8f34b-2539-452a-9325-b432dbe3b995'';
     medo_id UUID := ''d913320a-baf1-43e0-b8b7-25f748e574ee'';
     aki_id UUID := ''fc98612b-c0c2-4792-b2ac-acb7dd6555c1'';
-
 BEGIN
 INSERT INTO reviews VALUES (review_1_id, sampita_id, medo_id, true, 4, ''Dobar pravo'');
 INSERT INTO reviews VALUES (review_2_id, sampita_id, medo_id, false, 3, ''Meh bezze'');

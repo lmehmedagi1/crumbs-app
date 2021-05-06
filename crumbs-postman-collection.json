@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "079f2c50-788a-47b0-8e10-a91339e8e55e",
+		"_postman_id": "8357b714-c525-43a5-8333-c2d5d323292f",
 		"name": "CRUMBS-APP",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -9,235 +9,603 @@
 			"name": "USER-SERVICE",
 			"item": [
 				{
-					"name": "user-details",
-					"item": [
-						{
-							"name": "/profile?id=",
-							"protocolProfileBehavior": {
-								"disableBodyPruning": true
-							},
-							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "",
-											"type": "string"
-										}
-									]
-								},
-								"method": "GET",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "http://localhost:8081/profile?id=d913320a-baf1-43e0-b8b7-25f748e574ee",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "8081",
-									"path": [
-										"profile"
-									],
-									"query": [
-										{
-											"key": "id",
-											"value": "d913320a-baf1-43e0-b8b7-25f748e574ee"
-										}
-									]
+					"name": "/account/login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"lmehmedagi\",\r\n    \"password\": \"Passw!\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
 								}
-							},
-							"response": []
+							}
 						},
-						{
-							"name": "/profile",
-							"request": {
-								"method": "PATCH",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n  \"firstName\": \"Medo\",\r\n  \"lastName\": \"Medici\",\r\n  \"gender\": \"female\",\r\n  \"phoneNumber\": \"123456789\",\r\n  \"avatar\": \"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==\"\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "localhost:8081/profile?id=d913320a-baf1-43e0-b8b7-25f748e574ee",
-									"host": [
-										"localhost"
-									],
-									"port": "8081",
-									"path": [
-										"profile"
-									],
-									"query": [
-										{
-											"key": "id",
-											"value": "d913320a-baf1-43e0-b8b7-25f748e574ee"
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "PARTIAL /profile?id=",
-							"request": {
-								"method": "PATCH",
-								"header": [
-									{
-										"key": "Content-Type",
-										"value": "application/json-patch+json",
-										"type": "text"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "[\r\n    {\r\n        \"op\": \"replace\",\r\n        \"path\": \"/gender\",\r\n        \"value\": \"male\"\r\n    }\r\n]",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "localhost:8081/profile?id=d913320a-baf1-43e0-b8b7-25f748e574ee",
-									"host": [
-										"localhost"
-									],
-									"port": "8081",
-									"path": [
-										"profile"
-									],
-									"query": [
-										{
-											"key": "id",
-											"value": "d913320a-baf1-43e0-b8b7-25f748e574ee"
-										}
-									]
-								}
-							},
-							"response": []
+						"url": {
+							"raw": "localhost:8081/account/login",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"account",
+								"login"
+							]
 						}
-					]
+					},
+					"response": []
 				},
 				{
-					"name": "user",
-					"item": [
-						{
-							"name": "/account/register",
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n  \"email\": \"novi@gmail.com\",\r\n  \"first_name\": \"Novo\",\r\n  \"gender\": \"female\",\r\n  \"last_name\": \"Novic\",\r\n  \"password\": \"Password123!\",\r\n  \"phone_number\": \"0603189774\",\r\n  \"username\": \"lmehmedagi\"\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "localhost:8081/account/register",
-									"host": [
-										"localhost"
-									],
-									"port": "8081",
-									"path": [
-										"account",
-										"register"
-									]
+					"name": "/account/register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"novi@gmail.com\",\r\n  \"first_name\": \"Novo\",\r\n  \"gender\": \"female\",\r\n  \"last_name\": \"Novic\",\r\n  \"password\": \"Password123!\",\r\n  \"phone_number\": \"0603189774\",\r\n  \"username\": \"lmehmedagi\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
 								}
-							},
-							"response": []
+							}
 						},
-						{
-							"name": "/account/login",
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n    \"username\": \"lmehmedagi\",\r\n    \"password\": \"Passw!\"\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "localhost:8081/account/login",
-									"host": [
-										"localhost"
-									],
-									"port": "8081",
-									"path": [
-										"account",
-										"login"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "/account?id=",
-							"protocolProfileBehavior": {
-								"disableBodyPruning": true
-							},
-							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJoZWhlbG9sbyIsImlhdCI6MTYxNjg3MDc3MywiZXhwIjoxNjE2OTY4ODAwfQ.lwy2oimoQbJndk4gCQPnU21oXlFgmH4t-kiCJjmlNeD2Vbt1uQgvV_nDWPU5gnGkIuhySf6msGtVk50-Ylqo_g",
-											"type": "string"
-										}
-									]
-								},
-								"method": "GET",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "localhost:8081/profile?id=d913320a-baf1-43e0-b8b7-25f748e574ee",
-									"host": [
-										"localhost"
-									],
-									"port": "8081",
-									"path": [
-										"profile"
-									],
-									"query": [
-										{
-											"key": "id",
-											"value": "d913320a-baf1-43e0-b8b7-25f748e574ee"
-										}
-									]
-								}
-							},
-							"response": []
+						"url": {
+							"raw": "localhost:8081/account/register",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"account",
+								"register"
+							]
 						}
-					]
+					},
+					"response": []
+				},
+				{
+					"name": "/account?id=",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8081/account?id=3e8ec94c-3edf-49e0-b548-425088881f60",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"account"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "3e8ec94c-3edf-49e0-b548-425088881f60"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/account?id=",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:8081/account?id=3e8ec94c-3edf-49e0-b548-425088881f60",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"account"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "3e8ec94c-3edf-49e0-b548-425088881f60"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/profile?id=",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8081/profile?id=75a8f34b-2539-452a-9325-b432dbe3b995",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"profile"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "75a8f34b-2539-452a-9325-b432dbe3b995"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "REVIEW-SERVICE",
+			"item": [
+				{
+					"name": "/reviews?id=",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8083/reviews?id=9469a486-1e50-4aaf-a760-1daf770a2147",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"reviews"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "9469a486-1e50-4aaf-a760-1daf770a2147"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/reviews?userId=",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8083/reviews?userId=75a8f34b-2539-452a-9325-b432dbe3b995",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"reviews"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "75a8f34b-2539-452a-9325-b432dbe3b995"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/reviews?recipeId=",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8083/reviews?recipeId=d3cd7d6f-b9c5-40aa-bbd0-487c47411b8a",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"reviews"
+							],
+							"query": [
+								{
+									"key": "recipeId",
+									"value": "d3cd7d6f-b9c5-40aa-bbd0-487c47411b8a"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/reviews/rating",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8083/reviews/rating?recipeId=d3cd7d6f-b9c5-40aa-bbd0-487c47411b8a",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"reviews",
+								"rating"
+							],
+							"query": [
+								{
+									"key": "recipeId",
+									"value": "d3cd7d6f-b9c5-40aa-bbd0-487c47411b8a"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/reviews",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"comment\": \"Novi komentarhehe\",\r\n  \"is_liked\": true,\r\n  \"rating\": 5,\r\n  \"recipe_id\": \"d3cd7d6f-b9c5-40aa-bbd0-487c47411b8a\",\r\n  \"user_id\": \"3e8ec94c-3edf-49e0-b548-425088881f60\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8083/reviews",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"reviews"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/reviews?id=",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"comment\": \"LOLOLO\",\r\n  \"is_liked\": false,\r\n  \"rating\": 1,\r\n  \"recipe_id\": \"71bd970f-1f0c-4662-9bba-d1514ec6d62a\",\r\n  \"user_id\": \"71bd970f-1f0c-4662-9bba-d1514e66d62b\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8083/reviews?id=a03c7a37-6f49-4e52-ab70-9c1e24bf5c96",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"reviews"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "a03c7a37-6f49-4e52-ab70-9c1e24bf5c96"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PARTIAL /reviews?id=",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json-patch+json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "[\r\n    {\r\n        \"op\": \"replace\",\r\n        \"path\": \"/comment\",\r\n        \"value\": \"P R E J A K O\"\r\n    }\r\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8083/reviews?id=a03c7a37-6f49-4e52-ab70-9c1e24bf5c96",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"reviews"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "a03c7a37-6f49-4e52-ab70-9c1e24bf5c96"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/reviews?id=",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json-patch+json",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8083/reviews?id=a03c7a37-6f49-4e52-ab70-9c1e24bf5c96",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"reviews"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "a03c7a37-6f49-4e52-ab70-9c1e24bf5c96"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "NOTIFICATION-SERVICE",
+			"item": [
+				{
+					"name": "/notifications?id=",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8084/notifications?id=3b9ceeb5-4099-49e0-beca-cc6b864c3707",
+							"host": [
+								"localhost"
+							],
+							"port": "8084",
+							"path": [
+								"notifications"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "3b9ceeb5-4099-49e0-beca-cc6b864c3707"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/notifications?userId=",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8084/notifications?userId=75a8f34b-2539-452a-9325-b432dbe3b995",
+							"host": [
+								"localhost"
+							],
+							"port": "8084",
+							"path": [
+								"notifications"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "75a8f34b-2539-452a-9325-b432dbe3b995"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/notifications/markAsRead?userId=",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8084/notifications/markAsRead?userId=75a8f34b-2539-452a-9325-b432dbe3b995",
+							"host": [
+								"localhost"
+							],
+							"port": "8084",
+							"path": [
+								"notifications",
+								"markAsRead"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "75a8f34b-2539-452a-9325-b432dbe3b995"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/notifications",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"description\": \"Evo ga braca najnovija testXD\",\r\n  \"is_read\": true,\r\n  \"user_id\": \"7ada4a84-20cb-43cf-9b10-3c14a71afdb2\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8084/notifications",
+							"host": [
+								"localhost"
+							],
+							"port": "8084",
+							"path": [
+								"notifications"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/notifications?id=",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"description\": \"strinSDASADg\",\r\n  \"is_read\": false,\r\n  \"user_id\": \"50017881-0e82-47ca-bc2a-971624573e4c\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8084/notifications?id=3b9ceeb5-4099-49e0-beca-cc6b864c3707",
+							"host": [
+								"localhost"
+							],
+							"port": "8084",
+							"path": [
+								"notifications"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "3b9ceeb5-4099-49e0-beca-cc6b864c3707"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PARTIAL /notifications?id=",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json-patch+json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "[\r\n    {\r\n        \"op\":\"replace\",\r\n        \"path\":\"/is_read\",\r\n        \"value\": true\r\n    }\r\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8084/notifications?id=3b9ceeb5-4099-49e0-beca-cc6b864c3707",
+							"host": [
+								"localhost"
+							],
+							"port": "8084",
+							"path": [
+								"notifications"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "3b9ceeb5-4099-49e0-beca-cc6b864c3707"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/notifications?id=",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:8084/notifications?id=3b9ceeb5-4099-49e0-beca-cc6b864c3707",
+							"host": [
+								"localhost"
+							],
+							"port": "8084",
+							"path": [
+								"notifications"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "3b9ceeb5-4099-49e0-beca-cc6b864c3707"
+								}
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -295,7 +663,7 @@
 									}
 								},
 								"url": {
-									"raw": "localhost:8082/categories?id=fb244361-88cb-14eb-8ecd-0242ac130003",
+									"raw": "localhost:8082/categories?id=d3f25855-9723-43c2-b29c-34626dd834d2",
 									"host": [
 										"localhost"
 									],
@@ -306,7 +674,7 @@
 									"query": [
 										{
 											"key": "id",
-											"value": "fb244361-88cb-14eb-8ecd-0242ac130003"
+											"value": "d3f25855-9723-43c2-b29c-34626dd834d2"
 										}
 									]
 								}
@@ -355,7 +723,7 @@
 									}
 								},
 								"url": {
-									"raw": "localhost:8082/categories?id=17e216ec-87d4-4dc0-8458-da3625772d97",
+									"raw": "localhost:8082/categories?id=2bab77b6-1b86-4079-a30f-6bff12a4b5dd",
 									"host": [
 										"localhost"
 									],
@@ -366,7 +734,7 @@
 									"query": [
 										{
 											"key": "id",
-											"value": "17e216ec-87d4-4dc0-8458-da3625772d97"
+											"value": "2bab77b6-1b86-4079-a30f-6bff12a4b5dd"
 										}
 									]
 								}
@@ -399,7 +767,7 @@
 									}
 								},
 								"url": {
-									"raw": "localhost:8082/categories?id=17e216ec-87d4-4dc0-8458-da3625772d97",
+									"raw": "localhost:8082/categories?id=2bab77b6-1b86-4079-a30f-6bff12a4b5dd",
 									"host": [
 										"localhost"
 									],
@@ -410,7 +778,7 @@
 									"query": [
 										{
 											"key": "id",
-											"value": "17e216ec-87d4-4dc0-8458-da3625772d97"
+											"value": "2bab77b6-1b86-4079-a30f-6bff12a4b5dd"
 										}
 									]
 								}
@@ -423,7 +791,7 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "localhost:8082/categories?id=17e216ec-87d4-4dc0-8458-da3625772d97",
+									"raw": "localhost:8082/categories?id=2bab77b6-1b86-4079-a30f-6bff12a4b5dd",
 									"host": [
 										"localhost"
 									],
@@ -434,7 +802,7 @@
 									"query": [
 										{
 											"key": "id",
-											"value": "17e216ec-87d4-4dc0-8458-da3625772d97"
+											"value": "2bab77b6-1b86-4079-a30f-6bff12a4b5dd"
 										}
 									]
 								}
@@ -470,7 +838,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "localhost:8082/ingredients?id=79e8a3a4-d2ac-4816-a824-ca17ec43c9dc",
+									"raw": "localhost:8082/ingredients?id=89f1cf70-2824-443c-8eda-bfdeb4c2b3a2",
 									"host": [
 										"localhost"
 									],
@@ -481,7 +849,7 @@
 									"query": [
 										{
 											"key": "id",
-											"value": "79e8a3a4-d2ac-4816-a824-ca17ec43c9dc"
+											"value": "89f1cf70-2824-443c-8eda-bfdeb4c2b3a2"
 										}
 									]
 								}
@@ -530,7 +898,7 @@
 									}
 								},
 								"url": {
-									"raw": "localhost:8082/ingredients?id=b3ba010c-42b5-41a6-892f-afd86519c2a6",
+									"raw": "localhost:8082/ingredients?id=f4d3c0ac-d660-4303-abe1-eb4b75451288",
 									"host": [
 										"localhost"
 									],
@@ -541,7 +909,7 @@
 									"query": [
 										{
 											"key": "id",
-											"value": "b3ba010c-42b5-41a6-892f-afd86519c2a6"
+											"value": "f4d3c0ac-d660-4303-abe1-eb4b75451288"
 										}
 									]
 								}
@@ -574,7 +942,7 @@
 									}
 								},
 								"url": {
-									"raw": "localhost:8082/ingredients?id=b3ba010c-42b5-41a6-892f-afd86519c2a6",
+									"raw": "localhost:8082/ingredients?id=f4d3c0ac-d660-4303-abe1-eb4b75451288",
 									"host": [
 										"localhost"
 									],
@@ -585,7 +953,7 @@
 									"query": [
 										{
 											"key": "id",
-											"value": "b3ba010c-42b5-41a6-892f-afd86519c2a6"
+											"value": "f4d3c0ac-d660-4303-abe1-eb4b75451288"
 										}
 									]
 								}
@@ -598,7 +966,7 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "localhost:8082/ingredients?id=b3ba010c-42b5-41a6-892f-afd86519c2a6",
+									"raw": "localhost:8082/ingredients?id=f4d3c0ac-d660-4303-abe1-eb4b75451288",
 									"host": [
 										"localhost"
 									],
@@ -609,7 +977,7 @@
 									"query": [
 										{
 											"key": "id",
-											"value": "b3ba010c-42b5-41a6-892f-afd86519c2a6"
+											"value": "f4d3c0ac-d660-4303-abe1-eb4b75451288"
 										}
 									]
 								}
@@ -679,7 +1047,7 @@
 									}
 								},
 								"url": {
-									"raw": "localhost:8082/recipes?id=fb244360-88cb-11eb-8dcd-0242ac130003",
+									"raw": "localhost:8082/recipes?id=d3cd7d6f-b9c5-40aa-bbd0-487c47411b8a&details=true",
 									"host": [
 										"localhost"
 									],
@@ -690,7 +1058,59 @@
 									"query": [
 										{
 											"key": "id",
-											"value": "fb244360-88cb-11eb-8dcd-0242ac130003"
+											"value": "d3cd7d6f-b9c5-40aa-bbd0-487c47411b8a"
+										},
+										{
+											"key": "details",
+											"value": "true"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/recipes?userId=",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:8082/recipes?userId=3e8ec94c-3edf-49e0-b548-425088881f60",
+									"host": [
+										"localhost"
+									],
+									"port": "8082",
+									"path": [
+										"recipes"
+									],
+									"query": [
+										{
+											"key": "userId",
+											"value": "3e8ec94c-3edf-49e0-b548-425088881f60"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/recipes?categoryId=",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:8082/recipes?categoryId=d3f25855-9723-43c2-b29c-34626dd834d2",
+									"host": [
+										"localhost"
+									],
+									"port": "8082",
+									"path": [
+										"recipes"
+									],
+									"query": [
+										{
+											"key": "categoryId",
+											"value": "d3f25855-9723-43c2-b29c-34626dd834d2"
 										}
 									]
 								}
@@ -704,7 +1124,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"description\": \"Arrived totally in as between private. Favour of so as on pretty though elinor direct. Reasonable estimating be alteration we themselves entreaties me of reasonably. Direct wished so be expect polite valley. Whose asked stand it sense no spoil to. Prudent you too his conduct feeling limited and. Side he lose paid as hope so face upon be. Goodness did suitable learning put. \",\r\n  \"method\": \"sadaklhdawuhdajdoadja9wdhaudhapwdhaiopudha9dhnapiodaopdha9pdhauwdhpaudhapwdaipuwdhnpawuda\",\r\n  \"title\": \"LowDo\"\r\n}",
+									"raw": "{\r\n  \"description\": \"Arrived totally in as between private. Favour of so as on pretty though elinor direct. Reasonable estimating be alteration we themselves entreaties me of reasonably. Direct wished so be expect polite valley. Whose asked stand it sense no spoil to. Prudent you too his conduct feeling limited and. Side he lose paid as hope so face upon be. Goodness did suitable learning put. \",\r\n  \"method\": \"sadaklhdawuhdajdoadja9wdhaudhapwdhaiopudha9dhnapiodaopdha9pdhauwdhpaudhapwdaipuwdhnpawuda\",\r\n  \"title\": \"LowDo\",\r\n  \"user_id\": \"3e8ec94c-3edf-49e0-b548-425088881f60\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -852,7 +1272,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "localhost:8082/diets?id=bb244361-88cb-14eb-8ecd-0242ac130003",
+									"raw": "localhost:8082/diets?id=add537e6-12a6-410a-83f3-7c9cc95c2d7a&details=true",
 									"host": [
 										"localhost"
 									],
@@ -863,7 +1283,11 @@
 									"query": [
 										{
 											"key": "id",
-											"value": "bb244361-88cb-14eb-8ecd-0242ac130003"
+											"value": "add537e6-12a6-410a-83f3-7c9cc95c2d7a"
+										},
+										{
+											"key": "details",
+											"value": "true"
 										}
 									]
 								}
@@ -877,7 +1301,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"description\": \"string\",\r\n  \"duration\": 0,\r\n  \"is_private\": true,\r\n  \"title\": \"string\"\r\n}",
+									"raw": "{\r\n  \"description\": \"strinsdasdg\",\r\n  \"duration\": 3,\r\n  \"is_private\": true,\r\n  \"title\": \"strsadasdaing\",\r\n  \"user_id\": \"3e8ec94c-3edf-49e0-b548-425088881f61\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -999,448 +1423,6 @@
 							"response": []
 						}
 					]
-				}
-			]
-		},
-		{
-			"name": "REVIEW-SERVICE",
-			"item": [
-				{
-					"name": "/reviews",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:8083/reviews",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8083",
-							"path": [
-								"reviews"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "/reviews?id=",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:8083/reviews?id=bb244361-88cb-14eb-8ecd",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8083",
-							"path": [
-								"reviews"
-							],
-							"query": [
-								{
-									"key": "id",
-									"value": "bb244361-88cb-14eb-8ecd"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "/reviews?userId=",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:8083/reviews?userId=a28cafae-1868-4ce9-8d70-da943c7fe981",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8083",
-							"path": [
-								"reviews"
-							],
-							"query": [
-								{
-									"key": "userId",
-									"value": "a28cafae-1868-4ce9-8d70-da943c7fe981"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "/reviews?recipeId=",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:8083/reviews?recipeId=7f0fa93f-54b2-49cf-a659-a44f803036f2",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8083",
-							"path": [
-								"reviews"
-							],
-							"query": [
-								{
-									"key": "recipeId",
-									"value": "7f0fa93f-54b2-49cf-a659-a44f803036f2"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "/reviews",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n  \"comment\": \"Novi komentar\",\r\n  \"is_liked\": true,\r\n  \"rating\": 5,\r\n  \"recipe_id\": \"e3b461d0-96a9-4bcf-836f-35441f57a701\",\r\n  \"user_id\": \"e3b461d0-96a9-4bcf-836f-35441f57a702\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://localhost:8083/reviews",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8083",
-							"path": [
-								"reviews"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "/reviews?id=",
-					"request": {
-						"method": "PATCH",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n  \"comment\": \"LOLOLO\",\r\n  \"is_liked\": false,\r\n  \"rating\": 1,\r\n  \"recipe_id\": \"71bd970f-1f0c-4662-9bba-d1514ec6d62a\",\r\n  \"user_id\": \"71bd970f-1f0c-4662-9bba-d1514e66d62b\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://localhost:8083/reviews?id=a03c7a37-6f49-4e52-ab70-9c1e24bf5c96",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8083",
-							"path": [
-								"reviews"
-							],
-							"query": [
-								{
-									"key": "id",
-									"value": "a03c7a37-6f49-4e52-ab70-9c1e24bf5c96"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "PARTIAL /reviews?id=",
-					"protocolProfileBehavior": {
-						"disabledSystemHeaders": {
-							"content-type": true
-						}
-					},
-					"request": {
-						"method": "PATCH",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json-patch+json",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "[\r\n    {\r\n        \"op\": \"replace\",\r\n        \"path\": \"/comment\",\r\n        \"value\": \"P R E J A K O\"\r\n    }\r\n]",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://localhost:8083/reviews?id=a03c7a37-6f49-4e52-ab70-9c1e24bf5c96",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8083",
-							"path": [
-								"reviews"
-							],
-							"query": [
-								{
-									"key": "id",
-									"value": "a03c7a37-6f49-4e52-ab70-9c1e24bf5c96"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "/reviews?id=",
-					"protocolProfileBehavior": {
-						"disabledSystemHeaders": {
-							"content-type": true
-						}
-					},
-					"request": {
-						"method": "DELETE",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json-patch+json",
-								"type": "text",
-								"disabled": true
-							}
-						],
-						"url": {
-							"raw": "http://localhost:8083/reviews?id=a03c7a37-6f49-4e52-ab70-9c1e24bf5c96",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8083",
-							"path": [
-								"reviews"
-							],
-							"query": [
-								{
-									"key": "id",
-									"value": "a03c7a37-6f49-4e52-ab70-9c1e24bf5c96"
-								}
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "NOTIFICATION-SERVICE",
-			"item": [
-				{
-					"name": "/notifications",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "localhost:8084/notifications",
-							"host": [
-								"localhost"
-							],
-							"port": "8084",
-							"path": [
-								"notifications"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "/notifications?id=",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "localhost:8084/notifications?id=3b9ceeb5-4099-49e0-beca-cc6b864c3707",
-							"host": [
-								"localhost"
-							],
-							"port": "8084",
-							"path": [
-								"notifications"
-							],
-							"query": [
-								{
-									"key": "id",
-									"value": "3b9ceeb5-4099-49e0-beca-cc6b864c3707"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "/notifications?userId=",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "localhost:8084/notifications?userId=c76d0732-afb7-44ff-85b8-76e5120eedd6",
-							"host": [
-								"localhost"
-							],
-							"port": "8084",
-							"path": [
-								"notifications"
-							],
-							"query": [
-								{
-									"key": "userId",
-									"value": "c76d0732-afb7-44ff-85b8-76e5120eedd6"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "/notifications",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n  \"description\": \"Evo ga braca najnovija testXD\",\r\n  \"is_read\": true,\r\n  \"user_id\": \"7ada4a84-20cb-43cf-9b10-3c14a71afdb2\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "localhost:8084/notifications",
-							"host": [
-								"localhost"
-							],
-							"port": "8084",
-							"path": [
-								"notifications"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "/notifications?id=",
-					"request": {
-						"method": "PATCH",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n  \"description\": \"strinSDASADg\",\r\n  \"is_read\": false,\r\n  \"user_id\": \"50017881-0e82-47ca-bc2a-971624573e4c\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "localhost:8084/notifications?id=3b9ceeb5-4099-49e0-beca-cc6b864c3707",
-							"host": [
-								"localhost"
-							],
-							"port": "8084",
-							"path": [
-								"notifications"
-							],
-							"query": [
-								{
-									"key": "id",
-									"value": "3b9ceeb5-4099-49e0-beca-cc6b864c3707"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "PARTIAL /notifications?id=",
-					"protocolProfileBehavior": {
-						"disabledSystemHeaders": {
-							"content-type": true
-						}
-					},
-					"request": {
-						"method": "PATCH",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json-patch+json",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "[\r\n    {\r\n        \"op\":\"replace\",\r\n        \"path\":\"/is_read\",\r\n        \"value\": true\r\n    }\r\n]",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "localhost:8084/notifications?id=3b9ceeb5-4099-49e0-beca-cc6b864c3707",
-							"host": [
-								"localhost"
-							],
-							"port": "8084",
-							"path": [
-								"notifications"
-							],
-							"query": [
-								{
-									"key": "id",
-									"value": "3b9ceeb5-4099-49e0-beca-cc6b864c3707"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "/notifications?id=",
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"url": {
-							"raw": "localhost:8084/notifications?id=3b9ceeb5-4099-49e0-beca-cc6b864c3707",
-							"host": [
-								"localhost"
-							],
-							"port": "8084",
-							"path": [
-								"notifications"
-							],
-							"query": [
-								{
-									"key": "id",
-									"value": "3b9ceeb5-4099-49e0-beca-cc6b864c3707"
-								}
-							]
-						}
-					},
-					"response": []
 				}
 			]
 		}

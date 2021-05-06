@@ -7,6 +7,7 @@ import com.crumbs.reviewservice.requests.ReviewRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -14,6 +15,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
+@Validated
 public class ReviewService {
 
     private final ReviewRepository reviewRepository;
@@ -21,11 +23,6 @@ public class ReviewService {
     @Autowired
     public ReviewService(ReviewRepository reviewRepository) {
         this.reviewRepository = reviewRepository;
-    }
-
-    @Transactional(readOnly = true)
-    public List<Review> getAllReviews() {
-        return reviewRepository.findAll();
     }
 
     @Transactional(readOnly = true)
@@ -44,9 +41,10 @@ public class ReviewService {
     }
 
     @Transactional(readOnly = true)
-    public Double getRecipeRating(@NotNull UUID recipeId){
-        return reviewRepository.getAvgRatingOfRecipe(recipeId);
+    public Double getRecipeRating(@NotNull UUID recipeId) {
+        return (double) Math.round(reviewRepository.getAvgRatingOfRecipe(recipeId) * 100) / 100;
     }
+
     private void modifyReview(ReviewRequest reviewRequest, Review review) {
         review.setUserId(UUID.fromString(reviewRequest.getUser_id()));
         review.setRecipeId(UUID.fromString(reviewRequest.getRecipe_id()));

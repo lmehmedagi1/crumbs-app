@@ -3,7 +3,7 @@ package com.crumbs.recipeservice.controllers;
 import com.crumbs.recipeservice.models.Ingredient;
 import com.crumbs.recipeservice.requests.IngredientRequest;
 import com.crumbs.recipeservice.services.IngredientService;
-import com.crumbs.recipeservice.utility.IngredientModelAssembler;
+import com.crumbs.recipeservice.utility.assemblers.IngredientModelAssembler;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -17,13 +17,11 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -49,22 +47,17 @@ public class IngredientController {
         this.ingredientModelAssembler = ingredientModelAssembler;
     }
 
-    public CollectionModel<EntityModel<Ingredient>> getAllIngredients() {
-        List<EntityModel<Ingredient>> ingredients = ingredientService.getAllIngredients()
+    @GetMapping
+    public CollectionModel<EntityModel<Ingredient>> getIngredients(
+            @RequestParam(defaultValue = "0") Integer pageNo,
+            @RequestParam(defaultValue = "5") Integer pageSize,
+            @RequestParam(defaultValue = "name") String sort) {
+        List<EntityModel<Ingredient>> ingredients = ingredientService.getIngredients(pageNo, pageSize, sort)
                 .stream()
                 .map(ingredientModelAssembler::toModel)
                 .collect(Collectors.toList());
 
-        return CollectionModel.of(ingredients, linkTo(methodOn(IngredientController.class).getAllIngredients()).withSelfRel());
-    }
-
-    @GetMapping
-    public CollectionModel<EntityModel<Ingredient>> getIngredients(@RequestParam Map<String, String> allRequestParams)
-            throws HttpRequestMethodNotSupportedException {
-        if (allRequestParams != null && !allRequestParams.isEmpty())
-            throw new HttpRequestMethodNotSupportedException("GET");
-
-        return getAllIngredients();
+        return CollectionModel.of(ingredients, linkTo(methodOn(IngredientController.class).getIngredients(pageNo, pageSize, sort)).withSelfRel());
     }
 
     @RequestMapping(params = "id", method = RequestMethod.GET)

@@ -1,10 +1,11 @@
 package com.crumbs.userservice.controllers;
 
+import com.crumbs.userservice.models.User;
 import com.crumbs.userservice.models.UserProfile;
 import com.crumbs.userservice.requests.UserProfileRequest;
 import com.crumbs.userservice.services.UserProfileService;
 import com.crumbs.userservice.services.UserService;
-import com.crumbs.userservice.utility.UserProfileModelAssembler;
+import com.crumbs.userservice.utility.assemblers.UserProfileModelAssembler;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -17,7 +18,6 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.reactive.function.client.WebClient;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -36,17 +36,14 @@ public class UserProfileController {
     private final UserProfileService userProfileService;
     private final UserProfileModelAssembler userProfileModelAssembler;
     private final UserService userService;
-    private final WebClient.Builder webClientBuilder;
 
     @Autowired
     public UserProfileController(UserProfileService userProfileService,
                                  UserProfileModelAssembler userProfileModelAssembler,
-                                 UserService userService,
-                                 WebClient.Builder webClientBuilder) {
+                                 UserService userService) {
         this.userProfileService = userProfileService;
         this.userProfileModelAssembler = userProfileModelAssembler;
         this.userService = userService;
-        this.webClientBuilder = webClientBuilder;
     }
 
     @RequestMapping(params = "id", method = RequestMethod.GET)
@@ -56,8 +53,8 @@ public class UserProfileController {
 
     @PatchMapping(consumes = "application/json")
     public ResponseEntity<?> updateUserProfile(@RequestParam("id") @NotNull UUID id,
-                                               @RequestBody @Valid UserProfileRequest recipeRequest) {
-        final UserProfile userProfile = userProfileService.updateUserProfile(recipeRequest, id);
+                                               @RequestBody @Valid UserProfileRequest userProfileRequest) {
+        final UserProfile userProfile = userProfileService.updateUserProfile(userProfileRequest, id);
         EntityModel<UserProfile> entityModel = userProfileModelAssembler.toModel(userProfile);
         return ResponseEntity.ok(entityModel);
     }
@@ -66,13 +63,15 @@ public class UserProfileController {
      * PATCH method with partial update, based on JSON Patch
      */
     @PatchMapping(consumes = "application/json-patch+json")
-    public ResponseEntity<?> patchRecipe(@RequestParam("id") @NotNull UUID id, @RequestBody JsonPatch patch) {
+    public ResponseEntity<?> patchUserProfile(@RequestParam("id") @NotNull UUID id, @RequestBody JsonPatch patch) {
         try {
             UserProfile userProfile = userProfileService.getUserProfile(id);
             final ObjectMapper objectMapper = new ObjectMapper();
             JsonNode patched = patch.apply(objectMapper.convertValue(userProfile, JsonNode.class));
             UserProfile userProfilePatched = objectMapper.treeToValue(patched, UserProfile.class);
-            userProfilePatched.setUser(userService.getUserById(id));
+            User userPatched = userService.getUserById(id);
+            userPatched.setUserProfile(userProfilePatched);
+            userProfilePatched.setUser(userPatched);
             userProfileService.updateUserProfile(userProfilePatched);
             return ResponseEntity.ok(userProfileModelAssembler.toModel(userProfilePatched));
         } catch (JsonPatchException | JsonProcessingException e) {

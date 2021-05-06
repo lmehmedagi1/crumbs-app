@@ -1,43 +1,57 @@
 package com.crumbs.systemevents.grpc;
 
-import com.crumbs.systemevents.repositories.SystemEventsRepository;
-import io.grpc.stub.StreamObserver;
-import org.lognet.springboot.grpc.GRpcService;
-
 import com.crumbs.systemevents.models.SystemEvent;
 import com.crumbs.systemevents.repositories.SystemEventsRepository;
+import io.grpc.stub.StreamObserver;
+import net.devh.boot.grpc.server.service.GrpcService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.TransactionSystemException;
+import org.springframework.validation.annotation.Validated;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.UUID;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import java.util.Set;
 
-@GRpcService
+@GrpcService
+@Validated
 public class LogServiceImpl extends LogServiceGrpc.LogServiceImplBase {
 
-    @Autowired
-    private SystemEventsRepository systemEventsRepository;
+    private final SystemEventsRepository systemEventsRepository;
 
-    @Override
-    public void hello(HelloRequest request, StreamObserver<HelloResponse> responseObserver) {
-        responseObserver.onNext(HelloResponse.newBuilder().setGreeting("Sup " + request.getFirstName()).build());
-        responseObserver.onCompleted();
+    @Autowired
+    public LogServiceImpl(SystemEventsRepository systemEventsRepository) {
+        this.systemEventsRepository = systemEventsRepository;
+    }
+
+    private void validateAndLog(ActionRequest actionRequest) {
+        SystemEvent systemEvent = new SystemEvent();
+        systemEvent.setServiceName(actionRequest.getServiceName());
+        systemEvent.setResourceName(actionRequest.getResourceName());
+        systemEvent.setMethod(actionRequest.getMethod());
+        systemEvent.setResponseStatus(actionRequest.getResponseStatus());
+
+        Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+        validator.validate(systemEvent);
+        Set<ConstraintViolation<SystemEvent>> violations = validator.validate(systemEvent);
+        if (!violations.isEmpty())
+            throw new ConstraintViolationException(violations);
+
+        try {
+            systemEventsRepository.save(systemEvent);
+        } catch (Exception e) {
+            throw new TransactionSystemException("Log unsuccessful!");
+        }
     }
 
     @Override
     public void log(ActionRequest request, StreamObserver<ActionResponse> responseObserver) {
-        SystemEvent systemEvent = new SystemEvent();
-        systemEvent.setServiceName(request.getServiceName());
-        systemEvent.setActionType(request.getActionType());
-        systemEvent.setTimestamp(LocalDateTime.now(ZoneId.of("UTC")));
-        systemEvent.setResourceName(request.getResourceName());
-        systemEvent.setResponseType(request.getResponseType());
-
-        systemEventsRepository.save(systemEvent);
-
         ActionResponse response = ActionResponse.newBuilder()
-                .setResponseMessage("OK")
+                .setResponseMessage("Log successful!")
                 .build();
+
+        validateAndLog(request);
         responseObserver.onNext(response);
         responseObserver.onCompleted();
     }

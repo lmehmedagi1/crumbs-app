@@ -9,8 +9,16 @@ spring:
     config:
       uri: https://crumbs-config-server.herokuapp.com
 eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
   instance:
     preferIpAddress: true
+    instanceId: ${spring.application.name}:${vcap.application.instance_id:${spring.application.instance_id:${server.port}}}
 grpc:
-  server:
-    port: 9091
+  client:
+    user-service-grpc:
+      enable-keep-alive: true
+      keep-alive-without-calls: true
+      negotiation-type: plaintext
+      address: discovery:///system-events

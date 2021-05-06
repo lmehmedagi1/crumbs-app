@@ -5,7 +5,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.annotation.CreatedDate;
+
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -27,15 +29,19 @@ public class SystemEvent implements Serializable {
     @CreatedDate
     private LocalDateTime timestamp = LocalDateTime.now();
 
+    @NotBlank
     @Column(name = "service_name")
     private String serviceName;
 
-    @Column(name = "action_type")
-    private String actionType;
-
+    @NotBlank
     @Column(name = "resource_name")
     private String resourceName;
 
-    @Column(name = "response_type")
-    private String responseType;
+    @NotBlank
+    @Column(name = "method")
+    private String method;
+
+    @NotBlank
+    @Column(name = "response_status")
+    private String responseStatus;
 }

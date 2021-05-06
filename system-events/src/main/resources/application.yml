@@ -9,8 +9,12 @@ spring:
     config:
       uri: https://crumbs-config-server.herokuapp.com
 eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
   instance:
     preferIpAddress: true
+    instanceId: ${spring.application.name}:${vcap.application.instance_id:${spring.application.instance_id:${server.port}}}
 grpc:
-  port: 9090
-  enableReflection: true
+  server:
+    port: 0   # Random port number

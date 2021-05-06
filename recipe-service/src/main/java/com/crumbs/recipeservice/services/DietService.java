@@ -6,6 +6,10 @@ import com.crumbs.recipeservice.models.Diet;
 import com.crumbs.recipeservice.repositories.DietRepository;
 import com.crumbs.recipeservice.requests.DietRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -28,8 +32,10 @@ public class DietService {
     }
 
     @Transactional(readOnly = true)
-    public List<Diet> getAllDiets() {
-        return dietRepository.findAll();
+    public List<Diet> getDiets(Integer pageNo, Integer pageSize, String sort) {
+        Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sort).ascending());
+        Slice<Diet> slicedProducts = dietRepository.findAll(paging);
+        return slicedProducts.getContent();
     }
 
     @Transactional(readOnly = true)

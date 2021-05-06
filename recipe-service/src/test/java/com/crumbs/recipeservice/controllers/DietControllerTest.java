@@ -2,7 +2,6 @@ package com.crumbs.recipeservice.controllers;
 
 import com.crumbs.recipeservice.RecipeServiceApplication;
 import com.crumbs.recipeservice.requests.DietRequest;
-import com.crumbs.recipeservice.requests.RecipeRequest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +9,6 @@ import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWeb
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -111,7 +109,7 @@ class DietControllerTest {
                 "    \"duration\": \"78\"," +
                 "    \"is_private\": \"false\"," +
                 "    \"user_id\": \"75a8f34b-2539-452a-9325-b432dbe3b995\"" +
-                "}";;
+                "}";
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post(uri)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(inputJson)).andReturn();
@@ -257,9 +255,9 @@ class DietControllerTest {
         String medo_id = "d913320a-baf1-43e0-b8b7-25f748e574ee";
         DietRequest dietRequest =
                 new DietRequest(medo_id, "LowDo",
-                "Arrived totally in as between private. Favour of so as on pretty though elinor direct. " +
-                        "Reasonable estimating be alteration we themselves entreaties me of reasonably",
-                7, true);
+                        "Arrived totally in as between private. Favour of so as on pretty though elinor direct. " +
+                                "Reasonable estimating be alteration we themselves entreaties me of reasonably",
+                        7, true);
         String sport_diet = "87940ca7-807d-4d1b-af2e-f6a0c22ed2c8";
 
         webTestClient.patch()

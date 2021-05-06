@@ -67,7 +67,7 @@ class NotificationServiceTest {
 
     @Test
     void testUpdateMarkAllAsReadNotificationSuccess() {
-        int value = notificationService.updateNotificationMarkAllAsRead(UUID.fromString("9c76205a-afa0-4699-9ec3-0ce0f10c515e"));
+        int value = notificationService.markAllAsReadForUser(UUID.fromString("9c76205a-afa0-4699-9ec3-0ce0f10c515e"));
         assertEquals(4, value);
     }
 
