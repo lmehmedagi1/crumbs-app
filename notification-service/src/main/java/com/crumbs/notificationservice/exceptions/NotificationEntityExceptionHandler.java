@@ -21,6 +21,7 @@ import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 import org.springframework.web.reactive.function.client.WebClientException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
@@ -183,6 +184,12 @@ public class NotificationEntityExceptionHandler extends ResponseEntityExceptionH
         ApiError apiError = new ApiError(BAD_REQUEST, "Malformed JSON request",
                 "Check your JSON request and try again!", getRequestUri(request));
         return new ResponseEntity<>(apiError, BAD_REQUEST);
+    }
+
+    @ExceptionHandler(WebClientResponseException.class)
+    protected ResponseEntity<Object> handleWebClientResponseException(WebClientResponseException ex, WebRequest request) {
+        ApiError apiError = new ApiError(NOT_FOUND, "Service unavailable", "Could not reach microservice!", getRequestUri(request));
+        return new ResponseEntity<>(apiError, NOT_FOUND);
     }
 
     /**

@@ -6,13 +6,22 @@ spring:
     name: gateway-service
 
 zuul:
+  sensitiveHeaders: Cookie,Set-Cookie
   host:
-    connect-timeout-millis: 5000000
-    socket-timeout-millis: 5000000
+    connect-timeout-millis: 6000
   ignored-services: '*'
   routes:
     user-service:
       path: /user-service/**
       serviceId: user-service
-      stripPrefix: true
       url: http://localhost:8081
+ribbon:
+  eureka:
+    enabled: true
+eureka:
+  instance:
+    preferIpAddress: true
+    instanceId: ${spring.application.name}:${vcap.application.instance_id:${spring.application.instance_id:${server.port}}}
+  client:
+    registerWithEureka: true
+    fetchRegistry: true
