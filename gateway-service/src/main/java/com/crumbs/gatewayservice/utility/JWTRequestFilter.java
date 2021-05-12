@@ -1,6 +1,6 @@
 package com.crumbs.gatewayservice.utility;
 
-import com.google.gson.Gson;
+
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureException;
@@ -65,11 +65,11 @@ public class JWTRequestFilter extends OncePerRequestFilter {
         formatter.setTimeZone(TimeZone.getTimeZone(DEFAULT_TIMEZONE));
         Date date = new Date(System.currentTimeMillis());
         ApiError apiError = new ApiError(formatter.format(date), HttpStatus.UNAUTHORIZED.value(), message, "Unauthorized", path);
-        Gson gson = new Gson();
-        response.resetBuffer();
-        response.setStatus(HttpStatus.UNAUTHORIZED.value());
-        response.setHeader("Content-Type", "application/json");
-        response.getOutputStream().print(gson.toJson(apiError));
-        response.flushBuffer();
+//        Gson gson = new Gson();
+//        response.resetBuffer();
+//        response.setStatus(HttpStatus.UNAUTHORIZED.value());
+//        response.setHeader("Content-Type", "application/json");
+//        response.getOutputStream().print(gson.toJson(apiError));
+//        response.flushBuffer();
     }
 }
