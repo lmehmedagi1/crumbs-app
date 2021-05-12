@@ -6,6 +6,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 import static java.util.Collections.emptyList;
 
 @Service
@@ -19,8 +21,8 @@ public class CustomUserDetailsService implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) {
-        com.crumbs.userservice.models.User applicationUser = userService.getUserByUsername(username);
+    public UserDetails loadUserByUsername(String id) {
+        com.crumbs.userservice.models.User applicationUser = userService.getUserById(UUID.fromString(id));
         return new User(applicationUser.getUsername(), applicationUser.getPassword(), emptyList());
     }
 }

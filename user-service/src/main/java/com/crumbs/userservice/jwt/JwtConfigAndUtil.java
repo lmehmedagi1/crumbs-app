@@ -27,23 +27,15 @@ public final class JwtConfigAndUtil {
     @Value("${application.jwt.token-expiration-after-days}")
     private Integer tokenExpiration;
 
-    public String getAuthorizationHeader() {
-        return HttpHeaders.AUTHORIZATION;
-    }
-
     public SecretKey getSecretKey() {
         return Keys.hmacShaKeyFor(secretKey.getBytes());
-    }
-
-    public String getTokenPrefix() {
-        return tokenPrefix;
     }
 
     public Integer getTokenExpiration() {
         return tokenExpiration;
     }
 
-    public String extractUsername(String token) {
+    public String extractUserId(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
@@ -64,19 +56,14 @@ public final class JwtConfigAndUtil {
         return extractExpiration(token).before(new Date());
     }
 
-    public String generateToken(@NotNull UserDetails userDetails) {
+    public String generateToken(@NotNull String id) {
         Map<String, Object> claims = new HashMap<>();
-        return createToken(claims, userDetails.getUsername());
+        return createToken(claims, id);
     }
 
     private String createToken(Map<String, Object> claims, String subject) {
         return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date())
                 .setExpiration(java.sql.Date.valueOf(LocalDate.now().plusDays(getTokenExpiration())))
                 .signWith(getSecretKey()).compact();
-    }
-
-    public Boolean validateToken(String token, UserDetails userDetails) {
-        final String username = extractUsername(token);
-        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 }

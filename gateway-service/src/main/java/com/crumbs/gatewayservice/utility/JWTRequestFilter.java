@@ -1,11 +1,15 @@
 package com.crumbs.gatewayservice.utility;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -25,20 +29,36 @@ import static com.fasterxml.jackson.annotation.JsonFormat.DEFAULT_TIMEZONE;
 @Component
 public class JWTRequestFilter extends OncePerRequestFilter {
 
+    private final UserDetailsServiceImpl userDetailsService;
+
+    public JWTRequestFilter(UserDetailsServiceImpl userDetailsService) {
+        this.userDetailsService = userDetailsService;
+    }
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
 
         final String authorizationHeader = request.getHeader(HEADER_STRING);
 
-        String username = null;
-        String jwt = null;
-
         if (authorizationHeader != null && authorizationHeader.startsWith(TOKEN_PREFIX)) {
             try {
-                jwt = authorizationHeader.substring(7);
+                String jwt = authorizationHeader.substring(7);
                 JWTUtil jwtUtil = new JWTUtil();
-                username = jwtUtil.extractUsername(jwt);
+                String userId = jwtUtil.extractUserId(jwt);
+
+                if (userId == null) {
+                    handleException("Invalid credentials", request.getRequestURI(), response);
+                    return;
+                }
+
+                UserDetails userDetails = userDetailsService.loadUserByUsername(userId);
+                UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
+                        userDetails, null, userDetails.getAuthorities());
+                usernamePasswordAuthenticationToken
+                        .setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+
             } catch (SignatureException | MalformedJwtException ignore) {
                 handleException("Invalid JWT signature", request.getRequestURI(), response);
                 return;
@@ -49,13 +69,7 @@ public class JWTRequestFilter extends OncePerRequestFilter {
                 handleException("Unable to get JWT token", request.getRequestURI(), response);
                 return;
             }
-            if (username == null) {
-                handleException("Invalid credentials", request.getRequestURI(), response);
-                return;
-
-            }
         }
-
 
         chain.doFilter(request, response);
     }
@@ -65,11 +79,12 @@ public class JWTRequestFilter extends OncePerRequestFilter {
         formatter.setTimeZone(TimeZone.getTimeZone(DEFAULT_TIMEZONE));
         Date date = new Date(System.currentTimeMillis());
         ApiError apiError = new ApiError(formatter.format(date), HttpStatus.UNAUTHORIZED.value(), message, "Unauthorized", path);
-//        Gson gson = new Gson();
-//        response.resetBuffer();
-//        response.setStatus(HttpStatus.UNAUTHORIZED.value());
-//        response.setHeader("Content-Type", "application/json");
-//        response.getOutputStream().print(gson.toJson(apiError));
-//        response.flushBuffer();
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        response.resetBuffer();
+        response.setStatus(HttpStatus.UNAUTHORIZED.value());
+        response.setHeader("Content-Type", "application/json");
+        response.getOutputStream().print(objectMapper.writeValueAsString(apiError));
+        response.flushBuffer();
     }
 }

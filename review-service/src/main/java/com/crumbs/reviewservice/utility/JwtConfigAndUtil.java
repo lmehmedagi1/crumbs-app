@@ -1,19 +1,23 @@
-package com.crumbs.gatewayservice.utility;
+package com.crumbs.reviewservice.utility;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import javax.validation.constraints.NotBlank;
+import java.util.Date;
 import java.util.function.Function;
 
-import static com.crumbs.gatewayservice.utility.SecurityConstants.SECRET;
+@Component
+public final class JwtConfigAndUtil {
 
-public final class JWTUtil {
+    private String secretKey = "e94a08b7f23735dcc5a14af50ccb5ba1617d0c3f299c0b133cc1c7a3c2474342a54cb2179207868bcadb1ce812f9fc757bfcc243d153fe9740a345a1e167b6f0";
 
     public SecretKey getSecretKey() {
-        return Keys.hmacShaKeyFor(SECRET.getBytes());
+        return Keys.hmacShaKeyFor(secretKey.getBytes());
     }
 
     public String extractUserId(String token) {

@@ -6,20 +6,21 @@ public final class SecurityConstants {
     public static final String TOKEN_PREFIX = "Bearer ";
     public static final String HEADER_STRING = "Authorization";
     public static final String[] PUBLIC_ROUTES = {
-            "/user-service/account/login",
-            "/user-service/account/register",
-            "/user-service/account",
-            "/reviews",
-            "/reviews/rating",
-            "/notifications",
-            "/notifications/markAsRead",
+            "/user-service/account/**",
             "/swagger-ui/",
             "/swagger-ui/**",
             "/v2/api-docs",
             "/swagger-resources/**",
             "/swagger-ui.html**",
             "/webjars/**",
-            "/ws/**"
+            "/ws/**",
+            "/user-service/swagger-ui/",
+            "/user-service/swagger-ui/**",
+            "/user-service/v2/api-docs",
+            "/user-service/swagger-resources/**",
+            "/user-service/swagger-ui.html**",
+            "/user-service/webjars/**",
+            "/user-service/ws/**"
     };
     private SecurityConstants() {}
 }

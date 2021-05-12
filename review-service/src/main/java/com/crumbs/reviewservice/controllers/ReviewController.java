@@ -4,6 +4,7 @@ import com.crumbs.reviewservice.models.Review;
 import com.crumbs.reviewservice.requests.ReviewRequest;
 import com.crumbs.reviewservice.requests.ReviewWebClientRequest;
 import com.crumbs.reviewservice.services.ReviewService;
+import com.crumbs.reviewservice.utility.JwtConfigAndUtil;
 import com.crumbs.reviewservice.utility.assemblers.ReviewModelAssembler;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -57,15 +58,15 @@ public class ReviewController {
     }
 
     @RequestMapping(params = "userId", method = RequestMethod.GET)
-    public CollectionModel<EntityModel<Review>> getReviewsOfUser(@RequestParam("userId") @NotNull UUID userId) {
+    public CollectionModel<EntityModel<Review>> getReviewsOfUser(@RequestParam("userId") @NotNull UUID userId, @RequestHeader("Authorization") String jwt) {
 
-        reviewWebClientRequest.checkIfUserExists(userId);
+        reviewWebClientRequest.checkIfUserExists(userId, jwt);
 
         List<EntityModel<Review>> reviews = reviewService.getReviewsOfUser(userId).stream()
                 .map(reviewModelAssembler::toModel)
                 .collect(Collectors.toList());
         return CollectionModel.of(reviews,
-                linkTo(methodOn(ReviewController.class).getReviewsOfUser(userId)).withSelfRel());
+                linkTo(methodOn(ReviewController.class).getReviewsOfUser(userId, jwt)).withSelfRel());
     }
 
     @RequestMapping(params = "recipeId", method = RequestMethod.GET)
@@ -87,24 +88,30 @@ public class ReviewController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createReview(@RequestBody @Valid ReviewRequest reviewRequest) {
+    public ResponseEntity<?> createReview(@RequestBody @Valid ReviewRequest reviewRequest, @RequestHeader("Authorization") String jwt) {
 
+        UUID userId = getUserIdFromJwt(jwt);
+        System.out.println("User id: " + userId);
         reviewWebClientRequest.checkIfRecipeExists(UUID.fromString(reviewRequest.getRecipe_id()));
-        reviewWebClientRequest.checkIfUserExists(UUID.fromString(reviewRequest.getUser_id()));
+        System.out.println("Recipe postoji");
+        reviewWebClientRequest.checkIfUserExists(userId, jwt);
+        System.out.println("User postoji");
 
-        final Review newReview = reviewService.saveReview(reviewRequest);
+        final Review newReview = reviewService.saveReview(reviewRequest, userId);
         EntityModel<Review> entityModel = reviewModelAssembler.toModel(newReview);
         return ResponseEntity.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(entityModel);
     }
 
     @PatchMapping(consumes = "application/json")
     public ResponseEntity<?> updateReview(@RequestParam("id") @NotNull UUID id,
-                                          @RequestBody @Valid ReviewRequest reviewRequest) {
+                                          @RequestBody @Valid ReviewRequest reviewRequest,
+                                          @RequestHeader("Authorization") String jwt) {
 
+        UUID userId = getUserIdFromJwt(jwt);
         reviewWebClientRequest.checkIfRecipeExists(UUID.fromString(reviewRequest.getRecipe_id()));
-        reviewWebClientRequest.checkIfUserExists(UUID.fromString(reviewRequest.getUser_id()));
+        reviewWebClientRequest.checkIfUserExists(userId, jwt);
 
-        final Review updatedReview = reviewService.updateReview(reviewRequest, id);
+        final Review updatedReview = reviewService.updateReview(reviewRequest, id, userId);
         EntityModel<Review> entityModel = reviewModelAssembler.toModel(updatedReview);
         return ResponseEntity.ok(entityModel);
     }
@@ -130,5 +137,9 @@ public class ReviewController {
     public ResponseEntity<?> deleteReview(@RequestParam("id") @NotNull UUID id) {
         reviewService.deleteReview(id);
         return ResponseEntity.noContent().build();
+    }
+
+    private UUID getUserIdFromJwt(String jwt) {
+        return UUID.fromString(new JwtConfigAndUtil().extractUserId(jwt.substring(7)));
     }
 }

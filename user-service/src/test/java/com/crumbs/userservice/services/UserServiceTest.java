@@ -39,14 +39,14 @@ class UserServiceTest {
 
     @Test
     void testGenerateTokenSuccess() {
-        final String generatedToken = jwtConfigAndUtil.generateToken(customUserDetailsService.loadUserByUsername("lmehmedagi"));
-        final String extractedUsername = jwtConfigAndUtil.extractUsername(generatedToken);
-        assertEquals("lmehmedagi", extractedUsername);
+        final String generatedToken = jwtConfigAndUtil.generateToken("c41edd72-06cd-435d-9a07-089673168dfc");
+        final String extractedUsername = jwtConfigAndUtil.extractUserId(generatedToken);
+        assertEquals("c41edd72-06cd-435d-9a07-089673168dfc", extractedUsername);
     }
 
     @Test
     void testGenerateTokenWrongUsername() {
-        assertThrows(UserNotFoundException.class, () -> jwtConfigAndUtil.generateToken(customUserDetailsService.loadUserByUsername("testtest")));
+        assertThrows(UserNotFoundException.class, () -> jwtConfigAndUtil.generateToken("c41edd72-06cd-435d-9a07-089673168aaa"));
     }
 
     @Test
