@@ -11,7 +11,6 @@ import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -46,7 +45,7 @@ public class UserController {
     @PostMapping("/register")
     public EntityModel<User> register(@RequestBody @Valid RegisterRequest registerRequest, HttpServletResponse httpServletResponse) {
         final User user = userService.registerUser(registerRequest);
-        httpServletResponse.setHeader("Authorization", "Bearer " + jwtConfigAndUtil.generateToken(customUserDetailsService.loadUserByUsername(user.getUsername())));
+        httpServletResponse.setHeader("Authorization", "Bearer " + jwtConfigAndUtil.generateToken(user.getId().toString()));
         return userModelAssembler.toModel(user);
     }
 

@@ -15,11 +15,6 @@ public class ReviewRequest {
     @NotBlank
     @Pattern(regexp = uuid_regex,
             flags = Pattern.Flag.CASE_INSENSITIVE, message = "UUID string format is invalid!")
-    private String user_id;
-
-    @NotBlank
-    @Pattern(regexp = uuid_regex,
-            flags = Pattern.Flag.CASE_INSENSITIVE, message = "UUID string format is invalid!")
     private String recipe_id;
 
     @NotNull

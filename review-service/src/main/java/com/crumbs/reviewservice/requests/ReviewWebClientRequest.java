@@ -22,12 +22,13 @@ public class ReviewWebClientRequest {
         this.webClientBuilder = webClientBuilder;
     }
 
-    public User checkIfUserExists(UUID userId) {
+    public User checkIfUserExists(UUID userId, String jwt) {
         return webClientBuilder.baseUrl("http://user-service").build().get()
                 .uri(uriBuilder -> uriBuilder
                         .path("/account")
                         .queryParam("id", userId)
                         .build())
+                .header("Authorization", jwt)
                 .retrieve()
                 .onStatus(HttpStatus::is4xxClientError, response -> Mono.error(new UserNotFoundException()))
                 .bodyToMono(User.class)

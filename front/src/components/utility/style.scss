@@ -1,0 +1,23 @@
+
+
+$base-color: #252525;
+$text-color: #9B9B9B;
+$default-purple-color: #8367D8;
+$light-background-color: #FAFAFA;
+$border-color: #D8D8D8;
+body {
+    font-family: "Lato", sans-serif;
+    .blockedWait {
+        cursor: wait;
+        .blocked {
+            pointer-events: none;
+        }
+    }
+}
+
+
+$tablet: "only screen and (min-width: 600px) and (max-width: 1250px)";
+$mobile: "only screen and (min-width: 320px) and (max-width: 600px)";
+
+@import 'components/common/style.scss';
+@import 'components/login/login.scss'

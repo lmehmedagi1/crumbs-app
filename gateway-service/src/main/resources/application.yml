@@ -15,6 +15,10 @@ zuul:
       path: /user-service/**
       serviceId: user-service
       url: http://localhost:8081
+    review-service:
+      path: /review-service/**
+      serviceId: review-service
+      url: http://localhost:8083
 ribbon:
   eureka:
     enabled: true

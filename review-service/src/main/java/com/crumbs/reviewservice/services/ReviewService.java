@@ -45,8 +45,8 @@ public class ReviewService {
         return (double) Math.round(reviewRepository.getAvgRatingOfRecipe(recipeId) * 100) / 100;
     }
 
-    private void modifyReview(ReviewRequest reviewRequest, Review review) {
-        review.setUserId(UUID.fromString(reviewRequest.getUser_id()));
+    private void modifyReview(ReviewRequest reviewRequest, UUID userId, Review review) {
+        review.setUserId(userId);
         review.setRecipeId(UUID.fromString(reviewRequest.getRecipe_id()));
         review.setIsLiked(reviewRequest.getIs_liked());
         review.setRating(reviewRequest.getRating());
@@ -54,16 +54,16 @@ public class ReviewService {
     }
 
     @Transactional
-    public Review saveReview(@NotNull @Valid ReviewRequest reviewRequest) {
+    public Review saveReview(@NotNull @Valid ReviewRequest reviewRequest, @NotNull UUID userId) {
         Review review = new Review();
-        modifyReview(reviewRequest, review);
+        modifyReview(reviewRequest, userId, review);
         return reviewRepository.save(review);
     }
 
     @Transactional
-    public Review updateReview(@NotNull @Valid ReviewRequest reviewRequest, @NotNull UUID id) {
+    public Review updateReview(@NotNull @Valid ReviewRequest reviewRequest, @NotNull UUID id, @NotNull UUID userId) {
         return reviewRepository.findById(id).map(review -> {
-            modifyReview(reviewRequest, review);
+            modifyReview(reviewRequest, userId,  review);
             return reviewRepository.save(review);
         }).orElseThrow(ReviewNotFoundException::new);
     }
