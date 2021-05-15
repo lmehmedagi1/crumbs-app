@@ -4,6 +4,11 @@ server:
 spring:
   application:
     name: gateway-service
+  config:
+    import: optional:configserver:https://crumbs-config-server.herokuapp.com
+  cloud:
+    config:
+      uri: https://crumbs-config-server.herokuapp.com
 
 zuul:
   sensitiveHeaders: Cookie,Set-Cookie
@@ -14,19 +19,19 @@ zuul:
     user-service:
       path: /user-service/**
       serviceId: user-service
-      url: http://localhost:8081
+      url: https://crumbs-user-service.herokuapp.com/
     review-service:
       path: /review-service/**
       serviceId: review-service
-      url: http://localhost:8083
+      url: https://crumbs-review-service.herokuapp.com/
     notification-service:
       path: /notification-service/**
       serviceId: notification-service
-      url: http://localhost:8084
+      url: https://crumbs-notification-service.herokuapp.com/
     recipe-service:
       path: /recipe-service/**
       serviceId: recipe-service
-      url: http://localhost:8082
+      url: https://crumbs-recipe-service.herokuapp.com/
 
 ribbon:
   eureka:
@@ -34,12 +39,4 @@ ribbon:
 
 eureka:
   instance:
-    preferIpAddress: true
     instanceId: ${spring.application.name}:${vcap.application.instance_id:${spring.application.instance_id:${server.port}}}
-  client:
-    registerWithEureka: true
-    fetchRegistry: true
-    healthcheck:
-      enabled: true
-    serviceUrl:
-      defaultZone: https://crumbs-discovery-server.herokuapp.com/eureka/
