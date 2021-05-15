@@ -31,6 +31,8 @@ public class NotificationService {
 
     @Transactional(readOnly = true)
     public Notification getNotification(@NotNull UUID id) throws NotificationNotFoundException {
+//        if (notificationRepository.findByIdAndUserId(id, userId) == null)
+//            throw new NotificationNotFoundException("You don't have permission to update this review");
         return notificationRepository.findById(id).orElseThrow(NotificationNotFoundException::new);
     }
 
@@ -74,9 +76,9 @@ public class NotificationService {
     }
 
     @Transactional
-    public void deleteNotification(@NotNull UUID id) {
-        if (!notificationRepository.existsById(id))
-            throw new NotificationNotFoundException();
+    public void deleteNotification(@NotNull UUID id, @NotNull UUID userId) {
+        if (notificationRepository.findByIdAndUserId(id, userId) == null)
+            throw new NotificationNotFoundException("You don't have permission to delete this review");
 
         notificationRepository.deleteById(id);
     }

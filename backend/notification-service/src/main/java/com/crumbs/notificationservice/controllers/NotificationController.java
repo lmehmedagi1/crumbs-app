@@ -105,11 +105,12 @@ public class NotificationController {
      * PATCH method with partial update, based on JSON Patch
      */
     @PatchMapping(consumes = "application/json-patch+json")
-    public ResponseEntity<?> patchNotification(@RequestHeader("Authorization") String jwt,
+    public ResponseEntity<?> patchNotification(@RequestParam("id") @NotNull UUID id,
+                                               @RequestHeader("Authorization") String jwt,
                                                @RequestBody JsonPatch patch) {
         UUID userId = getUserIdFromJwt(jwt);
         try {
-            Notification notification = notificationService.getNotification(userId);
+            Notification notification = notificationService.getNotification(id);
             final ObjectMapper objectMapper = new ObjectMapper();
             JsonNode patched = patch.apply(objectMapper.convertValue(notification, JsonNode.class));
             Notification notificationPatched = objectMapper.treeToValue(patched, Notification.class);
@@ -121,9 +122,9 @@ public class NotificationController {
     }
 
     @DeleteMapping
-    public ResponseEntity<?> deleteNotification(@RequestHeader("Authorization") String jwt) {
+    public ResponseEntity<?> deleteNotification(@RequestParam("id") @NotNull UUID id, @RequestHeader("Authorization") String jwt) {
         UUID userId = getUserIdFromJwt(jwt);
-        notificationService.deleteNotification(userId);
+        notificationService.deleteNotification(id, userId);
         return ResponseEntity.noContent().build();
     }
 }
