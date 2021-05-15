@@ -27,7 +27,8 @@ public class Diet {
     private UUID id;
 
     @NotNull
-    private UUID user_id;
+    @Column(name = "user_id")
+    private UUID userId;
 
     @NotBlank
     @Size(min = 5, message = "Diet title must be at least 5 characters long!")

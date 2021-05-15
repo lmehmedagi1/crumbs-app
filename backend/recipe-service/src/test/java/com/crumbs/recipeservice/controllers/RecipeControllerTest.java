@@ -186,73 +186,73 @@ class RecipeControllerTest {
         assertEquals(HttpStatus.NO_CONTENT.value(), mvcResult.getResponse().getStatus());
     }
 
-    @Test
-    void testCreateRecipeValidUser() throws Exception {
-        String medo_id = "d913320a-baf1-43e0-b8b7-25f748e574ee";
-        RecipeRequest recipeRequest = new RecipeRequest(medo_id, "LowDo",
-                "Arrived totally in as between private. Favour of so as on pretty though elinor direct. Reasonable estimating be alteration we themselves entreaties me of reasonably",
-                "Favour of so as on pretty though elinor direct. Favour of so as on pretty though elinor direct. ");
-
-        webTestClient.post()
-                .uri(uriBuilder -> uriBuilder
-                        .path("/recipes")
-                        .queryParam("userId", "d913320a-baf1-43e0-b8b7-25f748e574ee", "token")
-                        .build()).contentType(MediaType.APPLICATION_JSON).body(BodyInserters.fromObject(recipeRequest))
-                .exchange()
-                .expectStatus()
-                .is2xxSuccessful();
-    }
-
-    @Test
-    void testCreateRecipeInvalidUser() throws Exception {
-        String medo_id = "d913320a-baf1-43e0-b8b7-25f748e574bb";
-        RecipeRequest recipeRequest = new RecipeRequest(medo_id, "LowDo",
-                "Arrived totally in as between private. Favour of so as on pretty though elinor direct. Reasonable estimating be alteration we themselves entreaties me of reasonably",
-                "Favour of so as on pretty though elinor direct. Favour of so as on pretty though elinor direct. ");
-
-        webTestClient.post()
-                .uri(uriBuilder -> uriBuilder
-                        .path("/recipes")
-                        .queryParam("userId", "d913320a-baf1-43e0-b8b7-25f748e574ee", "token")
-                        .build()).contentType(MediaType.APPLICATION_JSON).body(BodyInserters.fromObject(recipeRequest))
-                .exchange()
-                .expectStatus()
-                .is5xxServerError();
-    }
-
-    @Test
-    void testUpdateRecipeInvalidUser() throws Exception {
-        String medo_id = "d913320a-baf1-43e0-b8b7-25f748e574bb";
-        RecipeRequest recipeRequest = new RecipeRequest(medo_id, "LowDo",
-                "Arrived totally in as between private. Favour of so as on pretty though elinor direct. Reasonable estimating be alteration we themselves entreaties me of reasonably",
-                "Favour of so as on pretty though elinor direct. Favour of so as on pretty though elinor direct. ");
-        String sampita_id = "d3cd7d6f-b9c5-40aa-bbd0-487c47411b8a";
-
-        webTestClient.patch()
-                .uri(uriBuilder -> uriBuilder
-                        .path("/recipes")
-                        .queryParam("id", sampita_id)
-                        .build()).contentType(MediaType.APPLICATION_JSON).body(BodyInserters.fromObject(recipeRequest))
-                .exchange()
-                .expectStatus()
-                .is5xxServerError();
-    }
-
-    @Test
-    void testUpdateRecipeValidUser() throws Exception {
-        String medo_id = "d913320a-baf1-43e0-b8b7-25f748e574ee";
-        RecipeRequest recipeRequest = new RecipeRequest(medo_id, "LowDo",
-                "Arrived totally in as between private. Favour of so as on pretty though elinor direct. Reasonable estimating be alteration we themselves entreaties me of reasonably",
-                "Favour of so as on pretty though elinor direct. Favour of so as on pretty though elinor direct. ");
-        String sampita_id = "d3cd7d6f-b9c5-40aa-bbd0-487c47411b8a";
-
-        webTestClient.patch()
-                .uri(uriBuilder -> uriBuilder
-                        .path("/recipes")
-                        .queryParam("id", sampita_id)
-                        .build()).contentType(MediaType.APPLICATION_JSON).body(BodyInserters.fromObject(recipeRequest))
-                .exchange()
-                .expectStatus()
-                .is2xxSuccessful();
-    }
+//    @Test
+//    void testCreateRecipeValidUser() throws Exception {
+//        String medo_id = "d913320a-baf1-43e0-b8b7-25f748e574ee";
+//        RecipeRequest recipeRequest = new RecipeRequest(medo_id, "LowDo",
+//                "Arrived totally in as between private. Favour of so as on pretty though elinor direct. Reasonable estimating be alteration we themselves entreaties me of reasonably",
+//                "Favour of so as on pretty though elinor direct. Favour of so as on pretty though elinor direct. ");
+//
+//        webTestClient.post()
+//                .uri(uriBuilder -> uriBuilder
+//                        .path("/recipes")
+//                        .queryParam("userId", "d913320a-baf1-43e0-b8b7-25f748e574ee", "token")
+//                        .build()).contentType(MediaType.APPLICATION_JSON).body(BodyInserters.fromObject(recipeRequest))
+//                .exchange()
+//                .expectStatus()
+//                .is2xxSuccessful();
+//    }
+//
+//    @Test
+//    void testCreateRecipeInvalidUser() throws Exception {
+//        String medo_id = "d913320a-baf1-43e0-b8b7-25f748e574bb";
+//        RecipeRequest recipeRequest = new RecipeRequest(medo_id, "LowDo",
+//                "Arrived totally in as between private. Favour of so as on pretty though elinor direct. Reasonable estimating be alteration we themselves entreaties me of reasonably",
+//                "Favour of so as on pretty though elinor direct. Favour of so as on pretty though elinor direct. ");
+//
+//        webTestClient.post()
+//                .uri(uriBuilder -> uriBuilder
+//                        .path("/recipes")
+//                        .queryParam("userId", "d913320a-baf1-43e0-b8b7-25f748e574ee", "token")
+//                        .build()).contentType(MediaType.APPLICATION_JSON).body(BodyInserters.fromObject(recipeRequest))
+//                .exchange()
+//                .expectStatus()
+//                .is5xxServerError();
+//    }
+//
+//    @Test
+//    void testUpdateRecipeInvalidUser() throws Exception {
+//        String medo_id = "d913320a-baf1-43e0-b8b7-25f748e574bb";
+//        RecipeRequest recipeRequest = new RecipeRequest(medo_id, "LowDo",
+//                "Arrived totally in as between private. Favour of so as on pretty though elinor direct. Reasonable estimating be alteration we themselves entreaties me of reasonably",
+//                "Favour of so as on pretty though elinor direct. Favour of so as on pretty though elinor direct. ");
+//        String sampita_id = "d3cd7d6f-b9c5-40aa-bbd0-487c47411b8a";
+//
+//        webTestClient.patch()
+//                .uri(uriBuilder -> uriBuilder
+//                        .path("/recipes")
+//                        .queryParam("id", sampita_id)
+//                        .build()).contentType(MediaType.APPLICATION_JSON).body(BodyInserters.fromObject(recipeRequest))
+//                .exchange()
+//                .expectStatus()
+//                .is5xxServerError();
+//    }
+//
+//    @Test
+//    void testUpdateRecipeValidUser() throws Exception {
+//        String medo_id = "d913320a-baf1-43e0-b8b7-25f748e574ee";
+//        RecipeRequest recipeRequest = new RecipeRequest(medo_id, "LowDo",
+//                "Arrived totally in as between private. Favour of so as on pretty though elinor direct. Reasonable estimating be alteration we themselves entreaties me of reasonably",
+//                "Favour of so as on pretty though elinor direct. Favour of so as on pretty though elinor direct. ");
+//        String sampita_id = "d3cd7d6f-b9c5-40aa-bbd0-487c47411b8a";
+//
+//        webTestClient.patch()
+//                .uri(uriBuilder -> uriBuilder
+//                        .path("/recipes")
+//                        .queryParam("id", sampita_id)
+//                        .build()).contentType(MediaType.APPLICATION_JSON).body(BodyInserters.fromObject(recipeRequest))
+//                .exchange()
+//                .expectStatus()
+//                .is2xxSuccessful();
+//    }
 }

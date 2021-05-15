@@ -46,23 +46,12 @@ public class WebClientRequest {
                 .block();
     }
 
-    public User checkIfUserExists(UUID userId) {
+    public User checkIfUserExists(String jwt) {
         return webClientBuilder.baseUrl("http://user-service").build().get()
                 .uri(uriBuilder -> uriBuilder
                         .path("/account")
-                        .queryParam("id", userId)
                         .build())
-                .retrieve()
-                .onStatus(HttpStatus::is4xxClientError, response -> Mono.error(new UserNotFoundException()))
-                .bodyToMono(User.class).block();
-    }
-
-    public User getAuthorIfExists(UUID authorId) {
-        return webClientBuilder.baseUrl("http://user-service").build().get()
-                .uri(uriBuilder -> uriBuilder
-                        .path("/account")
-                        .queryParam("id", authorId)
-                        .build())
+                .header("Authorization", jwt)
                 .accept(MediaTypes.HAL_JSON)
                 .retrieve()
                 .onStatus(HttpStatus::is4xxClientError, response -> Mono.error(new UserNotFoundException()))

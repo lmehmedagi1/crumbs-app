@@ -196,77 +196,77 @@ class DietControllerTest {
         assertEquals(HttpStatus.NO_CONTENT.value(), mvcResult.getResponse().getStatus());
     }
 
-    @Test
-    void testCreateDietValidUser() throws Exception {
-        String medo_id = "d913320a-baf1-43e0-b8b7-25f748e574ee";
-        DietRequest dietRequest = new DietRequest(medo_id, "LowDo",
-                "Arrived totally in as between private. Favour of so as on pretty though elinor direct. Reasonable estimating be alteration we themselves entreaties me of reasonably",
-                7, true);
-        String sport_diet = "87940ca7-807d-4d1b-af2e-f6a0c22ed2c8";
+//    @Test
+//    void testCreateDietValidUser() throws Exception {
+//        String medo_id = "d913320a-baf1-43e0-b8b7-25f748e574ee";
+//        DietRequest dietRequest = new DietRequest(medo_id, "LowDo",
+//                "Arrived totally in as between private. Favour of so as on pretty though elinor direct. Reasonable estimating be alteration we themselves entreaties me of reasonably",
+//                7, true);
+//        String sport_diet = "87940ca7-807d-4d1b-af2e-f6a0c22ed2c8";
+//
+//        webTestClient.patch()
+//                .uri(uriBuilder -> uriBuilder
+//                        .path("/diets")
+//                        .queryParam("id", sport_diet)
+//                        .build()).contentType(MediaType.APPLICATION_JSON).body(BodyInserters.fromObject(dietRequest))
+//                .exchange()
+//                .expectStatus()
+//                .is2xxSuccessful();
+//    }
+//
+//    @Test
+//    void testCreateDietInvalidUser() throws Exception {
+//        String medo_id = "d913320a-baf1-43e0-b8b7-25f748e574bb";
+//        DietRequest dietRequest = new DietRequest(medo_id, "LowDo",
+//                "Arrived totally in as between private. Favour of so as on pretty though elinor direct. Reasonable estimating be alteration we themselves entreaties me of reasonably",
+//                7, true);
+//        String sport_diet = "87940ca7-807d-4d1b-af2e-f6a0c22ed2c8";
+//
+//        webTestClient.patch()
+//                .uri(uriBuilder -> uriBuilder
+//                        .path("/diets")
+//                        .queryParam("id", sport_diet)
+//                        .build()).contentType(MediaType.APPLICATION_JSON).body(BodyInserters.fromObject(dietRequest))
+//                .exchange()
+//                .expectStatus()
+//                .is5xxServerError();
+//    }
 
-        webTestClient.patch()
-                .uri(uriBuilder -> uriBuilder
-                        .path("/diets")
-                        .queryParam("id", sport_diet)
-                        .build()).contentType(MediaType.APPLICATION_JSON).body(BodyInserters.fromObject(dietRequest))
-                .exchange()
-                .expectStatus()
-                .is2xxSuccessful();
-    }
-
-    @Test
-    void testCreateDietInvalidUser() throws Exception {
-        String medo_id = "d913320a-baf1-43e0-b8b7-25f748e574bb";
-        DietRequest dietRequest = new DietRequest(medo_id, "LowDo",
-                "Arrived totally in as between private. Favour of so as on pretty though elinor direct. Reasonable estimating be alteration we themselves entreaties me of reasonably",
-                7, true);
-        String sport_diet = "87940ca7-807d-4d1b-af2e-f6a0c22ed2c8";
-
-        webTestClient.patch()
-                .uri(uriBuilder -> uriBuilder
-                        .path("/diets")
-                        .queryParam("id", sport_diet)
-                        .build()).contentType(MediaType.APPLICATION_JSON).body(BodyInserters.fromObject(dietRequest))
-                .exchange()
-                .expectStatus()
-                .is5xxServerError();
-    }
-
-    @Test
-    void testUpdateDietInvalidUser() throws Exception {
-        String medo_id = "d913320a-baf1-43e0-b8b7-25f748e574bb";
-        DietRequest dietRequest = new DietRequest(medo_id, "LowDo",
-                "Arrived totally in as between private. Favour of so as on pretty though elinor direct. Reasonable estimating be alteration we themselves entreaties me of reasonably",
-                7, true);
-        String sport_diet = "87940ca7-807d-4d1b-af2e-f6a0c22ed2c8";
-
-        webTestClient.patch()
-                .uri(uriBuilder -> uriBuilder
-                        .path("/diets")
-                        .queryParam("id", sport_diet)
-                        .build()).contentType(MediaType.APPLICATION_JSON).body(BodyInserters.fromObject(dietRequest))
-                .exchange()
-                .expectStatus()
-                .is5xxServerError();
-    }
-
-    @Test
-    void testUpdateDietValidUser() throws Exception {
-        String medo_id = "d913320a-baf1-43e0-b8b7-25f748e574ee";
-        DietRequest dietRequest =
-                new DietRequest(medo_id, "LowDo",
-                        "Arrived totally in as between private. Favour of so as on pretty though elinor direct. " +
-                                "Reasonable estimating be alteration we themselves entreaties me of reasonably",
-                        7, true);
-        String sport_diet = "87940ca7-807d-4d1b-af2e-f6a0c22ed2c8";
-
-        webTestClient.patch()
-                .uri(uriBuilder -> uriBuilder
-                        .path("/diets")
-                        .queryParam("id", sport_diet)
-                        .build()).contentType(MediaType.APPLICATION_JSON).body(BodyInserters.fromObject(dietRequest))
-                .exchange()
-                .expectStatus()
-                .is2xxSuccessful();
-    }
+//    @Test
+//    void testUpdateDietInvalidUser() throws Exception {
+//        String medo_id = "d913320a-baf1-43e0-b8b7-25f748e574bb";
+//        DietRequest dietRequest = new DietRequest(medo_id, "LowDo",
+//                "Arrived totally in as between private. Favour of so as on pretty though elinor direct. Reasonable estimating be alteration we themselves entreaties me of reasonably",
+//                7, true);
+//        String sport_diet = "87940ca7-807d-4d1b-af2e-f6a0c22ed2c8";
+//
+//        webTestClient.patch()
+//                .uri(uriBuilder -> uriBuilder
+//                        .path("/diets")
+//                        .queryParam("id", sport_diet)
+//                        .build()).contentType(MediaType.APPLICATION_JSON).body(BodyInserters.fromObject(dietRequest))
+//                .exchange()
+//                .expectStatus()
+//                .is5xxServerError();
+//    }
+//
+//    @Test
+//    void testUpdateDietValidUser() throws Exception {
+//        String medo_id = "d913320a-baf1-43e0-b8b7-25f748e574ee";
+//        DietRequest dietRequest =
+//                new DietRequest(medo_id, "LowDo",
+//                        "Arrived totally in as between private. Favour of so as on pretty though elinor direct. " +
+//                                "Reasonable estimating be alteration we themselves entreaties me of reasonably",
+//                        7, true);
+//        String sport_diet = "87940ca7-807d-4d1b-af2e-f6a0c22ed2c8";
+//
+//        webTestClient.patch()
+//                .uri(uriBuilder -> uriBuilder
+//                        .path("/diets")
+//                        .queryParam("id", sport_diet)
+//                        .build()).contentType(MediaType.APPLICATION_JSON).body(BodyInserters.fromObject(dietRequest))
+//                .exchange()
+//                .expectStatus()
+//                .is2xxSuccessful();
+//    }
 }

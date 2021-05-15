@@ -8,6 +8,7 @@ import com.crumbs.recipeservice.requests.DietRequest;
 import com.crumbs.recipeservice.requests.WebClientRequest;
 import com.crumbs.recipeservice.responses.DietWithDetails;
 import com.crumbs.recipeservice.services.DietService;
+import com.crumbs.recipeservice.utility.JwtConfigAndUtil;
 import com.crumbs.recipeservice.utility.assemblers.DietModelAssembler;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -74,13 +75,16 @@ public class DietController {
     }
 
     @RequestMapping(params = {"id", "details"}, method = RequestMethod.GET)
-    public EntityModel<?> getDietWithDetails(@RequestParam("id") @NotNull UUID id, @RequestParam(value = "details", defaultValue = "false") @NotNull Boolean details) {
+    public EntityModel<?> getDietWithDetails(@RequestParam("id") @NotNull UUID id,
+                                             @RequestParam(value = "details", defaultValue = "false")
+                                             @NotNull Boolean details,
+                                             @RequestHeader("Authorization") String jwt) {
         if (!details)
             return getDiet(id);
         else {
             Diet diet = dietService.getDiet(id);
 
-            User author = webClientRequest.getAuthorIfExists(diet.getUser_id());
+            User author = webClientRequest.checkIfUserExists(jwt);
             DietWithDetails dietWithDetails = new DietWithDetails(diet.getTitle(), diet.getDescription(), diet.getDuration());
             dietWithDetails.setAuthor(new UserView(author.getId(), author.getUsername(), author.getUserProfile().getAvatar()));
             dietWithDetails.setRecipes(diet.getRecipes().stream().map(recipe -> {
@@ -99,19 +103,22 @@ public class DietController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createDiet(@RequestBody @Valid DietRequest dietRequest) {
-        webClientRequest.getAuthorIfExists(UUID.fromString(dietRequest.getUser_id()));
-
-        final Diet diet = dietService.saveDiet(dietRequest);
+    public ResponseEntity<?> createDiet(@RequestBody @Valid DietRequest dietRequest, @RequestHeader("Authorization") String jwt) {
+        webClientRequest.checkIfUserExists(jwt);
+        UUID userId = JwtConfigAndUtil.getUserIdFromJwt(jwt);
+        final Diet diet = dietService.saveDiet(dietRequest, userId);
         EntityModel<Diet> entityModel = dietModelAssembler.toModel(diet);
         return ResponseEntity.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(entityModel);
     }
 
     @PatchMapping(consumes = "application/json")
-    public ResponseEntity<?> updateDiet(@RequestParam("id") @NotNull UUID id, @RequestBody @Valid DietRequest dietRequest) {
-        webClientRequest.getAuthorIfExists(UUID.fromString(dietRequest.getUser_id()));
+    public ResponseEntity<?> updateDiet(@RequestParam("id") @NotNull UUID id,
+                                        @RequestBody @Valid DietRequest dietRequest,
+                                        @RequestHeader("Authorization") String jwt) {
 
-        final Diet diet = dietService.updateDiet(dietRequest, id);
+        webClientRequest.checkIfUserExists(jwt);
+        UUID userId = JwtConfigAndUtil.getUserIdFromJwt(jwt);
+        final Diet diet = dietService.updateDiet(dietRequest, id, userId);
         EntityModel<Diet> entityModel = dietModelAssembler.toModel(diet);
         return ResponseEntity.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(entityModel);
     }
@@ -134,8 +141,9 @@ public class DietController {
     }
 
     @DeleteMapping
-    public ResponseEntity<?> deleteDiet(@RequestParam("id") @NotNull UUID id) {
-        dietService.deleteDiet(id);
+    public ResponseEntity<?> deleteDiet(@RequestParam("id") @NotNull UUID id, @RequestHeader("Authorization") String jwt) {
+        UUID userId = JwtConfigAndUtil.getUserIdFromJwt(jwt);
+        dietService.deleteDiet(id, userId);
         return ResponseEntity.noContent().build();
     }
 }
