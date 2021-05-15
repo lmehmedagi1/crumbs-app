@@ -138,6 +138,16 @@ public class ReviewEntityExceptionHandler extends ResponseEntityExceptionHandler
     }
 
     /**
+     * Handles UnauthorizedException.
+     * Created to encapsulate errors with more detail than javax.persistence.EntityNotFoundException.
+     */
+    @ExceptionHandler(UnauthorizedException.class)
+    protected ResponseEntity<Object> handleUnauthorizedException(UnauthorizedException ex, WebRequest request) {
+        ApiError apiError = new ApiError(UNAUTHORIZED, ex.getMessage(), "Unauthorized action!", getRequestUri(request));
+        return new ResponseEntity<>(apiError, UNAUTHORIZED);
+    }
+
+    /**
      * Handle javax.persistence.EntityNotFoundException
      */
     @ExceptionHandler(javax.persistence.EntityNotFoundException.class)

@@ -6,18 +6,12 @@ import com.crumbs.reviewservice.requests.ReviewWebClientRequest;
 import com.crumbs.reviewservice.services.ReviewService;
 import com.crumbs.reviewservice.utility.JwtConfigAndUtil;
 import com.crumbs.reviewservice.utility.assemblers.ReviewModelAssembler;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.fge.jsonpatch.JsonPatch;
-import com.github.fge.jsonpatch.JsonPatchException;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -60,7 +54,7 @@ public class ReviewController {
     @RequestMapping(params = "userId", method = RequestMethod.GET)
     public CollectionModel<EntityModel<Review>> getReviewsOfUser(@RequestParam("userId") @NotNull UUID userId, @RequestHeader("Authorization") String jwt) {
 
-        reviewWebClientRequest.checkIfUserExists(userId, jwt);
+        reviewWebClientRequest.checkIfUserExists(jwt);
 
         List<EntityModel<Review>> reviews = reviewService.getReviewsOfUser(userId).stream()
                 .map(reviewModelAssembler::toModel)
@@ -91,11 +85,8 @@ public class ReviewController {
     public ResponseEntity<?> createReview(@RequestBody @Valid ReviewRequest reviewRequest, @RequestHeader("Authorization") String jwt) {
 
         UUID userId = getUserIdFromJwt(jwt);
-        System.out.println("User id: " + userId);
         reviewWebClientRequest.checkIfRecipeExists(UUID.fromString(reviewRequest.getRecipe_id()));
-        System.out.println("Recipe postoji");
-        reviewWebClientRequest.checkIfUserExists(userId, jwt);
-        System.out.println("User postoji");
+        reviewWebClientRequest.checkIfUserExists(jwt);
 
         final Review newReview = reviewService.saveReview(reviewRequest, userId);
         EntityModel<Review> entityModel = reviewModelAssembler.toModel(newReview);
@@ -109,33 +100,18 @@ public class ReviewController {
 
         UUID userId = getUserIdFromJwt(jwt);
         reviewWebClientRequest.checkIfRecipeExists(UUID.fromString(reviewRequest.getRecipe_id()));
-        reviewWebClientRequest.checkIfUserExists(userId, jwt);
+        reviewWebClientRequest.checkIfUserExists(jwt);
 
         final Review updatedReview = reviewService.updateReview(reviewRequest, id, userId);
         EntityModel<Review> entityModel = reviewModelAssembler.toModel(updatedReview);
         return ResponseEntity.ok(entityModel);
     }
 
-    /**
-     * PATCH method with partial update, based on JSON Patch
-     */
-    @PatchMapping(consumes = "application/json-patch+json")
-    public ResponseEntity<?> patchReview(@RequestParam("id") @NotNull UUID id, @RequestBody JsonPatch patch) {
-        try {
-            Review review = reviewService.getReview(id);
-            final ObjectMapper objectMapper = new ObjectMapper();
-            JsonNode patched = patch.apply(objectMapper.convertValue(review, JsonNode.class));
-            Review reviewPatched = objectMapper.treeToValue(patched, Review.class);
-            reviewService.updateReview(reviewPatched);
-            return ResponseEntity.ok(reviewModelAssembler.toModel(reviewPatched));
-        } catch (JsonPatchException | JsonProcessingException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
-
     @DeleteMapping
-    public ResponseEntity<?> deleteReview(@RequestParam("id") @NotNull UUID id) {
-        reviewService.deleteReview(id);
+    public ResponseEntity<?> deleteReview(@RequestParam("id") @NotNull UUID id, @RequestHeader("Authorization") String jwt) {
+        UUID userId = getUserIdFromJwt(jwt);
+        reviewWebClientRequest.checkIfUserExists(jwt);
+        reviewService.deleteReview(id, userId);
         return ResponseEntity.noContent().build();
     }
 
