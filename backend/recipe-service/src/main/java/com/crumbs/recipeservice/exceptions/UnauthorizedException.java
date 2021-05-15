@@ -1,0 +1,8 @@
+package com.crumbs.recipeservice.exceptions;
+
+public class UnauthorizedException extends RuntimeException {
+
+    public UnauthorizedException(String message) {
+        super(message);
+    }
+}

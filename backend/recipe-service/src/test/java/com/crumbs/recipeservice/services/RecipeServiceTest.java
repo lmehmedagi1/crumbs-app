@@ -38,40 +38,40 @@ class RecipeServiceTest {
                 () -> assertEquals("1. Kupite sampitu; 2. Bacite je", recipe.getMethod()));
     }
 
-    @Test
-    void testCreateRecipeNullInputParameter() {
-        assertThrows(NullPointerException.class, () -> {
-            recipeService.saveRecipe(null);
-        });
-    }
+//    @Test
+//    void testCreateRecipeNullInputParameter() {
+//        assertThrows(NullPointerException.class, () -> {
+//            recipeService.saveRecipe(null);
+//        });
+//    }
 
-    @Test
-    void testCreateRecipeSuccess() {
-        String method = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.";
-        final RecipeRequest recipeRequest = new RecipeRequest("d913320a-baf1-43e0-b8b7-25f748e574ee", "Lazanje", "Sir i Meso", method);
-        final Recipe recipe = recipeService.saveRecipe(recipeRequest);
-        assertAll(
-                () -> assertEquals("Lazanje", recipe.getTitle()),
-                () -> assertEquals(method, recipe.getMethod()),
-                () -> assertEquals("Sir i Meso", recipe.getDescription()));
-    }
+//    @Test
+//    void testCreateRecipeSuccess() {
+//        String method = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.";
+//        final RecipeRequest recipeRequest = new RecipeRequest("d913320a-baf1-43e0-b8b7-25f748e574ee", "Lazanje", "Sir i Meso", method);
+//        final Recipe recipe = recipeService.saveRecipe(recipeRequest);
+//        assertAll(
+//                () -> assertEquals("Lazanje", recipe.getTitle()),
+//                () -> assertEquals(method, recipe.getMethod()),
+//                () -> assertEquals("Sir i Meso", recipe.getDescription()));
+//    }
 
-    @Test
-    void testCreateRecipeShortMethod() {
-        final RecipeRequest recipeRequest = new RecipeRequest("d913320a-baf1-43e0-b8b7-25f748e574ee", "Lazanje", "Sir i Meso", "MMMMM");
-        assertThrows(ConstraintViolationException.class, () -> recipeService.saveRecipe(recipeRequest));
-    }
+//    @Test
+//    void testCreateRecipeShortMethod() {
+//        final RecipeRequest recipeRequest = new RecipeRequest("d913320a-baf1-43e0-b8b7-25f748e574ee", "Lazanje", "Sir i Meso", "MMMMM");
+//        assertThrows(ConstraintViolationException.class, () -> recipeService.saveRecipe(recipeRequest));
+//    }
 
-    @Test
-    void testUpdateRecipeSuccess() {
-        String method = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.";
-        final RecipeRequest recipeRequest = new RecipeRequest("d913320a-baf1-43e0-b8b7-25f748e574ee", "Lazanje nakon apdejta", "Sir", method);
-        final Recipe recipe = recipeService.updateRecipe(recipeRequest, UUID.fromString("0668b655-97b3-4514-9f65-50cf8087fa46"));
-        assertAll(
-                () -> assertEquals("Lazanje nakon apdejta", recipe.getTitle()),
-                () -> assertEquals(method, recipe.getMethod()),
-                () -> assertEquals("Sir", recipe.getDescription()));
-    }
+//    @Test
+//    void testUpdateRecipeSuccess() {
+//        String method = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.";
+//        final RecipeRequest recipeRequest = new RecipeRequest("d913320a-baf1-43e0-b8b7-25f748e574ee", "Lazanje nakon apdejta", "Sir", method);
+//        final Recipe recipe = recipeService.updateRecipe(recipeRequest, UUID.fromString("0668b655-97b3-4514-9f65-50cf8087fa46"));
+//        assertAll(
+//                () -> assertEquals("Lazanje nakon apdejta", recipe.getTitle()),
+//                () -> assertEquals(method, recipe.getMethod()),
+//                () -> assertEquals("Sir", recipe.getDescription()));
+//    }
 
     @Test
     void testDeleteRecipeSuccess() {
