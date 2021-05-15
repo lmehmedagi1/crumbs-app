@@ -1,6 +1,7 @@
 package com.crumbs.reviewservice.services;
 
 import com.crumbs.reviewservice.exceptions.ReviewNotFoundException;
+import com.crumbs.reviewservice.exceptions.UnauthorizedException;
 import com.crumbs.reviewservice.models.Review;
 import com.crumbs.reviewservice.repositories.ReviewRepository;
 import com.crumbs.reviewservice.requests.ReviewRequest;
@@ -45,14 +46,6 @@ public class ReviewService {
         return (double) Math.round(reviewRepository.getAvgRatingOfRecipe(recipeId) * 100) / 100;
     }
 
-    private void modifyReview(ReviewRequest reviewRequest, UUID userId, Review review) {
-        review.setUserId(userId);
-        review.setRecipeId(UUID.fromString(reviewRequest.getRecipe_id()));
-        review.setIsLiked(reviewRequest.getIs_liked());
-        review.setRating(reviewRequest.getRating());
-        review.setComment(reviewRequest.getComment());
-    }
-
     @Transactional
     public Review saveReview(@NotNull @Valid ReviewRequest reviewRequest, @NotNull UUID userId) {
         Review review = new Review();
@@ -61,22 +54,26 @@ public class ReviewService {
     }
 
     @Transactional
-    public Review updateReview(@NotNull @Valid ReviewRequest reviewRequest, @NotNull UUID id, @NotNull UUID userId) {
-        return reviewRepository.findById(id).map(review -> {
-            modifyReview(reviewRequest, userId,  review);
-            return reviewRepository.save(review);
-        }).orElseThrow(ReviewNotFoundException::new);
+    public Review updateReview(@NotNull @Valid ReviewRequest reviewRequest, @NotNull UUID reviewId, @NotNull UUID userId) {
+        Review review = reviewRepository.findByIdAndUserId(reviewId, userId);
+        if (review == null)
+            throw new UnauthorizedException("You don't have permission to update this review");
+        modifyReview(reviewRequest, userId,  review);
+        return reviewRepository.save(review);
     }
 
     @Transactional
-    public void updateReview(@NotNull @Valid Review updatedReview) {
-        reviewRepository.save(updatedReview);
+    public void deleteReview(@NotNull UUID reviewId, @NotNull UUID userId) {
+        if (reviewRepository.findByIdAndUserId(reviewId, userId) == null)
+            throw new UnauthorizedException("You don't have permission to delete this review");
+        reviewRepository.deleteById(reviewId);
     }
 
-    @Transactional
-    public void deleteReview(@NotNull UUID id) {
-        if (!reviewRepository.existsById(id))
-            throw new ReviewNotFoundException();
-        reviewRepository.deleteById(id);
+    private void modifyReview(ReviewRequest reviewRequest, UUID userId, Review review) {
+        review.setUserId(userId);
+        review.setRecipeId(UUID.fromString(reviewRequest.getRecipe_id()));
+        review.setIsLiked(reviewRequest.getIs_liked());
+        review.setRating(reviewRequest.getRating());
+        review.setComment(reviewRequest.getComment());
     }
 }

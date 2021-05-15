@@ -5,6 +5,7 @@ import com.crumbs.reviewservice.exceptions.UserNotFoundException;
 import com.crumbs.reviewservice.models.Recipe;
 import com.crumbs.reviewservice.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -22,13 +23,13 @@ public class ReviewWebClientRequest {
         this.webClientBuilder = webClientBuilder;
     }
 
-    public User checkIfUserExists(UUID userId, String jwt) {
+    public User checkIfUserExists(String jwt) {
         return webClientBuilder.baseUrl("http://user-service").build().get()
                 .uri(uriBuilder -> uriBuilder
                         .path("/account")
-                        .queryParam("id", userId)
                         .build())
                 .header("Authorization", jwt)
+                .accept(MediaTypes.HAL_JSON)
                 .retrieve()
                 .onStatus(HttpStatus::is4xxClientError, response -> Mono.error(new UserNotFoundException()))
                 .bodyToMono(User.class)
