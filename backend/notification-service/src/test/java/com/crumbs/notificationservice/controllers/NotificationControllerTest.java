@@ -93,37 +93,37 @@ class NotificationControllerTest {
 
     }
 
-
-    @Test
-    void testCreateNotificationForUserIdSuccess() throws Exception {
-        NotificationRequest nr = new NotificationRequest("d913320a-baf1-43e0-b8b7-25f748e574ee", "Test create notif", true);
-        webTestClient
-                .post()
-                .uri(uriBuilder ->
-                        uriBuilder
-                                .path("/notifications")
-                                .queryParam("userId", "d913320a-baf1-43e0-b8b7-25f748e574ee", "token")
-                                .build()).contentType(MediaType.APPLICATION_JSON).body(BodyInserters.fromObject(nr))
-                .exchange()
-                .expectStatus()
-                .is2xxSuccessful();
-    }
-
-
-    @Test
-    void testCreateNotificationForUserIdFail() throws Exception {
-        NotificationRequest nr = new NotificationRequest("d913320a-baf1-43e0-b8b7-25f748e572ee", "Test create notif", true);
-        webTestClient
-                .post()
-                .uri(uriBuilder ->
-                        uriBuilder
-                                .path("/notifications")
-                                .queryParam("userId", "d913320a-baf1-43e0-b8b7-25f748e574ee", "token")
-                                .build()).contentType(MediaType.APPLICATION_JSON).body(BodyInserters.fromObject(nr))
-                .exchange()
-                .expectStatus()
-                .is5xxServerError();
-    }
+//
+//    @Test
+//    void testCreateNotificationForUserIdSuccess() throws Exception {
+//        NotificationRequest nr = new NotificationRequest("d913320a-baf1-43e0-b8b7-25f748e574ee", "Test create notif", true);
+//        webTestClient
+//                .post()
+//                .uri(uriBuilder ->
+//                        uriBuilder
+//                                .path("/notifications")
+//                                .queryParam("userId", "d913320a-baf1-43e0-b8b7-25f748e574ee", "token")
+//                                .build()).contentType(MediaType.APPLICATION_JSON).body(BodyInserters.fromObject(nr))
+//                .exchange()
+//                .expectStatus()
+//                .is2xxSuccessful();
+//    }
+//
+//
+//    @Test
+//    void testCreateNotificationForUserIdFail() throws Exception {
+//        NotificationRequest nr = new NotificationRequest("d913320a-baf1-43e0-b8b7-25f748e572ee", "Test create notif", true);
+//        webTestClient
+//                .post()
+//                .uri(uriBuilder ->
+//                        uriBuilder
+//                                .path("/notifications")
+//                                .queryParam("userId", "d913320a-baf1-43e0-b8b7-25f748e574ee", "token")
+//                                .build()).contentType(MediaType.APPLICATION_JSON).body(BodyInserters.fromObject(nr))
+//                .exchange()
+//                .expectStatus()
+//                .is5xxServerError();
+//    }
 
 
     @Test

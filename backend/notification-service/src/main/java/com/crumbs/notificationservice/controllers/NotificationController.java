@@ -4,6 +4,7 @@ import com.crumbs.notificationservice.models.Notification;
 import com.crumbs.notificationservice.requests.NotificationRequest;
 import com.crumbs.notificationservice.requests.NotificationWebClientRequest;
 import com.crumbs.notificationservice.services.NotificationService;
+import com.crumbs.notificationservice.utility.JwtConfigAndUtil;
 import com.crumbs.notificationservice.utility.assemblers.NotificationModelAssembler;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -43,6 +44,10 @@ public class NotificationController {
     private final NotificationModelAssembler notificationModelAssembler;
     private final NotificationWebClientRequest notificationWebClientRequest;
 
+    private UUID getUserIdFromJwt(String jwt) {
+        return UUID.fromString(new JwtConfigAndUtil().extractUserId(jwt.substring(7)));
+    }
+
     @Autowired
     NotificationController(NotificationService notificationService, NotificationModelAssembler notificationModelAssembler, NotificationWebClientRequest notificationWebClientRequest) {
         this.notificationService = notificationService;
@@ -56,37 +61,43 @@ public class NotificationController {
     }
 
     @RequestMapping(params = "userId", method = RequestMethod.GET)
-    public CollectionModel<EntityModel<Notification>> getNotificationsForUser(@RequestParam("userId") @NotNull UUID userId,
+    public CollectionModel<EntityModel<Notification>> getNotificationsForUser(@RequestHeader("Authorization") String jwt,
                                                                               @RequestParam(defaultValue = "0") Integer pageNo,
                                                                               @RequestParam(defaultValue = "3") Integer pageSize,
                                                                               @RequestParam(defaultValue = "createdAt") String sortBy) {
-        notificationWebClientRequest.checkIfUserExists(userId);
+        UUID userId = getUserIdFromJwt(jwt);
+
+        notificationWebClientRequest.checkIfUserExists(jwt);
         List<EntityModel<Notification>> reviews = notificationService.getNotificationsOfUser(userId, pageNo, pageSize, sortBy)
                 .stream()
                 .map(notificationModelAssembler::toModel)
                 .collect(Collectors.toList());
         return CollectionModel.of(reviews, linkTo(methodOn(NotificationController.class)
-                .getNotificationsForUser(userId, pageNo, pageSize, sortBy)).withSelfRel());
+                .getNotificationsForUser(jwt, pageNo, pageSize, sortBy)).withSelfRel());
     }
 
     @PostMapping
-    public ResponseEntity<?> createNotification(@RequestBody @Valid NotificationRequest notificationRequest) {
-        notificationWebClientRequest.checkIfUserExists(UUID.fromString(notificationRequest.getUser_id()));
-        final Notification newNotification = notificationService.saveNotification(notificationRequest);
+    public ResponseEntity<?> createNotification(@RequestBody @Valid NotificationRequest notificationRequest, @RequestHeader("Authorization") String jwt) {
+        notificationWebClientRequest.checkIfUserExists(jwt);
+        UUID userId = getUserIdFromJwt(jwt);
+        final Notification newNotification = notificationService.saveNotification(notificationRequest, userId);
         EntityModel<Notification> entityModel = notificationModelAssembler.toModel(newNotification);
         return ResponseEntity.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(entityModel);
     }
 
     @RequestMapping(value = "/markAsRead")
-    public int markAllAsReadForUser(@RequestParam("userId") @NotNull UUID id) {
-        notificationWebClientRequest.checkIfUserExists(id);
-        return notificationService.markAllAsReadForUser(id);
+    public int markAllAsReadForUser(@RequestHeader("Authorization") String jwt) {
+        notificationWebClientRequest.checkIfUserExists(jwt);
+        UUID userId = getUserIdFromJwt(jwt);
+        return notificationService.markAllAsReadForUser(userId);
     }
 
     @PatchMapping(consumes = "application/json")
-    public ResponseEntity<?> updateNotification(@RequestParam("id") @NotNull UUID id,
+    public ResponseEntity<?> updateNotification(@RequestHeader("Authorization") String jwt,
+                                                @RequestParam("id") @NotNull UUID id,
                                                 @RequestBody @Valid NotificationRequest notificationRequest) {
-        final Notification updatedNotification = notificationService.updateNotification(notificationRequest, id);
+        UUID userId = getUserIdFromJwt(jwt);
+        final Notification updatedNotification = notificationService.updateNotification(notificationRequest, id, userId);
         return ResponseEntity.ok().body(notificationModelAssembler.toModel(updatedNotification));
     }
 
@@ -94,10 +105,11 @@ public class NotificationController {
      * PATCH method with partial update, based on JSON Patch
      */
     @PatchMapping(consumes = "application/json-patch+json")
-    public ResponseEntity<?> patchNotification(@RequestParam("id") @NotNull UUID id,
+    public ResponseEntity<?> patchNotification(@RequestHeader("Authorization") String jwt,
                                                @RequestBody JsonPatch patch) {
+        UUID userId = getUserIdFromJwt(jwt);
         try {
-            Notification notification = notificationService.getNotification(id);
+            Notification notification = notificationService.getNotification(userId);
             final ObjectMapper objectMapper = new ObjectMapper();
             JsonNode patched = patch.apply(objectMapper.convertValue(notification, JsonNode.class));
             Notification notificationPatched = objectMapper.treeToValue(patched, Notification.class);
@@ -109,8 +121,9 @@ public class NotificationController {
     }
 
     @DeleteMapping
-    public ResponseEntity<?> deleteNotification(@RequestParam("id") @NotNull UUID id) {
-        notificationService.deleteNotification(id);
+    public ResponseEntity<?> deleteNotification(@RequestHeader("Authorization") String jwt) {
+        UUID userId = getUserIdFromJwt(jwt);
+        notificationService.deleteNotification(userId);
         return ResponseEntity.noContent().build();
     }
 }

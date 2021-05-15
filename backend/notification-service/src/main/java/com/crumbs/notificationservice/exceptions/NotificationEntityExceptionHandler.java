@@ -72,6 +72,7 @@ public class NotificationEntityExceptionHandler extends ResponseEntityExceptionH
         return new ResponseEntity<String>(ex.getResponseBodyAsString(), ex.getResponseHeaders(), ex.getStatusCode());
     }
 
+
     /**
      * Handle HttpMediaTypeNotSupportedException.
      * This one triggers when JSON is invalid as well.
@@ -139,11 +140,6 @@ public class NotificationEntityExceptionHandler extends ResponseEntityExceptionH
     protected ResponseEntity<Object> handleEntityNotFound(javax.persistence.EntityNotFoundException ex, WebRequest request) {
         ApiError apiError = new ApiError(NOT_FOUND, "Database error", "Entity does not exist!", getRequestUri(request));
         return new ResponseEntity<>(apiError, NOT_FOUND);
-    }
-
-    @ExceptionHandler(HttpStatusCodeException.class)
-    public final ResponseEntity<String> handleHttpStatusCodeException(HttpStatusCodeException ex, WebRequest request) {
-        return new ResponseEntity<>(ex.getResponseBodyAsString(), ex.getResponseHeaders(), ex.getStatusCode());
     }
 
     /**
