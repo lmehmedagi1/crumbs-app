@@ -43,21 +43,21 @@ class NotificationServiceTest {
         assertAll(() -> assertEquals("Lajk od usera 2", notification.getDescription()),
                 () -> assertEquals(false, notification.getIsRead()));
     }
-
-    @Test
-    void testCreateNotificationNullInputParameter() {
-        assertThrows(NullPointerException.class, () -> {
-            notificationService.saveNotification(null);
-        });
-    }
-
-    @Test
-    void testCreateNotificationSuccess() {
-        final NotificationRequest createRecipeRequest = new NotificationRequest("6494e288-f6ac-47b1-b6d6-c52724c35570", "Test Notification Description", true);
-        final Notification notification = notificationService.saveNotification(createRecipeRequest);
-        assertAll(() -> assertEquals("Test Notification Description", notification.getDescription()),
-                () -> assertEquals(true, notification.getIsRead()));
-    }
+//
+//    @Test
+//    void testCreateNotificationNullInputParameter() {
+//        assertThrows(NullPointerException.class, () -> {
+//            notificationService.saveNotification(null);
+//        });
+//    }
+//
+//    @Test
+//    void testCreateNotificationSuccess() {
+//        final NotificationRequest createRecipeRequest = new NotificationRequest("6494e288-f6ac-47b1-b6d6-c52724c35570", "Test Notification Description", true);
+//        final Notification notification = notificationService.saveNotification(createRecipeRequest);
+//        assertAll(() -> assertEquals("Test Notification Description", notification.getDescription()),
+//                () -> assertEquals(true, notification.getIsRead()));
+//    }
 
     @Test
     void testDeleteNotificationSuccess() {
