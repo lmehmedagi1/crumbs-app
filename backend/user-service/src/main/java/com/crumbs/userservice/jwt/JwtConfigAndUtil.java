@@ -20,8 +20,7 @@ import java.util.function.Function;
 @Component
 public final class JwtConfigAndUtil {
 
-    @Value("${application.jwt.secret-key}")
-    private String secretKey;
+    private String secretKey = "e94a08b7f23735dcc5a14af50ccb5ba1617d0c3f299c0b133cc1c7a3c2474342a54cb2179207868bcadb1ce812f9fc757bfcc243d153fe9740a345a1e167b6f0";
     @Value("${application.jwt.token-prefix}")
     private String tokenPrefix;
     @Value("${application.jwt.token-expiration-after-days}")

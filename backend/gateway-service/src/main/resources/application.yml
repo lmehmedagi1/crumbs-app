@@ -19,6 +19,14 @@ zuul:
       path: /review-service/**
       serviceId: review-service
       url: http://localhost:8083
+    notification-service:
+      path: /notification-service/**
+      serviceId: notification-service
+      url: http://localhost:8084
+    recipe-service:
+      path: /recipe-service/**
+      serviceId: recipe-service
+      url: http://localhost:8082
 ribbon:
   eureka:
     enabled: true

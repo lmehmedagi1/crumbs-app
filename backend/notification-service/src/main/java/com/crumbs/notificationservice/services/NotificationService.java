@@ -31,6 +31,8 @@ public class NotificationService {
 
     @Transactional(readOnly = true)
     public Notification getNotification(@NotNull UUID id) throws NotificationNotFoundException {
+//        if (notificationRepository.findByIdAndUserId(id, userId) == null)
+//            throw new NotificationNotFoundException("You don't have permission to update this review");
         return notificationRepository.findById(id).orElseThrow(NotificationNotFoundException::new);
     }
 
@@ -42,16 +44,16 @@ public class NotificationService {
         return slicedProducts.getContent();
     }
 
-    private void modifyNotification(NotificationRequest notificationRequest, Notification notification) {
-        notification.setUserId(UUID.fromString(notificationRequest.getUser_id()));
+    private void modifyNotification(NotificationRequest notificationRequest, Notification notification, UUID userId) {
+        notification.setUserId(userId);
         notification.setIsRead(notificationRequest.getIs_read());
         notification.setDescription(notificationRequest.getDescription());
     }
 
     @Transactional
-    public Notification saveNotification(@NotNull @Valid NotificationRequest notificationRequest) {
+    public Notification saveNotification(@NotNull @Valid NotificationRequest notificationRequest, UUID userId) {
         Notification notification = new Notification();
-        modifyNotification(notificationRequest, notification);
+        modifyNotification(notificationRequest, notification, userId);
         return notificationRepository.save(notification);
     }
 
@@ -61,9 +63,9 @@ public class NotificationService {
     }
 
     @Transactional
-    public Notification updateNotification(@NotNull @Valid NotificationRequest notificationRequest, @NotNull UUID id) {
+    public Notification updateNotification(@NotNull @Valid NotificationRequest notificationRequest, @NotNull UUID id, @NotNull UUID userId) {
         return notificationRepository.findById(id).map(notification -> {
-            modifyNotification(notificationRequest, notification);
+            modifyNotification(notificationRequest, notification, userId);
             return notificationRepository.save(notification);
         }).orElseThrow(NotificationNotFoundException::new);
     }
@@ -74,9 +76,9 @@ public class NotificationService {
     }
 
     @Transactional
-    public void deleteNotification(@NotNull UUID id) {
-        if (!notificationRepository.existsById(id))
-            throw new NotificationNotFoundException();
+    public void deleteNotification(@NotNull UUID id, @NotNull UUID userId) {
+        if (notificationRepository.findByIdAndUserId(id, userId) == null)
+            throw new NotificationNotFoundException("You don't have permission to delete this review");
 
         notificationRepository.deleteById(id);
     }
