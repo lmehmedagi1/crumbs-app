@@ -42,16 +42,16 @@ public class NotificationService {
         return slicedProducts.getContent();
     }
 
-    private void modifyNotification(NotificationRequest notificationRequest, Notification notification) {
-        notification.setUserId(UUID.fromString(notificationRequest.getUser_id()));
+    private void modifyNotification(NotificationRequest notificationRequest, Notification notification, UUID userId) {
+        notification.setUserId(userId);
         notification.setIsRead(notificationRequest.getIs_read());
         notification.setDescription(notificationRequest.getDescription());
     }
 
     @Transactional
-    public Notification saveNotification(@NotNull @Valid NotificationRequest notificationRequest) {
+    public Notification saveNotification(@NotNull @Valid NotificationRequest notificationRequest, UUID userId) {
         Notification notification = new Notification();
-        modifyNotification(notificationRequest, notification);
+        modifyNotification(notificationRequest, notification, userId);
         return notificationRepository.save(notification);
     }
 
@@ -61,9 +61,9 @@ public class NotificationService {
     }
 
     @Transactional
-    public Notification updateNotification(@NotNull @Valid NotificationRequest notificationRequest, @NotNull UUID id) {
+    public Notification updateNotification(@NotNull @Valid NotificationRequest notificationRequest, @NotNull UUID id, @NotNull UUID userId) {
         return notificationRepository.findById(id).map(notification -> {
-            modifyNotification(notificationRequest, notification);
+            modifyNotification(notificationRequest, notification, userId);
             return notificationRepository.save(notification);
         }).orElseThrow(NotificationNotFoundException::new);
     }

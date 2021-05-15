@@ -2,6 +2,7 @@ package com.crumbs.userservice.controllers;
 
 import com.crumbs.userservice.jwt.JwtConfigAndUtil;
 import com.crumbs.userservice.models.User;
+import com.crumbs.userservice.requests.LoginRequest;
 import com.crumbs.userservice.requests.RegisterRequest;
 import com.crumbs.userservice.services.CustomUserDetailsService;
 import com.crumbs.userservice.services.UserService;
@@ -34,12 +35,23 @@ public class UserController {
     private final UserModelAssembler userModelAssembler;
     private final JwtConfigAndUtil jwtConfigAndUtil;
 
+    private UUID getUserIdFromJwt(String jwt) {
+        return UUID.fromString(new JwtConfigAndUtil().extractUserId(jwt.substring(7)));
+    }
+
     @Autowired
     public UserController(UserService userService, UserModelAssembler userModelAssembler, JwtConfigAndUtil jwtConfigAndUtil, CustomUserDetailsService customUserDetailsService) {
         this.userService = userService;
         this.userModelAssembler = userModelAssembler;
         this.jwtConfigAndUtil = jwtConfigAndUtil;
         this.customUserDetailsService = customUserDetailsService;
+    }
+
+    @PostMapping("/login")
+    public EntityModel<User> login(@RequestBody @Valid LoginRequest loginRequest, HttpServletResponse httpServletResponse) {
+        final User user = userService.getUserByCredentials(loginRequest.getUsername(), loginRequest.getPassword());
+        httpServletResponse.setHeader("Authorization", "Bearer " + jwtConfigAndUtil.generateToken(user.getId().toString()));
+        return userModelAssembler.toModel(user);
     }
 
     @PostMapping("/register")
@@ -49,8 +61,13 @@ public class UserController {
         return userModelAssembler.toModel(user);
     }
 
+    @RequestMapping(method = RequestMethod.GET)
+    public EntityModel<User> getUserByJwt(@RequestHeader("Authorization") String jwt) {
+        UUID userId = getUserIdFromJwt(jwt);
+        return userModelAssembler.toModel(userService.getUserById(userId));
+    }
     @RequestMapping(params = "id", method = RequestMethod.GET)
-    public EntityModel<User> getUserById(@RequestParam("id") @NotNull UUID id) {
+    public EntityModel<User> getUserById(@RequestParam("username") @NotNull UUID id) {
         return userModelAssembler.toModel(userService.getUserById(id));
     }
 
