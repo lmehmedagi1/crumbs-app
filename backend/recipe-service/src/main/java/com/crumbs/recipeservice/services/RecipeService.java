@@ -1,6 +1,9 @@
 package com.crumbs.recipeservice.services;
 
+import com.crumbs.recipeservice.exceptions.DietNotFoundException;
 import com.crumbs.recipeservice.exceptions.RecipeNotFoundException;
+import com.crumbs.recipeservice.exceptions.UnauthorizedException;
+import com.crumbs.recipeservice.models.Diet;
 import com.crumbs.recipeservice.models.Recipe;
 import com.crumbs.recipeservice.projections.RecipeView;
 import com.crumbs.recipeservice.repositories.RecipeRepository;
@@ -55,26 +58,28 @@ public class RecipeService {
         return recipeRepository.findById(id).orElseThrow(RecipeNotFoundException::new);
     }
 
-    private void modifyRecipe(RecipeRequest recipeRequest, Recipe recipe) {
+    private void modifyRecipe(RecipeRequest recipeRequest, UUID userId, Recipe recipe) {
         recipe.setTitle(recipeRequest.getTitle());
         recipe.setDescription(recipeRequest.getDescription());
         recipe.setMethod(recipeRequest.getMethod());
-        recipe.setUserId(UUID.fromString(recipeRequest.getUser_id()));
+        recipe.setUserId(userId);
     }
 
     @Transactional
-    public Recipe saveRecipe(@NonNull @Valid RecipeRequest recipeRequest) {
+    public Recipe saveRecipe(@NonNull @Valid RecipeRequest recipeRequest, @NotNull UUID userId) {
         Recipe recipe = new Recipe();
-        modifyRecipe(recipeRequest, recipe);
+        modifyRecipe(recipeRequest, userId, recipe);
         return recipeRepository.save(recipe);
     }
 
     @Transactional
-    public Recipe updateRecipe(@NotNull @Valid RecipeRequest recipeRequest, @NotNull UUID id) {
-        return recipeRepository.findById(id).map(recipe -> {
-            modifyRecipe(recipeRequest, recipe);
-            return recipeRepository.save(recipe);
-        }).orElseThrow(RecipeNotFoundException::new);
+    public Recipe updateRecipe(@NotNull @Valid RecipeRequest recipeRequest, @NotNull UUID id, @NotNull UUID userId) {
+        Recipe recipe = recipeRepository.findByIdAndUserId(id, userId);
+        if (recipe == null)
+            throw new UnauthorizedException("You don't have permission to update this recipe");
+
+        modifyRecipe(recipeRequest, userId, recipe);
+        return recipeRepository.save(recipe);
     }
 
     @Transactional
@@ -83,9 +88,9 @@ public class RecipeService {
     }
 
     @Transactional
-    public void deleteRecipe(@NonNull UUID id) {
-        if (!recipeRepository.existsById(id))
-            throw new RecipeNotFoundException();
+    public void deleteRecipe(@NonNull UUID id, @NotNull UUID userId) {
+        if (recipeRepository.findByIdAndUserId(id, userId) == null)
+            throw new RecipeNotFoundException("You don't have permission to delete this recipe");
 
         recipeRepository.deleteById(id);
     }

@@ -2,6 +2,7 @@ package com.crumbs.recipeservice.services;
 
 import com.crumbs.recipeservice.exceptions.CategoryNotFoundException;
 import com.crumbs.recipeservice.exceptions.DietNotFoundException;
+import com.crumbs.recipeservice.exceptions.UnauthorizedException;
 import com.crumbs.recipeservice.models.Diet;
 import com.crumbs.recipeservice.repositories.DietRepository;
 import com.crumbs.recipeservice.requests.DietRequest;
@@ -43,29 +44,31 @@ public class DietService {
         return dietRepository.findById(id).orElseThrow(DietNotFoundException::new);
     }
 
-    private void modifyDiet(DietRequest dietRequest, Diet diet) {
+    private void modifyDiet(DietRequest dietRequest, UUID userId, Diet diet) {
         diet.setTitle(dietRequest.getTitle());
         diet.setDescription(dietRequest.getDescription());
         diet.setDuration(dietRequest.getDuration());
         diet.setIsPrivate(dietRequest.getIs_private());
-        diet.setUser_id(UUID.fromString(dietRequest.getUser_id()));
+        diet.setUserId(userId);
         diet.setRecipes(new ArrayList<>());
     }
 
     @Transactional
-    public Diet saveDiet(@NotNull @Valid DietRequest dietRequest) {
+    public Diet saveDiet(@NotNull @Valid DietRequest dietRequest, @NotNull UUID userId) {
         Diet diet = new Diet();
-        modifyDiet(dietRequest, diet);
+        modifyDiet(dietRequest, userId, diet);
         dietRepository.save(diet);
         return diet;
     }
 
     @Transactional
-    public Diet updateDiet(@NotNull @Valid DietRequest dietRequest, @NotNull UUID id) {
-        return dietRepository.findById(id).map(diet -> {
-            modifyDiet(dietRequest, diet);
-            return dietRepository.save(diet);
-        }).orElseThrow(CategoryNotFoundException::new);
+    public Diet updateDiet(@NotNull @Valid DietRequest dietRequest, @NotNull UUID id, @NotNull UUID userId) {
+        Diet diet = dietRepository.findByIdAndUserId(id, userId);
+        if (diet == null)
+            throw new UnauthorizedException("You don't have permission to update this diet");
+
+        modifyDiet(dietRequest, userId, diet);
+        return dietRepository.save(diet);
     }
 
     @Transactional
@@ -74,9 +77,9 @@ public class DietService {
     }
 
     @Transactional
-    public void deleteDiet(@NotNull UUID id) {
-        if (!dietRepository.existsById(id))
-            throw new DietNotFoundException("The specified diet does not exist :(");
+    public void deleteDiet(@NotNull UUID id, @NotNull UUID userId) {
+        if (dietRepository.findByIdAndUserId(id, userId) == null)
+            throw new DietNotFoundException("You don't have permission to delete this diet");
 
         dietRepository.deleteById(id);
     }

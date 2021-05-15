@@ -8,6 +8,7 @@ import com.crumbs.recipeservice.requests.RecipeRequest;
 import com.crumbs.recipeservice.requests.WebClientRequest;
 import com.crumbs.recipeservice.responses.RecipeWithDetails;
 import com.crumbs.recipeservice.services.RecipeService;
+import com.crumbs.recipeservice.utility.JwtConfigAndUtil;
 import com.crumbs.recipeservice.utility.assemblers.RecipeModelAssembler;
 import com.crumbs.recipeservice.utility.assemblers.RecipeViewModelAssembler;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -62,18 +63,19 @@ public class RecipeController {
     public CollectionModel<EntityModel<RecipeView>> getRecipePreviews(
             @RequestParam(defaultValue = "0") Integer pageNo,
             @RequestParam(defaultValue = "5") Integer pageSize,
-            @RequestParam(defaultValue = "title") String sort) {
+            @RequestParam(defaultValue = "title") String sort,
+            @RequestHeader("Authorization") String jwt) {
 
         List<RecipeView> recipes = recipeService.getRecipePreviews(pageNo, pageSize, sort);
         for (RecipeView recipe : recipes) {
             UUID authorId = recipe.getAuthor().getUserId();
-            User user = webClientRequest.checkIfUserExists(authorId);
+            User user = webClientRequest.checkIfUserExists(jwt);
             recipe.setAuthor(new UserView(user.getId(), user.getUsername(), user.getUserProfile().getAvatar()));
         }
 
         return CollectionModel.of(recipes.stream().map(recipeViewModelAssembler::toModel).collect(Collectors.toList()),
                 linkTo(methodOn(RecipeController.class)
-                        .getRecipePreviews(pageNo, pageSize, sort)).withSelfRel());
+                        .getRecipePreviews(pageNo, pageSize, sort, jwt)).withSelfRel());
     }
 
     @RequestMapping(params = "userId", method = RequestMethod.GET)
@@ -81,18 +83,19 @@ public class RecipeController {
             @RequestParam("userId") @NotNull UUID userId,
             @RequestParam(defaultValue = "0") Integer pageNo,
             @RequestParam(defaultValue = "5") Integer pageSize,
-            @RequestParam(defaultValue = "title") String sort) {
+            @RequestParam(defaultValue = "title") String sort,
+            @RequestHeader("Authorization") String jwt) {
 
         List<RecipeView> recipes = recipeService.getRecipePreviewsForUser(userId, pageNo, pageSize, sort);
         for (RecipeView recipe : recipes) {
             UUID authorId = recipe.getAuthor().getUserId();
-            User user = webClientRequest.checkIfUserExists(authorId);
+            User user = webClientRequest.checkIfUserExists(jwt);
             recipe.setAuthor(new UserView(user.getId(), user.getUsername(), user.getUserProfile().getAvatar()));
         }
 
         return CollectionModel.of(recipes.stream().map(recipeViewModelAssembler::toModel).collect(Collectors.toList()),
                 linkTo(methodOn(RecipeController.class)
-                        .getRecipePreviewsForUser(userId, pageNo, pageSize, sort)).withSelfRel());
+                        .getRecipePreviewsForUser(userId, pageNo, pageSize, sort, jwt)).withSelfRel());
     }
 
     @RequestMapping(params = "categoryId", method = RequestMethod.GET)
@@ -100,18 +103,19 @@ public class RecipeController {
             @RequestParam("categoryId") @NotNull UUID categoryId,
             @RequestParam(defaultValue = "0") Integer pageNo,
             @RequestParam(defaultValue = "5") Integer pageSize,
-            @RequestParam(defaultValue = "title") String sort) {
+            @RequestParam(defaultValue = "title") String sort,
+            @RequestHeader("Authorization") String jwt) {
 
         List<RecipeView> recipes = recipeService.getRecipePreviewsForCategory(categoryId, pageNo, pageSize, sort);
         for (RecipeView recipe : recipes) {
             UUID authorId = recipe.getAuthor().getUserId();
-            User user = webClientRequest.checkIfUserExists(authorId);
+            User user = webClientRequest.checkIfUserExists(jwt);
             recipe.setAuthor(new UserView(user.getId(), user.getUsername(), user.getUserProfile().getAvatar()));
         }
 
         return CollectionModel.of(recipes.stream().map(recipeViewModelAssembler::toModel).collect(Collectors.toList()),
                 linkTo(methodOn(RecipeController.class)
-                        .getRecipePreviewsForCategory(categoryId, pageNo, pageSize, sort)).withSelfRel());
+                        .getRecipePreviewsForCategory(categoryId, pageNo, pageSize, sort, jwt)).withSelfRel());
     }
 
     @RequestMapping(params = "id", method = RequestMethod.GET)
@@ -133,22 +137,25 @@ public class RecipeController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createRecipe(@RequestBody @Valid RecipeRequest recipeRequest) {
+    public ResponseEntity<?> createRecipe(@RequestBody @Valid RecipeRequest recipeRequest, @RequestHeader("Authorization") String jwt) {
 
-        webClientRequest.checkIfUserExists(UUID.fromString(recipeRequest.getUser_id()));
+        webClientRequest.checkIfUserExists(jwt);
+        UUID userId = JwtConfigAndUtil.getUserIdFromJwt(jwt);
 
-        final Recipe recipe = recipeService.saveRecipe(recipeRequest);
+        final Recipe recipe = recipeService.saveRecipe(recipeRequest, userId);
         EntityModel<Recipe> entityModel = recipeModelAssembler.toModel(recipe);
         return ResponseEntity.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(entityModel);
     }
 
     @PatchMapping(consumes = "application/json")
     public ResponseEntity<?> updateRecipe(@RequestParam("id") @NotNull UUID id,
-                                          @RequestBody @Valid RecipeRequest recipeRequest) {
+                                          @RequestBody @Valid RecipeRequest recipeRequest,
+                                          @RequestHeader("Authorization") String jwt) {
 
-        webClientRequest.checkIfUserExists(UUID.fromString(recipeRequest.getUser_id()));
+        webClientRequest.checkIfUserExists(jwt);
+        UUID userId = JwtConfigAndUtil.getUserIdFromJwt(jwt);
 
-        final Recipe recipe = recipeService.updateRecipe(recipeRequest, id);
+        final Recipe recipe = recipeService.updateRecipe(recipeRequest, id, userId);
         EntityModel<Recipe> entityModel = recipeModelAssembler.toModel(recipe);
         return ResponseEntity.ok(entityModel);
     }
@@ -171,8 +178,9 @@ public class RecipeController {
     }
 
     @DeleteMapping
-    public ResponseEntity<?> deleteIngredient(@RequestParam("id") @NotNull UUID id) {
-        recipeService.deleteRecipe(id);
+    public ResponseEntity<?> deleteIngredient(@RequestParam("id") @NotNull UUID id, @RequestHeader("Authorization") String jwt) {
+        UUID userId = JwtConfigAndUtil.getUserIdFromJwt(jwt);
+        recipeService.deleteRecipe(id, userId);
         return ResponseEntity.noContent().build();
     }
 }

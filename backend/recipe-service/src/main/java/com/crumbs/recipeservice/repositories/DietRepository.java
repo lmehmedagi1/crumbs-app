@@ -9,4 +9,5 @@ import java.util.UUID;
 @Repository
 public interface DietRepository extends JpaRepository<Diet, UUID> {
 
+    Diet findByIdAndUserId(UUID id, UUID userId);
 }
