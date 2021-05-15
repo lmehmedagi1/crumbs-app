@@ -27,9 +27,11 @@ zuul:
       path: /recipe-service/**
       serviceId: recipe-service
       url: http://localhost:8082
+
 ribbon:
   eureka:
     enabled: true
+
 eureka:
   instance:
     preferIpAddress: true
@@ -37,3 +39,7 @@ eureka:
   client:
     registerWithEureka: true
     fetchRegistry: true
+    healthcheck:
+      enabled: true
+    serviceUrl:
+      defaultZone: https://crumbs-discovery-server.herokuapp.com/eureka/
