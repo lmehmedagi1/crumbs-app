@@ -21,6 +21,8 @@ $tablet: "only screen and (min-width: 600px) and (max-width: 1250px)";
 $mobile: "only screen and (min-width: 320px) and (max-width: 600px)";
 
 /* Styles */
+@import "react-dropzone-uploader/dist/styles.css";
+
 @import 'components/common/style.scss';
 @import 'components/notifications/notificationBell.scss';
 @import 'components/login/login.scss';
@@ -30,4 +32,4 @@ $mobile: "only screen and (min-width: 320px) and (max-width: 600px)";
 @import 'components/browse/browse.scss';
 
 @import 'components/recipe/recipe.scss';
-@import 'components/recipe/addRecipe.scss';
+@import 'components/recipe/recipeForm.scss';

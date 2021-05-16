@@ -1,5 +1,13 @@
-@import 'components/common/menu.scss';
-@import 'components/common/recipeCard.scss';
+@import "components/common/menu.scss";
+@import "components/common/recipeCard.scss";
+
+.form-group {
+    margin-bottom: 2%;
+}
+
+.form-label {
+    font-weight: 500;
+  }
 
 .footerContainer {
     background-color: $base-color;
@@ -10,7 +18,6 @@
 
     padding-top: 4.2%;
 
-    
     font-size: 16px;
     color: $border-color;
     letter-spacing: 0.56px;
@@ -19,11 +26,10 @@
     grid-template-columns: 1fr 1fr;
 
     .footerColumn {
-
         width: 220px;
         text-align: left;
         margin: 0 auto;
-        
+
         div {
             margin-bottom: 0.7%;
 
@@ -79,13 +85,11 @@
     display: flex;
     justify-content: space-between;
 
-    
     font-size: 14px;
     color: $border-color;
     letter-spacing: 0.49px;
 
     #headerColumnLeft {
-
         padding-top: 4px;
 
         .fa {
@@ -113,11 +117,10 @@
     }
 
     #headerColumnRight {
-
         padding-top: 8px;
 
         .headerLink {
-            color: #FFFFFF;
+            color: #ffffff;
         }
     }
 }
