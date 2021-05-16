@@ -5,10 +5,12 @@ import Menu from 'components/common/menu'
 import RecipeCard from 'components/common/recipeCard'
 import 'components/home/home.scss'
 import Button from 'react-bootstrap/Button'
+import RecipeForm from 'components/recipe/recipeForm'
 
 function Home(props) {
     const [counter, setCounter] = useState(0);
     const [counterMP, setCounterMP] = useState(0);
+    const [show, setShow] = useState(false);
     const [products, setProducts] = useState([
         {
             recepieName: "Ime recepta",
@@ -65,6 +67,7 @@ function Home(props) {
             <Menu handleSearchChange={handleSearchChange} {...props}/>
             <p>Home page</p>
             <Row>
+                <Button className="homeBtnClass" onClick={() => {setShow(true)}}> + </Button>
                 <h2 className="titleHome">Daily recepies</h2>
             </Row>
             <Row id="dailyGrid" >
@@ -72,7 +75,7 @@ function Home(props) {
                         <RecipeCard {...product}> </RecipeCard>
                             
                         ))}
-                <Button style={{height: "30px", width: "70px", alignSelf: "center"}}>Next</Button>
+                <Button className="homeBtnClass" style={{ alignSelf: "center"}}>Next</Button>
             </Row>
             <Row >
                 <h2 className="titleHome">Most popular recepies</h2>
@@ -82,8 +85,9 @@ function Home(props) {
                          <RecipeCard {...product}> </RecipeCard>
                             
                         ))}
-                <Button style={{height: "30px", width: "70px", alignSelf: "center"}}>Next</Button>
+                <Button className="homeBtnClass" style={{ alignSelf: "center"}} >Next</Button>
             </Row>
+            {show && <RecipeForm show={show} onHide={() => setShow(false)}></RecipeForm>}
         </div>
     )
 }
