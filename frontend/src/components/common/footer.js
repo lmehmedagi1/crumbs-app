@@ -6,7 +6,7 @@ function Footer() {
         <div className="footerContainer">
             <div className="footerColumn">
                 <div>
-                    AUCTION
+                    CRUMBS
                 </div>
                 <div>
                     <Link className="footerLink" to={"/"}>
