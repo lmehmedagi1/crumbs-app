@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import { withRouter } from 'react-router-dom'
-import { Form, Button } from 'react-bootstrap'
-import { Formik } from "formik"
+import {  Button, Form } from 'react-bootstrap'
+import { Formik } from 'formik'
 import * as yup from 'yup'
 
 const schema = yup.object().shape({
-    email: yup.string().email("*Email must be valid").required("*Email is required"),
+    username: yup.string().required("*Username is required"),
     password: yup.string().required("*Password is required").matches(/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!"#$%&'()*+,-./:;<=>?@\[\]^_`{|}~])(?=\S+$).{8,}$/, "*Password must be at least 8 characters long. There must be at least one digit, one lowercase and one uppercase letter, one special character and no whitespaces!")
 });
 
@@ -16,11 +16,11 @@ const initialValues = {
 
 function Login(props) {
 
-    const [show, setShow] = useState(false);
-    const [message, setMessage] = useState("");
-    const [variant, setVariant] = useState("");
-
     const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        // To do: ako je korisnik prijavljen, redirect ga na pocetnu
+    }, []);
 
     const handleSubmit = user => {
         console.log("ARSLAN KRALJINA");
@@ -50,10 +50,10 @@ function Login(props) {
                             errors,
                         }) => (
                             <Form noValidate className="formBasic" onSubmit={handleSubmit}>
-                                <Form.Group controlId="formBasicEmail">
-                                    <Form.Label>Enter Email</Form.Label>
-                                    <Form.Control type="email" name="email" onChange={handleChange} isInvalid={touched.email && errors.email} />
-                                    <Form.Control.Feedback type="invalid">{errors.email}</Form.Control.Feedback>
+                                <Form.Group controlId="formBasicUsername">
+                                    <Form.Label>Enter Username</Form.Label>
+                                    <Form.Control type="email" name="username" onChange={handleChange} isInvalid={touched.username && errors.username} />
+                                    <Form.Control.Feedback type="invalid">{errors.username}</Form.Control.Feedback>
                                 </Form.Group>
                                 <Form.Group controlId="formBasicPassword">
                                     <Form.Label>Password</Form.Label>
