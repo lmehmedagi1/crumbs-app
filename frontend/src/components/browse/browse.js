@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { withRouter } from 'react-router-dom'
-import { Row, Col, Form} from 'react-bootstrap'
+import { Row, Col, Form } from 'react-bootstrap'
 import Menu from 'components/common/menu'
 import RecipeCard from 'components/common/recipeCard'
 import SelectField from 'components/common/selectField';
@@ -81,12 +81,12 @@ function Browse(props) {
 
     return (
         <div>
-            <Menu handleSearchChange={handleSearchChange} {...props}/>
+            <Menu handleSearchChange={handleSearchChange} {...props} />
             <p>Browse page</p>
 
             <Row>
                 <Col md={3} className="filterCol">
-                <Form.Group>
+                    <Form.Group>
                         <Form.Label>Title</Form.Label>
                         <Form.Control
                             type="text"
@@ -124,13 +124,13 @@ function Browse(props) {
 
                 </Col>
                 <Col md={9}>
-                <div id="dailyGridRecepies">
-                {products.map((product, index) => (
-                        <RecipeCard {...product}> </RecipeCard>
-                            
+                    <div id="dailyGridRecepies">
+                        {products.map((product, index) => (
+                            <RecipeCard {...product}> </RecipeCard>
+
                         ))}
-                </div>
-                
+                    </div>
+
                 </Col>
             </Row>
         </div>
