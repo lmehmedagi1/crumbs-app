@@ -1,0 +1,21 @@
+.recipePreview {
+    min-height: 100vh;
+    margin: 2%;
+
+    .title {
+        margin: 2%;
+        font-size: 1.6em;
+    }
+
+    .row {
+        margin-bottom: 1%;
+    }
+
+    .list-group-item {
+        width: 20%;
+    }
+
+    .comment {
+        margin: 0 30% 0;
+    }
+}
