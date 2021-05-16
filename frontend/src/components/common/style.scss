@@ -1,8 +1,11 @@
+@import 'components/common/menu.scss';
+@import 'components/common/recipeCard.scss';
+
 .footerContainer {
     background-color: $base-color;
     border: 1px solid #979797;
 
-    min-height: 340px;
+    min-height: 250px;
     width: 100%;
 
     padding-top: 4.2%;

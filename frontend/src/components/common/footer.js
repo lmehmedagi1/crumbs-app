@@ -32,7 +32,7 @@ function Footer() {
                     Call Us at +123 797-567-2535
                 </div>
                 <div>
-                    support@auction.com
+                    support@crumbs.com
                 </div>
                 <div>
                     <a className="fa fa-facebook" rel="noopener noreferrer" target="_blank" href="https://www.facebook.com/arslan.turkusic.5/"></a>

@@ -20,11 +20,11 @@ function Header() {
             <div id="headerColumnRight">
                 {true ? 
                     <div>
-                    <Link className="headerLink" to={"/"}>
+                    <Link className="headerLink" to={"/login"}>
                         Login
                     </Link>
                     <span> or </span>
-                    <Link className="headerLink" to={"/"}>
+                    <Link className="headerLink" to={"/register"}>
                         Create an Account
                     </Link>
                     </div>
