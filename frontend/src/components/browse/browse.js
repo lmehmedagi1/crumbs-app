@@ -17,49 +17,49 @@ function Browse(props) {
     const [type, setType] = useState()
     const [products] = useState([
         {
-            recepieName: "Ime recepta",
+            recipeName: "Ime recepta",
             text: "Learn to swim 1",
             author: "Autor 1",
             id: 1
         },
         {
-            recepieName: "Ime recepta 2",
+            recipeName: "Ime recepta 2",
             text: "Learn to swim 2",
             author: "Autor 2",
             id: 2
         },
         {
-            recepieName: "Ime recepta 3",
+            recipeName: "Ime recepta 3",
             text: "Learn to swim 3",
             author: "Autor 3",
             id: 3
         },
         {
-            recepieName: "Ime recepta 4",
+            recipeName: "Ime recepta 4",
             text: "Learn to swim 3",
             author: "Autor 4",
             id: 4
         },
         {
-            recepieName: "Ime recepta",
+            recipeName: "Ime recepta",
             text: "Learn to swim 1",
             author: "Autor 1",
             id: 1
         },
         {
-            recepieName: "Ime recepta 2",
+            recipeName: "Ime recepta 2",
             text: "Learn to swim 2",
             author: "Autor 2",
             id: 2
         },
         {
-            recepieName: "Ime recepta 3",
+            recipeName: "Ime recepta 3",
             text: "Learn to swim 3",
             author: "Autor 3",
             id: 3
         },
         {
-            recepieName: "Ime recepta 4",
+            recipeName: "Ime recepta 4",
             text: "Learn to swim 3",
             author: "Autor 4",
             id: 4

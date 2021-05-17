@@ -7,7 +7,7 @@ function RecipeCard(props) {
             <Card border="primary" style={{ width: '18rem', color: "black" }}>
                 <Card.Img variant="top" src="https://source.unsplash.com/random/300x300" />
                 <Card.Body>
-                    <Card.Title>{props.ButtonrecepieName}</Card.Title>
+                    <Card.Title>{props.ButtonrecipeName}</Card.Title>
                     <Card.Text style={{ textDecoration: "none" }}>
                         {props.text}
                     </Card.Text>

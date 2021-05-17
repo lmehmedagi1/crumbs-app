@@ -13,19 +13,19 @@ function Home(props) {
     const [show, setShow] = useState(false);
     const [products] = useState([
         {
-            recepieName: "Ime recepta",
+            recipeName: "Ime recepta",
             text: "Learn to swim 1",
             author: "Autor 1",
             id: 1
         },
         {
-            recepieName: "Ime recepta 2",
+            recipeName: "Ime recepta 2",
             text: "Learn to swim 2",
             author: "Autor 2",
             id: 2
         },
         {
-            recepieName: "Ime recepta 3",
+            recipeName: "Ime recepta 3",
             text: "Learn to swim 3",
             author: "Autor 3",
             id: 3
@@ -34,25 +34,25 @@ function Home(props) {
 
     const [popularProducts, setProductsMP] = useState([
         {
-            recepieName: "Ime recepta",
+            recipeName: "Ime recepta",
             text: "Learn to swim 1",
             author: "Autor 1",
             id: 1
         },
         {
-            recepieName: "Ime recepta 2",
+            recipeName: "Ime recepta 2",
             text: "Learn to swim 2",
             author: "Autor 2",
             id: 2
         },
         {
-            recepieName: "Ime recepta 3",
+            recipeName: "Ime recepta 3",
             text: "Learn to swim 3",
             author: "Autor 3",
             id: 3
         },
         {
-            recepieName: "Ime recepta 4",
+            recipeName: "Ime recepta 4",
             text: "Learn to swim 3",
             author: "Autor 4",
             id: 4
@@ -74,7 +74,7 @@ function Home(props) {
                 <BsPlusCircleFill />
             </Button>
 
-            <Row className="headerText">Daily recepies</Row>
+            <Row className="headerText">Daily Recipes</Row>
 
             <CardGroup id="dailyGrid">
                 {products.map(product => (
@@ -88,7 +88,7 @@ function Home(props) {
                 </Button>
             </CardGroup>
 
-            <Row className="headerText">Most popular recepies</Row>
+            <Row className="headerText">Most Popular Recipes</Row>
             <Row id="mostPopularGrid" >
                 {popularProducts.map(product => (
                     <Link to={"recipe/" + product.id}>
