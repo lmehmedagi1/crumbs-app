@@ -1,5 +1,6 @@
 package com.crumbs.reviewservice.controllers;
 
+import com.crumbs.reviewservice.amqp.ReviewCreatedEvent;
 import com.crumbs.reviewservice.models.Review;
 import com.crumbs.reviewservice.requests.ReviewRequest;
 import com.crumbs.reviewservice.requests.ReviewWebClientRequest;
@@ -8,6 +9,7 @@ import com.crumbs.reviewservice.utility.JwtConfigAndUtil;
 import com.crumbs.reviewservice.utility.assemblers.ReviewModelAssembler;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
@@ -37,13 +39,15 @@ public class ReviewController {
     private final ReviewService reviewService;
     private final ReviewModelAssembler reviewModelAssembler;
     private final ReviewWebClientRequest reviewWebClientRequest;
+    private final RabbitTemplate rabbitTemplate;
 
     @Autowired
     ReviewController(ReviewService reviewService, ReviewModelAssembler reviewModelAssembler,
-                     ReviewWebClientRequest reviewWebClientRequest) {
+                     ReviewWebClientRequest reviewWebClientRequest, RabbitTemplate rabbitTemplate) {
         this.reviewService = reviewService;
         this.reviewModelAssembler = reviewModelAssembler;
         this.reviewWebClientRequest = reviewWebClientRequest;
+        this.rabbitTemplate = rabbitTemplate;
     }
 
     @RequestMapping(params = "id", method = RequestMethod.GET)
@@ -84,12 +88,16 @@ public class ReviewController {
     @PostMapping
     public ResponseEntity<?> createReview(@RequestBody @Valid ReviewRequest reviewRequest, @RequestHeader("Authorization") String jwt) {
 
-        UUID userId = getUserIdFromJwt(jwt);
+        final UUID userId = getUserIdFromJwt(jwt);
         reviewWebClientRequest.checkIfRecipeExists(UUID.fromString(reviewRequest.getRecipe_id()));
         reviewWebClientRequest.checkIfUserExists(jwt);
 
-        final Review newReview = reviewService.saveReview(reviewRequest, userId);
+        final Review newReview = reviewService.createReview(reviewRequest, userId);
         EntityModel<Review> entityModel = reviewModelAssembler.toModel(newReview);
+
+        ReviewCreatedEvent createdEvent = new ReviewCreatedEvent(UUID.randomUUID().toString(), newReview.getId());
+        rabbitTemplate.convertAndSend("REVIEW_EXCHANGE", "REVIEW_ROUTING_KEY", createdEvent);
+
         return ResponseEntity.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(entityModel);
     }
 
