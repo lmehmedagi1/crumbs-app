@@ -43,14 +43,14 @@ class ReviewServiceTest {
     @Test
     void testCreateReviewNullInputParameter() {
         assertThrows(NullPointerException.class, () -> {
-            reviewService.saveReview(null, null);
+            reviewService.createReview(null, null);
         });
     }
 
     @Test
     void testCreateReviewSuccess() {
         final ReviewRequest createRecipeRequest = new ReviewRequest("5ccafc30-b1b3-4f74-ba3c-79583a3129c7", true, 3, "Sir Meso");
-        final Review review = reviewService.saveReview(createRecipeRequest, UUID.fromString("5ccafc30-b1b3-4f74-ba3c-79583a3129c6"));
+        final Review review = reviewService.createReview(createRecipeRequest, UUID.fromString("5ccafc30-b1b3-4f74-ba3c-79583a3129c6"));
         assertAll(
                 () -> assertEquals(true, review.getIsLiked()),
                 () -> assertEquals(3, review.getRating()),

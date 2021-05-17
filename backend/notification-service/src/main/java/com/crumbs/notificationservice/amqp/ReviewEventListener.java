@@ -21,11 +21,12 @@ public class ReviewEventListener {
     @RabbitListener(queues = "REVIEW_QUEUE")
     public void handleReviewEvent(ReviewCreatedEvent event) {
         try {
-            NotificationRequest notificationRequest = new NotificationRequest("Test", false);
+            NotificationRequest notificationRequest = new NotificationRequest("Notification RabbitMQ", false);
+            if (event.getPoruka().equals("FailOnPurpose"))
+                throw new RuntimeException("Intentional");
             notificationService.saveNotification(notificationRequest, UUID.randomUUID());
-        }
-        catch (Exception e) {
-            NotificationFailedEvent failedEvent = new NotificationFailedEvent(UUID.randomUUID().toString(), UUID.randomUUID());
+        } catch (Exception e) {
+            NotificationFailedEvent failedEvent = new NotificationFailedEvent(UUID.randomUUID().toString(), event.getReviewId());
             rabbitTemplate.convertAndSend("NOTIFICATION_EXCHANGE", "NOTIFICATION_ROUTING_KEY", failedEvent);
         }
     }

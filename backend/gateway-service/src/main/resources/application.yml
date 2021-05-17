@@ -19,19 +19,23 @@ zuul:
     user-service:
       path: /user-service/**
       serviceId: user-service
-      url: https://crumbs-user-service.herokuapp.com/
+      # url: https://crumbs-user-service.herokuapp.com/
+      url: http://localhost:8081
     review-service:
       path: /review-service/**
       serviceId: review-service
-      url: https://crumbs-review-service.herokuapp.com/
+      # url: https://crumbs-review-service.herokuapp.com/
+      url: http://localhost:8083
     notification-service:
       path: /notification-service/**
       serviceId: notification-service
-      url: https://crumbs-notification-service.herokuapp.com/
+      # url: https://crumbs-notification-service.herokuapp.com/
+      url: http://localhost:8084
     recipe-service:
       path: /recipe-service/**
       serviceId: recipe-service
-      url: https://crumbs-recipe-service.herokuapp.com/
+      # url: https://crumbs-recipe-service.herokuapp.com/
+      url: http://localhost:8082
 
 ribbon:
   eureka:

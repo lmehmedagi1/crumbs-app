@@ -95,7 +95,7 @@ public class ReviewController {
         final Review newReview = reviewService.createReview(reviewRequest, userId);
         EntityModel<Review> entityModel = reviewModelAssembler.toModel(newReview);
 
-        ReviewCreatedEvent createdEvent = new ReviewCreatedEvent(UUID.randomUUID().toString(), newReview.getId());
+        ReviewCreatedEvent createdEvent = new ReviewCreatedEvent(UUID.randomUUID().toString(), newReview.getId(), reviewRequest.getComment());
         rabbitTemplate.convertAndSend("REVIEW_EXCHANGE", "REVIEW_ROUTING_KEY", createdEvent);
 
         return ResponseEntity.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(entityModel);

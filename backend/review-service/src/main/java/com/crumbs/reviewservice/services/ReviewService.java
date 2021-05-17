@@ -1,6 +1,5 @@
 package com.crumbs.reviewservice.services;
 
-import com.crumbs.reviewservice.amqp.ReviewCreatedEvent;
 import com.crumbs.reviewservice.exceptions.ReviewNotFoundException;
 import com.crumbs.reviewservice.exceptions.UnauthorizedException;
 import com.crumbs.reviewservice.models.Review;
@@ -59,7 +58,6 @@ public class ReviewService {
         log.debug("Saving a review {}", review);
         Review returnReview = reviewRepository.save(review);
         System.out.println("Rev id: " + returnReview.getId() + " a old rev id: " + review.getId());
-        publish(review);
         return returnReview;
     }
 
@@ -75,7 +73,7 @@ public class ReviewService {
     @Transactional
     public void deleteReview(@NotNull UUID reviewId, @NotNull UUID userId) {
         //if (reviewRepository.findByIdAndUserId(reviewId, userId) == null)
-            //throw new UnauthorizedException("You don't have permission to delete this review");
+        //throw new UnauthorizedException("You don't have permission to delete this review");
         reviewRepository.deleteById(reviewId);
     }
 
@@ -85,11 +83,5 @@ public class ReviewService {
         review.setIsLiked(reviewRequest.getIs_liked());
         review.setRating(reviewRequest.getRating());
         review.setComment(reviewRequest.getComment());
-    }
-
-    private void publish(Review review) {
-        ReviewCreatedEvent event = new ReviewCreatedEvent(UUID.randomUUID().toString(), review);
-        log.debug("Publishing a review created event {}", event);
-        publisher.publishEvent(event);
     }
 }

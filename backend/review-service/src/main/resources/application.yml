@@ -8,6 +8,11 @@ spring:
   cloud:
     config:
       uri: https://crumbs-config-server.herokuapp.com
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
 eureka:
   instance:
     instanceId: ${spring.application.name}:${vcap.application.instance_id:${spring.application.instance_id:${server.port}}}
