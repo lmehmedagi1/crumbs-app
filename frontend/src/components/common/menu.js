@@ -42,9 +42,9 @@ function Menu(props) {
                     <LinkContainer to="/browse">
                         <Nav.Link active={window.location.pathname.includes("/single-product")}>Recipes</Nav.Link>
                     </LinkContainer>
-                    <LinkContainer to="/my-account">
+                    {/* <LinkContainer to="/my-account">
                         <Nav.Link active={window.location.pathname.includes("/my-account")}>My account</Nav.Link>
-                    </LinkContainer>
+                    </LinkContainer> */}
                     {"userIsLoggedIn()" ? <NotificationBell {...props}/> : null}
                 </Nav>
             </Navbar>

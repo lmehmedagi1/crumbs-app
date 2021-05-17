@@ -1,6 +1,7 @@
 import React from 'react'
 import { withRouter } from 'react-router-dom'
 import Menu from 'components/common/menu'
+import RecipeForm from 'components/recipe/recipeForm'
 
 function Recipe(props) {
 
@@ -13,7 +14,8 @@ function Recipe(props) {
 
     return (
         <div>
-            <Menu handleSearchChange={handleSearchChange} {...props}/>
+            <Menu handleSearchChange={handleSearchChange} {...props} />
+            <RecipeForm show={true} title="Add Recipe" />
             <p>single recipe page</p>
         </div>
     )
