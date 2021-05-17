@@ -1,58 +1,70 @@
 import React, { useState } from 'react'
-import { withRouter } from 'react-router-dom'
-import { Row, Col, Form } from 'react-bootstrap'
+import { withRouter, Link } from 'react-router-dom'
+import { Row, Col, Form, CardGroup, Container, Button } from 'react-bootstrap'
 import Menu from 'components/common/menu'
 import RecipeCard from 'components/common/recipeCard'
 import SelectField from 'components/common/selectField';
-import 'components/browse/browse.scss'
+import { BsPlusCircleFill } from "react-icons/bs"
+import RecipeForm from 'components/recipe/recipeForm'
+import { env } from 'configs/env'
 
 function Browse(props) {
-    const [method, setMethod] = useState()
+
+    const [show, setShow] = useState(false);
     const [title, setTitle] = useState()
     const [preparation, setPreparation] = useState()
     const [meal, setMeal] = useState()
     const [type, setType] = useState()
-    const [products, setProducts] = useState([
+    const [products] = useState([
         {
             recepieName: "Ime recepta",
-            text: "neki text bla bla bla bala 1",
-            author: "neki autor 1",
+            text: "Learn to swim 1",
+            author: "Autor 1",
+            id: 1
         },
         {
-            recepieName: "Ime recepta2",
-            text: "neki text bla bla bla bala 2",
-            author: "neki autor 2",
+            recepieName: "Ime recepta 2",
+            text: "Learn to swim 2",
+            author: "Autor 2",
+            id: 2
         },
         {
-            recepieName: "Ime recepta3",
-            text: "neki text bla bla bla bala3",
-            author: "neki autor 3",
+            recepieName: "Ime recepta 3",
+            text: "Learn to swim 3",
+            author: "Autor 3",
+            id: 3
         },
         {
-            recepieName: "Ime recepta3",
-            text: "neki text bla bla bla bala3",
-            author: "neki autor 3",
+            recepieName: "Ime recepta 4",
+            text: "Learn to swim 3",
+            author: "Autor 4",
+            id: 4
         },
         {
-            recepieName: "Ime recepta3",
-            text: "neki text bla bla bla bala3",
-            author: "neki autor 3",
+            recepieName: "Ime recepta",
+            text: "Learn to swim 1",
+            author: "Autor 1",
+            id: 1
         },
         {
-            recepieName: "Ime recepta3",
-            text: "neki text bla bla bla bala3",
-            author: "neki autor 3",
+            recepieName: "Ime recepta 2",
+            text: "Learn to swim 2",
+            author: "Autor 2",
+            id: 2
         },
         {
-            recepieName: "Ime recepta3",
-            text: "neki text bla bla bla bala3",
-            author: "neki autor 3",
+            recepieName: "Ime recepta 3",
+            text: "Learn to swim 3",
+            author: "Autor 3",
+            id: 3
         },
         {
-            recepieName: "Ime recepta3",
-            text: "neki text bla bla bla bala3",
-            author: "neki autor 3",
+            recepieName: "Ime recepta 4",
+            text: "Learn to swim 3",
+            author: "Autor 4",
+            id: 4
         }
+
     ]);
 
     const prepTimeoptions = [
@@ -80,12 +92,10 @@ function Browse(props) {
     }
 
     return (
-        <div>
+        <Container>
             <Menu handleSearchChange={handleSearchChange} {...props} />
-            <p>Browse page</p>
-
             <Row>
-                <Col md={3} className="filterCol">
+                <Col md={4}>
                     <Form.Group>
                         <Form.Label>Title</Form.Label>
                         <Form.Control
@@ -122,18 +132,22 @@ function Browse(props) {
                         onChange={item => setType(item)}
                         viewMode={props.viewMode} />
 
+                    <Button variant="outline-primary" className="addRecipe float-right" onClick={() => setShow(true)}>
+                        <BsPlusCircleFill />
+                    </Button>
                 </Col>
-                <Col md={9}>
-                    <div id="dailyGridRecepies">
-                        {products.map((product, index) => (
-                            <RecipeCard {...product}> </RecipeCard>
-
+                <Col md={8}>
+                    <CardGroup >
+                        {products.map(product => (
+                            <Link style={{ margin: "1%" }} to={"recipe/" + product.id}>
+                                <RecipeCard  {...product}> </RecipeCard>
+                            </Link>
                         ))}
-                    </div>
-
+                    </CardGroup>
                 </Col>
             </Row>
-        </div>
+            <RecipeForm title="Create New Recipe" show={show} onHide={() => setShow(false)} />
+        </Container>
     )
 }
 
