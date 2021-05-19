@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-    Route, Switch
+  Route, Switch
 } from "react-router-dom";
 import ScrollToTop from 'components/utility/scrollToTop';
 
@@ -10,6 +10,7 @@ import Register from 'components/register/register';
 import Home from 'components/home/home';
 import Browse from 'components/browse/browse';
 import Recipe from 'components/recipe/recipe';
+import RecipePreview from 'components/recipe/recipePreview';
 
 function Routes(props) {
   return (
@@ -20,7 +21,8 @@ function Routes(props) {
         <Route exact path={"/register"} render={(routeProps) => <Register {...routeProps} />}></Route>
         <Route exact path={"/browse"} render={(routeProps) => <Browse {...routeProps} />}></Route>
         <Route exact path={"/recipe"} render={(routeProps) => <Recipe {...routeProps} />}></Route>
-        <Route><NotFound/></Route>
+        <Route exact path={"/recipe/:id"} render={(routeProps) => <RecipePreview {...routeProps} />}></Route>
+        <Route><NotFound /></Route>
       </Switch>
     </ScrollToTop>
   )

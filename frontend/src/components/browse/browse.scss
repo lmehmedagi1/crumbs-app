@@ -1,11 +1,8 @@
-#dailyGridRecepies {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    row-gap: 20px;
-    column-gap: 20px;
-    margin-top: 20px;
+a {
+    text-decoration: none;
 }
 
-.filterCol {
-    padding-left: 2% !important;
+.recipeCard {
+    margin: 5%;
+    padding: 5%;
 }

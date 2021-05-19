@@ -1,9 +1,9 @@
 /* Theme colors */
 $base-color: #252525;
-$text-color: #9B9B9B;
-$default-purple-color: #8367D8;
-$light-background-color: #FAFAFA;
-$border-color: #D8D8D8;
+$text-color: #9b9b9b;
+$default-purple-color: #8367d8;
+$light-background-color: #fafafa;
+$border-color: #d8d8d8;
 
 /* Common components style */
 body {
@@ -22,12 +22,11 @@ $mobile: "only screen and (min-width: 320px) and (max-width: 600px)";
 
 /* Styles */
 
-@import 'components/common/style.scss';
-@import 'components/notifications/notificationBell.scss';
-@import 'components/login/login.scss';
-@import 'components/register/register.scss';
+@import "components/common/style.scss";
+@import "components/notifications/notificationBell.scss";
+@import "components/login/login.scss";
+@import "components/register/register.scss";
 
-@import 'components/home/home.scss';
+@import "components/home/home.scss";
 
-@import 'components/recipe/recipe.scss';
-@import 'components/recipe/recipeForm.scss';
+@import "components/recipe/recipe.scss";

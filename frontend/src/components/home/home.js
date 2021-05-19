@@ -1,57 +1,62 @@
-import React, { useState } from 'react'
-import { withRouter } from 'react-router-dom'
-import { Row, Col } from 'react-bootstrap'
 import Menu from 'components/common/menu'
 import RecipeCard from 'components/common/recipeCard'
 import 'components/home/home.scss'
-import Button from 'react-bootstrap/Button'
 import RecipeForm from 'components/recipe/recipeForm'
+import React, { useState } from 'react'
+import { CardGroup, Container, Row } from 'react-bootstrap'
+import Button from 'react-bootstrap/Button'
+import { BsPlusCircleFill } from "react-icons/bs"
+import { ImArrowRight } from "react-icons/im"
+import { Link, withRouter } from 'react-router-dom'
 
 function Home(props) {
-    const [counter, setCounter] = useState(0);
-    const [counterMP, setCounterMP] = useState(0);
     const [show, setShow] = useState(false);
-    const [products, setProducts] = useState([
+    const [products] = useState([
         {
-            recepieName: "Ime recepta",
-            text: "neki text bla bla bla bala 1",
-            author: "neki autor 1",
+            recipeName: "Ime recepta",
+            text: "Learn to swim 1",
+            author: "Autor 1",
+            id: 1
         },
         {
-            recepieName: "Ime recepta2",
-            text: "neki text bla bla bla bala 2",
-            author: "neki autor 2",
+            recipeName: "Ime recepta 2",
+            text: "Learn to swim 2",
+            author: "Autor 2",
+            id: 2
         },
         {
-            recepieName: "Ime recepta3",
-            text: "neki text bla bla bla bala3",
-            author: "neki autor 3",
+            recipeName: "Ime recepta 3",
+            text: "Learn to swim 3",
+            author: "Autor 3",
+            id: 3
         }
-
     ]);
 
-    const [productsMP, setProductsMP] = useState([
+    const [popularProducts, setProductsMP] = useState([
         {
-            recepieName: "Ime recepta",
-            text: "neki text bla bla bla bala 1",
-            author: "neki autor 1",
+            recipeName: "Ime recepta",
+            text: "Learn to swim 1",
+            author: "Autor 1",
+            id: 1
         },
         {
-            recepieName: "Ime recepta2",
-            text: "neki text bla bla bla bala 2",
-            author: "neki autor 2",
+            recipeName: "Ime recepta 2",
+            text: "Learn to swim 2",
+            author: "Autor 2",
+            id: 2
         },
         {
-            recepieName: "Ime recepta3",
-            text: "neki text bla bla bla bala3",
-            author: "neki autor 3",
+            recipeName: "Ime recepta 3",
+            text: "Learn to swim 3",
+            author: "Autor 3",
+            id: 3
         },
         {
-            recepieName: "Ime recepta4",
-            text: "neki text bla bla bla bala3",
-            author: "neki autor 4",
+            recipeName: "Ime recepta 4",
+            text: "Learn to swim 3",
+            author: "Autor 4",
+            id: 4
         }
-
     ]);
 
     const handleSearchChange = search => {
@@ -62,33 +67,41 @@ function Home(props) {
     }
 
     return (
-        <div>
-            
-            <Menu handleSearchChange={handleSearchChange} {...props}/>
-            <p>Home page</p>
-            <Row>
-                <Button className="homeBtnClass" onClick={() => {setShow(true)}}> + </Button>
-                <h2 className="titleHome">Daily recepies</h2>
-            </Row>
-            <Row id="dailyGrid" >
-                {products.map((product, index) => (
+        <Container className="container">
+            <Menu handleSearchChange={handleSearchChange} {...props} />
+
+            <Button variant="outline-primary" className="addRecipe float-right" onClick={() => setShow(true)}>
+                <BsPlusCircleFill />
+            </Button>
+
+            <Row className="headerText">Daily Recipes</Row>
+
+            <CardGroup id="dailyGrid">
+                {products.map(product => (
+                    <Link to={"recipe/" + product.id}>
                         <RecipeCard {...product}> </RecipeCard>
-                            
-                        ))}
-                <Button className="homeBtnClass" style={{ alignSelf: "center"}}>Next</Button>
-            </Row>
-            <Row >
-                <h2 className="titleHome">Most popular recepies</h2>
-            </Row>
+                    </Link>
+
+                ))}
+                <Button variant="outline-primary" className="nextBtn">
+                    <ImArrowRight />
+                </Button>
+            </CardGroup>
+
+            <Row className="headerText">Most Popular Recipes</Row>
             <Row id="mostPopularGrid" >
-                {productsMP.map((product, index) => (
-                         <RecipeCard {...product}> </RecipeCard>
-                            
-                        ))}
-                <Button className="homeBtnClass" style={{ alignSelf: "center"}} >Next</Button>
+                {popularProducts.map(product => (
+                    <Link to={"recipe/" + product.id}>
+                        <RecipeCard {...product}> </RecipeCard>
+                    </Link>))}
+
+                <Button variant="outline-primary" className="nextBtn" >
+                    <ImArrowRight />
+                </Button>
             </Row>
-            {show && <RecipeForm show={show} onHide={() => setShow(false)}></RecipeForm>}
-        </div>
+
+            <RecipeForm title="Create New Recipe" show={show} onHide={() => setShow(false)} />
+        </Container>
     )
 }
 

@@ -1,4 +1,12 @@
-@import './components/utility/style.scss';
+@import "./components/utility/style.scss";
+
+// change the theme
+$theme-colors: (
+  "primary": #8367d8,
+);
+
+// Import Bootstrap and its default variables
+@import "~bootstrap/scss/bootstrap.scss";
 
 .App {
   text-align: center;
@@ -7,6 +15,10 @@
 .App-logo {
   height: 40vmin;
   pointer-events: none;
+}
+
+.container {
+  min-width: 100%;
 }
 
 @media (prefers-reduced-motion: no-preference) {
