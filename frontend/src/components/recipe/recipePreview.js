@@ -1,21 +1,18 @@
 import Menu from 'components/common/menu'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
+import { useSelector } from 'react-redux'
 import { Col, Form, Row, ListGroup } from 'react-bootstrap'
 import { withRouter } from 'react-router-dom'
+import { get } from '../../actions/recipeActions';
 
 function RecipePreview(props) {
 
-    const [data, setData] = useState({});
+    const recipe = useSelector(state => state.recipes.recipe);
+
     useEffect(() => {
         console.log("Id", props.match.params.id)
         // Axios call to fetch recipe with provided id
-        const result = {
-            title: "Best Pancake Ever",
-            method: "Bjelanjke istuci u snijeg. Zutanjke izmutiti s secerom, dodati brasno, kakao i prasak i mijesati dok se dobije glatka smjesa. Dodati 3 zlice snijega od bjelanjka i lagano mijesati da se dobije lijepa smjesa, zatim sve izliti u ostatak bjelanjaka i jos lagano mijesati dok smjesa bude jednolicna.",
-            ingredients: [["jaje", "brasno", "ulje", "maslac", "cokolada"], ["mlijeko"]],
-            comment: "Odlican recept!"
-        }
-        setData(result)
+        // dispatch(get(props.match.params.id))
     }, []);
 
     const handleSearchChange = search => {
@@ -29,12 +26,12 @@ function RecipePreview(props) {
         <div className="recipePreview">
             <Menu handleSearchChange={handleSearchChange} {...props} />
             <Row>
-                <Form.Label className="title">{data.title}</Form.Label>
+                <Form.Label className="title">{recipe.title}</Form.Label>
             </Row>
             <Row>
                 <Col md={6}>
                     <Form.Label className="form-label">Ingredients</Form.Label>
-                    {data.ingredients && (data.ingredients.map(row =>
+                    {recipe.ingredients && (recipe.ingredients.map(row =>
                         <ListGroup horizontal>  {row.map(i => <ListGroup.Item action> {i} </ListGroup.Item>)} </ListGroup>))}
                 </Col>
             </Row>
@@ -44,7 +41,7 @@ function RecipePreview(props) {
                     <textarea
                         rows="10"
                         name="Method"
-                        value={data.method}
+                        value={recipe.method}
                         disabled
                         className="comment-section form-control"
                     />
