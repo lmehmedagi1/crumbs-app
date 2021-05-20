@@ -36,16 +36,17 @@ public class WebClientRequest {
                 .block();
     }
 
-    public ListWrapper getTopMonthlyRecepies(int pageNo, String jwt) {
+    public UUID[] getTopMonthlyRecepies(int pageNo, String jwt) {
         return webClientBuilder.baseUrl("http://review-service").build().get()
                 .uri(uriBuilder -> uriBuilder
                         .path("/reviews/topMonthly")
                         .queryParam("pageNo", pageNo)
                         .build())
                 .header("Authorization", jwt)
+                .accept(MediaTypes.HAL_JSON)
                 .retrieve()
                 .onStatus(HttpStatus::is4xxClientError, response -> Mono.error(new RecipeNotFoundException()))
-                .bodyToMono(ListWrapper.class)
+                .bodyToMono(UUID[].class)
                 .block();
     }
 

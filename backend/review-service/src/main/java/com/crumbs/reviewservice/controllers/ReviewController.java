@@ -10,7 +10,7 @@ import com.crumbs.reviewservice.utility.JwtConfigAndUtil;
 import com.crumbs.reviewservice.utility.assemblers.ReviewModelAssembler;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
+//import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -44,15 +44,15 @@ public class ReviewController {
     private final ReviewService reviewService;
     private final ReviewModelAssembler reviewModelAssembler;
     private final ReviewWebClientRequest reviewWebClientRequest;
-    private final RabbitTemplate rabbitTemplate;
+    //private final RabbitTemplate rabbitTemplate;
 
     @Autowired
     ReviewController(ReviewService reviewService, ReviewModelAssembler reviewModelAssembler,
-                     ReviewWebClientRequest reviewWebClientRequest, RabbitTemplate rabbitTemplate) {
+                     ReviewWebClientRequest reviewWebClientRequest /*, RabbitTemplate rabbitTemplate*/) {
         this.reviewService = reviewService;
         this.reviewModelAssembler = reviewModelAssembler;
         this.reviewWebClientRequest = reviewWebClientRequest;
-        this.rabbitTemplate = rabbitTemplate;
+        //this.rabbitTemplate = rabbitTemplate;
     }
 
     @RequestMapping(params = "id", method = RequestMethod.GET)
@@ -85,10 +85,11 @@ public class ReviewController {
     }
 
     @RequestMapping(value = "/topMonthly", params = "pageNo", method = RequestMethod.GET)
-    public ListWrapper getHighestRated(@RequestParam("pageNo") @NotNull int pageNo, @RequestHeader("Authorization") String jwt) {
-        reviewWebClientRequest.checkIfUserExists(jwt);
+    public UUID[] getHighestRated(@RequestParam("pageNo") @NotNull int pageNo, @RequestHeader("Authorization") String jwt) {
+        //reviewWebClientRequest.checkIfUserExists(jwt);
         Pageable paging = PageRequest.of(pageNo, 4);
-        return new ListWrapper(reviewService.getHighestRated(paging));
+        UUID[] var = reviewService.getHighestRated(paging).toArray(new UUID[0]);
+        return var;
     }
 
     @RequestMapping(value = "/rating", params = "recipeId", method = RequestMethod.GET)
@@ -107,8 +108,8 @@ public class ReviewController {
         final Review newReview = reviewService.createReview(reviewRequest, userId);
         EntityModel<Review> entityModel = reviewModelAssembler.toModel(newReview);
 
-        ReviewCreatedEvent createdEvent = new ReviewCreatedEvent(UUID.randomUUID().toString(), newReview.getId(), reviewRequest.getComment());
-        rabbitTemplate.convertAndSend("REVIEW_EXCHANGE", "REVIEW_ROUTING_KEY", createdEvent);
+//        ReviewCreatedEvent createdEvent = new ReviewCreatedEvent(UUID.randomUUID().toString(), newReview.getId(), reviewRequest.getComment());
+//        rabbitTemplate.convertAndSend("REVIEW_EXCHANGE", "REVIEW_ROUTING_KEY", createdEvent);
 
         return ResponseEntity.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(entityModel);
     }

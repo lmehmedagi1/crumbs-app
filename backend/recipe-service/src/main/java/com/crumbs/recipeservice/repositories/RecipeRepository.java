@@ -27,7 +27,7 @@ public interface RecipeRepository extends JpaRepository<Recipe, UUID> {
     Slice<RecipeView> findRecipesInCategory(UUID uuid, Pageable pageable);
 
     @Query("SELECT new com.crumbs.recipeservice.projections.RecipeView(r.id, r.title, r.description, r.userId) " +
-            "FROM Recipe r WHERE ?1 IN (?1)")
+            "FROM Recipe r WHERE r.id IN (?1)")
     Slice<RecipeView> findTopMonthlyRecepies(List<UUID> uuids);
 
     Recipe findByIdAndUserId(UUID id, UUID userId);
