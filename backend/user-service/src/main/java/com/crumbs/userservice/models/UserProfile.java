@@ -56,4 +56,7 @@ public class UserProfile {
     private User user;
 
     private byte[] avatar;
+
+    @Column(name = "email_verified")
+    private boolean emailVerified;
 }

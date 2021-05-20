@@ -25,22 +25,22 @@ INSERT INTO user_profile
 VALUES (''Lejla'', ''Mehmedagic'', ''female'', ''062123123'',
     decode(
         ''iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z/C/HgAGgwJ/lK3Q6wAAAABJRU5ErkJggg=='',
-        ''base64''), lela_id);
+        ''base64''), true, lela_id);
 INSERT INTO user_profile
 VALUES (''Anel'', ''Mandal'', ''male'', ''062123123'',
     decode(
         ''iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z/C/HgAGgwJ/lK3Q6wAAAABJRU5ErkJggg=='',
-        ''base64''), manda_id);
+        ''base64''), true, manda_id);
 INSERT INTO user_profile
 VALUES (''Medin'', ''Paldum'', ''male'', ''062123123'',
     decode(
         ''iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z/C/HgAGgwJ/lK3Q6wAAAABJRU5ErkJggg=='',
-        ''base64''), medo_id);
+        ''base64''), true, medo_id);
 INSERT INTO user_profile
 VALUES (''Arslan'', ''Turkusic'', ''other'', ''062123123'',
     decode(
         ''iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z/C/HgAGgwJ/lK3Q6wAAAABJRU5ErkJggg=='',
-        ''base64''), aki_id);
+        ''base64''), true, aki_id);
 
 INSERT INTO subscriptions VALUES (manda_id, lela_id);
 INSERT INTO subscriptions VALUES (manda_id, aki_id);

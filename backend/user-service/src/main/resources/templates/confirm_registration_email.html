@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Email</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@100;300;400;700&display=swap" rel="stylesheet">
+    <style type="text/css">
+        body {
+            margin: 0;
+            font-family: 'Lato', sans-serif;
+            -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; background-color: #FAFAFA;
+        }
+    </style>
+</head>
+<body>
+<div style="padding:0 35px;text-align:center">
+    <h1 style="color:#1e1e2d; font-weight:500; margin:0;font-size:32px;letter-spacing: 1.26px;">
+        Hi, receiver-name</h1>
+    <span style="display:inline-block; vertical-align:middle; margin:29px 0 26px; border-bottom:1px solid #cecece; width:100px;"></span>
+    <p style="color:#455056; font-size:16px;line-height:24px; margin:0; letter-spacing: 0.56px;">
+        You are seeing this email because you requested a registration over at Crumbs App.
+        <br/>
+        To continue, click the button below.
+        <br/>
+        The registration link will be active for an hour.
+        <br/>
+        If it expires, you will have to start the process again.
+    </p>
+    <a href="registration-url" style="background:#8367D8;text-decoration:none; font-weight:700; margin-top:35px; color:#fff;text-transform:uppercase;border: 3px solid #8367D8; font-size:16px; letter-spacing: 0.63px;padding:10px 24px;display:inline-block;">CONFIRM</a>
+</div>
+</body>
+</html>
