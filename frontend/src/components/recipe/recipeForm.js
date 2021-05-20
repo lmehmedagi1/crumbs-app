@@ -2,25 +2,22 @@ import React, { useState } from 'react';
 import { Modal, Form, Row, Col } from "react-bootstrap";
 import FileUploader from 'components/common/fileUploader/fileUploader'
 import SelectField from 'components/common/selectField';
-
+import { useSelector, useDispatch } from 'react-redux'
+import { setState } from '../../actions/recipeActions';
 
 function RecipeForm(props) {
 
-    const [method, setMethod] = useState()
-    const [title, setTitle] = useState()
-    const [preparation, setPreparation] = useState()
-    const [meal, setMeal] = useState()
-    const [type, setType] = useState()
+    const recipe = useSelector(state => state.recipes.recipe);
+    const dispatch = useDispatch()
 
-    const [profileImages, setProfileImages] = useState([]);
+    const [, setProfileImages] = useState([]);
     const [imagesError, setImagesError] = useState("");
-    const [initialImages, setinitialImages] = useState({});
+    const [initialImages] = useState({});
 
     const updateUploadedFiles = (files) => {
         setProfileImages(files);
         setImagesError("");
     }
-
 
     // will be fetched from server
     const prepTimeoptions = [
@@ -50,34 +47,34 @@ function RecipeForm(props) {
                             type="text"
                             name="Title"
                             placeholder="Recept..."
-                            value={title}
-                            onChange={e => setTitle(e.target.value)}
+                            value={recipe.title}
+                            onChange={e => dispatch(setState({ title: e.target.value }))}
                             disabled={props.viewMode}
                         />
                     </Form.Group>
                     <SelectField
                         label="Preparation Time"
-                        value={preparation}
+                        value={recipe.preparation}
                         name="selectFolder"
                         loadOptions={(inputValue, callback) => { callback(prepTimeoptions) }}
-                        onChange={item => setPreparation(item)}
+                        onChange={item => dispatch(setState({ preparation: item }))}
                         viewMode={props.viewMode} />
                     <SelectField
                         label="Meal of the Day"
-                        value={meal}
+                        value={recipe.meal}
                         isMulti={true}
                         name="selectFolder"
                         loadOptions={(inputValue, callback) => { callback(mealOptions) }}
-                        onChange={item => setMeal(item)}
+                        onChange={item => dispatch(setState({ meal: item }))}
                         viewMode={props.viewMode} />
 
                     <SelectField
                         label="Meal Type"
-                        value={type}
+                        value={recipe.type}
                         isMulti={true}
                         name="selectFolder"
                         loadOptions={(inputValue, callback) => { callback(typeOptions) }}
-                        onChange={item => setType(item)}
+                        onChange={item => dispatch(setState({ type: item }))}
                         viewMode={props.viewMode} />
 
                 </Col>
@@ -87,8 +84,8 @@ function RecipeForm(props) {
                         rows="11"
                         name="Method"
                         placeholder="Specijalitet je nastao..."
-                        value={method}
-                        onChange={e => setMethod(e.target.value)}
+                        value={recipe.method}
+                        onChange={e => dispatch(setState({ method: e.target.value }))}
                         disabled={props.viewMode}
                         className="comment-section form-control"
                     />
