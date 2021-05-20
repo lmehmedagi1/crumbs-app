@@ -3,7 +3,7 @@ import { Modal, Form, Row, Col } from "react-bootstrap";
 import FileUploader from 'components/common/fileUploader/fileUploader'
 import SelectField from 'components/common/selectField';
 import { useSelector, useDispatch } from 'react-redux'
-import { setState } from '../../actions/recipeActions';
+import { setState } from 'actions/recipeActions';
 
 function RecipeForm(props) {
 

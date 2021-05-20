@@ -54,6 +54,7 @@ public class AuthController {
         final User user = userService.getUserByCredentials(loginRequest.getUsername(), loginRequest.getPassword());
         final String jwt = jwtConfigAndUtil.generateToken(user.getId().toString());
         final String refreshToken = userService.generateRefreshToken(user);
+        response.setHeader("Access-Control-Expose-Headers", "Authorization");
         response.setHeader("Authorization", "Bearer " + jwt);
         response.addCookie(getCookie(refreshToken, REFRESH_TOKEN_EXPIRATION_TIME));
         return userModelAssembler.toModel(user);
@@ -67,13 +68,13 @@ public class AuthController {
         emailService.sendConfirmRegistrationEmail(user.getEmail(), "Registration Confirmation", verificationToken, userName);
 
         System.out.println("Sve ok");
-        return EntityModel.of("Email successfully sent");
+        return EntityModel.of("Verifi");
     }
 
     @GetMapping("/registration-confirmation")
-    public EntityModel<User> confirmRegistration(@RequestParam("token") String token, HttpServletResponse response) {
-        final User user = userService.confirmRegistration(token);
-        return userModelAssembler.toModel(user);
+    public EntityModel<String> confirmRegistration(@RequestParam("token") String token, HttpServletResponse response) {
+        userService.confirmRegistration(token);
+        return EntityModel.of("Account successfully verified");
     }
 
     @PostMapping("/logout")
@@ -87,6 +88,7 @@ public class AuthController {
     public EntityModel<String> refreshToken(@CookieValue(COOKIE_STRING) String refreshToken, HttpServletResponse response) {
         final UUID userId = userService.getUserIdFromRefreshToken(refreshToken);
         final String jwt = jwtConfigAndUtil.generateToken(userId.toString());
+        response.setHeader("Access-Control-Expose-Headers", "Authorization");
         response.setHeader("Authorization", "Bearer " + jwt);
         return EntityModel.of("Success");
     }

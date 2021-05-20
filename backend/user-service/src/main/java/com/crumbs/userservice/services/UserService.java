@@ -175,7 +175,7 @@ public class UserService {
     }
 
     @Transactional
-    public User confirmRegistration(String token) {
+    public void confirmRegistration(String token) {
         final VerificationToken verificationToken = verificationTokenRepository.findByValue(token);
         if (verificationToken == null)
             throw new UnauthorizedException("Invalid token");
@@ -187,6 +187,5 @@ public class UserService {
 
         verificationToken.getUser().getUserProfile().setEmailVerified(true);
         userProfileRepository.save(verificationToken.getUser().getUserProfile());
-        return verificationToken.getUser();
     }
 }
