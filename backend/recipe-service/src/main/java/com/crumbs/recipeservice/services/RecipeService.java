@@ -20,6 +20,7 @@ import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -93,5 +94,9 @@ public class RecipeService {
             throw new RecipeNotFoundException("You don't have permission to delete this recipe");
 
         recipeRepository.deleteById(id);
+    }
+
+    public List<RecipeView> getTopMonthlyRecipePreviews(List<UUID> topMonthly) {
+        return recipeRepository.findTopMonthlyRecepies(topMonthly).getContent();
     }
 }

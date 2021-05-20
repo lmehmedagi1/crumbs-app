@@ -8,6 +8,7 @@ import com.crumbs.reviewservice.requests.ReviewRequest;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -49,6 +50,11 @@ public class ReviewService {
     @Transactional(readOnly = true)
     public Double getRecipeRating(@NotNull UUID recipeId) {
         return (double) Math.round(reviewRepository.getAvgRatingOfRecipe(recipeId) * 100) / 100;
+    }
+
+    @Transactional(readOnly = true)
+    public List<UUID> getHighestRated(Pageable p) {
+        return reviewRepository.getFourTopRatedForMonth(p);
     }
 
     @Transactional

@@ -8,7 +8,8 @@ DECLARE
     monchay_id UUID := ''0668b655-97b3-4514-9f65-50cf8087fa46'';
     krempita_id UUID := ''2e0233d2-6e01-455c-8724-2117ad252ced'';
     omlet_id UUID := ''ac8ff8ff-7193-4c45-90bd-9c662cc0494a'';
-
+    hurme_id UUID := ''2e0235d2-6e01-455c-8724-2117ad252ced'';
+    pizza_id UUID := ''ac8ff6ff-7193-4c45-90bd-9c662cc0494a'';
     -- Categories
     kolac_cat UUID := ''d3f25855-9723-43c2-b29c-34626dd834d2'';
     dorucak_cat UUID := ''249cf0f8-c344-4b56-8eda-01ceb4ebfceb'';
