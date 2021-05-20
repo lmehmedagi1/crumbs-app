@@ -4,6 +4,7 @@ import com.crumbs.reviewservice.amqp.ReviewCreatedEvent;
 import com.crumbs.reviewservice.models.Review;
 import com.crumbs.reviewservice.requests.ReviewRequest;
 import com.crumbs.reviewservice.requests.ReviewWebClientRequest;
+import com.crumbs.reviewservice.responses.ListWrapper;
 import com.crumbs.reviewservice.services.ReviewService;
 import com.crumbs.reviewservice.utility.JwtConfigAndUtil;
 import com.crumbs.reviewservice.utility.assemblers.ReviewModelAssembler;
@@ -11,11 +12,15 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Mono;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -77,6 +82,13 @@ public class ReviewController {
                 .collect(Collectors.toList());
         return CollectionModel.of(reviews,
                 linkTo(methodOn(ReviewController.class).getReviewsOfRecipe(recipeId)).withSelfRel());
+    }
+
+    @RequestMapping(value = "/topMonthly", params = "pageNo", method = RequestMethod.GET)
+    public ListWrapper getHighestRated(@RequestParam("pageNo") @NotNull int pageNo, @RequestHeader("Authorization") String jwt) {
+        reviewWebClientRequest.checkIfUserExists(jwt);
+        Pageable paging = PageRequest.of(pageNo, 4);
+        return new ListWrapper(reviewService.getHighestRated(paging));
     }
 
     @RequestMapping(value = "/rating", params = "recipeId", method = RequestMethod.GET)

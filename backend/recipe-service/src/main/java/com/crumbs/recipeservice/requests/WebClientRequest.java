@@ -3,6 +3,7 @@ package com.crumbs.recipeservice.requests;
 import com.crumbs.recipeservice.exceptions.RecipeNotFoundException;
 import com.crumbs.recipeservice.exceptions.UserNotFoundException;
 import com.crumbs.recipeservice.models.User;
+import com.crumbs.recipeservice.responses.ListWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.HttpStatus;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
 import java.util.UUID;
 
 @Component
@@ -31,6 +33,19 @@ public class WebClientRequest {
                 .retrieve()
                 .onStatus(HttpStatus::is4xxClientError, response -> Mono.error(new UserNotFoundException()))
                 .bodyToMono(User.class)
+                .block();
+    }
+
+    public ListWrapper getTopMonthlyRecepies(int pageNo, String jwt) {
+        return webClientBuilder.baseUrl("http://review-service").build().get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/reviews/topMonthly")
+                        .queryParam("pageNo", pageNo)
+                        .build())
+                .header("Authorization", jwt)
+                .retrieve()
+                .onStatus(HttpStatus::is4xxClientError, response -> Mono.error(new RecipeNotFoundException()))
+                .bodyToMono(ListWrapper.class)
                 .block();
     }
 
