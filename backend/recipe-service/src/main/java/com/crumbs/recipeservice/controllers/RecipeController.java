@@ -6,6 +6,7 @@ import com.crumbs.recipeservice.projections.RecipeView;
 import com.crumbs.recipeservice.projections.UserView;
 import com.crumbs.recipeservice.requests.RecipeRequest;
 import com.crumbs.recipeservice.requests.WebClientRequest;
+import com.crumbs.recipeservice.responses.ListWrapper;
 import com.crumbs.recipeservice.responses.RecipeWithDetails;
 import com.crumbs.recipeservice.services.RecipeService;
 import com.crumbs.recipeservice.utility.JwtConfigAndUtil;
@@ -28,6 +29,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -85,20 +88,20 @@ public class RecipeController {
             @RequestParam(defaultValue = "title") String sort,
             @RequestHeader("Authorization") String jwt) {
 
-        Object topMonthly = webClientRequest.getTopMonthlyRecepies(pageNo, jwt);
+        UUID[] topMonthly = webClientRequest.getTopMonthlyRecepies(pageNo, jwt);
 
-//        List<RecipeView> recipes = recipeService.getTopMonthlyRecipePreviews(topMonthly);
-//
-//        for (RecipeView recipe : recipes) {
-//            UUID authorId = recipe.getAuthor().getUserId();
-//            User user = webClientRequest.checkIfUserExists(jwt);
-//            recipe.setAuthor(new UserView(user.getId(), user.getUsername(), user.getUserProfile().getAvatar()));
-//        }
-//
-//        return CollectionModel.of(recipes.stream().map(recipeViewModelAssembler::toModel).collect(Collectors.toList()),
-//                linkTo(methodOn(RecipeController.class)
-//                        .getRecipePreviews(pageNo, pageSize, sort, jwt)).withSelfRel());
-        return null;
+        List<RecipeView> recipes = recipeService.getTopMonthlyRecipePreviews(Arrays.asList(topMonthly));
+
+        for (RecipeView recipe : recipes) {
+            UUID authorId = recipe.getAuthor().getUserId();
+            //User user = webClientRequest.checkIfUserExists(jwt);
+            recipe.setAuthor(new UserView(UUID.randomUUID(), "Arslan", "avatar".getBytes(StandardCharsets.UTF_8)));
+        }
+
+        return CollectionModel.of(recipes.stream().map(recipeViewModelAssembler::toModel).collect(Collectors.toList()),
+                linkTo(methodOn(RecipeController.class)
+                        .getRecipePreviews(pageNo, pageSize, sort, jwt)).withSelfRel());
+
     }
 
     @RequestMapping(params = "userId", method = RequestMethod.GET)
