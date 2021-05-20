@@ -8,8 +8,8 @@ DECLARE
     monchay_id UUID := ''0668b655-97b3-4514-9f65-50cf8087fa46'';
     krempita_id UUID := ''2e0233d2-6e01-455c-8724-2117ad252ced'';
     omlet_id UUID := ''ac8ff8ff-7193-4c45-90bd-9c662cc0494a'';
-    hurme_id UUID := ''2e0235d2-6e01-455c-8724-2117ad252ced'';
-    pizza_id UUID := ''ac8ff6ff-7193-4c45-90bd-9c662cc0494a'';
+    hurme_id UUID := ''2e0235d2-6e01-455c-8724-2117ad252cea'';
+    pizza_id UUID := ''ac8ff6ff-7193-4c45-90bd-9c772cc0494a'';
     -- Categories
     kolac_cat UUID := ''d3f25855-9723-43c2-b29c-34626dd834d2'';
     dorucak_cat UUID := ''249cf0f8-c344-4b56-8eda-01ceb4ebfceb'';
@@ -45,6 +45,8 @@ INSERT INTO recipes VALUES (sampita_id, lela_id, ''Šampita'', ''Najgori kolac u
 INSERT INTO recipes VALUES (krempita_id, manda_id, ''Krempita'', ''Malo bolji od Šampite'', ''1. Kupite Krempitu; 2. Probajte malo; 3. Bacite je'');
 INSERT INTO recipes VALUES (monchay_id, aki_id, ''Mon Chay'', ''Najjaci kolac u istoriji'', ''1. Kupite Mon Chay u Metropolisu; 2. Dajte Anelu'');
 INSERT INTO recipes VALUES (omlet_id, medo_id, ''Omlet s gljivama'', ''Energetican dorucak'', ''1. Kupite jaja; 2. Kupite gljive; 3. Ispecite; 4. Profit?'');
+INSERT INTO recipes VALUES (hurme_id, aki_id, ''DIvne Hurme'', ''Energetican dorucak'', ''1. Kupite HURME; 2. Kupite gljive; 3. Ispecite; 4. Profit?'');
+INSERT INTO recipes VALUES (pizza_id, medo_id, ''Bosanska Pizza'', ''PREDOBRO'', ''1. Kupite PIZZU; 2. Kupite gljive; 3. Ispecite; 4. Profit?'');
 
 INSERT INTO categories VALUES (kolac_cat, ''Kolac'');
 INSERT INTO categories VALUES (dorucak_cat, ''Dorucak'');
@@ -60,6 +62,9 @@ INSERT INTO recipe_categories VALUES (sampita_id, kolac_cat);
 INSERT INTO recipe_categories VALUES (monchay_id, kolac_cat);
 INSERT INTO recipe_categories VALUES (krempita_id, kolac_cat);
 INSERT INTO recipe_categories VALUES (krempita_id, dorucak_cat);
+INSERT INTO recipe_categories VALUES (pizza_id, dorucak_cat);
+INSERT INTO recipe_categories VALUES (hurme_id, dorucak_cat);
+INSERT INTO recipe_categories VALUES (hurme_id, kolac_cat);
 INSERT INTO recipe_categories VALUES (omlet_id, dorucak_cat);
 
 INSERT INTO recipe_ingredients VALUES (sampita_id, slag_ing);

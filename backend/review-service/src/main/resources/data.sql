@@ -18,8 +18,8 @@ DO
     monchay_id UUID := ''0668b655-97b3-4514-9f65-50cf8087fa46'';
     krempita_id UUID := ''2e0233d2-6e01-455c-8724-2117ad252ced'';
     omlet_id UUID := ''2e0233d2-6e01-455c-8724-2117ad252ced'';
-    pizza_id UUID := ''ac8ff6ff-7193-4c45-90bd-9c662cc0494a'';
-    hurme_id UUID := ''2e0235d2-6e01-455c-8724-2117ad252ced'';
+    pizza_id UUID := ''ac8ff6ff-7193-4c45-90bd-9c772cc0494a'';
+    hurme_id UUID := ''2e0235d2-6e01-455c-8724-2117ad252cea'';
 
     -- Users
     lela_id UUID := ''3e8ec94c-3edf-49e0-b548-425088881f60'';
