@@ -47,20 +47,6 @@ public class UserController {
         this.customUserDetailsService = customUserDetailsService;
     }
 
-    @PostMapping("/login")
-    public EntityModel<User> login(@RequestBody @Valid LoginRequest loginRequest, HttpServletResponse httpServletResponse) {
-        final User user = userService.getUserByCredentials(loginRequest.getUsername(), loginRequest.getPassword());
-        httpServletResponse.setHeader("Authorization", "Bearer " + jwtConfigAndUtil.generateToken(user.getId().toString()));
-        return userModelAssembler.toModel(user);
-    }
-
-    @PostMapping("/register")
-    public EntityModel<User> register(@RequestBody @Valid RegisterRequest registerRequest, HttpServletResponse httpServletResponse) {
-        final User user = userService.registerUser(registerRequest);
-        httpServletResponse.setHeader("Authorization", "Bearer " + jwtConfigAndUtil.generateToken(user.getId().toString()));
-        return userModelAssembler.toModel(user);
-    }
-
     @RequestMapping(method = RequestMethod.GET)
     public EntityModel<User> getUserByJwt(@RequestHeader("Authorization") String jwt) {
         UUID userId = getUserIdFromJwt(jwt);

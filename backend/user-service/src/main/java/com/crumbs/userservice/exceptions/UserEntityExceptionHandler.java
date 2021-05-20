@@ -168,6 +168,26 @@ public class UserEntityExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     /**
+     * Handles UnauthorizedException
+     */
+    @ExceptionHandler(UnauthorizedException.class)
+    protected ResponseEntity<Object> handleUnauthorizedException(
+            UnauthorizedException ex, WebRequest request) {
+        ApiError apiError = new ApiError(UNAUTHORIZED, ex.getMessage(), "Check your credentials and try again!", getRequestUri(request));
+        return new ResponseEntity<>(apiError, UNAUTHORIZED);
+    }
+
+    /**
+     * Handles TokenExpiredException
+     */
+    @ExceptionHandler(TokenExpiredException.class)
+    protected ResponseEntity<Object> handleTokenExpiredException(
+            TokenExpiredException ex, WebRequest request) {
+        ApiError apiError = new ApiError(UNAUTHORIZED, ex.getMessage(), "Check your credentials and try again!", getRequestUri(request));
+        return new ResponseEntity<>(apiError, UNAUTHORIZED);
+    }
+
+    /**
      * Handles javax.validation.ConstraintViolationException.
      * Triggered when an object fails @Validated validation.
      */
