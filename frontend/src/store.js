@@ -1,4 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
+import authReducer from 'reducers/authReducer';
 import recipeReducer from './reducers/recipeReducer';
 import { createStore, combineReducers, applyMiddleware, compose } from "redux";
 import { composeWithDevTools } from 'redux-devtools-extension/developmentOnly';
@@ -12,7 +13,8 @@ const enhancer = composeEnhancers(
 );
 export default createStore(
   combineReducers({
-    recipes: recipeReducer
+    recipes: recipeReducer,
+    authReducer
   }),
   enhancer
 );

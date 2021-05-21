@@ -65,7 +65,7 @@ class UserControllerTest {
     @Test
     void testLoginFailIncorrectUsername() throws Exception {
         mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-        String uri = "/account/login";
+        String uri = "/auth/login";
         String inputJson = "{" +
                 "\"username\": \"lmehmedagiiii\"," +
                 "\"password\": \"password\"" +
@@ -80,7 +80,7 @@ class UserControllerTest {
     @Test
     void testRegisterSuccess() throws Exception {
         mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-        String uri = "/account/register";
+        String uri = "/auth/register";
         String inputJson = "{" +
                 "    \"email\": \"test@gmail.com\"," +
                 "    \"username\": \"testtest\"," +
@@ -99,7 +99,7 @@ class UserControllerTest {
     @Test
     void testRegisterFailMissingField() throws Exception {
         mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-        String uri = "/account/register";
+        String uri = "/auth/register";
         String inputJson = "{" +
                 "    \"email\": \"test@gmail.com\"," +
                 "    \"first_name\": \"test\"," +
@@ -118,7 +118,7 @@ class UserControllerTest {
     @Test
     void testRegisterFailInvalidEmail() throws Exception {
         mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-        String uri = "/account/register";
+        String uri = "/auth/register";
         String inputJson = "{" +
                 "    \"email\": \"gmail.com\"," +
                 "    \"username\": \"test\"," +
@@ -138,7 +138,7 @@ class UserControllerTest {
     @Test
     void testRegisterFailUserAlreadyExists() throws Exception {
         mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-        String uri = "/account/register";
+        String uri = "/auth/register";
         String inputJson = "{\n" +
                 "  \"email\": \"lejla@gmail.com\",\n" +
                 "  \"first_name\": \"Lela\",\n" +

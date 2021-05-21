@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import {  Button, Form } from 'react-bootstrap'
 import { Formik } from 'formik'
 import * as yup from 'yup'
+import authApi, { getUser } from 'api/auth'
 
 const schema = yup.object().shape({
     username: yup.string().required("*Username is required"),
@@ -16,14 +18,24 @@ const initialValues = {
 
 function Login(props) {
 
+    const auth = useSelector(state => state.authReducer.auth);
+    const dispatch = useDispatch()
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        // To do: ako je korisnik prijavljen, redirect ga na pocetnu
+        if (getUser() != null) {
+            props.history.push({
+                pathname: '/'
+            });
+        }
     }, []);
 
     const handleSubmit = user => {
-        console.log("ARSLAN KRALJINA");
+        authApi.login(token => {
+            console.log("Dobio sam token")
+            console.log(token)
+            props.history.push('/');
+        }, user);
     }
 
     const handleForgotPasswordCLick = () => {
