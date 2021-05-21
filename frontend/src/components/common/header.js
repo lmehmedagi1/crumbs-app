@@ -1,10 +1,11 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import auth, { userIsLoggedIn } from 'api/auth'
 
 function Header() {
 
     const logout = () => {
-        console.log("ARSLAN KRALJINA 4")
+        auth.logout(() => window.location.href="/");
     }
 
     return (
@@ -18,7 +19,7 @@ function Header() {
                 </div>
             </div>
             <div id="headerColumnRight">
-                {true ? 
+                {!userIsLoggedIn() ? 
                     <div>
                     <Link className="headerLink" to={"/login"}>
                         Login
@@ -30,7 +31,7 @@ function Header() {
                     </div>
                     :
                     <div onClick={logout}>
-                    <Link className="headerLink" to='#'>
+                    <Link className="headerLink" to=''>
                         Logout
                     </Link>
                     </div>

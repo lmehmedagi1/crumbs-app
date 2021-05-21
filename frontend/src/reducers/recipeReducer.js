@@ -36,7 +36,15 @@ const recipeReducer = (state = { ...initialState }, action) => {
                 ...state,
                 mostPopularRecipes: action.payload.data._embedded.recipeViewList
             });
-        break;
+            break;
+        case "RECIPE_GET_MOST_POPULAR_REJECTED":
+            // console.log("idemoo", action.payload)
+            // return Object.assign({}, state, {
+            //     ...state,
+                
+            // });
+            return state
+            break;
         default:
             return state;
             break;

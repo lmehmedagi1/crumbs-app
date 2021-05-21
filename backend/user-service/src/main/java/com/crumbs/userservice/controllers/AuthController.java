@@ -10,6 +10,7 @@ import com.crumbs.userservice.utility.assemblers.UserModelAssembler;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.hateoas.EntityModel;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -54,43 +55,41 @@ public class AuthController {
         final User user = userService.getUserByCredentials(loginRequest.getUsername(), loginRequest.getPassword());
         final String jwt = jwtConfigAndUtil.generateToken(user.getId().toString());
         final String refreshToken = userService.generateRefreshToken(user);
-        response.setHeader("Access-Control-Expose-Headers", "Authorization");
+        response.setHeader("Access-Control-Expose-Headers", "Authorization, Set-Cookie");
         response.setHeader("Authorization", "Bearer " + jwt);
         response.addCookie(getCookie(refreshToken, REFRESH_TOKEN_EXPIRATION_TIME));
         return userModelAssembler.toModel(user);
     }
 
     @PostMapping("/register")
-    public EntityModel<String> register(@RequestBody @Valid RegisterRequest registerRequest) {
+    public ResponseEntity<String> register(@RequestBody @Valid RegisterRequest registerRequest) {
         final User user = userService.registerUser(registerRequest);
         final String verificationToken = userService.generateVerificationToken(user);
         final String userName = user.getUserProfile().getFirstName() + " " + user.getUserProfile().getLastName();
         emailService.sendConfirmRegistrationEmail(user.getEmail(), "Registration Confirmation", verificationToken, userName);
-
-        System.out.println("Sve ok");
-        return EntityModel.of("Verifi");
+        return ResponseEntity.ok("Verification email has been sent to " + user.getEmail());
     }
 
     @GetMapping("/registration-confirmation")
-    public EntityModel<String> confirmRegistration(@RequestParam("token") String token, HttpServletResponse response) {
+    public ResponseEntity<String> confirmRegistration(@RequestParam("token") String token, HttpServletResponse response) {
         userService.confirmRegistration(token);
-        return EntityModel.of("Account successfully verified");
+        return ResponseEntity.ok("Account successfully verified");
     }
 
     @PostMapping("/logout")
-    public EntityModel<String> logout(@CookieValue(COOKIE_STRING) String refreshToken, HttpServletResponse response) {
+    public ResponseEntity<String> logout(@CookieValue(COOKIE_STRING) String refreshToken, HttpServletResponse response) {
         userService.logout(refreshToken);
         response.addCookie(getCookie(refreshToken, 0));
-        return EntityModel.of("Logout successful");
+        return ResponseEntity.ok("Logout successful");
     }
 
     @PostMapping("/refresh-token")
-    public EntityModel<String> refreshToken(@CookieValue(COOKIE_STRING) String refreshToken, HttpServletResponse response) {
+    public ResponseEntity<String> refreshToken(@CookieValue(COOKIE_STRING) String refreshToken, HttpServletResponse response) {
         final UUID userId = userService.getUserIdFromRefreshToken(refreshToken);
         final String jwt = jwtConfigAndUtil.generateToken(userId.toString());
-        response.setHeader("Access-Control-Expose-Headers", "Authorization");
+        response.setHeader("Access-Control-Expose-Headers", "Authorization, Set-Cookie");
         response.setHeader("Authorization", "Bearer " + jwt);
-        return EntityModel.of("Success");
+        return ResponseEntity.ok("Success");
     }
 
     private Cookie getCookie(String refreshCookie, int expirationTime) {

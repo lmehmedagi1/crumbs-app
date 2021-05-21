@@ -4,13 +4,19 @@ import { Form, Button } from 'react-bootstrap'
 import { Formik } from "formik"
 import * as yup from 'yup'
 
+import authApi, { getUser } from 'api/auth'
+import Alert from 'components/alert/alert'
+import ScrollButton from 'components/utility/scrollButton'
+
 const schema = yup.object().shape({
     firstName: yup.string().required("*First name is required")
         .matches(/^[^\p{P}\p{S}\s\d]*$/u,  "*First name can't contain special characters, numbers or whitespaces"),
     lastName: yup.string().required("*Last name is required")
         .matches(/^([^\p{P}\p{S}\s\d]+[ -]?[^\p{P}\p{S}\s\d]+)*$/u,  "*Last name can only contain characters and a space or dash"),
     email: yup.string().email("*Email must be valid").required("*Email is required"),
-    username: yup.string().required("*Username is required"),
+    username: yup.string().required("*Username is required").matches(/^(?!.*\.\.)(?!.*\.$)[a-z0-9_.]*$/, "*Username can only have lowercase letters, numbers and underscores!")
+        .min(6, "*Username must be at least 6 characters")
+        .max(30, "*Username can't be more than 30 characters"),
     password: yup.string().required("*Password is required").matches(/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!"#$%&'()*+,-./:;<=>?@\[\]^_`{|}~])(?=\S+$).{8,}$/, "*Password must be at least 8 characters long. There must be at least one digit, one lowercase and one uppercase letter, one special character and no whitespaces!")
 });
 
@@ -26,21 +32,46 @@ function Register(props) {
 
     const [loading, setLoading] = useState(false);
 
+    const [show, setShow] = useState(false);
+    const [message, setMessage] = useState("");
+    const [variant, setVariant] = useState("");
+
     useEffect(() => {
-        // To do: ako je korisnik prijavljen, redirect ga na pocetnu
+        if (getUser() != null) {
+            props.history.push({
+                pathname: '/'
+            });
+        }
     }, []);
 
     const handleSubmit = user => {
-        console.log("Lejla kraljina")
+        setLoading(true);
+        setShow(false);
+        
+        authApi.register(message => {
+            setLoading(false);
+            setMessage(message);
+            setVariant("success");
+            setShow(true);
+            ScrollButton.scrollToTop();
+        }, err => {
+            if (err == "timeout of 5000ms exceeded") setMessage("Verification email has been sent to " + user.email + ". Make sure to verify your account in the next 24 hours.");
+            else setMessage(err);
+            setLoading(false);
+            setVariant("warning");
+            setShow(true);
+            ScrollButton.scrollToTop();
+        },  user);
     }
 
     const handleSearchChange = search => {
-        console.log("Lejla kraljina 2")
+        // To do: implement search logic
     }
 
     return (
         <div className={loading ? "blockedWait" : ""}>
         <div className={loading ? "blocked" : ""}>
+            <Alert message={message} showAlert={show} variant={variant} onShowChange={setShow} />
             <div className="formContainer">
                 <div>
                     <div className="formTitle">

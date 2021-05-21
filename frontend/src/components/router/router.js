@@ -16,12 +16,12 @@ function Routes(props) {
   return (
     <ScrollToTop>
       <Switch>
-        <Route exact path={"/"} render={(routeProps) => <Home {...routeProps} />}></Route>
-        <Route exact path={"/login"} render={(routeProps) => <Login {...routeProps} />}></Route>
-        <Route exact path={"/register"} render={(routeProps) => <Register {...routeProps} />}></Route>
-        <Route exact path={"/browse"} render={(routeProps) => <Browse {...routeProps} />}></Route>
-        <Route exact path={"/recipe"} render={(routeProps) => <Recipe {...routeProps} />}></Route>
-        <Route exact path={"/recipe/:id"} render={(routeProps) => <RecipePreview {...routeProps} />}></Route>
+        <Route exact path={"/"} render={(routeProps) => <Home {...routeProps} {...props} />}></Route>
+        <Route exact path={"/login"} render={(routeProps) => <Login {...routeProps} {...props} />}></Route>
+        <Route exact path={"/register"} render={(routeProps) => <Register {...routeProps} {...props} />}></Route>
+        <Route exact path={"/browse"} render={(routeProps) => <Browse {...routeProps} {...props} />}></Route>
+        <Route exact path={"/recipe"} render={(routeProps) => <Recipe {...routeProps} {...props} />}></Route>
+        <Route exact path={"/recipe/:id"} render={(routeProps) => <RecipePreview {...routeProps} {...props} />}></Route>
         <Route><NotFound /></Route>
       </Switch>
     </ScrollToTop>

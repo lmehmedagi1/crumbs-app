@@ -8,7 +8,6 @@ const initialState = {
 };
 
 const authReducer = (state = { ...initialState }, action) => {
-    console.log("Akcija: " + action.type);
     switch (action.type) {
         case "AUTH_SET_STATE":
             return Object.assign({}, state, {
@@ -20,7 +19,6 @@ const authReducer = (state = { ...initialState }, action) => {
             break;
         case "AUTH_LOGIN_FULFILLED":
             setUserSession(action.payload.data);
-            console.log(action.payload);
             return Object.assign({}, state, {
                 auth: Object.assign({}, state.auth, {
                     ...initialState.auth,
@@ -29,7 +27,6 @@ const authReducer = (state = { ...initialState }, action) => {
             });
             break;
         case "AUTH_LOGIN_REJECTED": 
-            console.log(action.payload);
             return Object.assign({}, state, {
                 auth: Object.assign({}, state.auth, {
                     token: null,
