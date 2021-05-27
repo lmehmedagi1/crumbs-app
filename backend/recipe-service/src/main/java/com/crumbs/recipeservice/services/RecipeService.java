@@ -99,4 +99,8 @@ public class RecipeService {
     public List<RecipeView> getTopMonthlyRecipePreviews(List<UUID> topMonthly) {
         return recipeRepository.findTopMonthlyRecepies(topMonthly).getContent();
     }
+
+    public List<RecipeView> getTopDailyRecipePreviews(List<UUID> topDaily) {
+        return recipeRepository.findTopDailyRecepies(topDaily).getContent();
+    }
 }

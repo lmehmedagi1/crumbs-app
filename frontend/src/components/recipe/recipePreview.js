@@ -1,6 +1,6 @@
 import Menu from 'components/common/menu'
 import React, { useEffect } from 'react'
-import { Col, Form, Row, ListGroup } from 'react-bootstrap'
+import { Col, Form, Row, ListGroup, Button} from 'react-bootstrap'
 import { withRouter } from 'react-router-dom'
 import { get, getRecipeRating, getRecipeReviews} from '../../actions/recipeActions';
 import { useSelector, useDispatch } from 'react-redux'
@@ -23,6 +23,10 @@ function RecipePreview(props) {
         });
     }
 
+    const btnCommentOnClick = () => {
+        
+    }
+
     return (
         <div className="recipePreview">
             <Menu handleSearchChange={handleSearchChange} {...props} />
@@ -41,6 +45,12 @@ function RecipePreview(props) {
                 <br></br> <br></br>
                 Komentari
                 {recipe.comments && (recipe.comments.map(row => <ListGroup horizontal> <ListGroup.Item style={{width:"100%"}} action> {row.comment} </ListGroup.Item> </ListGroup>)) }
+                <textarea
+                        rows="5"
+                        name="Comment"
+                        className="comment-section form-control"
+                    />
+                {<Button className="btn-submit" onClick={btnCommentOnClick}> Comment </Button>}
                 </Col>
             </Row>
             <Row>
@@ -51,7 +61,7 @@ function RecipePreview(props) {
                         name="Method"
                         value={recipe.method}
                         disabled
-                        className="comment-section form-control"
+                        className="form-control"
                     />
                 </Col>
             </Row>

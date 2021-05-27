@@ -11,12 +11,11 @@ const initialState = {
         rating: 0,
         comments: []
     },
-    
+    dailyRecipes: [],
     mostPopularRecipes: []
 };
 
 const recipeReducer = (state = { ...initialState }, action) => {
-    console.log("idemoo", action.type)
     switch (action.type) {
         case "RECIPE_SET_STATE":
             return Object.assign({}, state, {
@@ -52,10 +51,16 @@ const recipeReducer = (state = { ...initialState }, action) => {
             });
             break;
         case "RECIPE_GET_MOST_POPULAR_FULFILLED":
-            console.log("idemoo", action.payload)
             return Object.assign({}, state, {
                 ...state,
                 mostPopularRecipes: action.payload.data._embedded.recipeViewList
+            });
+        break;
+        case "RECIPE_GET_DAILY_FULFILLED":
+            console.log("idemoo", action.payload)
+            return Object.assign({}, state, {
+                ...state,
+                dailyRecipes: action.payload.data._embedded.recipeViewList
             });
         break;
         default:

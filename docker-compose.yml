@@ -1,0 +1,189 @@
+version: '3'
+services:
+
+  eureka:
+    image: docker-eureka
+    container_name: eureka
+    build:
+      context: ./backend/discovery-server
+    expose:
+      - 8761
+    ports:
+      - 8761:8761
+    networks:
+      - crumbsapp
+    deploy:
+      restart_policy:
+        condition: on-failure
+        max_attempts: 5
+
+  serverconfig:
+    image: docker-serverconfig
+    container_name: serverconfig
+    build:
+      context: ./backend/config-server
+    ports:
+      - 8888:8888
+    networks:
+      - crumbsapp
+    depends_on:
+      - eureka
+    environment:
+      - CONFIG_REPO_USERNAME=lmehmedagi1
+      - CONFIG_REPO_PASSWORD=hWmZq4t7w!z%C&F)J@NcRfUjXn2r5u8x/A?D(G-KaPdSgVkYp3s6v9y$B&E)H@MbQeThWmZq4t7w!z%C*F-JaNdRfUjXn2r5u8x/A?D(G+KbPeShVkYp3s6v9y$B&E)H
+      - CONFIG_REPO_URI=https://github.com/lmehmedagi1/test-nwt
+    deploy:
+      restart_policy:
+        condition: on-failure
+        max_attempts: 5
+
+  systemevents:
+    image: docker-systemevents
+    container_name: systemevents
+    build:
+      context: ./backend/system-events
+    networks:
+      - crumbsapp
+    environment:
+      - JAVA_OPTS=
+        - EUREKA_SERVER=http://eureka:8761/eureka
+      - CONFIG_SERVER_URI=optional:serverconfig:http://serverconfig:8888
+    depends_on:
+      - serverconfig
+    ports:
+      - 8087:8087
+    deploy:
+      restart_policy:
+        condition: on-failure
+        max_attempts: 5
+
+  user-service:
+    image: docker-user-service
+    container_name: user-service
+    build:
+      context: ./backend/user-service
+    networks:
+      - crumbsapp
+    environment:
+      - JAVA_OPTS=
+        - EUREKA_SERVER=http://eureka:8761/eureka
+      - CONFIG_SERVER_URI=optional:serverconfig:http://serverconfig:8888
+    depends_on:
+      - eureka
+    ports:
+      - 8081:8081
+    deploy:
+      restart_policy:
+        condition: on-failure
+        max_attempts: 5
+
+  recipe-service:
+    image: docker-recipe-service
+    container_name: recipe-service
+    build:
+      context: ./backend/recipe-service
+    networks:
+      - crumbsapp
+    environment:
+      - JAVA_OPTS=
+        - EUREKA_SERVER=http://eureka:8761/eureka
+      - CONFIG_SERVER_URI=optional:serverconfig:http://serverconfig:8888
+    depends_on:
+      - eureka
+      - user-service
+      - review-service
+      - systemevents
+    ports:
+      - 8082:8082
+    deploy:
+      restart_policy:
+        condition: on-failure
+        max_attempts: 5
+
+
+  review-service:
+    image: docker-review-service
+    container_name: review-service
+    build:
+      context: ./backend/review-service
+    networks:
+      - crumbsapp
+    environment:
+      - JAVA_OPTS=
+        - EUREKA_SERVER=http://eureka:8761/eureka
+      - CONFIG_SERVER_URI=optional:serverconfig:http://serverconfig:8888
+    depends_on:
+      - eureka
+      - systemevents
+    ports:
+      - 8083:8083
+    deploy:
+      restart_policy:
+        condition: on-failure
+        max_attempts: 5
+
+  notification-service:
+    image: docker-notification-service
+    container_name: notification-service
+    build:
+      context: ./backend/notification-service
+    networks:
+      - crumbsapp
+    environment:
+      - JAVA_OPTS=
+        - EUREKA_SERVER=http://eureka:8761/eureka
+      - CONFIG_SERVER_URI=optional:serverconfig:http://serverconfig:8888
+    depends_on:
+      - eureka
+      - user-service
+      - systemevents
+      - review-service
+    ports:
+      - 8084:8084
+    deploy:
+      restart_policy:
+        condition: on-failure
+        max_attempts: 5
+
+  gateway-service:
+    image: docker-gateway-service
+    container_name: gateway-service
+    build:
+      context: ./backend/gateway-service
+    networks:
+      - crumbsapp
+    ports:
+      - 8090:8090
+    links:
+      - user-service
+      - recipe-service
+      - review-service
+      - notification-service
+    deploy:
+      restart_policy:
+        condition: on-failure
+        max_attempts: 5
+
+  frontend:
+    image: docker-frontend
+    container_name: frontend
+    build:
+      context: ./frontend
+    networks:
+      - crumbsapp
+    ports:
+      - 3000:3000
+    environment:
+      - REACT_APP_HOST_URL=http://gateway-service:8090
+    depends_on:
+      - eureka
+      - user-service
+      - gateway-service
+    deploy:
+      restart_policy:
+        condition: on-failure
+        max_attempts: 5
+
+networks:
+  crumbsapp:
+    driver: bridge

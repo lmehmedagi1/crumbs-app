@@ -11,7 +11,7 @@ export function get(id) {
             },
             headers: {
                 "Content-Type": "application/json",
-                Authorization: "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI3NWE4ZjM0Yi0yNTM5LTQ1MmEtOTMyNS1iNDMyZGJlM2I5OTUiLCJpYXQiOjE2MjE1MzU2NjgsImV4cCI6MTYyMTYzNDQwMH0.L57oPUx_l_a8gzlOIJVU4hYK7YZSA-VUevwv_zvOWXtlC92mlFkf6f6rWlTzOorhSelfWCmR2eg1ZOq2M4RImQ"
+                Authorization: "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI3NWE4ZjM0Yi0yNTM5LTQ1MmEtOTMyNS1iNDMyZGJlM2I5OTUiLCJpYXQiOjE2MjIxMzY4NzMsImV4cCI6MTYyMjIzOTIwMH0.LYUP_vO-yBdXAQBlc5XDCba5nA3O1BfC782ukpw9EequxbAWhein78txJGmymydiAsBAuJ2mKLIJn61mMQzdDg"
             }
         })
     };
@@ -27,7 +27,23 @@ export function getMostPopularRecipes(pageNumber) {
             },
             headers: {
                 "Content-Type": "application/json",
-                Authorization: "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI3NWE4ZjM0Yi0yNTM5LTQ1MmEtOTMyNS1iNDMyZGJlM2I5OTUiLCJpYXQiOjE2MjE1MzU2NjgsImV4cCI6MTYyMTYzNDQwMH0.L57oPUx_l_a8gzlOIJVU4hYK7YZSA-VUevwv_zvOWXtlC92mlFkf6f6rWlTzOorhSelfWCmR2eg1ZOq2M4RImQ"
+                Authorization: "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI3NWE4ZjM0Yi0yNTM5LTQ1MmEtOTMyNS1iNDMyZGJlM2I5OTUiLCJpYXQiOjE2MjIxMzY4NzMsImV4cCI6MTYyMjIzOTIwMH0.LYUP_vO-yBdXAQBlc5XDCba5nA3O1BfC782ukpw9EequxbAWhein78txJGmymydiAsBAuJ2mKLIJn61mMQzdDg"
+            }
+        })
+    };
+}
+
+export function getDailyRecipes(pageNumber) {
+    return {
+        type: "RECIPE_GET_DAILY",
+        payload: axios("http://localhost:8090/recipe-service/recipes/topDaily", {
+            method: "GET",
+            params: {
+                pageNo: pageNumber
+            },
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI3NWE4ZjM0Yi0yNTM5LTQ1MmEtOTMyNS1iNDMyZGJlM2I5OTUiLCJpYXQiOjE2MjIxMzY4NzMsImV4cCI6MTYyMjIzOTIwMH0.LYUP_vO-yBdXAQBlc5XDCba5nA3O1BfC782ukpw9EequxbAWhein78txJGmymydiAsBAuJ2mKLIJn61mMQzdDg"
             }
         })
     };
@@ -43,7 +59,7 @@ export function getRecipeRating(recipeId) {
             },
             headers: {
                 "Content-Type": "application/json",
-                Authorization: "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI3NWE4ZjM0Yi0yNTM5LTQ1MmEtOTMyNS1iNDMyZGJlM2I5OTUiLCJpYXQiOjE2MjE1MzU2NjgsImV4cCI6MTYyMTYzNDQwMH0.L57oPUx_l_a8gzlOIJVU4hYK7YZSA-VUevwv_zvOWXtlC92mlFkf6f6rWlTzOorhSelfWCmR2eg1ZOq2M4RImQ"
+                Authorization: "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI3NWE4ZjM0Yi0yNTM5LTQ1MmEtOTMyNS1iNDMyZGJlM2I5OTUiLCJpYXQiOjE2MjIxMzY4NzMsImV4cCI6MTYyMjIzOTIwMH0.LYUP_vO-yBdXAQBlc5XDCba5nA3O1BfC782ukpw9EequxbAWhein78txJGmymydiAsBAuJ2mKLIJn61mMQzdDg"
             }
         })
     };
@@ -60,12 +76,11 @@ export function getRecipeReviews(recipeId) {
             },
             headers: {
                 "Content-Type": "application/json",
-                Authorization: "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI3NWE4ZjM0Yi0yNTM5LTQ1MmEtOTMyNS1iNDMyZGJlM2I5OTUiLCJpYXQiOjE2MjE1MzU2NjgsImV4cCI6MTYyMTYzNDQwMH0.L57oPUx_l_a8gzlOIJVU4hYK7YZSA-VUevwv_zvOWXtlC92mlFkf6f6rWlTzOorhSelfWCmR2eg1ZOq2M4RImQ"
+                Authorization: "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI3NWE4ZjM0Yi0yNTM5LTQ1MmEtOTMyNS1iNDMyZGJlM2I5OTUiLCJpYXQiOjE2MjIxMzY4NzMsImV4cCI6MTYyMjIzOTIwMH0.LYUP_vO-yBdXAQBlc5XDCba5nA3O1BfC782ukpw9EequxbAWhein78txJGmymydiAsBAuJ2mKLIJn61mMQzdDg"
             }
         })
     };
 }
-
 
 export function setState(data) {
     return {
