@@ -23,4 +23,7 @@ public interface ReviewRepository extends JpaRepository<Review, UUID> {
     List<UUID> getFourTopRatedForMonth(Pageable pageable);
 
     Review findByIdAndUserId(UUID id, UUID userId);
+
+    @Query("SELECT r.recipeId FROM Review r WHERE r.userId = ?1 AND r.isLiked = true")
+    List<UUID> getUserLikedRecipes(UUID userId);
 }

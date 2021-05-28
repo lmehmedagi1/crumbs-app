@@ -2,6 +2,7 @@ package com.crumbs.reviewservice.controllers;
 
 import com.crumbs.reviewservice.amqp.ReviewCreatedEvent;
 import com.crumbs.reviewservice.models.Review;
+import com.crumbs.reviewservice.projections.UserRecipeView;
 import com.crumbs.reviewservice.requests.ReviewRequest;
 import com.crumbs.reviewservice.requests.ReviewWebClientRequest;
 import com.crumbs.reviewservice.responses.ListWrapper;
@@ -24,6 +25,7 @@ import reactor.core.publisher.Mono;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -138,5 +140,27 @@ public class ReviewController {
 
     private UUID getUserIdFromJwt(String jwt) {
         return UUID.fromString(new JwtConfigAndUtil().extractUserId(jwt.substring(7)));
+    }
+
+    @GetMapping("/likes/recipes")
+    public List<UserRecipeView> getUserLikedRecipes(@RequestHeader("Authorization") String jwt) {
+        UUID userId = getUserIdFromJwt(jwt);
+        List<UUID> recipeIds = reviewService.getUserLikedRecipes(userId);
+        List<UserRecipeView> recipes = new ArrayList<>();
+        for (UUID id : recipeIds) {
+            recipes.add(reviewWebClientRequest.getRecipeViewById(id));
+        }
+        return recipes;
+    }
+
+    @GetMapping("/likes/diets")
+    public List<UserRecipeView> getUserLikedDiets(@RequestHeader("Authorization") String jwt) {
+        UUID userId = getUserIdFromJwt(jwt);
+        List<UUID> dietIds = reviewService.getUserLikedDiets(userId);
+        List<UserRecipeView> recipes = new ArrayList<>();
+        for (UUID id : dietIds) {
+            recipes.add(reviewWebClientRequest.getDietViewById(id));
+        }
+        return recipes;
     }
 }

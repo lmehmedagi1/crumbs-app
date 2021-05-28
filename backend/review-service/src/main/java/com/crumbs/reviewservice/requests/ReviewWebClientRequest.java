@@ -4,6 +4,7 @@ import com.crumbs.reviewservice.exceptions.RecipeNotFoundException;
 import com.crumbs.reviewservice.exceptions.UserNotFoundException;
 import com.crumbs.reviewservice.models.Recipe;
 import com.crumbs.reviewservice.models.User;
+import com.crumbs.reviewservice.projections.UserRecipeView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.HttpStatus;
@@ -45,6 +46,30 @@ public class ReviewWebClientRequest {
                 .retrieve()
                 .onStatus(HttpStatus::is4xxClientError, response -> Mono.error(new RecipeNotFoundException()))
                 .bodyToMono(Recipe.class)
+                .block();
+    }
+
+    public UserRecipeView getRecipeViewById(UUID recipeId) {
+        return webClientBuilder.baseUrl("http://recipe-service").build().get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/recipes/view")
+                        .queryParam("id", recipeId)
+                        .build())
+                .retrieve()
+                .onStatus(HttpStatus::is4xxClientError, response -> Mono.error(new RecipeNotFoundException()))
+                .bodyToMono(UserRecipeView.class)
+                .block();
+    }
+
+    public UserRecipeView getDietViewById(UUID dietId) {
+        return webClientBuilder.baseUrl("http://recipe-service").build().get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/diet/view")
+                        .queryParam("id", dietId)
+                        .build())
+                .retrieve()
+                .onStatus(HttpStatus::is4xxClientError, response -> Mono.error(new RecipeNotFoundException()))
+                .bodyToMono(UserRecipeView.class)
                 .block();
     }
 }

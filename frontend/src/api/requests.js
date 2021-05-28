@@ -51,7 +51,7 @@ class Requests extends React.Component {
         axios
             .put(url, params, headers)
             .then((response) => { successCb(response); })
-            .catch(error => { this.handleError(error, cb, failureCb); });
+            .catch(error => { if (failureCb && error.response) failureCb(error.response.data.message) });
     }
 
     sendDeleteRequest(cb, url, params, successCb, failureCb) {

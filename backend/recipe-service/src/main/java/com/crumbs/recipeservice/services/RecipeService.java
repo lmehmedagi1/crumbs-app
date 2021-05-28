@@ -5,7 +5,9 @@ import com.crumbs.recipeservice.exceptions.RecipeNotFoundException;
 import com.crumbs.recipeservice.exceptions.UnauthorizedException;
 import com.crumbs.recipeservice.models.Diet;
 import com.crumbs.recipeservice.models.Recipe;
+import com.crumbs.recipeservice.models.User;
 import com.crumbs.recipeservice.projections.RecipeView;
+import com.crumbs.recipeservice.projections.UserRecipeView;
 import com.crumbs.recipeservice.repositories.RecipeRepository;
 import com.crumbs.recipeservice.requests.RecipeRequest;
 import lombok.NonNull;
@@ -98,5 +100,15 @@ public class RecipeService {
 
     public List<RecipeView> getTopMonthlyRecipePreviews(List<UUID> topMonthly) {
         return recipeRepository.findTopMonthlyRecepies(topMonthly).getContent();
+    }
+
+    @Transactional(readOnly = true)
+    public List<UserRecipeView> getUserRecipes(@NotNull UUID id) {
+        return recipeRepository.findByUserId(id);
+    }
+
+    @Transactional(readOnly = true)
+    public UserRecipeView getRecipeView(UUID id) {
+        return recipeRepository.findViewById(id);
     }
 }
