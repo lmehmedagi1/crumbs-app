@@ -1,6 +1,13 @@
 import axios from "axios";
 import { env } from "../configs/env";
 
+axios.interceptors.response.use(
+    response => response,
+    error => {
+      throw error
+    }
+  )
+  
 export function get(id) {
     return {
         type: "RECIPE_GET",
@@ -18,6 +25,7 @@ export function get(id) {
 }
 
 export function getMostPopularRecipes(pageNumber) {
+
     return {
         type: "RECIPE_GET_MOST_POPULAR",
         payload: axios("http://localhost:8090/recipe-service/recipes/topMonthly", {
@@ -77,9 +85,32 @@ export function getRecipeReviews(recipeId) {
             headers: {
                 "Content-Type": "application/json",
                 Authorization: "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI3NWE4ZjM0Yi0yNTM5LTQ1MmEtOTMyNS1iNDMyZGJlM2I5OTUiLCJpYXQiOjE2MjIxMzY4NzMsImV4cCI6MTYyMjIzOTIwMH0.LYUP_vO-yBdXAQBlc5XDCba5nA3O1BfC782ukpw9EequxbAWhein78txJGmymydiAsBAuJ2mKLIJn61mMQzdDg"
+    try {
+
+        axios.interceptors.response.use(
+            response => response,
+            error => {
+              throw error
             }
-        })
-    };
+          )
+
+        return {
+            type: "RECIPE_GET_MOST_POPULAR",
+            payload: axios("http://localhost:8090/recipe-service/recipes/topMonthly", {
+                method: "GET",
+                params: {
+                    pageNo: pageNumber
+                },
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI3NWE4ZjM0Yi0yNTM5LTQ1MmEtOTMyNS1iNDMyZGJlM2I5OTUiLCJpYXQiOjE2MjE1MzU2NjgsImV4cCI6MTYyMTYzNDQwMH0.L57oPUx_l_a8gzlOIJVU4hYK7YZSA-VUevwv_zvOWXtlC92mlFkf6f6rWlTzOorhSelfWCmR2eg1ZOq2M4RImQ"
+                }
+            })
+        };
+    }
+    catch(err) {
+        return null
+    }
 }
 
 export function setState(data) {

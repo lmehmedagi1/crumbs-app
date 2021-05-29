@@ -2,8 +2,12 @@ package com.crumbs.userservice.controllers;
 
 import com.crumbs.userservice.jwt.JwtConfigAndUtil;
 import com.crumbs.userservice.models.User;
+import com.crumbs.userservice.projections.UserClassView;
+import com.crumbs.userservice.projections.UserView;
 import com.crumbs.userservice.requests.LoginRequest;
 import com.crumbs.userservice.requests.RegisterRequest;
+import com.crumbs.userservice.requests.UserUpdateRequest;
+import com.crumbs.userservice.responses.UserListResponse;
 import com.crumbs.userservice.services.CustomUserDetailsService;
 import com.crumbs.userservice.services.UserService;
 import com.crumbs.userservice.utility.assemblers.UserModelAssembler;
@@ -18,6 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -52,6 +57,7 @@ public class UserController {
         UUID userId = getUserIdFromJwt(jwt);
         return userModelAssembler.toModel(userService.getUserById(userId));
     }
+
     @RequestMapping(params = "id", method = RequestMethod.GET)
     public EntityModel<User> getUserById(@RequestParam("username") @NotNull UUID id) {
         return userModelAssembler.toModel(userService.getUserById(id));
@@ -71,5 +77,41 @@ public class UserController {
     public ResponseEntity<?> deleteUserById(@RequestParam("id") @NotNull UUID id) {
         userService.deleteUserById(id);
         return ResponseEntity.noContent().build();
+    }
+
+    //    ISPOD NOVO
+    @GetMapping("/all")
+    public ResponseEntity<UserListResponse> filterUsers(@RequestParam(defaultValue = "") String search,
+                                                           @RequestParam(defaultValue = "0") Integer pageNo,
+                                                           @RequestParam(defaultValue = "3") Integer pageSize) {
+        return ResponseEntity.ok(userService.filterUsers(search, pageNo, pageSize));
+    }
+
+    @GetMapping("/info")
+    public ResponseEntity<UserView> getUserInfo(@RequestParam UUID id) {
+        return ResponseEntity.ok(userService.getUserInfoById(id));
+    }
+
+    @GetMapping("/subscribed")
+    public ResponseEntity<Boolean> checkIfUserIsSubscribed(@RequestParam UUID id, @RequestHeader("Authorization") String jwt) {
+        UUID userId = getUserIdFromJwt(jwt);
+        return ResponseEntity.ok(userService.checkIfUserIsSubscribed(userId, id));
+    }
+
+    @GetMapping("/subscribers")
+    public ResponseEntity<List<UserClassView>> getUserSubscribers(@RequestParam UUID id) {
+        return ResponseEntity.ok(userService.getUserSubscribers(id));
+    }
+
+    @GetMapping("/subscriptions")
+    public ResponseEntity<List<UserClassView>> getUserSubscriptions(@RequestParam UUID id) {
+        return ResponseEntity.ok(userService.getUserSubscriptions(id));
+    }
+
+    @PutMapping("/updateInfo")
+    public ResponseEntity<User> updateUserInformation(@RequestBody @Valid UserUpdateRequest userUpdateRequest, @RequestHeader("Authorization") String jwt) {
+        UUID userId = getUserIdFromJwt(jwt);
+        final User user = userService.updateUserInfo(userUpdateRequest, userId);
+        return ResponseEntity.ok(user);
     }
 }

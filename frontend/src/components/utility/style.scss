@@ -23,6 +23,7 @@ $mobile: "only screen and (min-width: 320px) and (max-width: 600px)";
 /* Styles */
 
 @import "components/common/style.scss";
+@import "components/alert/alert.scss";
 @import "components/notifications/notificationBell.scss";
 @import "components/login/login.scss";
 @import "components/register/register.scss";
@@ -30,3 +31,5 @@ $mobile: "only screen and (min-width: 320px) and (max-width: 600px)";
 @import "components/home/home.scss";
 
 @import "components/recipe/recipe.scss";
+@import "components/profile/profile.scss";
+@import "components/people/people.scss";

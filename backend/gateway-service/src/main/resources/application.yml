@@ -11,7 +11,7 @@ spring:
       uri: https://crumbs-config-server.herokuapp.com
 
 zuul:
-  sensitiveHeaders: Cookie,Set-Cookie
+  sensitiveHeaders:
   host:
     connect-timeout-millis: 6000
   ignored-services: '*'

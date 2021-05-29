@@ -2,6 +2,7 @@ package com.crumbs.reviewservice.controllers;
 
 import com.crumbs.reviewservice.amqp.ReviewCreatedEvent;
 import com.crumbs.reviewservice.models.Review;
+import com.crumbs.reviewservice.projections.UserRecipeView;
 import com.crumbs.reviewservice.requests.ReviewRequest;
 import com.crumbs.reviewservice.requests.ReviewWebClientRequest;
 import com.crumbs.reviewservice.responses.ListWrapper;
@@ -10,7 +11,7 @@ import com.crumbs.reviewservice.utility.JwtConfigAndUtil;
 import com.crumbs.reviewservice.utility.assemblers.ReviewModelAssembler;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-//import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -24,6 +25,7 @@ import reactor.core.publisher.Mono;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -44,15 +46,15 @@ public class ReviewController {
     private final ReviewService reviewService;
     private final ReviewModelAssembler reviewModelAssembler;
     private final ReviewWebClientRequest reviewWebClientRequest;
-    //private final RabbitTemplate rabbitTemplate;
+    private final RabbitTemplate rabbitTemplate;
 
     @Autowired
     ReviewController(ReviewService reviewService, ReviewModelAssembler reviewModelAssembler,
-                     ReviewWebClientRequest reviewWebClientRequest /*, RabbitTemplate rabbitTemplate*/) {
+                     ReviewWebClientRequest reviewWebClientRequest , RabbitTemplate rabbitTemplate) {
         this.reviewService = reviewService;
         this.reviewModelAssembler = reviewModelAssembler;
         this.reviewWebClientRequest = reviewWebClientRequest;
-        //this.rabbitTemplate = rabbitTemplate;
+        this.rabbitTemplate = rabbitTemplate;
     }
 
     @RequestMapping(params = "id", method = RequestMethod.GET)
@@ -121,8 +123,8 @@ public class ReviewController {
         final Review newReview = reviewService.createReview(reviewRequest, userId);
         EntityModel<Review> entityModel = reviewModelAssembler.toModel(newReview);
 
-//        ReviewCreatedEvent createdEvent = new ReviewCreatedEvent(UUID.randomUUID().toString(), newReview.getId(), reviewRequest.getComment());
-//        rabbitTemplate.convertAndSend("REVIEW_EXCHANGE", "REVIEW_ROUTING_KEY", createdEvent);
+        ReviewCreatedEvent createdEvent = new ReviewCreatedEvent(UUID.randomUUID().toString(), newReview.getId(), reviewRequest.getComment());
+        rabbitTemplate.convertAndSend("REVIEW_EXCHANGE", "REVIEW_ROUTING_KEY", createdEvent);
 
         return ResponseEntity.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(entityModel);
     }
@@ -151,5 +153,27 @@ public class ReviewController {
 
     private UUID getUserIdFromJwt(String jwt) {
         return UUID.fromString(new JwtConfigAndUtil().extractUserId(jwt.substring(7)));
+    }
+
+    @GetMapping("/likes/recipes")
+    public List<UserRecipeView> getUserLikedRecipes(@RequestHeader("Authorization") String jwt) {
+        UUID userId = getUserIdFromJwt(jwt);
+        List<UUID> recipeIds = reviewService.getUserLikedRecipes(userId);
+        List<UserRecipeView> recipes = new ArrayList<>();
+        for (UUID id : recipeIds) {
+            recipes.add(reviewWebClientRequest.getRecipeViewById(id));
+        }
+        return recipes;
+    }
+
+    @GetMapping("/likes/diets")
+    public List<UserRecipeView> getUserLikedDiets(@RequestHeader("Authorization") String jwt) {
+        UUID userId = getUserIdFromJwt(jwt);
+        List<UUID> dietIds = reviewService.getUserLikedDiets(userId);
+        List<UserRecipeView> recipes = new ArrayList<>();
+        for (UUID id : dietIds) {
+            recipes.add(reviewWebClientRequest.getDietViewById(id));
+        }
+        return recipes;
     }
 }

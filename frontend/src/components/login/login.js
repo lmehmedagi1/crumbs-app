@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import {  Button, Form } from 'react-bootstrap'
 import { Formik } from 'formik'
 import * as yup from 'yup'
+
 import authApi, { getUser } from 'api/auth'
+import Alert from 'components/alert/alert'
+import ScrollButton from 'components/utility/scrollButton'
+import auth from 'api/auth'
 
 const schema = yup.object().shape({
     username: yup.string().required("*Username is required"),
@@ -18,9 +21,11 @@ const initialValues = {
 
 function Login(props) {
 
-    const auth = useSelector(state => state.authReducer.auth);
-    const dispatch = useDispatch()
     const [loading, setLoading] = useState(false);
+
+    const [show, setShow] = useState(false);
+    const [message, setMessage] = useState("");
+    const [variant, setVariant] = useState("");
 
     useEffect(() => {
         if (getUser() != null) {
@@ -28,23 +33,39 @@ function Login(props) {
                 pathname: '/'
             });
         }
+
+        let searchArray = props.location.search.split('=');
+        if (searchArray && searchArray.length > 1) {
+            let verificationToken = searchArray[1]
+            auth.confirmRegistration(() => {}, verificationToken);
+        }
     }, []);
 
     const handleSubmit = user => {
+        setLoading(true);
+        setShow(false);
+        
         authApi.login(token => {
-            console.log("Dobio sam token")
-            console.log(token)
+            setLoading(false);
+            props.setToken(token);
             props.history.push('/');
-        }, user);
+        }, err => {
+            setLoading(false);
+            setMessage(err);
+            setVariant("warning");
+            setShow(true);
+            ScrollButton.scrollToTop();
+        },  user);
     }
 
     const handleForgotPasswordCLick = () => {
-        console.log("ARSLAN KRALJINA2");
+        // To do: password reset logic
     }
 
     return (
         <div className={loading ? "blockedWait" : ""}>
         <div className={loading ? "blocked" : ""}>
+            <Alert message={message} showAlert={show} variant={variant} onShowChange={setShow} />
             <div className="formContainer">
                 <div>
                     <div className="formTitle">

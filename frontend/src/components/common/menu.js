@@ -5,6 +5,8 @@ import { LinkContainer } from "react-router-bootstrap"
 import Logo from 'assets/images/food-logo.ico'
 import NotificationBell from 'components/notifications/notificationBell'
 
+import { userIsLoggedIn } from 'api/auth'
+
 function Menu(props) {
 
     const [initialSearch, setInitialSearch] = useState("");
@@ -37,15 +39,15 @@ function Menu(props) {
                 </Form>
                 <Nav className="mr-auto" defaultActiveKey="/my-account">
                     <LinkContainer to={'/'} exact>
-                        <Nav.Link active={!window.location.pathname.includes("/single-product") && !window.location.pathname.includes("/my-account")}>Home</Nav.Link>
+                        <Nav.Link active={!window.location.pathname.includes("/browse") && !window.location.pathname.includes("/people") && !window.location.pathname.includes("/profile")}>Home</Nav.Link>
                     </LinkContainer>
                     <LinkContainer to="/browse">
-                        <Nav.Link active={window.location.pathname.includes("/single-product")}>Recipes</Nav.Link>
+                        <Nav.Link active={window.location.pathname.includes("/browse")}>Recipes</Nav.Link>
                     </LinkContainer>
-                    {/* <LinkContainer to="/my-account">
-                        <Nav.Link active={window.location.pathname.includes("/my-account")}>My account</Nav.Link>
-                    </LinkContainer> */}
-                    {"userIsLoggedIn()" ? <NotificationBell {...props}/> : null}
+                    <LinkContainer to="/people">
+                        <Nav.Link active={window.location.pathname.includes("/people")}>People</Nav.Link>
+                    </LinkContainer>
+                    {userIsLoggedIn() ? <NotificationBell {...props}/> : null}
                 </Nav>
             </Navbar>
         </div>

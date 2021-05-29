@@ -1,0 +1,88 @@
+.profileContainer {
+    
+    margin: 2% 12%;
+
+    .profileHeader {
+
+        display: flex;
+        justify-content: space-between;
+        width: 60%;
+        margin: 0 auto;
+
+        .avatarWrapper {
+            overflow: hidden;
+            img {
+                width: 120px;
+                height: 120px;
+                object-fit: cover;
+                border-radius: 50%;
+            }
+        }
+
+        p {
+            font-size: 30px;
+            color: $default-purple-color;
+            margin-bottom: 0;
+        }
+
+        .buttonWrapper {
+            button {
+                background: #FFFFFF;
+                border: 3px solid $default-purple-color;
+                box-shadow: 3px 3px 0 0 rgba(131,103,216,0.31);
+                font-size: 16px;
+                font-weight: bold;
+                color: $base-color;
+                letter-spacing: 0.63px;
+                width: 160px;
+                height: 57px;
+                margin: 40px auto;
+            }
+
+            .subscribeButton, .editButton {
+                background: $default-purple-color;
+                color: white;
+            }
+        }
+    }
+
+    .profileBody {
+        margin-top: 30px;
+
+        .nav {
+            .nav-item {
+                font-size: 20px;
+                width: 190px;
+
+                .nav-link {
+                    padding: 1rem 1rem;
+                    color: $base-color;
+                }
+
+                .active {
+                    color: $default-purple-color;
+                }
+
+                i {
+                    margin-right: 5px;
+                }
+            }
+        }
+    }
+}
+
+@media #{$tablet} {
+    .profileContainer {
+        margin: 5% 5%;
+    }
+}
+
+@media #{$mobile} {
+    .profileContainer {
+        margin: 5% 5%;
+    }
+}
+
+@import "components/profile/tabs/about.scss";
+@import "components/profile/tabs/table.scss";
+@import "components/profile/editProfile.scss";

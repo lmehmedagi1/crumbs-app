@@ -15,6 +15,7 @@ import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -94,5 +95,15 @@ public class ReviewService {
         review.setIsLiked(reviewRequest.getIs_liked());
         review.setRating(reviewRequest.getRating());
         review.setComment(reviewRequest.getComment());
+    }
+
+    @Transactional(readOnly = true)
+    public List<UUID> getUserLikedRecipes(UUID userId) {
+        return reviewRepository.getUserLikedRecipes(userId);
+    }
+
+    @Transactional(readOnly = true)
+    public List<UUID> getUserLikedDiets(UUID userId) {
+        return new ArrayList<>();
     }
 }

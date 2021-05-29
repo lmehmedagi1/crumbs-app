@@ -10,6 +10,7 @@ class Requests extends React.Component {
     getCookieHeader = () => {
         return {
             withCredentials: true,
+            timeout: 5000,
             headers: {"Access-Control-Allow-Origin": "*", 'Access-Control-Allow-Credentials': true, 'Content-Type': 'application/json'}
         }
     }
@@ -36,21 +37,21 @@ class Requests extends React.Component {
         axios
             .post(url, params, headers)
             .then((response) => { successCb(response); })
-            .catch(error => {  });
+            .catch(error => { if (failureCb && error.response) failureCb(error.response.data.error); else failureCb(error.message) });
     }
 
     sendGetRequest(cb, url, params, successCb, failureCb) {
         axios
             .get(url, params)
             .then((response) => { successCb(response); })
-            .catch(error => { this.handleError(error, cb, failureCb); });
+            .catch(error => {  if (failureCb && error.response) failureCb(error.response.data.message) });
     }
 
     sendPutRequest(cb, url, params, headers, successCb, failureCb) {
         axios
             .put(url, params, headers)
             .then((response) => { successCb(response); })
-            .catch(error => { this.handleError(error, cb, failureCb); });
+            .catch(error => { if (failureCb && error.response) failureCb(error.response.data.message) });
     }
 
     sendDeleteRequest(cb, url, params, successCb, failureCb) {

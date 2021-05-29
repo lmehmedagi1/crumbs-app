@@ -3,6 +3,8 @@ package com.crumbs.recipeservice.controllers;
 import com.crumbs.recipeservice.models.Diet;
 import com.crumbs.recipeservice.models.User;
 import com.crumbs.recipeservice.projections.RecipeView;
+import com.crumbs.recipeservice.projections.UserDietView;
+import com.crumbs.recipeservice.projections.UserRecipeView;
 import com.crumbs.recipeservice.projections.UserView;
 import com.crumbs.recipeservice.requests.DietRequest;
 import com.crumbs.recipeservice.requests.WebClientRequest;
@@ -145,5 +147,14 @@ public class DietController {
         UUID userId = JwtConfigAndUtil.getUserIdFromJwt(jwt);
         dietService.deleteDiet(id, userId);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/user")
+    public ResponseEntity<List<UserDietView>> getUserRecipes(@RequestParam UUID id) {
+        List<UserDietView> diets = dietService.getUserDiets(id);
+//        for (UserRecipeView recipe : recipes) {
+//            recipe.setRating(webClientRequest.getRecipeRating(recipe.getId()));
+//        }
+        return ResponseEntity.ok(diets);
     }
 }

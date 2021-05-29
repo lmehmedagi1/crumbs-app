@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -14,6 +15,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.util.List;
 import java.util.UUID;
 
@@ -22,7 +24,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Entity
 @Table(name = "users")
-public class User {
+public class User implements Serializable {
 
     @Id
     @GeneratedValue(generator = "UUID")
@@ -50,13 +52,13 @@ public class User {
     @PrimaryKeyJoinColumn
     private UserProfile userProfile;
 
+    @OneToMany(mappedBy = "author")
+    @EqualsAndHashCode.Exclude
     @JsonIgnore
-    @ManyToMany
-    @JoinTable(
-            name = "subscriptions",
-            joinColumns = @JoinColumn(
-                    name = "subscriber_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(
-                    name = "author_id", referencedColumnName = "id"))
-    private List<User> subscriptions;
+    private List<Subscription> subscribers;
+
+    @OneToMany(mappedBy = "subscriber")
+    @EqualsAndHashCode.Exclude
+    @JsonIgnore
+    private List<Subscription> subscriptions;
 }

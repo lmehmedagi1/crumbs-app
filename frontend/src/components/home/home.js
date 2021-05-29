@@ -21,14 +21,11 @@ function Home(props) {
     const dailyRecipes = useSelector(state => state.recipes.dailyRecipes);
     const dispatch = useDispatch()
     useEffect( () => {
-        // axios.get("http://localhost:8090/recipe-service/recipes/topMonthly", {
-        //     params: {
-        //         pageNo: count
-        //     },
-        //     headers: {
-        //         'Content-Type': 'application/json',
-        //         'Authorization': 'Bearer ' + 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI3NWE4ZjM0Yi0yNTM5LTQ1MmEtOTMyNS1iNDMyZGJlM2I5OTUiLCJpYXQiOjE2MjE1MzU2NjgsImV4cCI6MTYyMTYzNDQwMH0.L57oPUx_l_a8gzlOIJVU4hYK7YZSA-VUevwv_zvOWXtlC92mlFkf6f6rWlTzOorhSelfWCmR2eg1ZOq2M4RImQ'
-        //     }
+        // try {
+        //     dispatch(getMostPopularRecipes(count))
+        // }
+        // catch(err) {
+        //     console.log(err)
         // }
         // ).then((response) => {
         //     console.log("idemoo", response.data._embedded.recipeViewList);
@@ -37,7 +34,7 @@ function Home(props) {
         //   .catch((error) => console.log(error));
         dispatch(getMostPopularRecipes(count))
         dispatch(getDailyRecipes(countDaily))
-      
+     
      }, []);
 
     const handleSearchChange = search => {
