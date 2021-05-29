@@ -63,6 +63,7 @@ function People(props) {
     }
 
     const handlePeopleSearch = event => {
+        setPeople([]);
         event.preventDefault();
         const formData = new FormData(event.target),
             formDataObj = Object.fromEntries(formData.entries());

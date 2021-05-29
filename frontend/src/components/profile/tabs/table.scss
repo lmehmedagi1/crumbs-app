@@ -28,6 +28,16 @@
         table-layout: auto; 
     }
 
+    .table-hover {
+        tbody {
+            tr:hover {
+                --bs-table-accent-bg: none;
+                background-color: #f8f7f7;
+                cursor: pointer;
+            }
+        }
+    }
+
     thead {
         background: #F0F0F0;
         th {

@@ -14,4 +14,5 @@ public class UserDietView {
     private String title;
     private String description;
     private double rating;
+    private String image;
 }

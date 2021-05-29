@@ -6,6 +6,7 @@ import com.crumbs.userservice.projections.UserClassView;
 import com.crumbs.userservice.projections.UserView;
 import com.crumbs.userservice.requests.LoginRequest;
 import com.crumbs.userservice.requests.RegisterRequest;
+import com.crumbs.userservice.requests.SubscribeRequest;
 import com.crumbs.userservice.requests.UserUpdateRequest;
 import com.crumbs.userservice.responses.UserListResponse;
 import com.crumbs.userservice.services.CustomUserDetailsService;
@@ -84,6 +85,13 @@ public class UserController {
     @GetMapping("/view")
     public ResponseEntity<UserClassView> getUserViewById(@RequestParam UUID id) {
         return ResponseEntity.ok(userService.getUserViewById(id));
+    }
+
+    @PostMapping("/subscribe")
+    public ResponseEntity<String> subscribe(@RequestBody @Valid SubscribeRequest request, @RequestHeader("Authorization") String jwt) {
+        UUID userId = getUserIdFromJwt(jwt);
+        userService.subscribe(userId, request.getId());
+        return ResponseEntity.ok("Subscription updated successfully");
     }
 
     @GetMapping("/subscribed")

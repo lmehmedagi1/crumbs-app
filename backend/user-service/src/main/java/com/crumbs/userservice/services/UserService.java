@@ -7,12 +7,14 @@ import com.crumbs.userservice.exceptions.UserAlreadyExistsException;
 import com.crumbs.userservice.exceptions.UserNotFoundException;
 import com.crumbs.userservice.models.RefreshToken;
 import com.crumbs.userservice.models.Subscription;
+import com.crumbs.userservice.models.SubscriptionId;
 import com.crumbs.userservice.models.User;
 import com.crumbs.userservice.models.UserProfile;
 import com.crumbs.userservice.models.VerificationToken;
 import com.crumbs.userservice.projections.UserClassView;
 import com.crumbs.userservice.projections.UserView;
 import com.crumbs.userservice.repositories.RefreshTokenRepository;
+import com.crumbs.userservice.repositories.SubscriptionRepository;
 import com.crumbs.userservice.repositories.UserProfileRepository;
 import com.crumbs.userservice.repositories.UserRepository;
 import com.crumbs.userservice.repositories.VerificationTokenRepository;
@@ -35,13 +37,13 @@ import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-import static com.crumbs.userservice.utility.Constants.REFRESH_TOKEN_EXPIRATION_TIME;
-import static com.crumbs.userservice.utility.Constants.VERIFICATION_TOKEN_EXPIRATION_TIME;
+import static com.crumbs.userservice.utility.Constants.*;
 
 @Service
 @Validated
@@ -51,13 +53,15 @@ public class UserService {
     private final UserProfileRepository userProfileRepository;
     private final RefreshTokenRepository refreshTokenRepository;
     private final VerificationTokenRepository verificationTokenRepository;
+    private final SubscriptionRepository subscriptionRepository;
 
     @Autowired
-    public UserService(UserRepository userRepository, UserProfileRepository userProfileRepository, RefreshTokenRepository refreshTokenRepository, VerificationTokenRepository verificationTokenRepository) {
+    public UserService(UserRepository userRepository, UserProfileRepository userProfileRepository, RefreshTokenRepository refreshTokenRepository, VerificationTokenRepository verificationTokenRepository, SubscriptionRepository subscriptionRepository) {
         this.userRepository = userRepository;
         this.userProfileRepository = userProfileRepository;
         this.refreshTokenRepository = refreshTokenRepository;
         this.verificationTokenRepository = verificationTokenRepository;
+        this.subscriptionRepository = subscriptionRepository;
     }
 
     @Transactional(readOnly = true)
@@ -65,14 +69,6 @@ public class UserService {
         return userRepository.findById(id).orElseThrow(() ->
                 new UserNotFoundException("Specified ID does not exists!"));
     }
-
-//    @Transactional(readOnly = true)
-//    public User getUserByEmail(@NotBlank String email) {
-//        final User user = userRepository.findByEmail(email);
-//        if (user == null)
-//            throw new UserNotFoundException("Specified email does not exists!");
-//        return user;
-//    }
 
     @Transactional(readOnly = true)
     public User getUserByUsername(@NotBlank String username) {
@@ -233,11 +229,28 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public boolean checkIfUserIsSubscribed(UUID userId, UUID id) {
-        User user = userRepository.findById(userId).orElseThrow(() ->
-                new UserNotFoundException("Specified ID does not exists!"));
-        return user.getSubscriptions().stream().anyMatch(u -> u.getId().equals(id));
+        Subscription subscription =  subscriptionRepository.findById(new SubscriptionId(id, userId)).orElse(null);
+        return subscription != null;
     }
 
+    @Transactional
+    public void subscribe(UUID subscriberId, UUID userId) {
+        Subscription subscription = subscriptionRepository.findById(new SubscriptionId(userId, subscriberId)).orElse(null);
+
+        User subscriber = userRepository.findById(subscriberId).orElseThrow(UserNotFoundException::new);
+        User author = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+
+        if (subscription == null) {
+            subscription = new Subscription();
+            subscription.setSubscriber(subscriber);
+            subscription.setAuthor(author);
+            subscription.setCreatedAt(LocalDateTime.now(ZoneId.of(DEFAULT_TIMEZONE)));
+            subscriptionRepository.save(subscription);
+        }
+        else subscriptionRepository.delete(subscription);
+    }
+
+    @Transactional
     public User updateUserInfo(UserUpdateRequest userUpdateRequest, UUID userId) {
         User user = userRepository.findById(userId).orElseThrow(() ->
                 new UserNotFoundException("Specified ID does not exists!"));
