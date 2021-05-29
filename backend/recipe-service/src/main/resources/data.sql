@@ -10,6 +10,7 @@ DECLARE
     omlet_id UUID := ''ac8ff8ff-7193-4c45-90bd-9c662cc0494a'';
     hurme_id UUID := ''2e0235d2-6e01-455c-8724-2117ad252cea'';
     pizza_id UUID := ''ac8ff6ff-7193-4c45-90bd-9c772cc0494a'';
+
     -- Categories
     kolac_cat UUID := ''d3f25855-9723-43c2-b29c-34626dd834d2'';
     dorucak_cat UUID := ''249cf0f8-c344-4b56-8eda-01ceb4ebfceb'';
@@ -91,5 +92,7 @@ INSERT INTO images VALUES (monchay_slika1, ''id:IJb-yHir50sAAAAAAAAAFA'', moncha
 INSERT INTO images VALUES (monchay_slika2, ''id:IJb-yHir50sAAAAAAAAAFA'', monchay_id);
 INSERT INTO images VALUES (krempita_slika1, ''id:IJb-yHir50sAAAAAAAAAFA'', krempita_id);
 INSERT INTO images VALUES (omlet_slika1, ''id:IJb-yHir50sAAAAAAAAAFA'', omlet_id);
+INSERT INTO images VALUES (gen_random_uuid(), ''id:IJb-yHir50sAAAAAAAAAFA'', hurme_id);
+INSERT INTO images VALUES (gen_random_uuid(), ''id:IJb-yHir50sAAAAAAAAAFA'', pizza_id);
 END;
 ' LANGUAGE PLPGSQL;

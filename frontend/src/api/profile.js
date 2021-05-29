@@ -51,6 +51,12 @@ class ProfileApi extends React.Component {
             }, (err) => {console.log(err)});
     }
 
+    sendPostSubscribeRequest = (cb, token, params) => {
+        Requests.sendPostRequest(cb, hostUrl + "user-service/account/subscribe", params, Requests.getAuthorizationHeader(token), 
+            (response) => { cb(response.data); }, (err) => { console.log(err); cb(null); },
+        );
+    }
+
     getUserInfo = (cb, params) => {
         Requests.sendGetRequest(cb, hostUrl + "user-service/account/info", {params: params}, (response) => { cb(response.data); }, (err) => { cb(null); });
     }
@@ -85,6 +91,10 @@ class ProfileApi extends React.Component {
 
     updateUserInfo = (cb, params, token, setToken) => {
         auth.forwardRequest(cb, params, token, setToken, this.sendPutUpdateUserInfo);
+    }
+
+    subscribe = (cb, params, token, setToken) => {
+        auth.forwardRequest(cb, params, token, setToken, this.sendPostSubscribeRequest);
     }
 }
 

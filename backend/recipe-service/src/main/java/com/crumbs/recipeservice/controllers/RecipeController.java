@@ -236,6 +236,7 @@ public class RecipeController {
         List<UserRecipeView> recipes = recipeService.getUserRecipes(id);
         for (UserRecipeView recipe : recipes) {
             recipe.setRating(webClientRequest.getRecipeRating(recipe.getId()));
+            recipe.setImage(recipeService.getRecipeImage(recipe.getId()));
         }
         return ResponseEntity.ok(recipes);
     }
@@ -244,6 +245,7 @@ public class RecipeController {
     public ResponseEntity<UserRecipeView> getRecipeView(@RequestParam UUID id) {
         UserRecipeView recipe = recipeService.getRecipeView(id);
         recipe.setRating(webClientRequest.getRecipeRating(recipe.getId()));
+        recipe.setImage(recipeService.getRecipeImage(recipe.getId()));
         return ResponseEntity.ok(recipe);
     }
 }

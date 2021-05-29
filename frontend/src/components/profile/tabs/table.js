@@ -11,8 +11,6 @@ import { CustomImage } from 'components/common/customImage'
 
 import profileApi from 'api/profile'
 
-const imagePlaceholder = "https://www.firstfishonline.com/wp-content/uploads/2017/07/default-placeholder-700x700.png";
-
 function CustomTable(props) {
 
     const [values, setValues] = useState([]);
@@ -83,7 +81,7 @@ function CustomTable(props) {
             dataField: 'title',
             text: '',
             formatter: (value, row) => {
-                return <div><img src={imagePlaceholder}/></div>
+                return <CustomImage imageId={row.image} className="rowImage" alt="Image"/>
             }
         }, {
             dataField: 'title',
@@ -135,6 +133,12 @@ function CustomTable(props) {
         }]
     };
 
+    const clickEvents = {
+        onClick: (e, row, rowIndex) => {
+            props.handleRowClick(row.id, currTab);
+        }
+    }
+
     const getNoValuesMessage = () => {
         if (props.tab == "likedRecipes") return "liked recipes";
         if (props.tab == "likedDiets") return "liked diets";
@@ -154,7 +158,7 @@ function CustomTable(props) {
         <div className="customTable">
             {getTitle()}
             {values.length ? 
-            <BootstrapTable keyField='id' data={ values } columns={ props.tab == "diets" || props.tab == "recipes" || props.tab.includes("liked") ? recipesColumns : userColumns } pagination={ paginationFactory(options) } />
+            <BootstrapTable hover={true} keyField='id' data={ values } columns={ props.tab == "diets" || props.tab == "recipes" || props.tab.includes("liked") ? recipesColumns : userColumns } pagination={ paginationFactory(options) } rowEvents={ clickEvents } />
             :
             <Table className="emptyTable">
             <thead>

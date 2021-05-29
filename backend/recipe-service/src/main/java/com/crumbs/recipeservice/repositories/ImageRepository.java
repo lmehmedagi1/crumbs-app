@@ -8,4 +8,5 @@ import java.util.UUID;
 
 @Repository
 public interface ImageRepository extends JpaRepository<Image, UUID> {
+    Image findTop1ByRecipe_Id(UUID id);
 }
