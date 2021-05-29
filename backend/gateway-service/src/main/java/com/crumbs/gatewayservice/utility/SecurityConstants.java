@@ -9,6 +9,8 @@ public final class SecurityConstants {
             "/user-service/auth/**",
             "/user-service/account/**",
             "/recipe-service/recipes/user",
+            "/recipe-service/recipes/topMonthly",
+            "/recipe-service/recipes/topDaily",
             "/recipe-service/diets/user",
             "/swagger-ui/",
             "/swagger-ui/**",

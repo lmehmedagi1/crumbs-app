@@ -106,6 +106,7 @@ public class RecipeService {
     @Transactional(readOnly = true)
     public List<RecipeView> getTopDailyRecipePreviews(List<UUID> topDaily) {
         return recipeRepository.findTopDailyRecepies(topDaily).getContent();
+    }
 
     @Transactional(readOnly = true)
     public List<UserRecipeView> getUserRecipes(@NotNull UUID id) {
