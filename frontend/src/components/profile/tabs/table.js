@@ -7,6 +7,8 @@ import paginationFactory from 'react-bootstrap-table2-paginator';
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css'
 import 'react-bootstrap-table2-paginator/dist/react-bootstrap-table2-paginator.min.css'
 
+import { CustomImage } from 'components/common/customImage'
+
 import profileApi from 'api/profile'
 
 const imagePlaceholder = "https://www.firstfishonline.com/wp-content/uploads/2017/07/default-placeholder-700x700.png";
@@ -14,13 +16,18 @@ const imagePlaceholder = "https://www.firstfishonline.com/wp-content/uploads/201
 function CustomTable(props) {
 
     const [values, setValues] = useState([]);
+    const [currTab, setCurrTab] = useState("");
 
     useEffect(() => {
-        setValues([]);
-        if (!props.userId) return;
-        console.log("tabela", props)
+
+        let tab = props.tab;
+
+        if (!["diets", "recipes", "subscribers", "subscriptions", "likedRecipes", "likedDiets"].includes(tab)) return;
+        if (tab == currTab || !props.userId) return;
+        setCurrTab(tab);
+        
         props.setLoading(true);
-        switch (props.tab) {
+        switch (tab) {
             case "recipes":
                 profileApi.getUserRecipes((data) => {
                     if (data == null) data = [];
@@ -64,7 +71,9 @@ function CustomTable(props) {
                 }, {id: props.userId}, props.getToken(), props.setToken);   
                 break;
             default:
+                console.log("default", values)
                 props.setLoading(false);
+                setValues([]);
                 break;
         }
     }, [props.tab]);
@@ -96,7 +105,7 @@ function CustomTable(props) {
             dataField: 'firstName',
             text: '',
             formatter: (value, row) => {
-                return <div><img src={imagePlaceholder}/></div>
+                return <CustomImage imageId={row.avatar} className="rowImage" alt="User avatar"/>
             }
         }, {
             dataField: 'firstName',

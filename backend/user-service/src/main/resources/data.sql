@@ -24,7 +24,7 @@ VALUES (aki_id, ''aturkusic'', ''aturkusic1@etf.unsa.ba'',
 INSERT INTO user_profile
 VALUES (''Lejla'', ''Mehmedagic'', ''female'', ''062123123'', ''id:IJb-yHir50sAAAAAAAAAEg'', true, lela_id);
 INSERT INTO user_profile
-VALUES (''Anel'', ''Mandal'', ''male'', ''062123123'', ''id:IJb-yHir50sAAAAAAAAAEg'', true, manda_id);
+VALUES (''Anel'', ''Mandal'', ''male'', ''062123123'', ''id:IJb-yHir50sAAAAAAAAAFQ'', true, manda_id);
 INSERT INTO user_profile
 VALUES (''Medin'', ''Paldum'', ''male'', ''062123123'', ''id:IJb-yHir50sAAAAAAAAAEQ'', true, medo_id);
 INSERT INTO user_profile

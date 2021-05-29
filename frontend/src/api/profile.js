@@ -84,7 +84,6 @@ class ProfileApi extends React.Component {
     }
 
     updateUserInfo = (cb, params, token, setToken) => {
-        console.log("poarams", params)
         auth.forwardRequest(cb, params, token, setToken, this.sendPutUpdateUserInfo);
     }
 }

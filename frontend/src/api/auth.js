@@ -74,7 +74,6 @@ class Auth extends React.Component {
     }
 
     register(cb, failCb, values) {
-        console.log("REGISTER 2 ", values)
         let url = hostUrl + 'user-service/auth/register';
         let parameters = {
             first_name: values.firstName,

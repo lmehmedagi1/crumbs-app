@@ -9,8 +9,9 @@ export function CustomImage(props) {
 
 
     useEffect(() => {
-        getImage(props.imageId, setImage);
-    }, []);
+        if (props.imageId)
+            getImage(props.imageId, setImage);
+    }, [props.imageId]);
 
     return (
         <div className={props.className}>

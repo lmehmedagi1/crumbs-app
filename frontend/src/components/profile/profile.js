@@ -5,7 +5,7 @@ import { Tab, Nav, Row, Spinner } from 'react-bootstrap'
 import { getUser, userIsLoggedIn } from 'api/auth'
 import Alert from 'components/alert/alert'
 import Menu from 'components/common/menu'
-
+import { CustomImage } from 'components/common/customImage'
 
 import AboutTab from 'components/profile/tabs/AboutTab'
 import RecipesTab from 'components/profile/tabs/RecipesTab'
@@ -17,8 +17,6 @@ import EditProfileModal from 'components/profile/editProfile'
 
 import profileApi from 'api/profile'
 
-const imagePlaceholder = "https://www.firstfishonline.com/wp-content/uploads/2017/07/default-placeholder-700x700.png";
-
 function Profile(props) {
 
     const [loading, setLoading] = useState(false);
@@ -28,6 +26,7 @@ function Profile(props) {
     const [variant, setVariant] = useState("");
 
     const [activeTab, setActiveTab] = useState("about");
+    const [tableKey, setTableKey] = useState(7);
 
     const [user, setUser] = useState({firstName: '', lastName: ''});
     const [isSubscribed, setIsSubscribed] = useState(false);
@@ -52,11 +51,12 @@ function Profile(props) {
         profileApi.getUserInfo((data) => {
             setUser(data);
             setActiveTab(tab);
+            const newTableKey = tableKey * 89;
+            setTableKey(newTableKey);
         }, {id: id})
 
         if (userIsLoggedIn() && !isMyAccount()) {
             profileApi.checkIfUserIsSubscribed((data) => {
-                console.log("Is subbed: ", data);
                 setIsSubscribed(data);
             }, {id: id}, props.getToken(), props.setToken);
         }
@@ -102,7 +102,7 @@ function Profile(props) {
             <div className="profileContainer">
                 <div className="profileHeader">
                     <div>
-                        <div className="avatarWrapper"><img src={imagePlaceholder} alt="Avatar"/></div>
+                        <CustomImage imageId={user.avatar} className="avatarWrapper" alt="User avatar" />
                         <p>{user && user.firstName} {user && user.lastName}</p>
                     </div>
                     <div className="buttonWrapper">
@@ -143,16 +143,16 @@ function Profile(props) {
                         <AboutTab user={user && user} /> 
                         </Tab.Pane>
                         <Tab.Pane eventKey="recipes" active={activeTab == "recipes"}>
-                        <RecipesTab tab={activeTab} userId={user && user.id} setShow={setShow} setMessage={setMessage} setVariant={setVariant} setLoading={setLoading}/>
+                        <RecipesTab key={tableKey} tab={activeTab} userId={user && user.id} setShow={setShow} setMessage={setMessage} setVariant={setVariant} setLoading={setLoading}/>
                         </Tab.Pane>
                         <Tab.Pane eventKey="diets"   active={activeTab == "diets"}>
-                        <DietsTab  tab={activeTab} userId={user && user.id} setShow={setShow} setMessage={setMessage} setVariant={setVariant} getToken={props.getToken} setToken={props.setToken} setLoading={setLoading}/>
+                        <DietsTab key={tableKey} tab={activeTab} userId={user && user.id} setShow={setShow} setMessage={setMessage} setVariant={setVariant} setLoading={setLoading}/>
                         </Tab.Pane>
                         <Tab.Pane eventKey="subscriptions" active={activeTab == "subscriptions"}>
-                        <SubscriptionsTab userId={user && user.id} setShow={setShow} setMessage={setMessage} setVariant={setVariant} getToken={props.getToken} setToken={props.setToken} setLoading={setLoading} />
+                        <SubscriptionsTab key={tableKey} userId={user && user.id} setShow={setShow} setMessage={setMessage} setVariant={setVariant} setLoading={setLoading} />
                         </Tab.Pane>
                         <Tab.Pane eventKey="likes"   active={activeTab == "likes"}>
-                        <LikesTab userId={user && user.id} setShow={setShow} setMessage={setMessage} setVariant={setVariant} getToken={props.getToken} setToken={props.setToken} setLoading={setLoading}/>
+                        <LikesTab key={tableKey} userId={user && user.id} setShow={setShow} setMessage={setMessage} setVariant={setVariant} getToken={props.getToken} setToken={props.setToken} setLoading={setLoading}/>
                         </Tab.Pane>
                     </Tab.Content>
                 </Row>

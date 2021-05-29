@@ -39,7 +39,6 @@ function People(props) {
 
         setLoading(true);
         peopleApi.getPeople((data) => {
-            console.log(data)
             if (data == null) data = { users: [], hasNext: false };
             if (data.users == null) data.users = [];
             if (pageNo == 0) setPeople(data.users);
@@ -92,7 +91,7 @@ function People(props) {
                         {people.map((user, index) => (
                             <Link to={"/profile/" + user.id + "/about"}>
                                 <div className="userCard">
-                                    <CustomImage imageId="id:IJb-yHir50sAAAAAAAAAFA" className="imageWrapper" alt="User avatar" />
+                                    <CustomImage imageId={user.avatar} className="imageWrapper" alt="User avatar" />
                                     <h1>{user.firstName + " " + user.lastName}</h1>
                                     <h2>@{user.username}</h2>
                                 </div>

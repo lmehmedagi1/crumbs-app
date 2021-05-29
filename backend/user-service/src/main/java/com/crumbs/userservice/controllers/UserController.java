@@ -63,23 +63,12 @@ public class UserController {
         return userModelAssembler.toModel(userService.getUserById(id));
     }
 
-//    @RequestMapping(params = "username", method = RequestMethod.GET)
-//    public EntityModel<User> getUserByUsername(@RequestParam @NotNull String username) {
-//        return userModelAssembler.toModel(userService.getUserByUsername(username));
-//    }
-//
-//    @RequestMapping(params = "email", method = RequestMethod.GET)
-//    public EntityModel<User> getUserByEmail(@RequestParam @NotBlank String email) {
-//        return userModelAssembler.toModel(userService.getUserByEmail(email));
-//    }
-
     @RequestMapping(params = "id", method = RequestMethod.DELETE)
     public ResponseEntity<?> deleteUserById(@RequestParam @NotNull UUID id) {
         userService.deleteUserById(id);
         return ResponseEntity.noContent().build();
     }
 
-    //    ISPOD NOVO
     @GetMapping("/all")
     public ResponseEntity<UserListResponse> filterUsers(@RequestParam(defaultValue = "") String search,
                                                            @RequestParam(defaultValue = "0") Integer pageNo,
