@@ -1,11 +1,15 @@
-DROP TABLE IF EXISTS images;
-DROP TABLE IF EXISTS recipe_categories;
-DROP TABLE IF EXISTS recipe_ingredients;
-DROP TABLE IF EXISTS diet_recipes;
-DROP TABLE IF EXISTS recipes;
-DROP TABLE IF EXISTS categories;
-DROP TABLE IF EXISTS ingredients;
-DROP TABLE IF EXISTS diets;
+DROP TABLE IF EXISTS images CASCADE;
+DROP TABLE IF EXISTS recipe_ingredients CASCADE;
+DROP TABLE IF EXISTS recipe_categories CASCADE;
+DROP TABLE IF EXISTS diet_recipes CASCADE;
+DROP TABLE IF EXISTS recipes CASCADE;
+
+DROP TABLE IF EXISTS categories CASCADE;
+DROP TABLE IF EXISTS category_type CASCADE;
+
+DROP TABLE IF EXISTS ingredients CASCADE;
+DROP TABLE IF EXISTS diets CASCADE;
+
 
 CREATE TABLE recipes
 (
@@ -14,14 +18,26 @@ CREATE TABLE recipes
     "title"       TEXT NOT NULL,
     "description" TEXT,
     "method"      TEXT NOT NULL,
+    "advice" TEXT,
+    "preparation_time" INT NOT NULL,
+    "created_at" TIMESTAMP NOT NULL,
+    "last_modify" TIMESTAMP NULL,
     PRIMARY KEY ("id")
+);
+
+CREATE TABLE category_type (
+       "id" UUID,
+       "name" TEXT NOT NULL UNIQUE,
+       PRIMARY KEY ("id")
 );
 
 CREATE TABLE categories
 (
-    "id"   uuid,
-    "name" TEXT NOT NULL,
-    PRIMARY KEY ("id")
+    "id" UUID,
+    "type_id" UUID NOT NULL,
+    "name" TEXT NOT NULL UNIQUE,
+    PRIMARY KEY ("id"),
+    FOREIGN KEY ("type_id") REFERENCES category_type (id) ON DELETE CASCADE
 );
 
 CREATE TABLE ingredients
@@ -44,6 +60,8 @@ CREATE TABLE recipe_ingredients
 (
     "recipe_id"     uuid,
     "ingredient_id" uuid,
+    "quantity" REAL NOT NULL,
+    "measuring_unit" TEXT NOT NULL,
     PRIMARY KEY ("recipe_id", "ingredient_id"),
     FOREIGN KEY ("recipe_id") REFERENCES recipes ("id") ON DELETE CASCADE,
     FOREIGN KEY ("ingredient_id") REFERENCES ingredients ("id") ON DELETE CASCADE
@@ -52,11 +70,13 @@ CREATE TABLE recipe_ingredients
 CREATE TABLE diets
 (
     "id"          uuid,
+    "user_id"     uuid,
     "title"       TEXT    NOT NULL,
     "description" TEXT    NOT NULL,
     "duration"    INT     NOT NULL,
     "is_private"  BOOLEAN NOT NULL DEFAULT 'false',
-    "user_id"     uuid,
+    "created_at" TIMESTAMP NOT NULL,
+    "last_modify" TIMESTAMP NOT NULL,
     PRIMARY KEY ("id")
 );
 
