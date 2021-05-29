@@ -13,7 +13,7 @@ public class RecipeView {
     private UUID recipeId;
     private String title;
     private String description;
-    private byte[] image;
+    private String image;
     private UserClassView author;
 
     public RecipeView(UUID recipeId, String title, String description, UUID authorId) {

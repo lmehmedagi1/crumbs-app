@@ -66,13 +66,13 @@ public class UserService {
                 new UserNotFoundException("Specified ID does not exists!"));
     }
 
-    @Transactional(readOnly = true)
-    public User getUserByEmail(@NotBlank String email) {
-        final User user = userRepository.findByEmail(email);
-        if (user == null)
-            throw new UserNotFoundException("Specified email does not exists!");
-        return user;
-    }
+//    @Transactional(readOnly = true)
+//    public User getUserByEmail(@NotBlank String email) {
+//        final User user = userRepository.findByEmail(email);
+//        if (user == null)
+//            throw new UserNotFoundException("Specified email does not exists!");
+//        return user;
+//    }
 
     @Transactional(readOnly = true)
     public User getUserByUsername(@NotBlank String username) {

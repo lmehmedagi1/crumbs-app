@@ -19,7 +19,7 @@ CREATE TABLE user_profile
     "last_name"    TEXT NOT NULL,
     "gender"       TEXT NOT NULL,
     "phone_number" TEXT NOT NULL,
-    "avatar"       bytea,
+    "avatar"       TEXT,
     "email_verified" BOOLEAN NOT NULL,
     "user_id"      UUID,
     FOREIGN KEY ("user_id") REFERENCES users ("id") ON DELETE CASCADE

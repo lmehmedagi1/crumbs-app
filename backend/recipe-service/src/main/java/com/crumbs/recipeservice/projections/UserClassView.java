@@ -15,6 +15,7 @@ public class UserClassView {
     private String lastName;
     private String username;
     private String email;
+    private String avatar;
 
     public UserClassView(UUID userId) {
         this.id = userId;
