@@ -30,14 +30,14 @@ VALUES (''Medin'', ''Paldum'', ''male'', ''062123123'', ''id:IJb-yHir50sAAAAAAAA
 INSERT INTO user_profile
 VALUES (''Arslan'', ''Turkusic'', ''other'', ''062123123'', ''id:IJb-yHir50sAAAAAAAAAEw'', true, aki_id);
 
-INSERT INTO subscriptions VALUES (manda_id, lela_id);
-INSERT INTO subscriptions VALUES (manda_id, aki_id);
-INSERT INTO subscriptions VALUES (aki_id, medo_id);
-INSERT INTO subscriptions VALUES (medo_id, manda_id);
-INSERT INTO subscriptions VALUES (medo_id, lela_id);
-INSERT INTO subscriptions VALUES (lela_id, manda_id);
-INSERT INTO subscriptions VALUES (lela_id, aki_id);
-INSERT INTO subscriptions VALUES (lela_id, medo_id);
+INSERT INTO subscriptions VALUES (manda_id, lela_id, current_timestamp);
+INSERT INTO subscriptions VALUES (manda_id, aki_id, current_timestamp);
+INSERT INTO subscriptions VALUES (aki_id, medo_id, current_timestamp);
+INSERT INTO subscriptions VALUES (medo_id, manda_id, current_timestamp);
+INSERT INTO subscriptions VALUES (medo_id, lela_id, current_timestamp);
+INSERT INTO subscriptions VALUES (lela_id, manda_id, current_timestamp);
+INSERT INTO subscriptions VALUES (lela_id, aki_id, current_timestamp);
+INSERT INTO subscriptions VALUES (lela_id, medo_id, current_timestamp);
 END;
 ' LANGUAGE PLPGSQL;
 

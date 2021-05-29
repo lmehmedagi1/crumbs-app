@@ -47,6 +47,7 @@ CREATE TABLE subscriptions
 (
     "subscriber_id" UUID,
     "author_id"     UUID,
+    "created_at" TIMESTAMP,
     PRIMARY KEY ("subscriber_id", "author_id"),
     FOREIGN KEY ("subscriber_id") REFERENCES users ("id") ON DELETE CASCADE,
     FOREIGN KEY ("author_id") REFERENCES users ("id") ON DELETE CASCADE

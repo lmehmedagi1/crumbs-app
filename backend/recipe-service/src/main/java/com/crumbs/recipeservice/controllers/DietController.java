@@ -151,11 +151,12 @@ public class DietController {
     }
 
     @GetMapping("/user")
-    public ResponseEntity<List<UserDietView>> getUserRecipes(@RequestParam UUID id) {
+    public ResponseEntity<List<UserDietView>> getUserDiets(@RequestParam UUID id) {
         List<UserDietView> diets = dietService.getUserDiets(id);
-//        for (UserRecipeView recipe : recipes) {
-//            recipe.setRating(webClientRequest.getRecipeRating(recipe.getId()));
-//        }
+        for (UserDietView diet : diets) {
+            diet.setImage(dietService.getDietImage(diet.getId()));
+            //diet.setRating(webClientRequest.getDietRating(diet.getId()));
+        }
         return ResponseEntity.ok(diets);
     }
 }
