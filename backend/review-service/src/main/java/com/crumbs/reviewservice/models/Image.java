@@ -16,7 +16,7 @@ public class Image {
     private UUID id;
 
     @NotNull
-    private byte[] image;
+    private String image;
 
     @JsonBackReference
     private Recipe recipe;

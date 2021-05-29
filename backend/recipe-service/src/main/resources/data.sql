@@ -85,23 +85,11 @@ INSERT INTO diet_recipes VALUES (kolac_diet, sampita_id);
 INSERT INTO diet_recipes VALUES (kolac_diet, monchay_id);
 
 
-INSERT INTO images VALUES (sampita_slika1,
-    decode(''iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z/C/HgAGgwJ/lK3Q6wAAAABJRU5ErkJggg=='',
-        ''base64''), sampita_id);
-INSERT INTO images VALUES (sampita_slika2,
-    decode(''iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z/C/HgAGgwJ/lK3Q6wAAAABJRU5ErkJggg=='',
-        ''base64''), sampita_id);
-INSERT INTO images VALUES (monchay_slika1,
-    decode(''iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z/C/HgAGgwJ/lK3Q6wAAAABJRU5ErkJggg=='',
-        ''base64''), monchay_id);
-INSERT INTO images VALUES (monchay_slika2,
-    decode(''iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z/C/HgAGgwJ/lK3Q6wAAAABJRU5ErkJggg=='',
-        ''base64''), monchay_id);
-INSERT INTO images VALUES (krempita_slika1,
-    decode(''iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z/C/HgAGgwJ/lK3Q6wAAAABJRU5ErkJggg=='',
-        ''base64''), krempita_id);
-INSERT INTO images VALUES (omlet_slika1,
-    decode(''iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z/C/HgAGgwJ/lK3Q6wAAAABJRU5ErkJggg=='',
-        ''base64''), omlet_id);
+INSERT INTO images VALUES (sampita_slika1, ''id:IJb-yHir50sAAAAAAAAAFA'', sampita_id);
+INSERT INTO images VALUES (sampita_slika2, ''id:IJb-yHir50sAAAAAAAAAFA'', sampita_id);
+INSERT INTO images VALUES (monchay_slika1, ''id:IJb-yHir50sAAAAAAAAAFA'', monchay_id);
+INSERT INTO images VALUES (monchay_slika2, ''id:IJb-yHir50sAAAAAAAAAFA'', monchay_id);
+INSERT INTO images VALUES (krempita_slika1, ''id:IJb-yHir50sAAAAAAAAAFA'', krempita_id);
+INSERT INTO images VALUES (omlet_slika1, ''id:IJb-yHir50sAAAAAAAAAFA'', omlet_id);
 END;
 ' LANGUAGE PLPGSQL;

@@ -43,5 +43,5 @@ public class UserProfile {
     @NotNull
     private User user;
 
-    private byte[] avatar;
+    private String avatar;
 }

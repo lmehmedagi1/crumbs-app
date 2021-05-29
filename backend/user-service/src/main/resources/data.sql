@@ -22,25 +22,13 @@ VALUES (aki_id, ''aturkusic'', ''aturkusic1@etf.unsa.ba'',
     ''$2y$10$IPqxD1wMn6kmnRI1rwT3ZeHqamUL46ZNsDtovq01Y.3Eh7lXAYQaW'');
 
 INSERT INTO user_profile
-VALUES (''Lejla'', ''Mehmedagic'', ''female'', ''062123123'',
-    decode(
-        ''iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z/C/HgAGgwJ/lK3Q6wAAAABJRU5ErkJggg=='',
-        ''base64''), true, lela_id);
+VALUES (''Lejla'', ''Mehmedagic'', ''female'', ''062123123'', ''id:IJb-yHir50sAAAAAAAAAEg'', true, lela_id);
 INSERT INTO user_profile
-VALUES (''Anel'', ''Mandal'', ''male'', ''062123123'',
-    decode(
-        ''iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z/C/HgAGgwJ/lK3Q6wAAAABJRU5ErkJggg=='',
-        ''base64''), true, manda_id);
+VALUES (''Anel'', ''Mandal'', ''male'', ''062123123'', ''id:IJb-yHir50sAAAAAAAAAEg'', true, manda_id);
 INSERT INTO user_profile
-VALUES (''Medin'', ''Paldum'', ''male'', ''062123123'',
-    decode(
-        ''iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z/C/HgAGgwJ/lK3Q6wAAAABJRU5ErkJggg=='',
-        ''base64''), true, medo_id);
+VALUES (''Medin'', ''Paldum'', ''male'', ''062123123'', ''id:IJb-yHir50sAAAAAAAAAEQ'', true, medo_id);
 INSERT INTO user_profile
-VALUES (''Arslan'', ''Turkusic'', ''other'', ''062123123'',
-    decode(
-        ''iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z/C/HgAGgwJ/lK3Q6wAAAABJRU5ErkJggg=='',
-        ''base64''), true, aki_id);
+VALUES (''Arslan'', ''Turkusic'', ''other'', ''062123123'', ''id:IJb-yHir50sAAAAAAAAAEw'', true, aki_id);
 
 INSERT INTO subscriptions VALUES (manda_id, lela_id);
 INSERT INTO subscriptions VALUES (manda_id, aki_id);

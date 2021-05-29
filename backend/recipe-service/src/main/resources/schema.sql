@@ -72,7 +72,7 @@ CREATE TABLE diet_recipes
 CREATE TABLE images
 (
     "id"        uuid,
-    "image"     bytea NOT NULL,
+    "image"     TEXT NOT NULL,
     "recipe_id" uuid  NOT NULL,
     FOREIGN KEY ("recipe_id") REFERENCES recipes ("id"),
     PRIMARY KEY ("id")

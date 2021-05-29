@@ -59,22 +59,22 @@ public class UserController {
     }
 
     @RequestMapping(params = "id", method = RequestMethod.GET)
-    public EntityModel<User> getUserById(@RequestParam("username") @NotNull UUID id) {
+    public EntityModel<User> getUserById(@RequestParam @NotNull UUID id) {
         return userModelAssembler.toModel(userService.getUserById(id));
     }
 
-    @RequestMapping(params = "username", method = RequestMethod.GET)
-    public EntityModel<User> getUserByUsername(@RequestParam("username") @NotNull String username) {
-        return userModelAssembler.toModel(userService.getUserByUsername(username));
-    }
-
-    @RequestMapping(params = "email", method = RequestMethod.GET)
-    public EntityModel<User> getUserByEmail(@RequestParam("email") @NotBlank String email) {
-        return userModelAssembler.toModel(userService.getUserByEmail(email));
-    }
+//    @RequestMapping(params = "username", method = RequestMethod.GET)
+//    public EntityModel<User> getUserByUsername(@RequestParam @NotNull String username) {
+//        return userModelAssembler.toModel(userService.getUserByUsername(username));
+//    }
+//
+//    @RequestMapping(params = "email", method = RequestMethod.GET)
+//    public EntityModel<User> getUserByEmail(@RequestParam @NotBlank String email) {
+//        return userModelAssembler.toModel(userService.getUserByEmail(email));
+//    }
 
     @RequestMapping(params = "id", method = RequestMethod.DELETE)
-    public ResponseEntity<?> deleteUserById(@RequestParam("id") @NotNull UUID id) {
+    public ResponseEntity<?> deleteUserById(@RequestParam @NotNull UUID id) {
         userService.deleteUserById(id);
         return ResponseEntity.noContent().build();
     }
@@ -88,7 +88,7 @@ public class UserController {
     }
 
     @GetMapping("/info")
-    public ResponseEntity<UserView> getUserInfo(@RequestParam UUID id) {
+    public ResponseEntity<UserView> getUserInfoById(@RequestParam UUID id) {
         return ResponseEntity.ok(userService.getUserInfoById(id));
     }
 
