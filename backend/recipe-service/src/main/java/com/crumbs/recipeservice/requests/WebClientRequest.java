@@ -3,6 +3,8 @@ package com.crumbs.recipeservice.requests;
 import com.crumbs.recipeservice.exceptions.RecipeNotFoundException;
 import com.crumbs.recipeservice.exceptions.UserNotFoundException;
 import com.crumbs.recipeservice.models.User;
+import com.crumbs.recipeservice.projections.UserClassView;
+import com.crumbs.recipeservice.projections.UserView;
 import com.crumbs.recipeservice.responses.ListWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.MediaTypes;
@@ -36,13 +38,12 @@ public class WebClientRequest {
                 .block();
     }
 
-    public UUID[] getTopMonthlyRecepies(int pageNo, String jwt) {
+    public UUID[] getTopMonthlyRecepies(int pageNo) {
         return webClientBuilder.baseUrl("http://review-service").build().get()
                 .uri(uriBuilder -> uriBuilder
                         .path("/reviews/topMonthly")
                         .queryParam("pageNo", pageNo)
                         .build())
-                .header("Authorization", jwt)
                 .accept(MediaTypes.HAL_JSON)
                 .retrieve()
                 .onStatus(HttpStatus::is4xxClientError, response -> Mono.error(new RecipeNotFoundException()))
@@ -75,13 +76,25 @@ public class WebClientRequest {
                 .block();
     }
 
-    public UUID[] getTopDailyRecepies(Integer pageNo, String jwt) {
+    public UserClassView getUserPreview(UUID id) {
+        return webClientBuilder.baseUrl("http://user-service").build().get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/account/view")
+                        .queryParam("id", id)
+                        .build())
+                .accept(MediaTypes.HAL_JSON)
+                .retrieve()
+                .onStatus(HttpStatus::is4xxClientError, response -> Mono.error(new UserNotFoundException()))
+                .bodyToMono(UserClassView.class)
+                .block();
+    }
+
+    public UUID[] getTopDailyRecepies(Integer pageNo) {
         return webClientBuilder.baseUrl("http://review-service").build().get()
                 .uri(uriBuilder -> uriBuilder
                         .path("/reviews/topDaily")
                         .queryParam("pageNo", pageNo)
                         .build())
-                .header("Authorization", jwt)
                 .accept(MediaTypes.HAL_JSON)
                 .retrieve()
                 .onStatus(HttpStatus::is4xxClientError, response -> Mono.error(new RecipeNotFoundException()))

@@ -32,10 +32,6 @@ export function getMostPopularRecipes(pageNumber) {
             method: "GET",
             params: {
                 pageNo: pageNumber
-            },
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI3NWE4ZjM0Yi0yNTM5LTQ1MmEtOTMyNS1iNDMyZGJlM2I5OTUiLCJpYXQiOjE2MjIxMzY4NzMsImV4cCI6MTYyMjIzOTIwMH0.LYUP_vO-yBdXAQBlc5XDCba5nA3O1BfC782ukpw9EequxbAWhein78txJGmymydiAsBAuJ2mKLIJn61mMQzdDg"
             }
         })
     };
@@ -48,10 +44,6 @@ export function getDailyRecipes(pageNumber) {
             method: "GET",
             params: {
                 pageNo: pageNumber
-            },
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI3NWE4ZjM0Yi0yNTM5LTQ1MmEtOTMyNS1iNDMyZGJlM2I5OTUiLCJpYXQiOjE2MjIxMzY4NzMsImV4cCI6MTYyMjIzOTIwMH0.LYUP_vO-yBdXAQBlc5XDCba5nA3O1BfC782ukpw9EequxbAWhein78txJGmymydiAsBAuJ2mKLIJn61mMQzdDg"
             }
         })
     };

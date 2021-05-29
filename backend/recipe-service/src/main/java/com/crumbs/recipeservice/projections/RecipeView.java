@@ -14,12 +14,12 @@ public class RecipeView {
     private String title;
     private String description;
     private byte[] image;
-    private UserView author;
+    private UserClassView author;
 
     public RecipeView(UUID recipeId, String title, String description, UUID authorId) {
         this.recipeId = recipeId;
         this.title = title;
         this.description = description;
-        this.author = new UserView(authorId);
+        this.author = new UserClassView(authorId);
     }
 }

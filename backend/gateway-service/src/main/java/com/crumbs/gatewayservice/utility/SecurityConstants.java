@@ -12,6 +12,8 @@ public final class SecurityConstants {
             "/recipe-service/recipes/topMonthly",
             "/recipe-service/recipes/topDaily",
             "/recipe-service/diets/user",
+            "/review-service/reviews/topMonthly",
+            "/review-service/reviews/topDaily",
             "/swagger-ui/",
             "/swagger-ui/**",
             "/v2/api-docs",

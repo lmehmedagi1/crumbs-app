@@ -3,6 +3,7 @@ package com.crumbs.recipeservice.controllers;
 import com.crumbs.recipeservice.models.Recipe;
 import com.crumbs.recipeservice.models.User;
 import com.crumbs.recipeservice.projections.RecipeView;
+import com.crumbs.recipeservice.projections.UserClassView;
 import com.crumbs.recipeservice.projections.UserRecipeView;
 import com.crumbs.recipeservice.projections.UserView;
 import com.crumbs.recipeservice.requests.RecipeRequest;
@@ -67,41 +68,39 @@ public class RecipeController {
     public CollectionModel<EntityModel<RecipeView>> getRecipePreviews(
             @RequestParam(defaultValue = "0") Integer pageNo,
             @RequestParam(defaultValue = "5") Integer pageSize,
-            @RequestParam(defaultValue = "title") String sort,
-            @RequestHeader("Authorization") String jwt) {
+            @RequestParam(defaultValue = "title") String sort) {
 
         List<RecipeView> recipes = recipeService.getRecipePreviews(pageNo, pageSize, sort);
         for (RecipeView recipe : recipes) {
-            UUID authorId = recipe.getAuthor().getUserId();
-            User user = webClientRequest.checkIfUserExists(jwt);
-            recipe.setAuthor(new UserView(user.getId(), user.getUsername(), user.getUserProfile().getAvatar()));
+            UUID authorId = recipe.getAuthor().getId();
+            UserClassView user = webClientRequest.getUserPreview(authorId);
+            recipe.setAuthor(user);
         }
 
         return CollectionModel.of(recipes.stream().map(recipeViewModelAssembler::toModel).collect(Collectors.toList()),
                 linkTo(methodOn(RecipeController.class)
-                        .getRecipePreviews(pageNo, pageSize, sort, jwt)).withSelfRel());
+                        .getRecipePreviews(pageNo, pageSize, sort)).withSelfRel());
     }
 
     @RequestMapping(value = "/topMonthly", method = RequestMethod.GET)
     public CollectionModel<EntityModel<RecipeView>> getRecipePreviewsTopMonthly(
             @RequestParam(defaultValue = "0") Integer pageNo,
             @RequestParam(defaultValue = "5") Integer pageSize,
-            @RequestParam(defaultValue = "title") String sort,
-            @RequestHeader("Authorization") String jwt) {
+            @RequestParam(defaultValue = "title") String sort) {
 
-        UUID[] topMonthly = webClientRequest.getTopMonthlyRecepies(pageNo, jwt);
+        UUID[] topMonthly = webClientRequest.getTopMonthlyRecepies(pageNo);
 
         List<RecipeView> recipes = recipeService.getTopMonthlyRecipePreviews(Arrays.asList(topMonthly));
 
         for (RecipeView recipe : recipes) {
-            UUID authorId = recipe.getAuthor().getUserId();
-            User user = webClientRequest.checkIfUserExists(jwt);
-            recipe.setAuthor(new UserView(user.getId(), user.getUsername(), "avatar".getBytes(StandardCharsets.UTF_8)));
+            UUID authorId = recipe.getAuthor().getId();
+            UserClassView author = webClientRequest.getUserPreview(authorId);
+            recipe.setAuthor(author);
         }
 
         return CollectionModel.of(recipes.stream().map(recipeViewModelAssembler::toModel).collect(Collectors.toList()),
                 linkTo(methodOn(RecipeController.class)
-                        .getRecipePreviews(pageNo, pageSize, sort, jwt)).withSelfRel());
+                        .getRecipePreviewsTopMonthly(pageNo, pageSize, sort)).withSelfRel());
 
     }
 
@@ -109,22 +108,21 @@ public class RecipeController {
     public CollectionModel<EntityModel<RecipeView>> getRecipePreviewsTopDaily(
             @RequestParam(defaultValue = "0") Integer pageNo,
             @RequestParam(defaultValue = "5") Integer pageSize,
-            @RequestParam(defaultValue = "title") String sort,
-            @RequestHeader("Authorization") String jwt) {
+            @RequestParam(defaultValue = "title") String sort) {
 
-        UUID[] topDaily = webClientRequest.getTopDailyRecepies(pageNo, jwt);
+        UUID[] topDaily = webClientRequest.getTopDailyRecepies(pageNo);
 
         List<RecipeView> recipes = recipeService.getTopDailyRecipePreviews(Arrays.asList(topDaily));
 
         for (RecipeView recipe : recipes) {
-            UUID authorId = recipe.getAuthor().getUserId();
-            User user = webClientRequest.checkIfUserExists(jwt);
-            recipe.setAuthor(new UserView(user.getId(), user.getUsername(), "avatar".getBytes(StandardCharsets.UTF_8)));
+            UUID authorId = recipe.getAuthor().getId();
+            UserClassView user = webClientRequest.getUserPreview(authorId);
+            recipe.setAuthor(user);
         }
 
         return CollectionModel.of(recipes.stream().map(recipeViewModelAssembler::toModel).collect(Collectors.toList()),
                 linkTo(methodOn(RecipeController.class)
-                        .getRecipePreviews(pageNo, pageSize, sort, jwt)).withSelfRel());
+                        .getRecipePreviewsTopDaily(pageNo, pageSize, sort)).withSelfRel());
 
     }
 
@@ -134,19 +132,18 @@ public class RecipeController {
             @RequestParam("userId") @NotNull UUID userId,
             @RequestParam(defaultValue = "0") Integer pageNo,
             @RequestParam(defaultValue = "5") Integer pageSize,
-            @RequestParam(defaultValue = "title") String sort,
-            @RequestHeader("Authorization") String jwt) {
+            @RequestParam(defaultValue = "title") String sort) {
 
         List<RecipeView> recipes = recipeService.getRecipePreviewsForUser(userId, pageNo, pageSize, sort);
         for (RecipeView recipe : recipes) {
-            UUID authorId = recipe.getAuthor().getUserId();
-            User user = webClientRequest.checkIfUserExists(jwt);
-            recipe.setAuthor(new UserView(user.getId(), user.getUsername(), user.getUserProfile().getAvatar()));
+            UUID authorId = recipe.getAuthor().getId();
+            UserClassView user = webClientRequest.getUserPreview(authorId);
+            recipe.setAuthor(user);
         }
 
         return CollectionModel.of(recipes.stream().map(recipeViewModelAssembler::toModel).collect(Collectors.toList()),
                 linkTo(methodOn(RecipeController.class)
-                        .getRecipePreviewsForUser(userId, pageNo, pageSize, sort, jwt)).withSelfRel());
+                        .getRecipePreviewsForUser(userId, pageNo, pageSize, sort)).withSelfRel());
     }
 
     @RequestMapping(params = "categoryId", method = RequestMethod.GET)
@@ -154,19 +151,18 @@ public class RecipeController {
             @RequestParam("categoryId") @NotNull UUID categoryId,
             @RequestParam(defaultValue = "0") Integer pageNo,
             @RequestParam(defaultValue = "5") Integer pageSize,
-            @RequestParam(defaultValue = "title") String sort,
-            @RequestHeader("Authorization") String jwt) {
+            @RequestParam(defaultValue = "title") String sort) {
 
         List<RecipeView> recipes = recipeService.getRecipePreviewsForCategory(categoryId, pageNo, pageSize, sort);
         for (RecipeView recipe : recipes) {
-            UUID authorId = recipe.getAuthor().getUserId();
-            User user = webClientRequest.checkIfUserExists(jwt);
-            recipe.setAuthor(new UserView(user.getId(), user.getUsername(), user.getUserProfile().getAvatar()));
+            UUID authorId = recipe.getAuthor().getId();
+            UserClassView user = webClientRequest.getUserPreview(authorId);
+            recipe.setAuthor(user);
         }
 
         return CollectionModel.of(recipes.stream().map(recipeViewModelAssembler::toModel).collect(Collectors.toList()),
                 linkTo(methodOn(RecipeController.class)
-                        .getRecipePreviewsForCategory(categoryId, pageNo, pageSize, sort, jwt)).withSelfRel());
+                        .getRecipePreviewsForCategory(categoryId, pageNo, pageSize, sort)).withSelfRel());
     }
 
     @RequestMapping(params = "id", method = RequestMethod.GET)

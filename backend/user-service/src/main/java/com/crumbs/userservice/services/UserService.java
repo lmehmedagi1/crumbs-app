@@ -249,4 +249,11 @@ public class UserService {
 
         return userRepository.save(user);
     }
+
+    @Transactional(readOnly = true)
+    public UserClassView getUserViewById(UUID id) {
+        UserClassView user = userRepository.getUserPreview(id);
+        if (user == null) throw new UserNotFoundException();
+        return user;
+    }
 }

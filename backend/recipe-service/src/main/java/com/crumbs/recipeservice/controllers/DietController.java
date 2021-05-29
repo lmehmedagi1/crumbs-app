@@ -3,6 +3,7 @@ package com.crumbs.recipeservice.controllers;
 import com.crumbs.recipeservice.models.Diet;
 import com.crumbs.recipeservice.models.User;
 import com.crumbs.recipeservice.projections.RecipeView;
+import com.crumbs.recipeservice.projections.UserClassView;
 import com.crumbs.recipeservice.projections.UserDietView;
 import com.crumbs.recipeservice.projections.UserRecipeView;
 import com.crumbs.recipeservice.projections.UserView;
@@ -94,8 +95,8 @@ public class DietController {
                         if (!recipe.getImages().isEmpty())
                             recipeView.setImage(recipe.getImages().get(0).getImage());
 
-                        User recipeAuthor = webClientRequest.getRecipeAuthor(recipe.getUserId());
-                        recipeView.setAuthor(new UserView(recipeAuthor.getId(), recipeAuthor.getUsername(), recipeAuthor.getUserProfile().getAvatar()));
+                        UserClassView recipeAuthor = webClientRequest.getUserPreview(recipe.getUserId());
+                        recipeView.setAuthor(recipeAuthor);
                         return recipeView;
                     }
             ).collect(Collectors.toList()));

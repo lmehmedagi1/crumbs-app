@@ -92,6 +92,11 @@ public class UserController {
         return ResponseEntity.ok(userService.getUserInfoById(id));
     }
 
+    @GetMapping("/view")
+    public ResponseEntity<UserClassView> getUserViewById(@RequestParam UUID id) {
+        return ResponseEntity.ok(userService.getUserViewById(id));
+    }
+
     @GetMapping("/subscribed")
     public ResponseEntity<Boolean> checkIfUserIsSubscribed(@RequestParam UUID id, @RequestHeader("Authorization") String jwt) {
         UUID userId = getUserIdFromJwt(jwt);
