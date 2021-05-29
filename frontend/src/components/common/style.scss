@@ -123,6 +123,21 @@
         .headerLink {
             color: #ffffff;
         }
+
+        .logoutHeader {
+            display: flex;
+
+            .imageWrapper {
+                margin-right: 15px;
+                margin-top: -2px;
+                img {
+                    width: 30px;
+                    height: 30px;
+                    object-fit: cover;
+                    border-radius: 50%;
+                }
+            }
+        }
     }
 }
 

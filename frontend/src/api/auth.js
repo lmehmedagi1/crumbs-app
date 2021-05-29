@@ -16,6 +16,7 @@ export const removeUserSession = () => {
 
 // set the user from the session storage
 export const setUserSession = (user) => {
+    user.password = null;
     localStorage.setItem('user', JSON.stringify(user));
 }
 
@@ -53,7 +54,7 @@ class Auth extends React.Component {
         );
     }
 
-    login(cb, values) {
+    login(cb, failCb, values) {
         let url = hostUrl + 'user-service/auth/login';
         let parameters = {
             username: values.username,
@@ -61,48 +62,42 @@ class Auth extends React.Component {
         };
         Requests.sendPostRequest(cb, url, parameters, Requests.getCookieHeader(), 
             (response) => {
-                let user = response.data;
-                console.log("User data: ")
-                console.log(user);
                 setUserSession(response.data);
-                console.log("Headers data: ")
-                console.log(response.headers)
-                console.log(response.headers['authorization'])
                 cb(response.headers.authorization);
-        }, null);
+        }, failCb);
     }
 
     logout(cb) {
-        Requests.sendPostRequest(cb, hostUrl + 'user-service/auth/logout', "{}", Requests.getCookieHeader(), 
+        Requests.sendPostRequest(cb, hostUrl + 'user-service/auth/logout', {}, Requests.getCookieHeader(), 
         (response) => { removeUserSession(); cb(); }, 
         (error) => { removeUserSession(); cb(); });
     }
 
-    register(cb, values) {
+    register(cb, failCb, values) {
+        console.log("REGISTER 2 ", values)
         let url = hostUrl + 'user-service/auth/register';
         let parameters = {
             first_name: values.firstName,
             last_name: values.lastName,
             email: values.email,
             username: values.username,
-            gender: 'Male',
-            birthDate: '2000-01-01',
+            gender: 'male',
             phone_number: '062123123',
             password: values.password
         };
         Requests.sendPostRequest(cb, url, parameters, Requests.getCookieHeader(), 
             (response) => {
                 if (response.data.length === 0) {
-                    cb("Something went wrong!", "warning");
+                    failCb("Something went wrong!");
                     return;
                 }
-                cb(response.data, "success", null);
-        }, null);
+                cb(response.data);
+        }, failCb);
     }
 
     confirmRegistration(cb, token) {
-        let url = hostUrl + 'auth/registration-confirmation';
-        Requests.sendGetRequest(cb, url, {}, (response) => {}, null);
+        let url = hostUrl + 'user-service/auth/registration-confirmation';
+        Requests.sendGetRequest(cb, url, {params: {token: token}}, (response) => {}, null);
     }
 }
 

@@ -6,16 +6,27 @@ import com.crumbs.userservice.exceptions.UnauthorizedException;
 import com.crumbs.userservice.exceptions.UserAlreadyExistsException;
 import com.crumbs.userservice.exceptions.UserNotFoundException;
 import com.crumbs.userservice.models.RefreshToken;
+import com.crumbs.userservice.models.Subscription;
 import com.crumbs.userservice.models.User;
 import com.crumbs.userservice.models.UserProfile;
 import com.crumbs.userservice.models.VerificationToken;
+import com.crumbs.userservice.projections.UserClassView;
+import com.crumbs.userservice.projections.UserView;
 import com.crumbs.userservice.repositories.RefreshTokenRepository;
 import com.crumbs.userservice.repositories.UserProfileRepository;
 import com.crumbs.userservice.repositories.UserRepository;
 import com.crumbs.userservice.repositories.VerificationTokenRepository;
 import com.crumbs.userservice.requests.RegisterRequest;
+import com.crumbs.userservice.requests.UserUpdateRequest;
+import com.crumbs.userservice.responses.UserListResponse;
+import com.crumbs.userservice.utility.UserSpec;
 import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,7 +35,9 @@ import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 import static com.crumbs.userservice.utility.Constants.REFRESH_TOKEN_EXPIRATION_TIME;
@@ -187,5 +200,53 @@ public class UserService {
 
         verificationToken.getUser().getUserProfile().setEmailVerified(true);
         userProfileRepository.save(verificationToken.getUser().getUserProfile());
+    }
+
+    @Transactional(readOnly = true)
+    public UserListResponse filterUsers(String search, Integer pageNo, Integer pageSize) {
+
+        Specification<User> specification = Specification.where(null);
+        if (search != null && !search.isEmpty()) specification = specification.and(UserSpec.isSearched(search));
+
+        Sort sorting = Sort.by("email").ascending();
+        Pageable paging = PageRequest.of(pageNo, pageSize, sorting);
+
+        Slice<UserView> slicedProducts = userRepository.findAll(specification, UserView.class, paging);
+        List<UserView> products = slicedProducts.getContent();
+        return new UserListResponse(products, slicedProducts.hasNext());
+    }
+
+    @Transactional(readOnly = true)
+    public UserView getUserInfoById(UUID id) {
+        return userRepository.findOneById(id);
+    }
+
+    @Transactional(readOnly = true)
+    public List<UserClassView> getUserSubscribers(UUID id) {
+        return userRepository.getUserSubscribers(id);
+    }
+
+    @Transactional(readOnly = true)
+    public List<UserClassView> getUserSubscriptions(UUID id) {
+        return userRepository.getUserSubscriptions(id);
+    }
+
+    @Transactional(readOnly = true)
+    public boolean checkIfUserIsSubscribed(UUID userId, UUID id) {
+        User user = userRepository.findById(userId).orElseThrow(() ->
+                new UserNotFoundException("Specified ID does not exists!"));
+        return user.getSubscriptions().stream().anyMatch(u -> u.getId().equals(id));
+    }
+
+    public User updateUserInfo(UserUpdateRequest userUpdateRequest, UUID userId) {
+        User user = userRepository.findById(userId).orElseThrow(() ->
+                new UserNotFoundException("Specified ID does not exists!"));
+
+        user.getUserProfile().setFirstName(userUpdateRequest.getFirstName());
+        user.getUserProfile().setLastName(userUpdateRequest.getLastName());
+        user.getUserProfile().setGender(userUpdateRequest.getGender());
+        user.getUserProfile().setPhoneNumber(userUpdateRequest.getPhoneNumber());
+
+        return userRepository.save(user);
     }
 }

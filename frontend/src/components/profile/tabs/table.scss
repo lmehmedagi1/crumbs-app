@@ -1,0 +1,71 @@
+.customTable {
+    margin-top: 50px;
+    #pageDropDown {
+        display: none;
+    }
+
+    .page-item .page-link {
+        margin-top: 10px;
+        background: #F0F0F0;
+        color: $base-color;
+        box-shadow: none;
+    }
+
+    .react-bootstrap-table-pagination-list .active .page-link {
+        margin-top: 10px;
+        background: $default-purple-color;
+        color: white;
+        border-color: darken($color: $default-purple-color, $amount: 2);
+        box-shadow: none;
+    }
+
+    .emptyTable {
+        border: 1px solid #dee2e6;
+    }
+
+    table {
+        margin: 0;
+        table-layout: auto; 
+    }
+
+    thead {
+        background: #F0F0F0;
+        th {
+            border: none;
+        }
+    }
+
+    tbody {
+        background: white;
+        td {
+            border: none;
+            vertical-align: middle;
+            img {
+                width: 60px;
+                height: 60px;
+                object-fit: cover;
+                border-radius: 50%;
+            }
+
+            button {
+                width: 103px;
+                height: 49px;
+                background: #FFFFFF;
+                border: 3px solid #E3E3E3;
+                box-shadow: 3px 3px 0 0 rgba(0,0,0,0.05);
+                color: $base-color;
+                font-weight: bold;
+                letter-spacing: 0.56px;
+                font-size: 16px;
+            }
+
+            .wishlistButton {
+                border: none;
+                box-shadow: none;
+                width: 50px;
+                font-size: 25px;
+                color: $default-purple-color;
+            }
+        }
+    }
+}

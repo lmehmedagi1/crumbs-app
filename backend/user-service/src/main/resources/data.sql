@@ -46,6 +46,10 @@ INSERT INTO subscriptions VALUES (manda_id, lela_id);
 INSERT INTO subscriptions VALUES (manda_id, aki_id);
 INSERT INTO subscriptions VALUES (aki_id, medo_id);
 INSERT INTO subscriptions VALUES (medo_id, manda_id);
+INSERT INTO subscriptions VALUES (medo_id, lela_id);
+INSERT INTO subscriptions VALUES (lela_id, manda_id);
+INSERT INTO subscriptions VALUES (lela_id, aki_id);
+INSERT INTO subscriptions VALUES (lela_id, medo_id);
 END;
 ' LANGUAGE PLPGSQL;
 

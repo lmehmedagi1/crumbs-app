@@ -4,6 +4,8 @@ import com.crumbs.recipeservice.exceptions.CategoryNotFoundException;
 import com.crumbs.recipeservice.exceptions.DietNotFoundException;
 import com.crumbs.recipeservice.exceptions.UnauthorizedException;
 import com.crumbs.recipeservice.models.Diet;
+import com.crumbs.recipeservice.projections.UserDietView;
+import com.crumbs.recipeservice.projections.UserRecipeView;
 import com.crumbs.recipeservice.repositories.DietRepository;
 import com.crumbs.recipeservice.requests.DietRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,5 +84,9 @@ public class DietService {
             throw new DietNotFoundException("You don't have permission to delete this diet");
 
         dietRepository.deleteById(id);
+    }
+
+    public List<UserDietView> getUserDiets(UUID id) {
+        return dietRepository.findByUserId(id);
     }
 }
