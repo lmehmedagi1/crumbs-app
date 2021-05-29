@@ -31,6 +31,6 @@ public interface UserRepository extends JpaRepository<User, UUID>, JpaSpecificat
 
     @Query("SELECT new com.crumbs.userservice.projections.UserClassView(c.author.id, " +
             "c.author.userProfile.firstName, c.author.userProfile.lastName," +
-            "c.author.username, c.author.email, c.subscriber.userProfile.avatar) FROM Subscription c WHERE c.subscriber.id = ?1")
+            "c.author.username, c.author.email, c.author.userProfile.avatar) FROM Subscription c WHERE c.subscriber.id = ?1")
     List<UserClassView> getUserSubscriptions(UUID id);
 }
