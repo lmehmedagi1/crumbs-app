@@ -5,6 +5,7 @@ import com.crumbs.userservice.exceptions.TokenExpiredException;
 import com.crumbs.userservice.exceptions.UnauthorizedException;
 import com.crumbs.userservice.exceptions.UserAlreadyExistsException;
 import com.crumbs.userservice.exceptions.UserNotFoundException;
+import com.crumbs.userservice.models.PasswordResetToken;
 import com.crumbs.userservice.models.RefreshToken;
 import com.crumbs.userservice.models.Subscription;
 import com.crumbs.userservice.models.SubscriptionId;
@@ -13,6 +14,7 @@ import com.crumbs.userservice.models.UserProfile;
 import com.crumbs.userservice.models.VerificationToken;
 import com.crumbs.userservice.projections.UserClassView;
 import com.crumbs.userservice.projections.UserView;
+import com.crumbs.userservice.repositories.PasswordResetTokenRepository;
 import com.crumbs.userservice.repositories.RefreshTokenRepository;
 import com.crumbs.userservice.repositories.SubscriptionRepository;
 import com.crumbs.userservice.repositories.UserProfileRepository;
@@ -53,15 +55,19 @@ public class UserService {
     private final UserProfileRepository userProfileRepository;
     private final RefreshTokenRepository refreshTokenRepository;
     private final VerificationTokenRepository verificationTokenRepository;
+    private final PasswordResetTokenRepository passwordResetTokenRepository;
     private final SubscriptionRepository subscriptionRepository;
+    private final EmailService emailService;
 
     @Autowired
-    public UserService(UserRepository userRepository, UserProfileRepository userProfileRepository, RefreshTokenRepository refreshTokenRepository, VerificationTokenRepository verificationTokenRepository, SubscriptionRepository subscriptionRepository) {
+    public UserService(UserRepository userRepository, UserProfileRepository userProfileRepository, RefreshTokenRepository refreshTokenRepository, VerificationTokenRepository verificationTokenRepository, PasswordResetTokenRepository passwordResetTokenRepository, SubscriptionRepository subscriptionRepository, EmailService emailService) {
         this.userRepository = userRepository;
         this.userProfileRepository = userProfileRepository;
         this.refreshTokenRepository = refreshTokenRepository;
         this.verificationTokenRepository = verificationTokenRepository;
+        this.passwordResetTokenRepository = passwordResetTokenRepository;
         this.subscriptionRepository = subscriptionRepository;
+        this.emailService = emailService;
     }
 
     @Transactional(readOnly = true)
@@ -267,6 +273,53 @@ public class UserService {
     public UserClassView getUserViewById(UUID id) {
         UserClassView user = userRepository.getUserPreview(id);
         if (user == null) throw new UserNotFoundException();
+        return user;
+    }
+
+    @Transactional
+    public void sendResetPasswordEmail(String email) {
+
+        final User user = userRepository.findByEmail(email);
+
+        if (user == null) throw new UserNotFoundException();
+
+        if (passwordResetTokenRepository.findByUser_Id(user.getId()) != null)
+            throw new IllegalArgumentException("Email was already sent");
+
+        final String value = RandomStringUtils.randomAlphanumeric(18);
+
+        PasswordResetToken emailToken = new PasswordResetToken();
+        emailToken.setValue(value);
+        emailToken.setUser(user);
+        emailToken.setValidUntil(new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRATION_TIME));
+
+        passwordResetTokenRepository.save(emailToken);
+
+        final String userName = user.getUserProfile().getFirstName() + " " + user.getUserProfile().getLastName();
+        emailService.sendPasswordResetEmail(user.getEmail(), value, userName);
+    }
+
+    @Transactional
+    public User resetPassword(String value, String password) {
+
+        final PasswordResetToken emailToken = passwordResetTokenRepository.findByValue(value);
+
+        if (emailToken == null)
+            throw new UnauthorizedException("Invalid token");
+
+        if (emailToken.getValidUntil().before(new Date())) {
+            passwordResetTokenRepository.deleteById(emailToken.getId());
+            throw new UnauthorizedException("Reset password token has expired");
+        }
+
+        final User user = userRepository.findByEmail(emailToken.getUser().getEmail());
+
+        if (user == null) throw new UserNotFoundException();
+
+        passwordResetTokenRepository.deleteById(emailToken.getId());
+
+        user.setPassword((new BCryptPasswordEncoder()).encode(password));
+        userRepository.save(user);
         return user;
     }
 }

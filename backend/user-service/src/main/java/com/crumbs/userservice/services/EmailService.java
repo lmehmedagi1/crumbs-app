@@ -9,7 +9,6 @@ import org.thymeleaf.context.Context;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
-import java.util.UUID;
 
 import static com.crumbs.userservice.utility.Constants.DEV_APP_URL;
 import static com.crumbs.userservice.utility.Constants.PRODUCTION_APP_URL;
@@ -25,7 +24,7 @@ public class EmailService {
         this.emailSender = emailSender;
     }
 
-    public void sendConfirmRegistrationEmail(String to, String subject, String token, String userName) {
+    public void sendConfirmRegistrationEmail(String to, String token, String userName) {
 
         Context context = new Context();
         String htmlContent = templateEngine.process("confirm_registration_email.html", context);
@@ -33,7 +32,7 @@ public class EmailService {
         htmlContent = htmlContent.replace("registration-url", DEV_APP_URL + "/login?token=" + token);
         htmlContent = htmlContent.replace("receiver-name", userName);
 
-        sendEmail(to, subject, htmlContent);
+        sendEmail(to, "Registration Confirmation", htmlContent);
     }
 
     public void sendEmail(String to, String subject, String htmlContent) {
@@ -49,5 +48,15 @@ public class EmailService {
         } catch (MessagingException e) {
             throw new SendEmailFailException("Email could not be sent");
         }
+    }
+
+    public void sendPasswordResetEmail(String to, String token, String userName) {
+        Context context = new Context();
+        String htmlContent = templateEngine.process("reset_password_email.html", context);
+
+        htmlContent = htmlContent.replace("confirmation-url", DEV_APP_URL + "/reset-password?token=" + token);
+        htmlContent = htmlContent.replace("receiver-name", userName);
+
+        sendEmail(to, "Crumbs App Password Reset", htmlContent);
     }
 }
