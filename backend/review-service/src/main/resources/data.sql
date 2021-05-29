@@ -14,27 +14,26 @@ DO
     review_9_id UUID := ''df41bb67-1ae7-49e4-b4b3-c170844a4248'';
 
     -- Recipes
-    sampita_id UUID := ''d3cd7d6f-b9c5-40aa-bbd0-487c47411b8a'';
-    monchay_id UUID := ''0668b655-97b3-4514-9f65-50cf8087fa46'';
-    krempita_id UUID := ''2e0233d2-6e01-455c-8724-2117ad252ced'';
-    omlet_id UUID := ''2e0233d2-6e01-455c-8724-2117ad252ced'';
-    pizza_id UUID := ''ac8ff6ff-7193-4c45-90bd-9c772cc0494a'';
-    hurme_id UUID := ''2e0235d2-6e01-455c-8724-2117ad252cea'';
 
+    sampita UUID := ''d3cd7d6f-b9c5-40aa-bbd0-487c47411b8a'';
+    cheesecake UUID := ''0668b655-97b3-4514-9f65-50cf8087fa46'';
+    parmezan_piletina UUID := ''2e0233d2-6e01-455c-8724-2117ad252ced'';
+    tjestenina_tuna UUID := ''ac8ff8ff-7193-4c45-90bd-9c662cc0494a'';
+    zimska_juha UUID := ''e530846c-9184-497d-923e-dc27ab0c5317'';
     -- Users
     lela_id UUID := ''3e8ec94c-3edf-49e0-b548-425088881f60'';
     manda_id UUID := ''75a8f34b-2539-452a-9325-b432dbe3b995'';
     medo_id UUID := ''d913320a-baf1-43e0-b8b7-25f748e574ee'';
     aki_id UUID := ''fc98612b-c0c2-4792-b2ac-acb7dd6555c1'';
 BEGIN
-INSERT INTO reviews VALUES (review_1_id, sampita_id, medo_id, true, 4, ''Dobar pravo'');
-INSERT INTO reviews VALUES (review_2_id, sampita_id, medo_id, false, 3, ''Meh bezze'');
-INSERT INTO reviews VALUES (review_3_id, sampita_id, manda_id, false, 1, ''Fuj :)'');
-INSERT INTO reviews VALUES (review_4_id, monchay_id, aki_id, true, 5, ''Prejako fakat'');
-INSERT INTO reviews VALUES (review_5_id, monchay_id, aki_id, true, 4, ''Najbolji kolac'');
-INSERT INTO reviews VALUES (review_6_id, krempita_id, lela_id, false, 1, ''Jadno'');
-INSERT INTO reviews VALUES (review_7_id, omlet_id, lela_id, false, 2, ''Jadno'');
-INSERT INTO reviews VALUES (review_8_id, hurme_id, lela_id, false, 3, ''Jadno'');
-INSERT INTO reviews VALUES (review_9_id, pizza_id, lela_id, false, 5, ''Jadno'');
+INSERT INTO reviews VALUES (review_1_id, sampita, medo_id, true, 4, ''Dobar pravo'');
+INSERT INTO reviews VALUES (review_2_id, sampita, medo_id, false, 3, ''Meh bezze'');
+INSERT INTO reviews VALUES (review_3_id, sampita, manda_id, false, 1, ''Fuj :)'');
+INSERT INTO reviews VALUES (review_4_id, cheesecake, aki_id, true, 5, ''Prejako fakat'');
+INSERT INTO reviews VALUES (review_5_id, cheesecake, aki_id, true, 4, ''Najbolji kolac'');
+INSERT INTO reviews VALUES (review_6_id, parmezan_piletina, lela_id, false, 1, ''Jadno'');
+INSERT INTO reviews VALUES (review_7_id, parmezan_piletina, lela_id, false, 2, ''Jadno'');
+INSERT INTO reviews VALUES (review_8_id, zimska_juha, lela_id, false, 3, ''Jadno'');
+INSERT INTO reviews VALUES (review_9_id, zimska_juha, lela_id, false, 5, ''Jadno'');
 END;
 ' LANGUAGE PLPGSQL;
