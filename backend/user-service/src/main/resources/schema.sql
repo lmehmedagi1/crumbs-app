@@ -1,5 +1,6 @@
 DROP TABLE IF EXISTS refresh_token;
 DROP TABLE IF EXISTS verification_token;
+DROP TABLE IF EXISTS password_reset_token;
 DROP TABLE IF EXISTS users cascade;
 DROP TABLE IF EXISTS subscriptions;
 DROP TABLE IF EXISTS user_profile;
@@ -35,6 +36,15 @@ CREATE TABLE refresh_token (
 );
 
 CREATE TABLE verification_token (
+   "id" UUID,
+   "value" TEXT NOT NULL,
+   "valid_until" DATE NOT NULL,
+   "user_id" UUID NOT NULL,
+   PRIMARY KEY("id"),
+   FOREIGN KEY("user_id") REFERENCES users("id")
+);
+
+CREATE TABLE password_reset_token (
    "id" UUID,
    "value" TEXT NOT NULL,
    "valid_until" DATE NOT NULL,

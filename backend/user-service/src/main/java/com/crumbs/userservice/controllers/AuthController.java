@@ -4,6 +4,7 @@ import com.crumbs.userservice.jwt.JwtConfigAndUtil;
 import com.crumbs.userservice.models.User;
 import com.crumbs.userservice.requests.LoginRequest;
 import com.crumbs.userservice.requests.RegisterRequest;
+import com.crumbs.userservice.requests.ResetPasswordRequest;
 import com.crumbs.userservice.services.EmailService;
 import com.crumbs.userservice.services.UserService;
 import com.crumbs.userservice.utility.assemblers.UserModelAssembler;
@@ -53,12 +54,7 @@ public class AuthController {
     @PostMapping("/login")
     public EntityModel<User> login(@RequestBody @Valid LoginRequest loginRequest, HttpServletResponse response) {
         final User user = userService.getUserByCredentials(loginRequest.getUsername(), loginRequest.getPassword());
-        final String jwt = jwtConfigAndUtil.generateToken(user.getId().toString());
-        final String refreshToken = userService.generateRefreshToken(user);
-        response.setHeader("Access-Control-Expose-Headers", "Authorization, Set-Cookie");
-        response.setHeader("Authorization", "Bearer " + jwt);
-        response.addCookie(getCookie(refreshToken, REFRESH_TOKEN_EXPIRATION_TIME));
-        return userModelAssembler.toModel(user);
+        return authorizeUser(response, user);
     }
 
     @PostMapping("/register")
@@ -66,7 +62,7 @@ public class AuthController {
         final User user = userService.registerUser(registerRequest);
         final String verificationToken = userService.generateVerificationToken(user);
         final String userName = user.getUserProfile().getFirstName() + " " + user.getUserProfile().getLastName();
-        emailService.sendConfirmRegistrationEmail(user.getEmail(), "Registration Confirmation", verificationToken, userName);
+        emailService.sendConfirmRegistrationEmail(user.getEmail(), verificationToken, userName);
         return ResponseEntity.ok("Verification email has been sent to " + user.getEmail());
     }
 
@@ -98,5 +94,26 @@ public class AuthController {
         cookie.setHttpOnly(true);
         cookie.setPath("/");
         return cookie;
+    }
+
+    @GetMapping("/initialize-password-reset")
+    public ResponseEntity<String> passwordReset(@RequestParam String email) {
+        userService.sendResetPasswordEmail(email);
+        return ResponseEntity.ok("Reset password email was successfully sent");
+    }
+
+    @PostMapping("/password-reset")
+    public EntityModel<User> passwordReset(@RequestBody @Valid ResetPasswordRequest resetPasswordRequest, HttpServletResponse response) {
+        final User user = userService.resetPassword(resetPasswordRequest.getToken(), resetPasswordRequest.getPassword());
+        return authorizeUser(response, user);
+    }
+
+    private EntityModel<User> authorizeUser(HttpServletResponse response, User user) {
+        final String jwt = jwtConfigAndUtil.generateToken(user.getId().toString());
+        final String refreshToken = userService.generateRefreshToken(user);
+        response.setHeader("Access-Control-Expose-Headers", "Authorization, Set-Cookie");
+        response.setHeader("Authorization", "Bearer " + jwt);
+        response.addCookie(getCookie(refreshToken, REFRESH_TOKEN_EXPIRATION_TIME));
+        return userModelAssembler.toModel(user);
     }
 }

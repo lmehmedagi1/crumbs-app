@@ -142,6 +142,9 @@ public class UserEntityExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(apiError, NOT_FOUND);
     }
 
+    /**
+     * Handles HttpStatusCodeException
+     */
     @ExceptionHandler(HttpStatusCodeException.class)
     public final ResponseEntity<String> handleHttpStatusCodeException(HttpStatusCodeException ex, WebRequest request) {
         return new ResponseEntity<>(ex.getResponseBodyAsString(), ex.getResponseHeaders(), ex.getStatusCode());
@@ -185,6 +188,15 @@ public class UserEntityExceptionHandler extends ResponseEntityExceptionHandler {
             TokenExpiredException ex, WebRequest request) {
         ApiError apiError = new ApiError(UNAUTHORIZED, ex.getMessage(), "Check your credentials and try again!", getRequestUri(request));
         return new ResponseEntity<>(apiError, UNAUTHORIZED);
+    }
+
+    /**
+     * Handles IllegalArgumentException
+     */
+    @ExceptionHandler(IllegalArgumentException.class)
+    public final ResponseEntity<ApiError> handleIllegalArgumentException(IllegalArgumentException ex, WebRequest request) {
+        ApiError apiError = new ApiError(UNAUTHORIZED, ex.getMessage(), "Conflicted values!", getRequestUri(request));
+        return new ResponseEntity<>(apiError, BAD_REQUEST);
     }
 
     /**
