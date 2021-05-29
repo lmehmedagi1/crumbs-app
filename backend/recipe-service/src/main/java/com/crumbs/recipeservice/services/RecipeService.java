@@ -98,9 +98,14 @@ public class RecipeService {
         recipeRepository.deleteById(id);
     }
 
+    @Transactional(readOnly = true)
     public List<RecipeView> getTopMonthlyRecipePreviews(List<UUID> topMonthly) {
         return recipeRepository.findTopMonthlyRecepies(topMonthly).getContent();
     }
+
+    @Transactional(readOnly = true)
+    public List<RecipeView> getTopDailyRecipePreviews(List<UUID> topDaily) {
+        return recipeRepository.findTopDailyRecepies(topDaily).getContent();
 
     @Transactional(readOnly = true)
     public List<UserRecipeView> getUserRecipes(@NotNull UUID id) {

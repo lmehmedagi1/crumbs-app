@@ -58,6 +58,11 @@ public class ReviewService {
         return reviewRepository.getFourTopRatedForMonth(p);
     }
 
+    @Transactional(readOnly = true)
+    public List<UUID> getHighestRatedDaily(Pageable p) {
+        return reviewRepository.getTopRatedDaily(p);
+    }
+
     @Transactional
     public Review createReview(@NotNull @Valid ReviewRequest reviewRequest, @NotNull UUID userId) {
         Review review = new Review();

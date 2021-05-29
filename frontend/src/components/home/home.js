@@ -7,16 +7,18 @@ import React, { useState, useEffect  } from 'react'
 import { CardGroup, Container, Row } from 'react-bootstrap'
 import Button from 'react-bootstrap/Button'
 import { BsPlusCircleFill } from "react-icons/bs"
-import { ImArrowRight } from "react-icons/im"
+import { ImArrowRight, ImArrowLeft } from "react-icons/im"
 import { Link, withRouter } from 'react-router-dom'
-import { getMostPopularRecipes } from 'actions/recipeActions'
+import { getDailyRecipes, getMostPopularRecipes } from 'actions/recipeActions'
 import { useSelector, useDispatch } from 'react-redux'
 
 
 function Home(props) {
     const [show, setShow] = useState(false);
-    const [count, setCount] = useState(0)
-    const mostPopularRecepies = useSelector(state => state.recipes.mostPopularRecipes);
+    const [count, setCount] = useState(0);
+    const [countDaily, setDailyCount] = useState(0)
+    const mostPopularRecipes = useSelector(state => state.recipes.mostPopularRecipes);
+    const dailyRecipes = useSelector(state => state.recipes.dailyRecipes);
     const dispatch = useDispatch()
     useEffect( () => {
         // try {
@@ -25,28 +27,15 @@ function Home(props) {
         // catch(err) {
         //     console.log(err)
         // }
+        // ).then((response) => {
+        //     console.log("idemoo", response.data._embedded.recipeViewList);
+        //     setProductsMP(response.data._embedded.recipeViewList)
+        //   })
+        //   .catch((error) => console.log(error));
+        dispatch(getMostPopularRecipes(count))
+        dispatch(getDailyRecipes(countDaily))
+     
      }, []);
-
-    const [products] = useState([
-        {
-            recipeName: "Ime recepta",
-            text: "Learn to swim 1",
-            author: "Autor 1",
-            id: 1
-        },
-        {
-            recipeName: "Ime recepta 2",
-            text: "Learn to swim 2",
-            author: "Autor 2",
-            id: 2
-        },
-        {
-            recipeName: "Ime recepta 3",
-            text: "Learn to swim 3",
-            author: "Autor 3",
-            id: 3
-        }
-    ]);
 
     const handleSearchChange = search => {
         props.history.push({
@@ -54,6 +43,27 @@ function Home(props) {
             state: { search: search }
         });
     }
+
+    const btnOnClickRight = () => {
+        dispatch(getMostPopularRecipes(count + 1))
+        setCount(count + 1);
+    }
+
+    const btnOnClickLeft = () => {
+        dispatch(getMostPopularRecipes(count - 1))
+        setCount(count - 1);
+    }
+
+    const btnOnClickDailyRight = () => {
+        dispatch(getDailyRecipes(countDaily + 1))
+        setDailyCount(countDaily + 1);
+    }
+
+    const btnOnClickDailyLeft = () => {
+        dispatch(getDailyRecipes(countDaily - 1))
+        setDailyCount(countDaily - 1);
+    }
+
 
     return (
         <Container className="container">
@@ -66,28 +76,33 @@ function Home(props) {
             <Row className="headerText">Daily Recipes</Row>
 
             <CardGroup id="dailyGrid">
-                {products.map(product => (
-                    <Link to={"recipe/" + product.recipeId}>
-                        <RecipeCard {...product}> </RecipeCard>
+            {countDaily > 0 ? <Button  onClick={btnOnClickDailyLeft} variant="outline-primary" className="nextBtn">
+                    <ImArrowLeft />
+                </Button> : null}
+                {dailyRecipes.map(recipe => (
+                    <Link to={"recipe/" + recipe.recipeId}>
+                        <RecipeCard {...recipe}> </RecipeCard>
                     </Link>
 
                 ))}
-                <Button variant="outline-primary" className="nextBtn">
+                {countDaily == 0 ? <Button  onClick={btnOnClickDailyRight} variant="outline-primary" className="nextBtn">
                     <ImArrowRight />
-                </Button>
+                </Button> : null}
             </CardGroup>
 
             <Row className="headerText">Most Popular Recipes</Row>
             <Row id="mostPopularGrid" >
-                {console.log("arslan", mostPopularRecepies)}
-                {mostPopularRecepies.map(recipe => (
+                {count > 0 ?  <Button onClick={btnOnClickLeft} variant="outline-primary" className="nextBtn" >
+                    <ImArrowLeft />
+                </Button> : null}
+                {mostPopularRecipes.map(recipe => (
                     <Link to={"recipe/" + recipe.recipeId}>
                         <RecipeCard {...recipe}> </RecipeCard>
                     </Link>))}
 
-                <Button variant="outline-primary" className="nextBtn" >
+                {count == 0 ? <Button onClick={btnOnClickRight} variant="outline-primary" className="nextBtn" >
                     <ImArrowRight />
-                </Button>
+                </Button> : null}
             </Row>
 
             <RecipeForm title="Create New Recipe" show={show} onHide={() => setShow(false)} />

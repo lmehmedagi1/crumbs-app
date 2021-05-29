@@ -87,12 +87,25 @@ public class ReviewController {
     }
 
     @RequestMapping(value = "/topMonthly", params = "pageNo", method = RequestMethod.GET)
-    public UUID[] getHighestRated(@RequestParam("pageNo") @NotNull int pageNo, @RequestHeader("Authorization") String jwt) {
+    public UUID[] getHighestRated(@RequestParam("pageNo") @NotNull int pageNo,
+                                  @RequestParam(defaultValue = "4") Integer pageSize,
+                                  @RequestHeader("Authorization") String jwt) {
         //reviewWebClientRequest.checkIfUserExists(jwt);
-        Pageable paging = PageRequest.of(pageNo, 4);
+        Pageable paging = PageRequest.of(pageNo, pageSize);
         UUID[] var = reviewService.getHighestRated(paging).toArray(new UUID[0]);
         return var;
     }
+
+    @RequestMapping(value = "/topDaily", params = "pageNo", method = RequestMethod.GET)
+    public UUID[] getHighestRatedDaily(@RequestParam("pageNo") @NotNull int pageNo,
+                                       @RequestParam(defaultValue = "3") Integer pageSize,
+                                       @RequestHeader("Authorization") String jwt) {
+        //reviewWebClientRequest.checkIfUserExists(jwt);
+        Pageable paging = PageRequest.of(pageNo, pageSize);
+        UUID[] var = reviewService.getHighestRatedDaily(paging).toArray(new UUID[0]);
+        return var;
+    }
+
 
     @RequestMapping(value = "/rating", params = "recipeId", method = RequestMethod.GET)
     public Double getRecipeRating(@RequestParam("recipeId") @NotNull UUID recipeId) {

@@ -1,18 +1,19 @@
 import Menu from 'components/common/menu'
 import React, { useEffect } from 'react'
-import { useSelector } from 'react-redux'
-import { Col, Form, Row, ListGroup } from 'react-bootstrap'
+import { Col, Form, Row, ListGroup, Button} from 'react-bootstrap'
 import { withRouter } from 'react-router-dom'
-import { get } from '../../actions/recipeActions';
+import { get, getRecipeRating, getRecipeReviews} from '../../actions/recipeActions';
+import { useSelector, useDispatch } from 'react-redux'
 
 function RecipePreview(props) {
 
     const recipe = useSelector(state => state.recipes.recipe);
-
+    const dispatch = useDispatch()
     useEffect(() => {
         console.log("Id", props.match.params.id)
-        // Axios call to fetch recipe with provided id
-        // dispatch(get(props.match.params.id))
+        dispatch(get(props.match.params.id));
+        dispatch(getRecipeRating(props.match.params.id));
+        dispatch(getRecipeReviews(props.match.params.id));
     }, []);
 
     const handleSearchChange = search => {
@@ -20,6 +21,10 @@ function RecipePreview(props) {
             pathname: '/browse',
             state: { search: search }
         });
+    }
+
+    const btnCommentOnClick = () => {
+        
     }
 
     return (
@@ -31,8 +36,21 @@ function RecipePreview(props) {
             <Row>
                 <Col md={6}>
                     <Form.Label className="form-label">Ingredients</Form.Label>
-                    {recipe.ingredients && (recipe.ingredients.map(row =>
-                        <ListGroup horizontal>  {row.map(i => <ListGroup.Item action> {i} </ListGroup.Item>)} </ListGroup>))}
+                    <ListGroup horizontal>
+                        {recipe.ingredients && (recipe.ingredients.map(row => <ListGroup.Item action> {row.name} </ListGroup.Item>)) }
+                    </ListGroup>
+                </Col>
+                <Col md={6}>
+                Ocjena: {recipe.rating}
+                <br></br> <br></br>
+                Komentari
+                {recipe.comments && (recipe.comments.map(row => <ListGroup horizontal> <ListGroup.Item style={{width:"100%"}} action> {row.comment} </ListGroup.Item> </ListGroup>)) }
+                <textarea
+                        rows="5"
+                        name="Comment"
+                        className="comment-section form-control"
+                    />
+                {<Button className="btn-submit" onClick={btnCommentOnClick}> Comment </Button>}
                 </Col>
             </Row>
             <Row>
@@ -43,7 +61,7 @@ function RecipePreview(props) {
                         name="Method"
                         value={recipe.method}
                         disabled
-                        className="comment-section form-control"
+                        className="form-control"
                     />
                 </Col>
             </Row>

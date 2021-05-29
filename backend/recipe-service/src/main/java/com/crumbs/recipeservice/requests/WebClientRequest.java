@@ -74,4 +74,18 @@ public class WebClientRequest {
                 .bodyToMono(User.class)
                 .block();
     }
+
+    public UUID[] getTopDailyRecepies(Integer pageNo, String jwt) {
+        return webClientBuilder.baseUrl("http://review-service").build().get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/reviews/topDaily")
+                        .queryParam("pageNo", pageNo)
+                        .build())
+                .header("Authorization", jwt)
+                .accept(MediaTypes.HAL_JSON)
+                .retrieve()
+                .onStatus(HttpStatus::is4xxClientError, response -> Mono.error(new RecipeNotFoundException()))
+                .bodyToMono(UUID[].class)
+                .block();
+    }
 }

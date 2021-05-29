@@ -20,22 +20,22 @@ zuul:
       path: /user-service/**
       serviceId: user-service
       # url: https://crumbs-user-service.herokuapp.com/
-      url: http://localhost:8081
+      url: http://user-service:8081
     review-service:
       path: /review-service/**
       serviceId: review-service
       # url: https://crumbs-review-service.herokuapp.com/
-      url: http://localhost:8083
+      url: http://review-service:8083
     notification-service:
       path: /notification-service/**
       serviceId: notification-service
       # url: https://crumbs-notification-service.herokuapp.com/
-      url: http://localhost:8084
+      url: http://notification-service:8084
     recipe-service:
       path: /recipe-service/**
       serviceId: recipe-service
       # url: https://crumbs-recipe-service.herokuapp.com/
-      url: http://localhost:8082
+      url: http://recipe-service:8082
 
 ribbon:
   eureka:
@@ -44,3 +44,6 @@ ribbon:
 eureka:
   instance:
     instanceId: ${spring.application.name}:${vcap.application.instance_id:${spring.application.instance_id:${server.port}}}
+  client:
+    serviceUrl:
+      defaultZone: http://eureka:8761/eureka

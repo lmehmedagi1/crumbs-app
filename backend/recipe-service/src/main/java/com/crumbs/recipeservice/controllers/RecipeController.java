@@ -95,8 +95,8 @@ public class RecipeController {
 
         for (RecipeView recipe : recipes) {
             UUID authorId = recipe.getAuthor().getUserId();
-            //User user = webClientRequest.checkIfUserExists(jwt);
-            recipe.setAuthor(new UserView(UUID.randomUUID(), "Arslan", "avatar".getBytes(StandardCharsets.UTF_8)));
+            User user = webClientRequest.checkIfUserExists(jwt);
+            recipe.setAuthor(new UserView(user.getId(), user.getUsername(), "avatar".getBytes(StandardCharsets.UTF_8)));
         }
 
         return CollectionModel.of(recipes.stream().map(recipeViewModelAssembler::toModel).collect(Collectors.toList()),
@@ -104,6 +104,30 @@ public class RecipeController {
                         .getRecipePreviews(pageNo, pageSize, sort, jwt)).withSelfRel());
 
     }
+
+    @RequestMapping(value = "/topDaily", method = RequestMethod.GET)
+    public CollectionModel<EntityModel<RecipeView>> getRecipePreviewsTopDaily(
+            @RequestParam(defaultValue = "0") Integer pageNo,
+            @RequestParam(defaultValue = "5") Integer pageSize,
+            @RequestParam(defaultValue = "title") String sort,
+            @RequestHeader("Authorization") String jwt) {
+
+        UUID[] topDaily = webClientRequest.getTopDailyRecepies(pageNo, jwt);
+
+        List<RecipeView> recipes = recipeService.getTopDailyRecipePreviews(Arrays.asList(topDaily));
+
+        for (RecipeView recipe : recipes) {
+            UUID authorId = recipe.getAuthor().getUserId();
+            User user = webClientRequest.checkIfUserExists(jwt);
+            recipe.setAuthor(new UserView(user.getId(), user.getUsername(), "avatar".getBytes(StandardCharsets.UTF_8)));
+        }
+
+        return CollectionModel.of(recipes.stream().map(recipeViewModelAssembler::toModel).collect(Collectors.toList()),
+                linkTo(methodOn(RecipeController.class)
+                        .getRecipePreviews(pageNo, pageSize, sort, jwt)).withSelfRel());
+
+    }
+
 
     @RequestMapping(params = "userId", method = RequestMethod.GET)
     public CollectionModel<EntityModel<RecipeView>> getRecipePreviewsForUser(
