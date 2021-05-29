@@ -21,6 +21,7 @@ import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -66,6 +67,9 @@ public class RecipeService {
         recipe.setDescription(recipeRequest.getDescription());
         recipe.setMethod(recipeRequest.getMethod());
         recipe.setUserId(userId);
+        recipe.setPreparationTime(recipeRequest.getPreparationTime());
+        recipe.setCreatedAt(LocalDateTime.now());
+        recipe.setAdvice(recipeRequest.getAdvice());
     }
 
     @Transactional

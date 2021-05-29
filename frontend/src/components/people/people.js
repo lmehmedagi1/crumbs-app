@@ -8,8 +8,6 @@ import Menu from 'components/common/menu'
 import peopleApi from 'api/people'
 import { CustomImage } from 'components/common/customImage'
 
-const imagePlaceholder = "https://www.firstfishonline.com/wp-content/uploads/2017/07/default-placeholder-700x700.png";
-
 function People(props) {
 
     const [loading, setLoading] = useState(false);

@@ -14,6 +14,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { listFiles } from 'components/common/dropbox'
 
 
+
 function Home(props) {
     const [show, setShow] = useState(false);
     const [count, setCount] = useState(0);
@@ -22,17 +23,6 @@ function Home(props) {
     const dailyRecipes = useSelector(state => state.recipes.dailyRecipes);
     const dispatch = useDispatch()
     useEffect(() => {
-        // try {
-        //     dispatch(getMostPopularRecipes(count))
-        // }
-        // catch(err) {
-        //     console.log(err)
-        // }
-        // ).then((response) => {
-        //     console.log("idemoo", response.data._embedded.recipeViewList);
-        //     setProductsMP(response.data._embedded.recipeViewList)
-        //   })
-        //   .catch((error) => console.log(error));
         dispatch(getMostPopularRecipes(count))
         dispatch(getDailyRecipes(countDaily))
         listFiles()
@@ -106,7 +96,8 @@ function Home(props) {
                 </Button> : null}
             </Row>
 
-            <RecipeForm title="Create New Recipe" show={show} onHide={() => setShow(false)} />
+            <RecipeForm title="Create New Recipe" show={show} onHide={() => setShow(false)}
+                getToken={props.getToken} setToken={props.setToken} />
         </Container>
     )
 }

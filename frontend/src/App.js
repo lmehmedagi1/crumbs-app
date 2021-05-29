@@ -9,9 +9,11 @@ import Routes from 'components/router/router'
 import Footer from 'components/common/footer'
 import Header from 'components/common/header'
 
+import { ErrorBoundary } from "react-error-boundary";
+import ErrorFallback from "components/common/errorFallback";
 
 function App() {
-  
+
   const [token, setToken] = useState(null);
 
   const refreshToken = (token) => {
@@ -22,15 +24,22 @@ function App() {
     return token;
   }
 
+  const myErrorHandler = (error, componentStack) => console.log(error, componentStack);
+
   return (
     <div className="App">
-      <Router>
-        <div>
-          <Header />
-          <Routes setToken={refreshToken} getToken={getToken}/>
-          <Footer />
-        </div>
-      </Router>
+      <ErrorBoundary
+        FallbackComponent={ErrorFallback}
+        onError={myErrorHandler}
+      >
+        <Router>
+          <div>
+            <Header />
+            <Routes setToken={refreshToken} getToken={getToken} />
+            <Footer />
+          </div>
+        </Router>
+      </ErrorBoundary>
     </div>
   );
 }

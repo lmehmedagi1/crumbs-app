@@ -1,15 +1,15 @@
-import { configureStore } from '@reduxjs/toolkit';
 import authReducer from 'reducers/authReducer';
-import recipeReducer from './reducers/recipeReducer';
-import { createStore, combineReducers, applyMiddleware, compose } from "redux";
+import { applyMiddleware, combineReducers, createStore } from "redux";
 import { composeWithDevTools } from 'redux-devtools-extension/developmentOnly';
-import thunk from "redux-thunk";
 import promise from "redux-promise-middleware";
+import thunk from "redux-thunk";
+import recipeReducer from './reducers/recipeReducer';
 
 const composeEnhancers = composeWithDevTools({});
 
 const enhancer = composeEnhancers(
-  applyMiddleware(thunk, promise)
+  applyMiddleware(thunk, promise),
+
 );
 export default createStore(
   combineReducers({

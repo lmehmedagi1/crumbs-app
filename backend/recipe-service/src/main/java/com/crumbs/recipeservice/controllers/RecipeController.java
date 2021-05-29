@@ -165,12 +165,12 @@ public class RecipeController {
                         .getRecipePreviewsForCategory(categoryId, pageNo, pageSize, sort)).withSelfRel());
     }
 
-    @RequestMapping(params = "id", method = RequestMethod.GET)
+    @GetMapping(path = "recipe", params = "id")
     public EntityModel<Recipe> getRecipe(@RequestParam("id") @NotNull UUID id) {
         return recipeModelAssembler.toModel(recipeService.getRecipe(id));
     }
 
-    @RequestMapping(params = {"id", "details"}, method = RequestMethod.GET)
+    @GetMapping(path = "recipe", params = {"id", "details"})
     public EntityModel<?> getRecipe(@RequestParam("id") @NotNull UUID id,
                                     @RequestParam(value = "details", defaultValue = "false") @NotNull Boolean details) {
         if (!details)

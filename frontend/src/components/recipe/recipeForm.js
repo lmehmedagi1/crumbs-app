@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { Modal, Form, Row, Col } from "react-bootstrap";
+import { Modal, Form, Row, Col, Button } from "react-bootstrap";
 import FileUploader from 'components/common/fileUploader/fileUploader'
 import SelectField from 'components/common/selectField';
 import { useSelector, useDispatch } from 'react-redux'
 import { setState } from 'actions/recipeActions';
+import recipeApi from 'api/recipe'
 
 function RecipeForm(props) {
 
@@ -17,6 +18,17 @@ function RecipeForm(props) {
     const updateUploadedFiles = (files) => {
         setProfileImages(files);
         setImagesError("");
+    }
+
+
+    const handleSubmit = () => {
+        // setLoading(true);
+
+        recipeApi.createRecipe(() => {
+            // setLoading(false);
+
+            // props.handleProfileUpdate();
+        }, recipe, props.getToken(), props.setToken);
     }
 
     // will be fetched from server
@@ -99,6 +111,9 @@ function RecipeForm(props) {
                 errorMessage={imagesError}
                 files={initialImages} />
         </Modal.Body>
+        <Modal.Footer>
+            <Button className="float-right" variant="primary" onClick={handleSubmit}>Submit</Button>
+        </Modal.Footer>
     </Modal>
     );
 }
