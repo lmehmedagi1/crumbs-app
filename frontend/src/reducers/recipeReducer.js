@@ -50,6 +50,11 @@ const recipeReducer = (state = { ...initialState }, action) => {
                 }),
             });
             break;
+        case "RECIPE_GET_MOST_POPULAR":
+            return Object.assign({}, state, {
+                ...state,
+                mostPopularRecipes: action.payload_embedded.recipeViewList
+            });
         case "RECIPE_GET_MOST_POPULAR_FULFILLED":
             return Object.assign({}, state, {
                 ...state,
@@ -63,14 +68,7 @@ const recipeReducer = (state = { ...initialState }, action) => {
                 dailyRecipes: action.payload.data._embedded.recipeViewList
             });
             break;
-        case "RECIPE_GET_MOST_POPULAR_REJECTED":
-            // console.log("idemoo", action.payload)
-            // return Object.assign({}, state, {
-            //     ...state,
-                
-            // });
-            return state
-            break;
+
         default:
             return state;
             break;
