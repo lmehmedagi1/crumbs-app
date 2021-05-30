@@ -1,12 +1,12 @@
-import React, { isValidElement, useState } from 'react';
-import { Modal, Form, Row, Col, Button, ProgressBar } from "react-bootstrap";
-import FileUploader from 'components/common/fileUploader/fileUploader'
-import SelectField from 'components/common/selectField';
-import { useSelector, useDispatch } from 'react-redux'
-import { setState, clearState } from 'actions/recipeActions';
-import recipeApi from 'api/recipe'
-import NumberFormat from "react-number-format";
+import { clearState, setState } from 'actions/recipeActions';
+import recipeApi from 'api/recipe';
 import { uploadFiles } from 'components/common/dropbox';
+import FileUploader from 'components/common/fileUploader/fileUploader';
+import SelectField from 'components/common/selectField';
+import React, { useState } from 'react';
+import { Button, Col, Form, Modal, ProgressBar, Row } from "react-bootstrap";
+import NumberFormat from "react-number-format";
+import { useDispatch, useSelector } from 'react-redux';
 
 function RecipeForm(props) {
 
