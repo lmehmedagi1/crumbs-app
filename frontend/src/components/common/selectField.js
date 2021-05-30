@@ -1,19 +1,28 @@
 import React, { useState } from "react";
 import { Form } from "react-bootstrap";
 import AsyncSelect from "react-select/async";
+import axios from "axios"
+import { env } from "configs/env"
 
 export default function SelectField(props) {
 
     const [search, setSearch] = useState()
 
     const getOptions = (searchTerm) => {
-        // axios request to fetch data from server
+        return axios(env.BASE_PATH + props.apiPath, {
+            method: "POST",
+            data: {
+                type: props.type,
+                searchTerm,
+            },
+            headers: { "Content-Type": "application/json" },
+        });
     };
 
     const loadOptions = (inputValue, callback) => {
         getOptions(inputValue).then((response) => {
-            const data = response.data.map((x) => {
-                return { ...x, label: x.label.trim() };
+            const data = response.data.map(x => {
+                return { value: x.id, label: x.name.trim() };
             });
             callback(data);
         });

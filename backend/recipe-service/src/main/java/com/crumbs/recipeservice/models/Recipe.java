@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -86,6 +87,7 @@ public class Recipe {
     private Set<Ingredient> ingredients;
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "recipe", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "recipe", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @ToString.Exclude
     private List<Image> images;
 }

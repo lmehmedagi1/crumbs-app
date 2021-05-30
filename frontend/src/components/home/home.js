@@ -13,8 +13,6 @@ import { getDailyRecipes, getMostPopularRecipes } from 'actions/recipeActions'
 import { useSelector, useDispatch } from 'react-redux'
 import { listFiles } from 'components/common/dropbox'
 
-
-
 function Home(props) {
     const [show, setShow] = useState(false);
     const [count, setCount] = useState(0);

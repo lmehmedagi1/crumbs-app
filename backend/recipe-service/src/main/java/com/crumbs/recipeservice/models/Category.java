@@ -1,5 +1,6 @@
 package com.crumbs.recipeservice.models;
 
+import com.crumbs.recipeservice.projections.UserClassView;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,14 +11,14 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.util.UUID;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @Table(name = "categories")
-public class Category {
+public class Category implements Serializable {
 
     @Id
     @GeneratedValue(generator = "UUID")
@@ -34,5 +35,11 @@ public class Category {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "type_id", referencedColumnName = "id")
     private CategoryType categoryType;
+
+    public Category(UUID id, String name, CategoryType categoryType) {
+        this.id = id;
+        this.name = name;
+        this.categoryType = new CategoryType(categoryType.getId(), categoryType.getName());
+    }
 
 }

@@ -2,10 +2,13 @@ package com.crumbs.recipeservice.requests;
 
 import com.crumbs.recipeservice.utility.annotation.NullOrNotBlank;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.collect.Lists;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import javax.validation.constraints.*;
+import java.util.List;
+import java.util.UUID;
 
 @Data
 @AllArgsConstructor
@@ -40,4 +43,10 @@ public class RecipeRequest {
     @Min(value = 1, message = "Preparation time in minutes must be greater than zero!")
     @JsonProperty(value = "preparation_time")
     private Integer preparationTime;
+
+    private List<UUID> categories;
+
+    private List<UUID> ingredients;
+
+    private List<String> images;
 }

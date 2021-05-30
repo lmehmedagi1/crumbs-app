@@ -13,8 +13,11 @@ class RecipeApi extends React.Component {
     sendPostRecipe = (cb, token, params) => {
         Requests.sendPostRequest(cb, env.BASE_PATH + "recipe-service/recipes", params, Requests.getAuthorizationHeader(token),
             (response) => {
-                cb(response.data);
-            }, (err) => { console.log(err) });
+                cb(response);
+            }, (err) => {
+                cb(null, err)
+                console.log(err)
+            });
     }
 
     createRecipe = (cb, params, token, setToken) => {

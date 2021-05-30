@@ -1,6 +1,7 @@
 import React from 'react'
 import axios from 'axios'
 
+
 class Requests extends React.Component {
 
     constructor() {
@@ -11,7 +12,7 @@ class Requests extends React.Component {
         return {
             withCredentials: true,
             timeout: 5000,
-            headers: {"Access-Control-Allow-Origin": "*", 'Access-Control-Allow-Credentials': true, 'Content-Type': 'application/json'}
+            headers: { "Access-Control-Allow-Origin": "*", 'Access-Control-Allow-Credentials': true, 'Content-Type': 'application/json' }
         }
     }
 
@@ -29,7 +30,7 @@ class Requests extends React.Component {
             cb("Please check your internet connection!", "warning", null);
         else if (failureCb != null)
             failureCb(error.response.data.message);
-        else 
+        else
             cb(error.response.data.message, "warning", null);
     }
 
@@ -44,7 +45,7 @@ class Requests extends React.Component {
         axios
             .get(url, params)
             .then((response) => { successCb(response); })
-            .catch(error => {  if (failureCb && error.response) failureCb(error.response.data.message) });
+            .catch(error => { if (failureCb && error.response) failureCb(error.response.data.message) });
     }
 
     sendPutRequest(cb, url, params, headers, successCb, failureCb) {

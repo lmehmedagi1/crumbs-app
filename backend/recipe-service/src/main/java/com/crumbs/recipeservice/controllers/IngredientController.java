@@ -1,7 +1,10 @@
 package com.crumbs.recipeservice.controllers;
 
 import com.crumbs.recipeservice.models.Ingredient;
+import com.crumbs.recipeservice.projections.CategoryView;
+import com.crumbs.recipeservice.projections.IngredientView;
 import com.crumbs.recipeservice.requests.IngredientRequest;
+import com.crumbs.recipeservice.requests.OptionRequest;
 import com.crumbs.recipeservice.services.IngredientService;
 import com.crumbs.recipeservice.utility.assemblers.IngredientModelAssembler;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -17,6 +20,7 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -100,5 +104,11 @@ public class IngredientController {
     public ResponseEntity<?> deleteRecipe(@RequestParam("id") @NotNull UUID id) {
         ingredientService.deleteIngredient(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("type")
+    @Transactional(readOnly = true)
+    public List<IngredientView> searchIngredients(@RequestBody @Valid OptionRequest optionRequest) {
+        return ingredientService.searchIngredients(optionRequest);
     }
 }

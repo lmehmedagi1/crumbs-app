@@ -2,8 +2,11 @@ package com.crumbs.recipeservice.services;
 
 import com.crumbs.recipeservice.exceptions.IngredientNotFoundException;
 import com.crumbs.recipeservice.models.Ingredient;
+import com.crumbs.recipeservice.projections.CategoryView;
+import com.crumbs.recipeservice.projections.IngredientView;
 import com.crumbs.recipeservice.repositories.IngredientRepository;
 import com.crumbs.recipeservice.requests.IngredientRequest;
+import com.crumbs.recipeservice.requests.OptionRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -74,5 +77,10 @@ public class IngredientService {
             throw new IngredientNotFoundException();
 
         ingredientRepository.deleteById(id);
+    }
+
+    @Transactional(readOnly = true)
+    public List<IngredientView> searchIngredients(@NotNull OptionRequest optionRequest) {
+        return ingredientRepository.searchIngredients(optionRequest.getSearchTerm());
     }
 }

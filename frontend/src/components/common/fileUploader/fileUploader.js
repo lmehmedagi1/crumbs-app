@@ -103,15 +103,15 @@ const FileUploader = ({
                 />
             </FileUploadContainer>
             <FilePreviewContainer>
-                <PreviewList>
+                <PreviewList className = "my-preview-list">
                     {Object.keys(files).map((fileName, index) => {
                         let file = files[fileName];
                         let isImageFile = file.type.split("/")[0] === "image";
                         return (
-                            <PreviewContainer className="sc-bkkfTU" key={fileName}>
-                                <div>
+                            <PreviewContainer className="" key={fileName}>
+                                <div className = "my-image-style">
                                     {isImageFile && (
-                                        <ImagePreview
+                                        <ImagePreview 
                                             src={URL.createObjectURL(file)}
                                             alt={`file preview ${index}`}
                                         />
