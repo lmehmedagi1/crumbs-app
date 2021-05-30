@@ -2,8 +2,10 @@ package com.crumbs.recipeservice.services;
 
 import com.crumbs.recipeservice.exceptions.CategoryNotFoundException;
 import com.crumbs.recipeservice.models.Category;
+import com.crumbs.recipeservice.projections.CategoryView;
 import com.crumbs.recipeservice.repositories.CategoryRepository;
 import com.crumbs.recipeservice.requests.CategoryRequest;
+import com.crumbs.recipeservice.requests.OptionRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -73,4 +75,8 @@ public class CategoryService {
         categoryRepository.deleteById(id);
     }
 
+    @Transactional(readOnly = true)
+    public List<CategoryView> getCategoryByType(@NotNull OptionRequest optionRequest) {
+        return categoryRepository.findCategoriesByType(optionRequest.getType(), optionRequest.getSearchTerm());
+    }
 }

@@ -15,7 +15,6 @@ import java.util.UUID;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @Table(name = "category_type")
 public class CategoryType {
@@ -30,4 +29,9 @@ public class CategoryType {
     @Size(max = 30, message = "Category Type name exceeds allowed limit of 30 characters!")
     @Pattern(regexp = "^[A-Za-z\\s]+$", flags = Pattern.Flag.UNICODE_CASE, message = "Category Type name can only contain letters and whitespaces!")
     private String name;
+
+    public CategoryType(UUID id, String name) {
+        this.id = id;
+        this.name = name;
+    }
 }

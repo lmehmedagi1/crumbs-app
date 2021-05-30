@@ -1,7 +1,9 @@
 package com.crumbs.recipeservice.controllers;
 
 import com.crumbs.recipeservice.models.Category;
+import com.crumbs.recipeservice.projections.CategoryView;
 import com.crumbs.recipeservice.requests.CategoryRequest;
+import com.crumbs.recipeservice.requests.OptionRequest;
 import com.crumbs.recipeservice.services.CategoryService;
 import com.crumbs.recipeservice.utility.assemblers.CategoryModelAssembler;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -17,6 +19,7 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -100,5 +103,12 @@ public class CategoryController {
     public ResponseEntity<?> deleteCategory(@RequestParam("id") @NotNull UUID id) {
         categoryService.deleteCategory(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("type")
+    @Transactional(readOnly = true)
+    public List<CategoryView> getCategoriesByType(@RequestBody @Valid OptionRequest optionRequest) {
+
+        return categoryService.getCategoryByType(optionRequest);
     }
 }

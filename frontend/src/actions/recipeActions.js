@@ -29,6 +29,12 @@ export function setState(data) {
     };
 }
 
+export function clearState() {
+    return {
+        type: "RECIPE_CLEAR_STATE",
+    };
+}
+
 
 export function getRecipeRating(recipeId) {
     return {

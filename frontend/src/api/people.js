@@ -9,7 +9,7 @@ class PeopleApi extends React.Component {
     }
 
     getPeople = (cb, params) => {
-        Requests.sendGetRequest(cb, hostUrl + "user-service/account/all", {params: params}, (response) => { cb(response.data); }, (error) => { cb(error); });
+        Requests.sendGetRequest(cb, hostUrl + "user-service/account/all", { params: params }, (response) => { cb(response.data); }, (error) => { cb(error); });
     }
 }
 

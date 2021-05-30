@@ -146,7 +146,7 @@ function Browse(props) {
                     </CardGroup>
                 </Col>
             </Row>
-            <RecipeForm title="Create New Recipe" show={show} onHide={() => setShow(false)} />
+            <RecipeForm title="Create" show={show} onHide={() => setShow(false)} getToken={props.getToken} setToken={props.setToken} />
         </Container>
     )
 }

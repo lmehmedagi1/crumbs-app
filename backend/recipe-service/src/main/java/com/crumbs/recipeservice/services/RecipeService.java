@@ -2,11 +2,15 @@ package com.crumbs.recipeservice.services;
 
 import com.crumbs.recipeservice.exceptions.RecipeNotFoundException;
 import com.crumbs.recipeservice.exceptions.UnauthorizedException;
+import com.crumbs.recipeservice.models.Category;
 import com.crumbs.recipeservice.models.Image;
+import com.crumbs.recipeservice.models.Ingredient;
 import com.crumbs.recipeservice.models.Recipe;
 import com.crumbs.recipeservice.projections.RecipeView;
 import com.crumbs.recipeservice.projections.UserRecipeView;
+import com.crumbs.recipeservice.repositories.CategoryRepository;
 import com.crumbs.recipeservice.repositories.ImageRepository;
+import com.crumbs.recipeservice.repositories.IngredientRepository;
 import com.crumbs.recipeservice.repositories.RecipeRepository;
 import com.crumbs.recipeservice.requests.RecipeRequest;
 import lombok.NonNull;
@@ -22,8 +26,7 @@ import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @Validated
@@ -31,11 +34,16 @@ public class RecipeService {
 
     private final RecipeRepository recipeRepository;
     private final ImageRepository imageRepository;
+    private final IngredientRepository ingredientRepository;
+    private final CategoryRepository categoryRepository;
 
     @Autowired
-    public RecipeService(RecipeRepository recipeRepository, ImageRepository imageRepository) {
+    public RecipeService(RecipeRepository recipeRepository, ImageRepository imageRepository,
+                         IngredientRepository ingredientRepository, CategoryRepository categoryRepository) {
         this.recipeRepository = recipeRepository;
         this.imageRepository = imageRepository;
+        this.ingredientRepository = ingredientRepository;
+        this.categoryRepository = categoryRepository;
     }
 
     @Transactional(readOnly = true)
@@ -70,12 +78,34 @@ public class RecipeService {
         recipe.setPreparationTime(recipeRequest.getPreparationTime());
         recipe.setCreatedAt(LocalDateTime.now());
         recipe.setAdvice(recipeRequest.getAdvice());
+
+        Set<Ingredient> ingredients = new HashSet<>();
+        for (UUID ingredient : recipeRequest.getIngredients())
+            ingredients.add(ingredientRepository.findById(ingredient).get());
+        recipe.setIngredients(ingredients);
+
+        Set<Category> categories = new HashSet<>();
+        for (UUID category : recipeRequest.getCategories())
+            categories.add(categoryRepository.findById(category).get());
+        recipe.setCategories(categories);
+
+        List<Image> images = new ArrayList<>();
+        for (String image : recipeRequest.getImages()) {
+            Image newImage = new Image();
+            newImage.setImage(image);
+            newImage.setRecipe(recipe);
+            images.add(newImage);
+        }
+        recipe.setImages(images);
+
+        System.out.println(recipe);
     }
 
     @Transactional
     public Recipe saveRecipe(@NonNull @Valid RecipeRequest recipeRequest, @NotNull UUID userId) {
         Recipe recipe = new Recipe();
         modifyRecipe(recipeRequest, userId, recipe);
+
         return recipeRepository.save(recipe);
     }
 

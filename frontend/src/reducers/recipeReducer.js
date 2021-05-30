@@ -25,6 +25,11 @@ const recipeReducer = (state = { ...initialState }, action) => {
                 },
             });
             break;
+        case "RECIPE_CLEAR_STATE":
+            return Object.assign({}, state, {
+                recipe: {},
+            });
+            break;
         case "RECIPE_GET_FULFILLED":
             return Object.assign({}, state, {
                 recipe: Object.assign({}, state.recipe, {
