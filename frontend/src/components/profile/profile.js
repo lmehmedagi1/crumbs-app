@@ -104,6 +104,11 @@ function Profile(props) {
         setShowEditModal(false);
     }
 
+    const update = (id) => {
+        props.history.replace('/profile/' + id + '/about', { activeKey: 'about' });
+        loadUser(id, 'about');
+    }
+
     const handleRowClick = (id, type) => {
         if (type == "subscribers" || type == "subscriptions") {
             props.history.replace('/profile/' + id + '/' + activeTab, { activeKey: activeTab });
@@ -125,7 +130,7 @@ function Profile(props) {
     return (
         <div className={loading ? "blockedWait" : ""}>
         <div className={loading ? "blocked" : ""}>
-            <Menu handleSearchChange={handleSearchChange} {...props}/>
+            <Menu handleSearchChange={handleSearchChange} update={update} {...props}/>
             <Alert message={message} showAlert={show} variant={variant} onShowChange={setShow} />
             <div className="profileContainer">
                 <div className="profileHeader">

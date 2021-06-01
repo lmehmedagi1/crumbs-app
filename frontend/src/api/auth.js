@@ -40,7 +40,7 @@ class Auth extends React.Component {
 
     refreshToken = (cb, token, setToken, params, successCb) => {
 
-        Requests.sendPostRequest(cb, hostUrl + "auth/refresh-token", {}, Requests.getCookieHeader(), 
+        Requests.sendPostRequest(cb, hostUrl + "user-service/auth/refresh-token", {}, Requests.getCookieHeader(), 
             (response) => { 
                 token = response.headers.authorization;
                 setToken(token);
@@ -48,7 +48,7 @@ class Auth extends React.Component {
             },  
             (message) => {
                 removeUserSession();
-                cb("Your session has expired, log in again!", "warning", null);
+                cb(null, "Your session has expired, log in again!");
                 return;
             }
         );

@@ -1,17 +1,16 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import auth, { userIsLoggedIn, getUser } from 'api/auth'
+import { CustomImage } from 'components/common/customImage'
 
-const imagePlaceholder = "https://www.firstfishonline.com/wp-content/uploads/2017/07/default-placeholder-700x700.png";
-
-function Header() {
+function Header(props) {
 
     const logout = () => {
         auth.logout(() => window.location.href="/");
     }
 
     const handleProfileClick = () => {
-        window.location.pathname = '/profile/' + getUser().id + '/about';
+        window.location.href = '/profile/' + getUser().id + '/about'
     }
 
     return (
@@ -37,7 +36,7 @@ function Header() {
                     </div>
                     :
                     <div className="logoutHeader">
-                    <div className="imageWrapper" onClick={handleProfileClick}><img src={imagePlaceholder}/></div>
+                    <CustomImage imageId={getUser().avatar} className="imageWrapper" alt="User avatar" onClick={handleProfileClick} />
                     <div onClick={logout}>
                     <Link className="headerLink" to=''>
                         Logout
