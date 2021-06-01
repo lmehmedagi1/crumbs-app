@@ -1,5 +1,10 @@
 .notificationBellContainer {
 
+    ul.dropdown-menu {
+        max-height: 50px;
+        overflow-y: scroll;
+    }
+
     .dropdown {
         max-width: 36.5px;
     }
@@ -10,10 +15,18 @@
         right: 0 !important;
         left: -310px;
         padding: 0px 0px !important;
+        max-height: 250px;
+        overflow-y: scroll;
     }
 
     .dropdown-item {
         padding: 0px 0px !important;
+    }
+
+    .empty {
+        margin: 20px 10px 20px 10px;
+        text-align: center;
+        color: $default-purple-color;
     }
 
     .bellIcon {
@@ -40,13 +53,21 @@
     .notification, .unread {
 
         display: flex;
-        width: 350px;
-        padding: 5px 10px;
+        width: 330px;
+        padding: 5px 0px 5px 10px;
         margin-bottom: 2px;
 
         .content {
-            width: 290px;
+            width: 260px;
             white-space: wrap;
+
+            h1 {
+                width: 100%;
+                white-space: pre-line;
+                font-size: 16px;
+                color: $base-color;
+            }
+
             h2 {
                 width: 100%;
                 white-space: pre-line;
@@ -55,7 +76,7 @@
             }
     
             h3 {
-                width: 290px;
+                width: 100%;
                 font-size: 13px;
             }
         }
@@ -69,6 +90,7 @@
 
         .fa {
             color: $default-purple-color;
+            
         }
     }
 

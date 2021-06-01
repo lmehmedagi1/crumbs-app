@@ -69,7 +69,6 @@ function CustomTable(props) {
                 }, {id: props.userId}, props.getToken(), props.setToken);   
                 break;
             default:
-                console.log("default", values)
                 props.setLoading(false);
                 setValues([]);
                 break;

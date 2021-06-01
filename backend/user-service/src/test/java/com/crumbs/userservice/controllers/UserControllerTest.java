@@ -73,7 +73,6 @@ class UserControllerTest {
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post(uri)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(inputJson)).andReturn();
-        System.out.println(mvcResult.getResponse().getContentAsString());
         assertEquals(HttpStatus.NOT_FOUND.value(), mvcResult.getResponse().getStatus());
     }
 

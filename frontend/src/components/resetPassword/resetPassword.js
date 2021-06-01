@@ -66,7 +66,6 @@ function PasswordReset(props) {
         }
         else {
             setShow(false);
-            console.log(data)
             setData(data);
         }
     }

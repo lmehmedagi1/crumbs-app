@@ -103,6 +103,7 @@ public class NotificationEntityExceptionHandler extends ResponseEntityExceptionH
             HttpStatus status,
             WebRequest request) {
         String message = null;
+        System.out.println("Method argument not valid " + ex.getMessage());
         try {
             message = ex.getBindingResult().getFieldErrors().get(0).getDefaultMessage();
         } catch (Exception ignored) {
@@ -197,6 +198,16 @@ public class NotificationEntityExceptionHandler extends ResponseEntityExceptionH
         ApiError apiError = new ApiError(INTERNAL_SERVER_ERROR, "Conversion failure", "Error writing JSON output!");
         apiError.setPath(getRequestUri(request));
         return new ResponseEntity<>(apiError, INTERNAL_SERVER_ERROR);
+    }
+
+    /**
+     * Handles UnauthorizedException
+     */
+    @ExceptionHandler(UnauthorizedException.class)
+    protected ResponseEntity<Object> handleUnauthorizedException(
+            UnauthorizedException ex, WebRequest request) {
+        ApiError apiError = new ApiError(UNAUTHORIZED, ex.getMessage(), "Check your credentials and try again!", getRequestUri(request));
+        return new ResponseEntity<>(apiError, UNAUTHORIZED);
     }
 
     /**

@@ -1,4 +1,3 @@
-import authReducer from 'reducers/authReducer';
 import { applyMiddleware, combineReducers, createStore } from "redux";
 import { composeWithDevTools } from 'redux-devtools-extension/developmentOnly';
 import promise from "redux-promise-middleware";
@@ -13,8 +12,7 @@ const enhancer = composeEnhancers(
 );
 export default createStore(
   combineReducers({
-    recipes: recipeReducer,
-    authReducer
+    recipes: recipeReducer
   }),
   enhancer
 );

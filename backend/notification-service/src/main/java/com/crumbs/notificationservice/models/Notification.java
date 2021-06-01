@@ -1,5 +1,6 @@
 package com.crumbs.notificationservice.models;
 
+import com.crumbs.notificationservice.utility.converters.CustomEnumType;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -18,7 +19,10 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.UUID;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
 
+@TypeDef(name = "entype", typeClass = CustomEnumType.class)
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -33,16 +37,25 @@ public class Notification {
 
     @NotNull
     @Column(name = "user_id")
-    @JsonProperty("user_id")
     private UUID userId;
 
     @NotNull
-    @CreatedDate
-    @Column(name = "created_at")
-    @JsonProperty("created_at")
-    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
-    @JsonSerialize(using = LocalDateTimeSerializer.class)
-    private LocalDateTime createdAt = LocalDateTime.now();
+    @Column(name = "entity_id")
+    private UUID entityId;
+
+    public enum EntityType {recipe, diet, crumbs_user}
+
+    @NotNull
+    @Column(name = "entity_type")
+    @Enumerated(EnumType.STRING)
+    @Type(type = "entype")
+    private EntityType entityType;
+
+    @NotBlank
+    @Size(max = 100, message = "Title exceeds allowed limit of 100 characters!")
+    @Pattern(regexp = "^[A-Za-z0-9 .,:;\\-_?!&%/'@()\"]*$", flags = {Pattern.Flag.MULTILINE, Pattern.Flag.UNICODE_CASE},
+            message = "Title can only contain letters, numbers, spaces, and punctuation marks!")
+    private String title;
 
     @NotBlank
     @Size(max = 150, message = "Description exceeds allowed limit of 250 characters!")
@@ -52,6 +65,12 @@ public class Notification {
 
     @NotNull
     @Column(name = "is_read")
-    @JsonProperty("is_read")
     private Boolean isRead;
+
+    @NotNull
+    @CreatedDate
+    @Column(name = "created_at")
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    private LocalDateTime createdAt = LocalDateTime.now();
 }

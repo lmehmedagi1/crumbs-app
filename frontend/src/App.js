@@ -12,7 +12,7 @@ import Header from 'components/common/header'
 import { ErrorBoundary } from "react-error-boundary";
 import ErrorFallback from "components/common/errorFallback";
 
-function App() {
+function App(props) {
 
   const [token, setToken] = useState(null);
 
@@ -34,7 +34,7 @@ function App() {
       >
         <Router>
           <div>
-            <Header />
+            <Header {...props} />
             <Routes setToken={refreshToken} getToken={getToken} />
             <Footer />
           </div>
