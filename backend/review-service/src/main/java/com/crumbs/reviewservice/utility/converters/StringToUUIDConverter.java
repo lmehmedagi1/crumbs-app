@@ -1,4 +1,4 @@
-package com.crumbs.reviewservice.utility;
+package com.crumbs.reviewservice.utility.converters;
 
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;

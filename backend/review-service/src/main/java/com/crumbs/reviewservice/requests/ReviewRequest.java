@@ -15,9 +15,12 @@ public class ReviewRequest {
     @NotBlank
     @Pattern(regexp = uuid_regex,
             flags = Pattern.Flag.CASE_INSENSITIVE, message = "UUID string format is invalid!")
-    private String recipe_id;
+    private String entity_id;
 
     @NotNull
+    private String entity_type;
+
+
     private Boolean is_liked;
 
     @Min(value = 1, message = "Rating must be between 1-5 inclusive!")

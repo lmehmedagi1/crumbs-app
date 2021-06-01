@@ -3,6 +3,8 @@ server:
 spring:
   application:
     name: eureka
+  main:
+    allow-bean-definition-overriding: true
 eureka:
   client:
     registerWithEureka: false

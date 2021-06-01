@@ -4,6 +4,7 @@ import com.crumbs.reviewservice.exceptions.RecipeNotFoundException;
 import com.crumbs.reviewservice.exceptions.UserNotFoundException;
 import com.crumbs.reviewservice.models.Recipe;
 import com.crumbs.reviewservice.models.User;
+import com.crumbs.reviewservice.projections.UserClassView;
 import com.crumbs.reviewservice.projections.UserRecipeView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.MediaTypes;
@@ -72,4 +73,19 @@ public class ReviewWebClientRequest {
                 .bodyToMono(UserRecipeView.class)
                 .block();
     }
+
+    public UserClassView getUserPreview(UUID id) {
+        return webClientBuilder.baseUrl("http://user-service").build().get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/account/view")
+                        .queryParam("id", id)
+                        .build())
+                .accept(MediaTypes.HAL_JSON)
+                .retrieve()
+                .onStatus(HttpStatus::is4xxClientError, response -> Mono.error(new UserNotFoundException()))
+                .bodyToMono(UserClassView.class)
+                .block();
+    }
+
+
 }
