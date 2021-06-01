@@ -1,0 +1,67 @@
+.notFoundContainer {
+
+    font-size: 30px;
+    color: $base-color;
+    letter-spacing: 1.26px;
+
+    margin: 6% auto;
+    padding: 0 10%;
+
+    .logo {
+        color: $default-purple-color;
+        font-size: 24px;
+        opacity: 0.7;
+        img {
+            width: 20px;
+            margin-right: 5px;
+        }
+    }
+
+    #errorCode {
+        font-size: 200px;
+        height: 280px;
+        color: $default-purple-color;
+        letter-spacing: 10.5px;
+        text-shadow: 7px 8px 0 #DADADA;
+        margin-top: -5%;
+    }
+
+    button {
+        width: 200px;
+        background: #FFFFFF;
+        border: 3px solid $default-purple-color;
+        box-shadow: 3px 3px 0 0 rgba(131,103,216,0.31);
+        font-weight: bold;
+        font-size: 18px;
+        color: $base-color;
+        letter-spacing: 0.63px;
+        margin-top: 3%;
+    }
+}
+
+@media #{$tablet} {
+    .notFoundContainer {
+        font-size: 24px;
+        #errorCode {
+            font-size: 200px;
+            text-shadow: 6px 7px 0 #DADADA;
+            height: 250px;
+        }
+    }
+}
+
+@media #{$mobile} {
+    .notFoundContainer {
+        font-size: 20px;
+
+        #errorCode {
+            font-size: 150px;
+            text-shadow: 4px 5px 0 #DADADA;
+            height: 200px;
+        }
+
+        button {
+            margin-top: 10%;
+        }
+    }
+}

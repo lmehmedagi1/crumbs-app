@@ -23,8 +23,8 @@ function Home(props) {
     const dailyRecipes = useSelector(state => state.recipes.dailyRecipes);
     const dispatch = useDispatch()
     useEffect(() => {
-        dispatch(getMostPopularRecipes(count))
-        dispatch(getDailyRecipes(countDaily))
+        // dispatch(getMostPopularRecipes(count))
+        // dispatch(getDailyRecipes(countDaily))
         listFiles()
     }, []);
 

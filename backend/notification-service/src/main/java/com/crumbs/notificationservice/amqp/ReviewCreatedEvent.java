@@ -16,5 +16,6 @@ import java.util.UUID;
 public class ReviewCreatedEvent {
     private String transactionId;
     private UUID reviewId;
+    private UUID userId;
     private String poruka;
 }

@@ -28,7 +28,7 @@ function Routes(props) {
         <Route exact path={["/profile/*/about", "/profile/*/recipes", "/profile/*/diets", "/profile/*/subscriptions", "/profile/*/likes"]} render={(routeProps) => <Profile {...routeProps} {...props} />}></Route>
         <Route exact path={"/recipe"} render={(routeProps) => <Recipe {...routeProps} {...props} />}></Route>
         <Route exact path={"/recipe/:id"} render={(routeProps) => <RecipePreview {...routeProps} {...props} />}></Route>
-        <Route><NotFound /></Route>
+        <Route  render={(routeProps) => <NotFound {...routeProps} {...props} />}></Route>
       </Switch>
     </ScrollToTop>
   )

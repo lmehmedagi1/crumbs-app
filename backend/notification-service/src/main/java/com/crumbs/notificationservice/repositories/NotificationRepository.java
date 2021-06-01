@@ -8,11 +8,12 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.UUID;
 
 @Repository
 public interface NotificationRepository extends JpaRepository<Notification, UUID> {
-    Slice<Notification> findByUserId(UUID uuid, Pageable pageable);
+    List<Notification> findByUserIdOrderByCreatedAtDesc(UUID uuid);
 
     @Modifying
     @Query(value = "UPDATE Notification n SET n.isRead = true WHERE n.userId = ?1")

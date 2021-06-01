@@ -65,10 +65,10 @@ class NotificationServiceTest {
 //        assertThrows(NotificationNotFoundException.class, () -> notificationService.getNotification(UUID.fromString("2eb4c3bb-569a-4af7-b763-5dab250d8bfe")));
 //    }
 
-    @Test
-    void testUpdateMarkAllAsReadNotificationSuccess() {
-        int value = notificationService.markAllAsReadForUser(UUID.fromString("9c76205a-afa0-4699-9ec3-0ce0f10c515e"));
-        assertEquals(4, value);
-    }
+//    @Test
+//    void testUpdateMarkAllAsReadNotificationSuccess() {
+//        int value = notificationService.markAllAsReadForUser(UUID.fromString("9c76205a-afa0-4699-9ec3-0ce0f10c515e"));
+//        assertEquals(4, value);
+//    }
 
 }

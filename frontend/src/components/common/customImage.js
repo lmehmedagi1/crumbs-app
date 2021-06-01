@@ -14,7 +14,7 @@ export function CustomImage(props) {
     }, [props.imageId]);
 
     return (
-        <div className={props.className}>
+        <div className={props.className} onClick={props.onClick ? props.onClick : null}>
             <img
                 style={props.style}
                 src={image}

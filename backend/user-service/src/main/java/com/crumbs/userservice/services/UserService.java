@@ -20,8 +20,10 @@ import com.crumbs.userservice.repositories.SubscriptionRepository;
 import com.crumbs.userservice.repositories.UserProfileRepository;
 import com.crumbs.userservice.repositories.UserRepository;
 import com.crumbs.userservice.repositories.VerificationTokenRepository;
+import com.crumbs.userservice.requests.NotificationRequest;
 import com.crumbs.userservice.requests.RegisterRequest;
 import com.crumbs.userservice.requests.UserUpdateRequest;
+import com.crumbs.userservice.requests.UserWebClientRequest;
 import com.crumbs.userservice.responses.UserListResponse;
 import com.crumbs.userservice.utility.UserSpec;
 import org.apache.commons.lang.RandomStringUtils;
@@ -58,9 +60,10 @@ public class UserService {
     private final PasswordResetTokenRepository passwordResetTokenRepository;
     private final SubscriptionRepository subscriptionRepository;
     private final EmailService emailService;
+    private final UserWebClientRequest webClientRequest;
 
     @Autowired
-    public UserService(UserRepository userRepository, UserProfileRepository userProfileRepository, RefreshTokenRepository refreshTokenRepository, VerificationTokenRepository verificationTokenRepository, PasswordResetTokenRepository passwordResetTokenRepository, SubscriptionRepository subscriptionRepository, EmailService emailService) {
+    public UserService(UserRepository userRepository, UserProfileRepository userProfileRepository, RefreshTokenRepository refreshTokenRepository, VerificationTokenRepository verificationTokenRepository, PasswordResetTokenRepository passwordResetTokenRepository, SubscriptionRepository subscriptionRepository, EmailService emailService, UserWebClientRequest webClientRequest) {
         this.userRepository = userRepository;
         this.userProfileRepository = userProfileRepository;
         this.refreshTokenRepository = refreshTokenRepository;
@@ -68,6 +71,7 @@ public class UserService {
         this.passwordResetTokenRepository = passwordResetTokenRepository;
         this.subscriptionRepository = subscriptionRepository;
         this.emailService = emailService;
+        this.webClientRequest = webClientRequest;
     }
 
     @Transactional(readOnly = true)
@@ -248,10 +252,19 @@ public class UserService {
 
         if (subscription == null) {
             subscription = new Subscription();
+            subscription.setId(new SubscriptionId(userId, subscriberId));
             subscription.setSubscriber(subscriber);
             subscription.setAuthor(author);
             subscription.setCreatedAt(LocalDateTime.now(ZoneId.of(DEFAULT_TIMEZONE)));
             subscriptionRepository.save(subscription);
+
+            NotificationRequest notification = new NotificationRequest();
+            notification.setDescription(subscriber.getUserProfile().getFirstName() + " " + subscriber.getUserProfile().getLastName() + " has subscribed");
+            notification.setTitle("Subscription");
+            notification.setUserId(author.getId());
+            notification.setEntityId(subscriber.getId());
+            notification.setEntityType(NotificationRequest.EntityType.crumbs_user);
+            webClientRequest.sendUserSubscribedNotification(notification);
         }
         else subscriptionRepository.delete(subscription);
     }

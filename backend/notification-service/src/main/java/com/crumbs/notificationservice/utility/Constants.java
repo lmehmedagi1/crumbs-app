@@ -1,4 +1,4 @@
-package com.crumbs.userservice.utility;
+package com.crumbs.notificationservice.utility;
 
 public final class Constants {
     public final static String DEV_APP_URL = "http://localhost:3000";

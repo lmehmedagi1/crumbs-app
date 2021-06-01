@@ -3,29 +3,37 @@ import { NavDropdown, Overlay, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import SockJS from 'sockjs-client'
 import Stomp from 'stompjs'
 import moment from 'moment'
+import { getUser } from 'api/auth'
+import notificationsApi from 'api/notification'
 
 function NotificationBell(props) {
 
-    const [notifications, setNotifications] = useState([]);
     const [notificationsCount, setNotificationsCount] = useState(0);
+    const [notifications, setNotifications] = useState([]);
 
     const [show, setShow] = useState(false);
 
     const notificationSound = new Audio(`https://ia800203.us.archive.org/14/items/slack_sfx/flitterbug.mp3`);
 
     useEffect(() => {
-        const socket = new SockJS('hostUrl' + '/ws');
+        if (!(getUser() && getUser().id)) return;
+
+        const socket = new SockJS('http://localhost:8084/ws');
         const stompClient = Stomp.over(socket);
         stompClient.debug = null;
 
         stompClient.connect({}, () => {
             if (stompClient.connected)
-                stompClient.subscribe('/topic/id_usera', (notif) => {
+                stompClient.subscribe('/topic/' + getUser().id, (notif) => {
                     receiveNotification(JSON.parse(notif.body))
                 });
         });
 
-        if (notifications.length == 0) fetchNotifications();
+        fetchNotifications();
+
+        return () => {
+            stompClient.disconnect(() => {})
+        }
     }, []);
 
     useEffect(() => {
@@ -36,47 +44,105 @@ function NotificationBell(props) {
     }, [notificationsCount]);
 
     const receiveNotification = (notification) => {
-        let oldNotifications = notifications;
-        oldNotifications.unshift(notification);
-        setNotifications(oldNotifications);
-        setNotificationsCount(c => c + 1);
+        if (notifications.some(n => n.id == notification.notification.id)) return;
+        if (notifications == undefined || notifications.length == 0) fetchNotifications(notification.notification);
+        else addNotification(notifications, notification.notification);
+    }
+
+    const addNotification = (data, notification) => {
+        if (data.some(n => n.id === notification.id)) {
+            setNotifications(data)
+            setNotificationsCount(data.filter(x => x.isRead == false).length);
+        }
+        else {
+            setNotifications([notification, ...data]);
+            setNotificationsCount(data.filter(x => x.isRead == false).length + 1);
+        }
         notificationSound.play();
     }
 
-    const fetchNotifications = () => {
-        // To do: send fetch notifications request
+    const fetchNotifications = (notif) => {
+        notificationsApi.getUserNotifications((data, err) => {
+            if (err != null) return;
+            if (data == null) data = [];
+            if (notif) {
+                addNotification(data, notif)
+            }
+            else {
+                setNotifications(data);
+                setNotificationsCount(data.filter(x => x.isRead == false).length);
+            }
+        }, props.getToken(), props.setToken);
     }
 
     const markNotification = (notification, cb) => {
-        // To do: send mark as read/unread request        
-        let oldNotification = notification;
-        if (oldNotification.read) setNotificationsCount(c => c + 1);
-        else setNotificationsCount(c => c - 1);
-        oldNotification.read = !notification.read;
-        let oldNotifications = notifications.filter(x => {if (notification.id == x.id) return oldNotification; else return x; });
-        setNotifications(oldNotifications);
+        notificationsApi.markNotificationAsReadOrUnread((res, err) => {
+            let oldNotification = notification;
+            if (oldNotification.isRead) setNotificationsCount(c => c + 1);
+            else setNotificationsCount(c => c - 1);
+            oldNotification.isRead = !notification.isRead;
+            let oldNotifications = notifications.filter(x => { if (notification.id == x.id) return oldNotification; else return x; });
+            setNotifications(oldNotifications);
+            if (cb != null) cb();
+        }, { id: notification.id }, props.getToken(), props.setToken);
+
     }
 
-    const markAllAsRead = () => {
-        // To do: send mark all as read request
-        setNotificationsCount(0);
+    const deleteNotification = (notification) => {
+        notificationsApi.deleteNotification((res, err) => {
+            let newNotifications = notifications.filter(x => { return (notification.id != x.id); });
+            setNotifications(newNotifications);
+            if (!notification.isRead) setNotificationsCount(c => c - 1);
+        }, { id: notification.id }, props.getToken(), props.setToken);
+    }
+
+    const markAllAsRead = (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        notificationsApi.markAllAsRead((res, err) => {
+            let oldNotifications = notifications.filter(x => {
+                if (x.isRead == false) {
+                    let newNotification = x;
+                    newNotification.isRead = true;
+                    return newNotification;
+                } return x;
+            });
+            setNotifications(oldNotifications);
+            setNotificationsCount(0);
+        }, props.getToken(), props.setToken);
     }
 
     const getBellIcon = () => {
         return <div className="bellIcon">
-            <div><i className="fa fa-bell" aria-hidden="true"/></div>
+            <div><i className="fa fa-bell" aria-hidden="true" /></div>
             {notificationsCount > 0 ? <div className="count">{notificationsCount > 9 ? "9+" : notificationsCount}</div> : null}
         </div>
     }
 
+    const redirectOnClick = (notification, url) => {
+        if ((notification.entityType == "crumbs_user" && window.location.pathname.includes('profile')) || window.location.pathname.includes(notification.entityType + '/'))
+            props.update(notification.entityId);
+        else {
+            props.history.push({
+                pathname: url
+            });
+        }
+    }
+
     const notificationSelected = (notification) => {
-        markNotification(notification, () => {
-            if (props.updateProduct == null)
-                props.history.push({
-                    pathname: '/single-product/' + notification.productId
-                });
-            else props.updateProduct();
-        });
+
+        let url = "";
+        if (notification.entityType == "crumbs_user") url = "/profile/" + notification.entityId + "/about";
+        else if (notification.entityType == "recipe") url = "/recipe/" + notification.entityId;
+        else if (notification.entityType == "diet") url = "/diet/" + notification.entityId;
+
+        if (notification.isRead) redirectOnClick(notification, url);
+        else {
+            markNotification(notification, (res, err) => {
+                if (err) return;
+                redirectOnClick(notification, url);
+            });
+        }
     }
 
     const timestampToDateTime = timestamp => {
@@ -84,35 +150,38 @@ function NotificationBell(props) {
         return moment.utc(timestamp).local().format(longDateTimeFormat);
     }
 
+    const handleMouseDownClick = event => {
+        event.preventDefault();
+        event.stopPropagation();
+    }
+
     return (
         <div className="notificationBellContainer">
-            <NavDropdown title={getBellIcon()} id="nav-dropdown" show={show && notificationsCount > 0}
-                onMouseEnter={() => {setShow(true);}} 
-                onMouseLeave={() => {setShow(false);}}
-                onClick={() => {setShow(true);}} 
-                >
-                    {notifications.length == 0 ? "No notifications yet." :
+            <NavDropdown title={getBellIcon()} id="nav-dropdown" show={show} onBlur={() => setShow(s => !s)} onFocus={() => setShow(s => !s)} >
+                {notifications.length == 0 ? <div className="empty">No notifications yet.</div> :
                     notifications.map((notification, index) => (
-                        <NavDropdown.Item eventKey={index}  onClick={() => notificationSelected(notification)}>
-                            <div className={notification.read ? "notification" : "notification unread"}>
+                        <NavDropdown.Item eventKey={index} onMouseDown={() => notificationSelected(notification)}>
+                            <div className={notification.isRead ? "notification" : "notification unread"}>
                                 <div className="content">
-                                <h2>{notification.content}</h2>
-                                <h3>{timestampToDateTime(notification.time)}</h3>
+                                    <h1>{notification.title}</h1>
+                                    <h2>{notification.description}</h2>
+                                    <h3>{timestampToDateTime(notification.createdAt)}</h3>
                                 </div>
                                 <div>
-                                <OverlayTrigger
-                                placement="bottom"
-                                overlay={
-                                    <Tooltip id="button-tooltip-2">Mark as {notification.read ? "un" : ""}read</Tooltip>
-                                }
-                                >
-                                    <button><i onClick={(event) => { event.stopPropagation(); markNotification(notification, null);}} className={notification.read ? "fa fa-envelope" : "fa fa-envelope-open"} aria-hidden="true"/></button>
-                                </OverlayTrigger>
+                                    <OverlayTrigger placement="bottom" overlay={
+                                        <Tooltip id="button-tooltip-2">Delete</Tooltip>} >
+                                        <button onMouseDown={handleMouseDownClick} onClick={(event) => { event.stopPropagation(); event.preventDefault(); deleteNotification(notification); }}><i className="fa fa-trash" aria-hidden="true" /></button>
+                                    </OverlayTrigger>
+                                    <OverlayTrigger placement="bottom" overlay={
+                                        <Tooltip id="button-tooltip-2">Mark as {notification.isRead ? "un" : ""}read</Tooltip>
+                                    } >
+                                        <button onMouseDown={handleMouseDownClick} onClick={(event) => { event.stopPropagation(); event.preventDefault(); markNotification(notification, null); }}><i className={notification.isRead ? "fa fa-envelope" : "fa fa-envelope-open"} aria-hidden="true" /></button>
+                                    </OverlayTrigger>
                                 </div>
                             </div>
                         </NavDropdown.Item>
                     ))}
-                    {notificationsCount > 0 ? <button className="markAllButton" onClick={markAllAsRead}> Mark all as read </button> : null}
+                {notificationsCount > 0 ? <button className="markAllButton" onMouseDown={handleMouseDownClick} onClick={markAllAsRead}> Mark all as read </button> : null}
             </NavDropdown>
         </div>
     )
