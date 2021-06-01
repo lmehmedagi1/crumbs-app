@@ -5,7 +5,8 @@ import { Tab, Nav, Row, Spinner } from 'react-bootstrap'
 import { getUser, userIsLoggedIn } from 'api/auth'
 import Alert from 'components/alert/alert'
 import Menu from 'components/common/menu'
-
+import { CustomImage } from 'components/common/customImage'
+import RecipeForm from 'components/recipe/recipeForm'
 
 import AboutTab from 'components/profile/tabs/AboutTab'
 import RecipesTab from 'components/profile/tabs/RecipesTab'
@@ -15,9 +16,9 @@ import LikesTab from 'components/profile/tabs/LikesTab'
 
 import EditProfileModal from 'components/profile/editProfile'
 
-import profileApi from 'api/profile'
+import ScrollButton from 'components/utility/scrollButton'
 
-const imagePlaceholder = "https://www.firstfishonline.com/wp-content/uploads/2017/07/default-placeholder-700x700.png";
+import profileApi from 'api/profile'
 
 function Profile(props) {
 
@@ -28,11 +29,13 @@ function Profile(props) {
     const [variant, setVariant] = useState("");
 
     const [activeTab, setActiveTab] = useState("about");
+    const [tableKey, setTableKey] = useState(7);
 
     const [user, setUser] = useState({firstName: '', lastName: ''});
     const [isSubscribed, setIsSubscribed] = useState(false);
 
     const [showEditModal, setShowEditModal] = useState(false);
+    const [showRecipeModal, setShowRecipeModal] = useState(false);
 
     useEffect(() => {
         readLocationPathname();
@@ -49,14 +52,17 @@ function Profile(props) {
 
     const loadUser = (id, tab) => {
 
+        setLoading(true);
         profileApi.getUserInfo((data) => {
             setUser(data);
             setActiveTab(tab);
+            const newTableKey = tableKey * 89;
+            setTableKey(newTableKey);
+            setLoading(false);
         }, {id: id})
 
         if (userIsLoggedIn() && !isMyAccount()) {
             profileApi.checkIfUserIsSubscribed((data) => {
-                console.log("Is subbed: ", data);
                 setIsSubscribed(data);
             }, {id: id}, props.getToken(), props.setToken);
         }
@@ -86,12 +92,34 @@ function Profile(props) {
     }
 
     const handleSubscribeClick = () => {
-        // To do: change button and call sub/unsub function
+        setLoading(true);
+        setIsSubscribed(value => !value);
+        profileApi.subscribe(() => {
+            setLoading(false);
+        }, {id: user.id}, props.getToken(), props.setToken);
     }
 
     const handleProfileUpdate = () => {
         readLocationPathname();
         setShowEditModal(false);
+    }
+
+    const handleRowClick = (id, type) => {
+        if (type == "subscribers" || type == "subscriptions") {
+            props.history.replace('/profile/' + id + '/' + activeTab, { activeKey: activeTab });
+            loadUser(id, activeTab);
+        }
+        else if (type.toLowerCase().includes("recipe")) {
+            props.history.push({
+                pathname: '/recipe/' + id
+            });
+        }
+        else if (type.toLowerCase().includes("diet")) {
+            props.history.push({
+                pathname: '/diet/' + id
+            });
+        }
+        ScrollButton.scrollToTop();
     }
 
     return (
@@ -102,15 +130,16 @@ function Profile(props) {
             <div className="profileContainer">
                 <div className="profileHeader">
                     <div>
-                        <div className="avatarWrapper"><img src={imagePlaceholder} alt="Avatar"/></div>
+                        <CustomImage imageId={user.avatar} className="avatarWrapper" alt="User avatar" />
                         <p>{user && user.firstName} {user && user.lastName}</p>
                     </div>
                     <div className="buttonWrapper">
                         {isMyAccount() ?
                         <button onClick={() => setShowEditModal(true)} className="editButton">Edit</button>
                         :
-                        <button onClick={handleSubscribeClick} className={isSubscribed ? "unsubscribeButton" : "subscribeButton"}>{getSubscriptionButtonText()}</button>
+                        <button disabled={!userIsLoggedIn()} onClick={handleSubscribeClick} className={isSubscribed ? "unsubscribeButton" : "subscribeButton"}>{getSubscriptionButtonText()}</button>
                         }
+                        {!userIsLoggedIn() ? <p>You have to be logged in to subscribe</p> : null}
                     </div>
                 </div>
                 <div className="profileBody">
@@ -143,23 +172,26 @@ function Profile(props) {
                         <AboutTab user={user && user} /> 
                         </Tab.Pane>
                         <Tab.Pane eventKey="recipes" active={activeTab == "recipes"}>
-                        <RecipesTab tab={activeTab} userId={user && user.id} setShow={setShow} setMessage={setMessage} setVariant={setVariant} setLoading={setLoading}/>
+                        <RecipesTab key={tableKey} tab={activeTab} userId={user && user.id} handleRowClick={handleRowClick} setLoading={setLoading}/>
                         </Tab.Pane>
                         <Tab.Pane eventKey="diets"   active={activeTab == "diets"}>
-                        <DietsTab  tab={activeTab} userId={user && user.id} setShow={setShow} setMessage={setMessage} setVariant={setVariant} getToken={props.getToken} setToken={props.setToken} setLoading={setLoading}/>
+                        <DietsTab key={tableKey} tab={activeTab} userId={user && user.id} handleRowClick={handleRowClick} setLoading={setLoading}/>
                         </Tab.Pane>
                         <Tab.Pane eventKey="subscriptions" active={activeTab == "subscriptions"}>
-                        <SubscriptionsTab userId={user && user.id} setShow={setShow} setMessage={setMessage} setVariant={setVariant} getToken={props.getToken} setToken={props.setToken} setLoading={setLoading} />
+                        <SubscriptionsTab key={tableKey} userId={user && user.id} handleRowClick={handleRowClick} setLoading={setLoading}/>
                         </Tab.Pane>
                         <Tab.Pane eventKey="likes"   active={activeTab == "likes"}>
-                        <LikesTab userId={user && user.id} setShow={setShow} setMessage={setMessage} setVariant={setVariant} getToken={props.getToken} setToken={props.setToken} setLoading={setLoading}/>
+                        <LikesTab key={tableKey} userId={user && user.id} setShow={setShow} setMessage={setMessage} setVariant={setVariant} getToken={props.getToken} setToken={props.setToken} setLoading={setLoading}/>
                         </Tab.Pane>
                     </Tab.Content>
                 </Row>
                 </Tab.Container>
+
+                {isMyAccount() && activeTab=="recipes" ? <button className="addButton" onClick={() => {setShowRecipeModal(true)}}> ADD NEW RECIPE </button> : null}
                 </div>
             </div>
             <EditProfileModal showModal={showEditModal} handleCloseEditModal={() => setShowEditModal(false)} getToken={props.getToken} setToken={props.setToken} handleProfileUpdate={handleProfileUpdate} />
+            <RecipeForm show={showRecipeModal} title="Add Recipe" onHide={() => setShowRecipeModal(false)} />
         </div>
         </div>
     )

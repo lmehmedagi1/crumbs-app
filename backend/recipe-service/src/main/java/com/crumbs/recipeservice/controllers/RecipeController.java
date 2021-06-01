@@ -165,7 +165,7 @@ public class RecipeController {
                         .getRecipePreviewsForCategory(categoryId, pageNo, pageSize, sort)).withSelfRel());
     }
 
-    @RequestMapping(params = "id", method = RequestMethod.GET)
+    @GetMapping(path = "recipe", params = "id")
     public EntityModel<Recipe> getRecipe(@RequestParam("id") @NotNull UUID id) {
         return recipeModelAssembler.toModel(recipeService.getRecipe(id));
     }
@@ -176,6 +176,7 @@ public class RecipeController {
     }
 
     @RequestMapping(params = {"id", "details"}, method = RequestMethod.GET)
+    @GetMapping(path = "recipe", params = {"id", "details"})
     public EntityModel<?> getRecipe(@RequestParam("id") @NotNull UUID id,
                                     @RequestParam(value = "details", defaultValue = "false") @NotNull Boolean details) {
         if (!details)
@@ -241,6 +242,7 @@ public class RecipeController {
         List<UserRecipeView> recipes = recipeService.getUserRecipes(id);
         for (UserRecipeView recipe : recipes) {
             recipe.setRating(webClientRequest.getRecipeRating(recipe.getId()));
+            recipe.setImage(recipeService.getRecipeImage(recipe.getId()));
         }
         return ResponseEntity.ok(recipes);
     }
@@ -249,6 +251,7 @@ public class RecipeController {
     public ResponseEntity<UserRecipeView> getRecipeView(@RequestParam UUID id) {
         UserRecipeView recipe = recipeService.getRecipeView(id);
         recipe.setRating(webClientRequest.getRecipeRating(recipe.getId()));
+        recipe.setImage(recipeService.getRecipeImage(recipe.getId()));
         return ResponseEntity.ok(recipe);
     }
 }

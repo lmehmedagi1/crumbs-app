@@ -1,47 +1,31 @@
 import axios from "axios";
 import { env } from "../configs/env";
 
-axios.interceptors.response.use(
-    response => response,
-    error => {
-      throw error
-    }
-  )
-  
 export function get(id) {
     return {
         type: "RECIPE_GET",
-        payload: axios("http://localhost:8090/recipe-service/recipes", {
+        payload: axios(env.BASE_PATH + "/api/recipes/" + id, {
             method: "GET",
-            params: {
-                id
-            }
         })
     };
 }
 
 export function getMostPopularRecipes(pageNumber) {
-
     return {
         type: "RECIPE_GET_MOST_POPULAR",
-        payload: axios("http://localhost:8090/recipe-service/recipes/topMonthly", {
+        payload: axios(env.BASE_PATH + "recipe-service/recipes/topMonthly", {
             method: "GET",
             params: {
                 pageNo: pageNumber
-            }
+            },
         })
     };
 }
 
-export function getDailyRecipes(pageNumber) {
+export function setState(data) {
     return {
-        type: "RECIPE_GET_DAILY",
-        payload: axios("http://localhost:8090/recipe-service/recipes/topDaily", {
-            method: "GET",
-            params: {
-                pageNo: pageNumber
-            }
-        })
+        type: "RECIPE_SET_STATE",
+        payload: data,
     };
 }
 
@@ -89,10 +73,17 @@ export function updateLike(is_liked, entity, entityId, reviewId) {
 }
 
 
+export function clearState() {
+    return {
+        type: "RECIPE_CLEAR_STATE",
+    };
+}
+
+
 export function getRecipeRating(recipeId) {
     return {
         type: "RECIPE_GET_RATING",
-        payload: axios("http://localhost:8090/review-service/reviews/rating", {
+        payload: axios(env.BASE_PATH + "review-service/reviews/rating", {
             method: "GET",
             params: {
                 recipeId
@@ -118,10 +109,13 @@ export function getEntityReviewForUser(entityId) {
     };
 }
 
-
-
+export function getRecipeReviews(recipeId) {
 export function postComment(comment, entity, entityId, reviewId) {
     return {
+        type: "RECIPE_GET_REVIEWS",
+        payload: axios(env.BASE_PATH + "review-service/reviews", {
+            method: "GET",
+            params: { recipeId },
         type: "RECIPE_POST_COMMENT",
         payload: axios("http://localhost:8090/review-service/reviews", {
             method: "PATCH",
@@ -178,16 +172,12 @@ export function getRecipeReviews(recipeId, pageNo) {
     }
 }
 
-
-export function clearState() {
+export function getDailyRecipes(pageNo) {
     return {
-        type: "RECIPE_CLEAR_STATE",
-    };
-}
-
-export function setState(data) {
-    return {
-        type: "RECIPE_SET_STATE",
-        payload: data,
+        type: "RECIPE_GET_DAILY",
+        payload: axios(env.BASE_PATH + "recipe-service/recipes/topDaily", {
+            method: "GET",
+            params: { pageNo }
+        })
     };
 }

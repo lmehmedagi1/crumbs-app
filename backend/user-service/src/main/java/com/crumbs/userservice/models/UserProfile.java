@@ -56,7 +56,7 @@ public class UserProfile implements Serializable {
     @JoinColumn(name = "user_id")
     private User user;
 
-    private byte[] avatar;
+    private String avatar;
 
     @Column(name = "email_verified")
     private boolean emailVerified;

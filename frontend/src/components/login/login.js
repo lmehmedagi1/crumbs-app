@@ -59,7 +59,9 @@ function Login(props) {
     }
 
     const handleForgotPasswordCLick = () => {
-        // To do: password reset logic
+        props.history.push({
+            pathname: '/reset-password'
+        });
     }
 
     return (

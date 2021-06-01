@@ -30,4 +30,6 @@ public class UserUpdateRequest {
     private String email;
 
     private String username;
+
+    private String avatar;
 }

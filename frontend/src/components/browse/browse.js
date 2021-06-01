@@ -1,20 +1,25 @@
-import React, { useState } from 'react'
-import { withRouter, Link } from 'react-router-dom'
-import { Row, Col, Form, CardGroup, Container, Button } from 'react-bootstrap'
+import { setState } from 'actions/recipeActions'
 import Menu from 'components/common/menu'
 import RecipeCard from 'components/common/recipeCard'
-import SelectField from 'components/common/selectField';
-import { BsPlusCircleFill } from "react-icons/bs"
+import SelectField from 'components/common/selectField'
 import RecipeForm from 'components/recipe/recipeForm'
-import { env } from 'configs/env'
+import React, { useState } from 'react'
+import { Button, CardGroup, Col, Container, Form, Row } from 'react-bootstrap'
+import { BsPlusCircleFill } from "react-icons/bs"
+import { useDispatch, useSelector } from 'react-redux'
+import { Link, withRouter } from 'react-router-dom'
 
 function Browse(props) {
 
+    const recipe = useSelector(state => state.recipes.recipe);
+    const dispatch = useDispatch()
+
     const [show, setShow] = useState(false);
     const [title, setTitle] = useState()
-    const [preparation, setPreparation] = useState()
-    const [meal, setMeal] = useState()
-    const [type, setType] = useState()
+
+    const category_api_path = "recipe-service/categories/type";
+    const ingredient_api_path = "recipe-service/ingredients/type";
+
     const [products] = useState([
         {
             recipeName: "Ime recepta",
@@ -67,29 +72,18 @@ function Browse(props) {
 
     ]);
 
-    const prepTimeoptions = [
-        { value: '30min', label: '< 30 min' },
-        { value: '30-60m', label: '30 - 60 min' },
-        { value: '1h', label: '1h+' },
-    ]
-
-    const mealOptions = [
-        { value: 'b', label: 'Breakfast' },
-        { value: 'l', label: 'Lunch' },
-        { value: 'd', label: 'Dinner' },
-    ]
-
-    const typeOptions = [
-        { value: 'v', label: 'Vegan' },
-        { value: 'g', label: 'Gluten Free' }
-    ]
-
     const handleSearchChange = search => {
         props.history.push({
             pathname: '/browse',
             state: { search: search }
         });
     }
+
+    const handleOnSelectChange = (value, name) => {
+        value = value ? value : [];
+        dispatch(setState({ [name]: value }))
+    };
+
 
     return (
         <Container>
@@ -108,29 +102,48 @@ function Browse(props) {
                         />
                     </Form.Group>
                     <SelectField
-                        label="Preparation Time"
-                        value={preparation}
-                        name="selectFolder"
-                        loadOptions={(inputValue, callback) => { callback(prepTimeoptions) }}
-                        onChange={item => setPreparation(item)}
+                        label="Ingredients"
+                        value={recipe.ingredients}
+                        name="ingredients"
+                        isMulti={true}
+                        onChange={item => handleOnSelectChange(item, "ingredients")}
+                        type="Tezina pripreme"
+                        apiPath={ingredient_api_path}
                         viewMode={props.viewMode} />
                     <SelectField
-                        label="Meal of the Day"
-                        value={meal}
-                        isMulti={true}
-                        name="selectFolder"
-                        loadOptions={(inputValue, callback) => { callback(mealOptions) }}
-                        onChange={item => setMeal(item)}
+                        label="Preparation Level"
+                        value={recipe.preparationLevel}
+                        name="preparationLevel"
+                        onChange={item => handleOnSelectChange(item, "preparationLevel")}
+                        type="Tezina pripreme"
+                        apiPath={category_api_path}
+                        viewMode={props.viewMode} />
+                    <SelectField
+                        label="Method"
+                        value={recipe.preparationMethod}
+                        name="preparationMethod"
+                        type="Nacin pripreme"
+                        apiPath={category_api_path}
+                        onChange={item => dispatch(setState({ preparationMethod: item.id, preparationMethod: item }))}
                         viewMode={props.viewMode} />
 
                     <SelectField
-                        label="Meal Type"
-                        value={type}
-                        isMulti={true}
-                        name="selectFolder"
-                        loadOptions={(inputValue, callback) => { callback(typeOptions) }}
-                        onChange={item => setType(item)}
-                        viewMode={props.viewMode} />
+                        label="Group"
+                        value={recipe.group}
+                        name="group"
+                        apiPath={category_api_path}
+                        onChange={item => dispatch(setState({ group: item.id, group: item }))}
+                        viewMode={props.viewMode}
+                        type="Grupa jela" />
+
+                    <SelectField
+                        label="Season"
+                        value={recipe.season}
+                        name="season"
+                        apiPath={category_api_path}
+                        onChange={item => dispatch(setState({ season: item }))}
+                        viewMode={props.viewMode}
+                        type="Sezona" />
 
                     <Button variant="outline-primary" className="addRecipe float-right" onClick={() => setShow(true)}>
                         <BsPlusCircleFill />
@@ -146,7 +159,7 @@ function Browse(props) {
                     </CardGroup>
                 </Col>
             </Row>
-            <RecipeForm title="Create New Recipe" show={show} onHide={() => setShow(false)} />
+            <RecipeForm title="Create" show={show} onHide={() => setShow(false)} getToken={props.getToken} setToken={props.setToken} />
         </Container>
     )
 }

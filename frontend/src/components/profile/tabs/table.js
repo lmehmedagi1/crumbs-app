@@ -7,20 +7,25 @@ import paginationFactory from 'react-bootstrap-table2-paginator';
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css'
 import 'react-bootstrap-table2-paginator/dist/react-bootstrap-table2-paginator.min.css'
 
-import profileApi from 'api/profile'
+import { CustomImage } from 'components/common/customImage'
 
-const imagePlaceholder = "https://www.firstfishonline.com/wp-content/uploads/2017/07/default-placeholder-700x700.png";
+import profileApi from 'api/profile'
 
 function CustomTable(props) {
 
     const [values, setValues] = useState([]);
+    const [currTab, setCurrTab] = useState("");
 
     useEffect(() => {
-        setValues([]);
-        if (!props.userId) return;
-        console.log("tabela", props)
+
+        let tab = props.tab;
+
+        if (!["diets", "recipes", "subscribers", "subscriptions", "likedRecipes", "likedDiets"].includes(tab)) return;
+        if (tab == currTab || !props.userId) return;
+        setCurrTab(tab);
+        
         props.setLoading(true);
-        switch (props.tab) {
+        switch (tab) {
             case "recipes":
                 profileApi.getUserRecipes((data) => {
                     if (data == null) data = [];
@@ -64,7 +69,9 @@ function CustomTable(props) {
                 }, {id: props.userId}, props.getToken(), props.setToken);   
                 break;
             default:
+                console.log("default", values)
                 props.setLoading(false);
+                setValues([]);
                 break;
         }
     }, [props.tab]);
@@ -74,7 +81,7 @@ function CustomTable(props) {
             dataField: 'title',
             text: '',
             formatter: (value, row) => {
-                return <div><img src={imagePlaceholder}/></div>
+                return <CustomImage imageId={row.image} className="rowImage" alt="Image"/>
             }
         }, {
             dataField: 'title',
@@ -96,7 +103,7 @@ function CustomTable(props) {
             dataField: 'firstName',
             text: '',
             formatter: (value, row) => {
-                return <div><img src={imagePlaceholder}/></div>
+                return <CustomImage imageId={row.avatar} className="rowImage" alt="User avatar"/>
             }
         }, {
             dataField: 'firstName',
@@ -126,6 +133,12 @@ function CustomTable(props) {
         }]
     };
 
+    const clickEvents = {
+        onClick: (e, row, rowIndex) => {
+            props.handleRowClick(row.id, currTab);
+        }
+    }
+
     const getNoValuesMessage = () => {
         if (props.tab == "likedRecipes") return "liked recipes";
         if (props.tab == "likedDiets") return "liked diets";
@@ -145,7 +158,7 @@ function CustomTable(props) {
         <div className="customTable">
             {getTitle()}
             {values.length ? 
-            <BootstrapTable keyField='id' data={ values } columns={ props.tab == "diets" || props.tab == "recipes" || props.tab.includes("liked") ? recipesColumns : userColumns } pagination={ paginationFactory(options) } />
+            <BootstrapTable hover={true} keyField='id' data={ values } columns={ props.tab == "diets" || props.tab == "recipes" || props.tab.includes("liked") ? recipesColumns : userColumns } pagination={ paginationFactory(options) } rowEvents={ clickEvents } />
             :
             <Table className="emptyTable">
             <thead>

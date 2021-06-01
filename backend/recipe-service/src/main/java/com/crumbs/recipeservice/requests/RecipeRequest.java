@@ -1,12 +1,14 @@
 package com.crumbs.recipeservice.requests;
 
 import com.crumbs.recipeservice.utility.annotation.NullOrNotBlank;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.collect.Lists;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
+import java.util.List;
+import java.util.UUID;
 
 @Data
 @AllArgsConstructor
@@ -31,4 +33,20 @@ public class RecipeRequest {
     @Pattern(regexp = "^[a-zA-Z0-9_\\s\\\\.,\\-!?%']*$", flags = Pattern.Flag.UNICODE_CASE, message = "Recipe method can only contain letters, numbers " +
             "and special characters: _ \\ . , - ! ? % '")
     private String method;
+
+    @Size(max = 3000, message = "Recipe method exceeds allowed limit of 3000 characters!")
+    @Pattern(regexp = "^[a-zA-Z0-9_\\s\\\\.,\\-!?%]*$", flags = Pattern.Flag.UNICODE_CASE, message = "Recipe method can only contain letters, numbers " +
+            "and special characters: _ \\ . , - ! ? %")
+    private String advice;
+
+    @NotNull
+    @Min(value = 1, message = "Preparation time in minutes must be greater than zero!")
+    @JsonProperty(value = "preparation_time")
+    private Integer preparationTime;
+
+    private List<UUID> categories;
+
+    private List<UUID> ingredients;
+
+    private List<String> images;
 }

@@ -37,11 +37,11 @@ public interface RecipeRepository extends JpaRepository<Recipe, UUID> {
 
     Recipe findByIdAndUserId(UUID id, UUID userId);
 
-    @Query("SELECT new com.crumbs.recipeservice.projections.UserRecipeView(r.id, r.title, r.description, 0.) " +
+    @Query("SELECT new com.crumbs.recipeservice.projections.UserRecipeView(r.id, r.title, r.description, 0., '') " +
             "FROM Recipe r WHERE r.userId=?1")
     List<UserRecipeView> findByUserId(UUID id);
 
-    @Query("SELECT new com.crumbs.recipeservice.projections.UserRecipeView(r.id, r.title, r.description, 0.) " +
+    @Query("SELECT new com.crumbs.recipeservice.projections.UserRecipeView(r.id, r.title, r.description, 0., '') " +
             "FROM Recipe r WHERE r.id=?1")
     UserRecipeView findViewById(UUID id);
 }

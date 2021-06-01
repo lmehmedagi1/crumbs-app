@@ -36,7 +36,13 @@
                 letter-spacing: 0.63px;
                 width: 160px;
                 height: 57px;
-                margin: 40px auto;
+                margin-top: 40px;// auto;
+            }
+
+            p {
+                color: $text-color;
+                font-size: 16px;
+                margin-top: 5px;
             }
 
             .subscribeButton, .editButton {
@@ -48,6 +54,24 @@
 
     .profileBody {
         margin-top: 30px;
+
+        .spinner {
+            margin-top: 15px;
+        }
+
+        .addButton {
+            background: #FFFFFF;
+                border: 3px solid $default-purple-color;
+                box-shadow: 3px 3px 0 0 rgba(131,103,216,0.31);
+                font-size: 16px;
+                font-weight: bold;
+                background: $default-purple-color;
+                color: white;
+                letter-spacing: 0.63px;
+                width: 200px;
+                height: 57px;
+                margin: 40px auto;
+        }
 
         .nav {
             .nav-item {

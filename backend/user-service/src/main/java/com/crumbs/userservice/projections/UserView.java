@@ -20,4 +20,7 @@ public interface UserView {
 
     @Value("#{target.userProfile.phoneNumber}")
     String getPhoneNumber();
+
+    @Value("#{target.userProfile.avatar}")
+    String getAvatar();
 }

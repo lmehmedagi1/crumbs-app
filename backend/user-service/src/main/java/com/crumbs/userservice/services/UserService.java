@@ -5,14 +5,18 @@ import com.crumbs.userservice.exceptions.TokenExpiredException;
 import com.crumbs.userservice.exceptions.UnauthorizedException;
 import com.crumbs.userservice.exceptions.UserAlreadyExistsException;
 import com.crumbs.userservice.exceptions.UserNotFoundException;
+import com.crumbs.userservice.models.PasswordResetToken;
 import com.crumbs.userservice.models.RefreshToken;
 import com.crumbs.userservice.models.Subscription;
+import com.crumbs.userservice.models.SubscriptionId;
 import com.crumbs.userservice.models.User;
 import com.crumbs.userservice.models.UserProfile;
 import com.crumbs.userservice.models.VerificationToken;
 import com.crumbs.userservice.projections.UserClassView;
 import com.crumbs.userservice.projections.UserView;
+import com.crumbs.userservice.repositories.PasswordResetTokenRepository;
 import com.crumbs.userservice.repositories.RefreshTokenRepository;
+import com.crumbs.userservice.repositories.SubscriptionRepository;
 import com.crumbs.userservice.repositories.UserProfileRepository;
 import com.crumbs.userservice.repositories.UserRepository;
 import com.crumbs.userservice.repositories.VerificationTokenRepository;
@@ -35,13 +39,13 @@ import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-import static com.crumbs.userservice.utility.Constants.REFRESH_TOKEN_EXPIRATION_TIME;
-import static com.crumbs.userservice.utility.Constants.VERIFICATION_TOKEN_EXPIRATION_TIME;
+import static com.crumbs.userservice.utility.Constants.*;
 
 @Service
 @Validated
@@ -51,27 +55,25 @@ public class UserService {
     private final UserProfileRepository userProfileRepository;
     private final RefreshTokenRepository refreshTokenRepository;
     private final VerificationTokenRepository verificationTokenRepository;
+    private final PasswordResetTokenRepository passwordResetTokenRepository;
+    private final SubscriptionRepository subscriptionRepository;
+    private final EmailService emailService;
 
     @Autowired
-    public UserService(UserRepository userRepository, UserProfileRepository userProfileRepository, RefreshTokenRepository refreshTokenRepository, VerificationTokenRepository verificationTokenRepository) {
+    public UserService(UserRepository userRepository, UserProfileRepository userProfileRepository, RefreshTokenRepository refreshTokenRepository, VerificationTokenRepository verificationTokenRepository, PasswordResetTokenRepository passwordResetTokenRepository, SubscriptionRepository subscriptionRepository, EmailService emailService) {
         this.userRepository = userRepository;
         this.userProfileRepository = userProfileRepository;
         this.refreshTokenRepository = refreshTokenRepository;
         this.verificationTokenRepository = verificationTokenRepository;
+        this.passwordResetTokenRepository = passwordResetTokenRepository;
+        this.subscriptionRepository = subscriptionRepository;
+        this.emailService = emailService;
     }
 
     @Transactional(readOnly = true)
     public User getUserById(@NotNull UUID id) {
         return userRepository.findById(id).orElseThrow(() ->
                 new UserNotFoundException("Specified ID does not exists!"));
-    }
-
-    @Transactional(readOnly = true)
-    public User getUserByEmail(@NotBlank String email) {
-        final User user = userRepository.findByEmail(email);
-        if (user == null)
-            throw new UserNotFoundException("Specified email does not exists!");
-        return user;
     }
 
     @Transactional(readOnly = true)
@@ -233,11 +235,28 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public boolean checkIfUserIsSubscribed(UUID userId, UUID id) {
-        User user = userRepository.findById(userId).orElseThrow(() ->
-                new UserNotFoundException("Specified ID does not exists!"));
-        return user.getSubscriptions().stream().anyMatch(u -> u.getId().equals(id));
+        Subscription subscription =  subscriptionRepository.findById(new SubscriptionId(id, userId)).orElse(null);
+        return subscription != null;
     }
 
+    @Transactional
+    public void subscribe(UUID subscriberId, UUID userId) {
+        Subscription subscription = subscriptionRepository.findById(new SubscriptionId(userId, subscriberId)).orElse(null);
+
+        User subscriber = userRepository.findById(subscriberId).orElseThrow(UserNotFoundException::new);
+        User author = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+
+        if (subscription == null) {
+            subscription = new Subscription();
+            subscription.setSubscriber(subscriber);
+            subscription.setAuthor(author);
+            subscription.setCreatedAt(LocalDateTime.now(ZoneId.of(DEFAULT_TIMEZONE)));
+            subscriptionRepository.save(subscription);
+        }
+        else subscriptionRepository.delete(subscription);
+    }
+
+    @Transactional
     public User updateUserInfo(UserUpdateRequest userUpdateRequest, UUID userId) {
         User user = userRepository.findById(userId).orElseThrow(() ->
                 new UserNotFoundException("Specified ID does not exists!"));
@@ -254,6 +273,53 @@ public class UserService {
     public UserClassView getUserViewById(UUID id) {
         UserClassView user = userRepository.getUserPreview(id);
         if (user == null) throw new UserNotFoundException();
+        return user;
+    }
+
+    @Transactional
+    public void sendResetPasswordEmail(String email) {
+
+        final User user = userRepository.findByEmail(email);
+
+        if (user == null) throw new UserNotFoundException();
+
+        if (passwordResetTokenRepository.findByUser_Id(user.getId()) != null)
+            throw new IllegalArgumentException("Email was already sent");
+
+        final String value = RandomStringUtils.randomAlphanumeric(18);
+
+        PasswordResetToken emailToken = new PasswordResetToken();
+        emailToken.setValue(value);
+        emailToken.setUser(user);
+        emailToken.setValidUntil(new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRATION_TIME));
+
+        passwordResetTokenRepository.save(emailToken);
+
+        final String userName = user.getUserProfile().getFirstName() + " " + user.getUserProfile().getLastName();
+        emailService.sendPasswordResetEmail(user.getEmail(), value, userName);
+    }
+
+    @Transactional
+    public User resetPassword(String value, String password) {
+
+        final PasswordResetToken emailToken = passwordResetTokenRepository.findByValue(value);
+
+        if (emailToken == null)
+            throw new UnauthorizedException("Invalid token");
+
+        if (emailToken.getValidUntil().before(new Date())) {
+            passwordResetTokenRepository.deleteById(emailToken.getId());
+            throw new UnauthorizedException("Reset password token has expired");
+        }
+
+        final User user = userRepository.findByEmail(emailToken.getUser().getEmail());
+
+        if (user == null) throw new UserNotFoundException();
+
+        passwordResetTokenRepository.deleteById(emailToken.getId());
+
+        user.setPassword((new BCryptPasswordEncoder()).encode(password));
+        userRepository.save(user);
         return user;
     }
 }

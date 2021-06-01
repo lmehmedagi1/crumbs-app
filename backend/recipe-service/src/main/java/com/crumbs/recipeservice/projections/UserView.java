@@ -12,7 +12,7 @@ import java.util.UUID;
 public class UserView {
     private UUID userId;
     private String username;
-    private byte[] avatar;
+    private String avatar;
 
     public UserView(UUID userId) {
         this.userId = userId;

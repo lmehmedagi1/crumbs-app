@@ -44,8 +44,6 @@ function EditProfileModal(props) {
 
         user.gender = lowerFirstLetter(user.gender);
 
-        console.log("EDITUJEM", user)
-
         setLoading(true);
 
         profileApi.updateUserInfo(() => {

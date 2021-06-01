@@ -7,10 +7,10 @@ function SubscriptionsTab(props) {
     return (
         <div className="subscriptionsTab">
             <div>
-            <CustomTable userId={props.userId} tab={"subscribers"} setShow={props.setShow} setMessage={props.setMessage} setVariant={props.setVariant} getToken={props.getToken} setToken={props.setToken} setLoading={props.setLoading}></CustomTable>
+            <CustomTable userId={props.userId} tab={"subscribers"} handleRowClick={props.handleRowClick} setLoading={props.setLoading}></CustomTable>
             </div>
             <div>
-            <CustomTable userId={props.userId} tab={"subscriptions"} setShow={props.setShow} setMessage={props.setMessage} setVariant={props.setVariant} getToken={props.getToken} setToken={props.setToken} setLoading={props.setLoading}></CustomTable>
+            <CustomTable userId={props.userId} tab={"subscriptions"} handleRowClick={props.handleRowClick} setLoading={props.setLoading}></CustomTable>
             </div>
         </div>
     )

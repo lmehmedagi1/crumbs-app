@@ -74,7 +74,6 @@ class Auth extends React.Component {
     }
 
     register(cb, failCb, values) {
-        console.log("REGISTER 2 ", values)
         let url = hostUrl + 'user-service/auth/register';
         let parameters = {
             first_name: values.firstName,
@@ -98,6 +97,25 @@ class Auth extends React.Component {
     confirmRegistration(cb, token) {
         let url = hostUrl + 'user-service/auth/registration-confirmation';
         Requests.sendGetRequest(cb, url, {params: {token: token}}, (response) => {}, null);
+    }
+
+    resetPassword(cb, values) {
+
+        let parameters = {
+            token: values.token,
+            password: values.password
+        }
+        Requests.sendPostRequest(cb, hostUrl + 'user-service/auth/password-reset', parameters, Requests.getCookieHeader(), 
+            (response) => { 
+                setUserSession(response.data);
+                cb(null, null, response.headers.authorization);
+            }, (err) => cb(err, "warning", null));
+    }
+    
+    sendResetPasswordEmail(cb, values) {
+        Requests.sendGetRequest(cb, hostUrl + 'user-service/auth/initialize-password-reset',  {params: {email: values.email}}, 
+            (response) => cb(`Email was sent to ${values.email}. It will expire in 24 hours`, "success", null), 
+            (err) => cb(err, "warning", null));
     }
 }
 

@@ -5,7 +5,6 @@ import com.crumbs.userservice.projections.UserClassView;
 import com.crumbs.userservice.projections.UserView;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.jpa.repository.QueryHints;
 import org.springframework.stereotype.Repository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import th.co.geniustree.springdata.jpa.repository.JpaSpecificationExecutorWithProjection;
@@ -22,16 +21,16 @@ public interface UserRepository extends JpaRepository<User, UUID>, JpaSpecificat
 
     UserView findOneById(UUID id);
 
-    @Query("SELECT new com.crumbs.userservice.projections.UserClassView(u.id, u.userProfile.firstName, u.userProfile.lastName, u.username, u.email) FROM User u WHERE u.id = ?1")
+    @Query("SELECT new com.crumbs.userservice.projections.UserClassView(u.id, u.userProfile.firstName, u.userProfile.lastName, u.username, u.email, u.userProfile.avatar) FROM User u WHERE u.id = ?1")
     UserClassView getUserPreview(UUID id);
 
     @Query("SELECT new com.crumbs.userservice.projections.UserClassView(s.subscriber.id, " +
             "s.subscriber.userProfile.firstName, s.subscriber.userProfile.lastName," +
-            "s.subscriber.username, s.subscriber.email) FROM User u INNER JOIN u.subscribers as s WHERE u.id=?1")
+            "s.subscriber.username, s.subscriber.email, s.subscriber.userProfile.avatar) FROM User u INNER JOIN u.subscribers as s WHERE u.id=?1")
     List<UserClassView> getUserSubscribers(UUID id);
 
     @Query("SELECT new com.crumbs.userservice.projections.UserClassView(c.author.id, " +
             "c.author.userProfile.firstName, c.author.userProfile.lastName," +
-            "c.author.username, c.author.email) FROM Subscription c WHERE c.subscriber.id = ?1")
+            "c.author.username, c.author.email, c.author.userProfile.avatar) FROM Subscription c WHERE c.subscriber.id = ?1")
     List<UserClassView> getUserSubscriptions(UUID id);
 }

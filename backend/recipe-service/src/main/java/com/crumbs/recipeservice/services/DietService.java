@@ -1,12 +1,13 @@
 package com.crumbs.recipeservice.services;
 
-import com.crumbs.recipeservice.exceptions.CategoryNotFoundException;
 import com.crumbs.recipeservice.exceptions.DietNotFoundException;
 import com.crumbs.recipeservice.exceptions.UnauthorizedException;
 import com.crumbs.recipeservice.models.Diet;
+import com.crumbs.recipeservice.models.Image;
+import com.crumbs.recipeservice.models.Recipe;
 import com.crumbs.recipeservice.projections.UserDietView;
-import com.crumbs.recipeservice.projections.UserRecipeView;
 import com.crumbs.recipeservice.repositories.DietRepository;
+import com.crumbs.recipeservice.repositories.ImageRepository;
 import com.crumbs.recipeservice.requests.DietRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -86,7 +87,15 @@ public class DietService {
         dietRepository.deleteById(id);
     }
 
+    @Transactional(readOnly = true)
     public List<UserDietView> getUserDiets(UUID id) {
         return dietRepository.findByUserId(id);
+    }
+
+    @Transactional(readOnly = true)
+    public String getDietImage(UUID id) {
+        List<Recipe> recipes = dietRepository.getDietRecipes(id);
+        if (!recipes.isEmpty() && !recipes.get(0).getImages().isEmpty()) return recipes.get(0).getImages().get(0).getImage();
+        return null;
     }
 }

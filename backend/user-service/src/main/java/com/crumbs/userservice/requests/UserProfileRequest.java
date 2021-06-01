@@ -28,5 +28,5 @@ public class UserProfileRequest {
     @Pattern(regexp = "^[0-9]+$", message = "Invalid phone number format!")
     private String phoneNumber;
 
-    private byte[] avatar;
+    private String avatar;
 }
