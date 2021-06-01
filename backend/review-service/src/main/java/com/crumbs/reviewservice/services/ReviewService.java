@@ -3,8 +3,10 @@ package com.crumbs.reviewservice.services;
 import com.crumbs.reviewservice.exceptions.ReviewNotFoundException;
 import com.crumbs.reviewservice.exceptions.UnauthorizedException;
 import com.crumbs.reviewservice.models.Review;
+import com.crumbs.reviewservice.projections.ReviewView;
 import com.crumbs.reviewservice.repositories.ReviewRepository;
 import com.crumbs.reviewservice.requests.ReviewRequest;
+import com.crumbs.reviewservice.utility.converters.CustomEnumType;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
@@ -14,10 +16,17 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
+import static com.fasterxml.jackson.annotation.JsonFormat.DEFAULT_TIMEZONE;
+
 
 @Log4j2
 @Service
@@ -44,8 +53,8 @@ public class ReviewService {
     }
 
     @Transactional(readOnly = true)
-    public List<Review> getReviewsOfRecipe(@NotNull UUID recipeId) {
-        return reviewRepository.findByRecipeId(recipeId);
+    public List<ReviewView> getReviewsOfRecipe(@NotNull UUID recipeId, Pageable p) {
+        return reviewRepository.findEntityId(recipeId, p);
     }
 
     @Transactional(readOnly = true)
@@ -91,10 +100,12 @@ public class ReviewService {
 
     private void modifyReview(ReviewRequest reviewRequest, UUID userId, Review review) {
         review.setUserId(userId);
-        review.setRecipeId(UUID.fromString(reviewRequest.getRecipe_id()));
+        review.setEntityId(UUID.fromString(reviewRequest.getEntity_id()));
+        review.setEntityType(Review.EntityType.valueOf(reviewRequest.getEntity_type()));
         review.setIsLiked(reviewRequest.getIs_liked());
         review.setRating(reviewRequest.getRating());
         review.setComment(reviewRequest.getComment());
+        review.setCreatedAt(LocalDateTime.now(ZoneId.of("CET")));
     }
 
     @Transactional(readOnly = true)
@@ -105,5 +116,25 @@ public class ReviewService {
     @Transactional(readOnly = true)
     public List<UUID> getUserLikedDiets(UUID userId) {
         return new ArrayList<>();
+    }
+
+    public Review getReviewOfEntityFromUser(UUID entityId, UUID userId) {
+        return reviewRepository.findByEntityIdAndUserId(entityId, userId);
+    }
+
+    public int updateReviewLike(Boolean is_liked, UUID id) {
+        return reviewRepository.setLikedForReview(is_liked, id);
+    }
+
+    public int updateReviewComment(String comment, UUID id) {
+        return reviewRepository.setCommentForReview(comment, id);
+    }
+
+    public int updateReviewRating(Integer rating, UUID id) {
+        return reviewRepository.setRatingForReview(rating, id);
+    }
+
+    public boolean doesReviewExist(UUID userId, UUID entity_id) {
+        return reviewRepository.existsReviewByUserIdAndEntityId(userId, entity_id);
     }
 }

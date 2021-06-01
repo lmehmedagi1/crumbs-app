@@ -170,6 +170,12 @@ public class RecipeController {
         return recipeModelAssembler.toModel(recipeService.getRecipe(id));
     }
 
+    @RequestMapping(value = "/get-recipe", params = "id", method = RequestMethod.GET)
+    public EntityModel<Recipe> getRecipe2(@RequestParam("id") @NotNull UUID id) {
+        return recipeModelAssembler.toModel(recipeService.getRecipe(id));
+    }
+
+    @RequestMapping(params = {"id", "details"}, method = RequestMethod.GET)
     @GetMapping(path = "recipe", params = {"id", "details"})
     public EntityModel<?> getRecipe(@RequestParam("id") @NotNull UUID id,
                                     @RequestParam(value = "details", defaultValue = "false") @NotNull Boolean details) {

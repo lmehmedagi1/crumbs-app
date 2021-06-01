@@ -1,12 +1,17 @@
 package com.crumbs.reviewservice.repositories;
 
 import com.crumbs.reviewservice.models.Review;
+import com.crumbs.reviewservice.projections.ReviewView;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 
 import org.springframework.data.domain.Pageable;
+
+import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -14,19 +19,42 @@ import java.util.UUID;
 public interface ReviewRepository extends JpaRepository<Review, UUID> {
     List<Review> findByUserId(UUID uuid);
 
-    List<Review> findByRecipeId(UUID uuid);
+    @Query("SELECT new com.crumbs.reviewservice.projections.ReviewView(r.id, r.comment, r.entityId, r.createdAt, r.lastModify, r.userId) " +
+                    "FROM Review r WHERE r.entityId = ?1")
+    List<ReviewView> findEntityId(UUID uuid, Pageable pageable);
 
-    @Query(value = "SELECT AVG(r.rating), 2 FROM Review r WHERE r.recipeId = ?1")
+    @Query(value = "SELECT AVG(r.rating), 2 FROM Review r WHERE r.entityId = ?1")
     Double getAvgRatingOfRecipe(UUID uuid);
 
-    @Query(value = "SELECT r.recipeId as ids FROM Review r group by r.recipeId order by AVG(r.rating) desc")
+    @Query(value = "SELECT r.entityId as ids FROM Review r group by r.entityId order by AVG(r.rating) desc")
     List<UUID> getFourTopRatedForMonth(Pageable pageable);
 
-    @Query(value = "SELECT r.recipeId as ids FROM Review r group by r.recipeId order by AVG(r.rating) desc")
+    @Query(value = "SELECT r.entityId as ids FROM Review r group by r.entityId order by AVG(r.rating) desc")
     List<UUID> getTopRatedDaily(Pageable pageable);
 
     Review findByIdAndUserId(UUID id, UUID userId);
 
-    @Query("SELECT r.recipeId FROM Review r WHERE r.userId = ?1 AND r.isLiked = true")
+    @Query("SELECT r.entityId FROM Review r WHERE r.userId = ?1 AND r.isLiked = true")
     List<UUID> getUserLikedRecipes(UUID userId);
+
+    Review findByEntityIdAndUserId(UUID eid, UUID uid);
+
+    @Modifying(clearAutomatically=true)
+    @Transactional
+    @Query("update Review r set r.isLiked = ?1, r.lastModify = current_timestamp where r.id = ?2")
+    int setLikedForReview(Boolean isLiked, UUID id);
+
+    @Modifying(clearAutomatically=true)
+    @Transactional
+    @Query("update Review r set r.comment = ?1, r.lastModify = current_timestamp where r.id = ?2")
+    int setCommentForReview(String comment, UUID id);
+
+    @Modifying(clearAutomatically=true)
+    @Transactional
+    @Query("update Review r set r.rating = ?1, r.lastModify = current_timestamp where r.id = ?2")
+    int setRatingForReview(int rating, UUID id);
+
+    boolean existsReviewByUserIdAndEntityId(UUID userid, UUID entityid);
+
+
 }
