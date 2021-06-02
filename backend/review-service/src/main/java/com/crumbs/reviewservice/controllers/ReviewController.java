@@ -2,7 +2,6 @@ package com.crumbs.reviewservice.controllers;
 
 //import com.crumbs.reviewservice.amqp.ReviewCreatedEvent;
 import com.crumbs.reviewservice.models.Review;
-import com.crumbs.reviewservice.models.User;
 import com.crumbs.reviewservice.projections.ReviewView;
 import com.crumbs.reviewservice.projections.UserClassView;
 import com.crumbs.reviewservice.projections.UserRecipeView;
@@ -52,11 +51,12 @@ public class ReviewController {
 
     @Autowired
     ReviewController(ReviewService reviewService, ReviewModelAssembler reviewModelAssembler,
-                     ReviewWebClientRequest reviewWebClientRequest
+                     ReviewViewModelAssembler reviewViewModelAssembler, ReviewWebClientRequest reviewWebClientRequest
 //            , RabbitTemplate rabbitTemplate
     ) {
         this.reviewService = reviewService;
         this.reviewModelAssembler = reviewModelAssembler;
+        this.reviewViewModelAssembler = reviewViewModelAssembler;
         this.reviewWebClientRequest = reviewWebClientRequest;
 //        this.rabbitTemplate = rabbitTemplate;
     }

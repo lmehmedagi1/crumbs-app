@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { getImage } from 'components/common/dropbox'
+import { getImage, listFiles } from 'components/common/dropbox'
 
 export function CustomImage(props) {
 
@@ -11,6 +11,7 @@ export function CustomImage(props) {
     useEffect(() => {
         if (props.imageId)
             getImage(props.imageId, setImage);
+        // listFiles()
     }, [props.imageId]);
 
     return (

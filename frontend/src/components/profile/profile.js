@@ -1,24 +1,20 @@
-import React, { useState, useEffect } from 'react'
-import { withRouter } from 'react-router-dom'
-import { Tab, Nav, Row, Spinner } from 'react-bootstrap'
-
-import { getUser, userIsLoggedIn } from 'api/auth'
-import Alert from 'components/alert/alert'
-import Menu from 'components/common/menu'
-import { CustomImage } from 'components/common/customImage'
-import RecipeForm from 'components/recipe/recipeForm'
-
-import AboutTab from 'components/profile/tabs/AboutTab'
-import RecipesTab from 'components/profile/tabs/RecipesTab'
-import DietsTab from 'components/profile/tabs/DietTab'
-import SubscriptionsTab from 'components/profile/tabs/SubscriptionsTab'
-import LikesTab from 'components/profile/tabs/LikesTab'
-
-import EditProfileModal from 'components/profile/editProfile'
-
-import ScrollButton from 'components/utility/scrollButton'
-
+import { userHasPermission, userIsLoggedIn } from 'api/auth'
 import profileApi from 'api/profile'
+import Alert from 'components/alert/alert'
+import { CustomImage } from 'components/common/customImage'
+import Menu from 'components/common/menu'
+import EditProfileModal from 'components/profile/editProfile'
+import AboutTab from 'components/profile/tabs/AboutTab'
+import DietsTab from 'components/profile/tabs/DietTab'
+import LikesTab from 'components/profile/tabs/LikesTab'
+import RecipesTab from 'components/profile/tabs/RecipesTab'
+import SubscriptionsTab from 'components/profile/tabs/SubscriptionsTab'
+import RecipeForm from 'components/recipe/recipeForm'
+import ScrollButton from 'components/utility/scrollButton'
+import React, { useEffect, useState } from 'react'
+import { Nav, Row, Spinner, Tab } from 'react-bootstrap'
+import { withRouter } from 'react-router-dom'
+
 
 function Profile(props) {
 
@@ -31,7 +27,7 @@ function Profile(props) {
     const [activeTab, setActiveTab] = useState("about");
     const [tableKey, setTableKey] = useState(7);
 
-    const [user, setUser] = useState({firstName: '', lastName: ''});
+    const [user, setUser] = useState({ firstName: '', lastName: '' });
     const [isSubscribed, setIsSubscribed] = useState(false);
 
     const [showEditModal, setShowEditModal] = useState(false);
@@ -59,12 +55,12 @@ function Profile(props) {
             const newTableKey = tableKey * 89;
             setTableKey(newTableKey);
             setLoading(false);
-        }, {id: id})
+        }, { id: id })
 
-        if (userIsLoggedIn() && !isMyAccount()) {
+        if (userIsLoggedIn() && !userHasPermission(user.id)) {
             profileApi.checkIfUserIsSubscribed((data) => {
                 setIsSubscribed(data);
-            }, {id: id}, props.getToken(), props.setToken);
+            }, { id: id }, props.getToken(), props.setToken);
         }
     }
 
@@ -81,11 +77,6 @@ function Profile(props) {
         setActiveTab(active);
     }
 
-    const isMyAccount = () => {
-        if (!userIsLoggedIn()) return false;
-        return getUser().id == user.id;
-    }
-
     const getSubscriptionButtonText = () => {
         if (!isSubscribed) return "Subscribe";
         return "Unsubscribe";
@@ -96,7 +87,7 @@ function Profile(props) {
         setIsSubscribed(value => !value);
         profileApi.subscribe(() => {
             setLoading(false);
-        }, {id: user.id}, props.getToken(), props.setToken);
+        }, { id: user.id }, props.getToken(), props.setToken);
     }
 
     const handleProfileUpdate = () => {
@@ -129,75 +120,75 @@ function Profile(props) {
 
     return (
         <div className={loading ? "blockedWait" : ""}>
-        <div className={loading ? "blocked" : ""}>
-            <Menu handleSearchChange={handleSearchChange} update={update} {...props}/>
-            <Alert message={message} showAlert={show} variant={variant} onShowChange={setShow} />
-            <div className="profileContainer">
-                <div className="profileHeader">
-                    <div>
-                        <CustomImage imageId={user.avatar} className="avatarWrapper" alt="User avatar" />
-                        <p>{user && user.firstName} {user && user.lastName}</p>
+            <div className={loading ? "blocked" : ""}>
+                <Menu handleSearchChange={handleSearchChange} update={update} {...props} />
+                <Alert message={message} showAlert={show} variant={variant} onShowChange={setShow} />
+                <div className="profileContainer">
+                    <div className="profileHeader">
+                        <div>
+                            <CustomImage imageId={user.avatar} className="avatarWrapper" alt="User avatar" />
+                            <p>{user && user.firstName} {user && user.lastName}</p>
+                        </div>
+                        <div className="buttonWrapper">
+                            {userHasPermission(user.id) ?
+                                <button onClick={() => setShowEditModal(true)} className="editButton">Edit</button>
+                                :
+                                <button disabled={!userIsLoggedIn()} onClick={handleSubscribeClick} className={isSubscribed ? "unsubscribeButton" : "subscribeButton"}>{getSubscriptionButtonText()}</button>
+                            }
+                            {!userIsLoggedIn() ? <p>You have to be logged in to subscribe</p> : null}
+                        </div>
                     </div>
-                    <div className="buttonWrapper">
-                        {isMyAccount() ?
-                        <button onClick={() => setShowEditModal(true)} className="editButton">Edit</button>
-                        :
-                        <button disabled={!userIsLoggedIn()} onClick={handleSubscribeClick} className={isSubscribed ? "unsubscribeButton" : "subscribeButton"}>{getSubscriptionButtonText()}</button>
-                        }
-                        {!userIsLoggedIn() ? <p>You have to be logged in to subscribe</p> : null}
-                    </div>
-                </div>
-                <div className="profileBody">
-                <Tab.Container id="left-tabs-example" defaultActiveKey={activeTab} onSelect={updateState}>
-                <Row>
-                    <Nav variant="tabs">
-                        <Nav.Item>
-                        <Nav.Link eventKey="about"  active={activeTab == "about"}><i className="fa fa-user" aria-hidden="true"/> About</Nav.Link>
-                        </Nav.Item>
-                        <Nav.Item>
-                        <Nav.Link eventKey="recipes" active={activeTab == "recipes"}><i className="fa fa-spoon" aria-hidden="true"/> Recipes</Nav.Link>
-                        </Nav.Item>
-                        <Nav.Item>
-                        <Nav.Link eventKey="diets"   active={activeTab == "diets"}><i className="fa fa-list" aria-hidden="true"/> Diets</Nav.Link>
-                        </Nav.Item>
-                        <Nav.Item>
-                        <Nav.Link eventKey="subscriptions" active={activeTab == "subscriptions"}><i className="fa fa-users" aria-hidden="true"/> Subscriptions</Nav.Link>
-                        </Nav.Item>
-                        { isMyAccount() ? 
-                        <Nav.Item>
-                        <Nav.Link eventKey="likes"   active={activeTab == "likes"}><i className="fa fa-heart" aria-hidden="true"/> Likes</Nav.Link>
-                        </Nav.Item>
-                        : null }
-                        {loading ? <Spinner className="spinner" animation="border" role="status"/> : null}
-                    </Nav>
-                </Row>
-                <Row>
-                    <Tab.Content>
-                        <Tab.Pane eventKey="about"   active={activeTab == "about"}>
-                        <AboutTab user={user && user} /> 
-                        </Tab.Pane>
-                        <Tab.Pane eventKey="recipes" active={activeTab == "recipes"}>
-                        <RecipesTab key={tableKey} tab={activeTab} userId={user && user.id} handleRowClick={handleRowClick} setLoading={setLoading}/>
-                        </Tab.Pane>
-                        <Tab.Pane eventKey="diets"   active={activeTab == "diets"}>
-                        <DietsTab key={tableKey} tab={activeTab} userId={user && user.id} handleRowClick={handleRowClick} setLoading={setLoading}/>
-                        </Tab.Pane>
-                        <Tab.Pane eventKey="subscriptions" active={activeTab == "subscriptions"}>
-                        <SubscriptionsTab key={tableKey} userId={user && user.id} handleRowClick={handleRowClick} setLoading={setLoading}/>
-                        </Tab.Pane>
-                        <Tab.Pane eventKey="likes"   active={activeTab == "likes"}>
-                        <LikesTab key={tableKey} userId={user && user.id} setShow={setShow} setMessage={setMessage} setVariant={setVariant} getToken={props.getToken} setToken={props.setToken} setLoading={setLoading}/>
-                        </Tab.Pane>
-                    </Tab.Content>
-                </Row>
-                </Tab.Container>
+                    <div className="profileBody">
+                        <Tab.Container id="left-tabs-example" defaultActiveKey={activeTab} onSelect={updateState}>
+                            <Row>
+                                <Nav variant="tabs">
+                                    <Nav.Item>
+                                        <Nav.Link eventKey="about" active={activeTab == "about"}><i className="fa fa-user" aria-hidden="true" /> About</Nav.Link>
+                                    </Nav.Item>
+                                    <Nav.Item>
+                                        <Nav.Link eventKey="recipes" active={activeTab == "recipes"}><i className="fa fa-spoon" aria-hidden="true" /> Recipes</Nav.Link>
+                                    </Nav.Item>
+                                    <Nav.Item>
+                                        <Nav.Link eventKey="diets" active={activeTab == "diets"}><i className="fa fa-list" aria-hidden="true" /> Diets</Nav.Link>
+                                    </Nav.Item>
+                                    <Nav.Item>
+                                        <Nav.Link eventKey="subscriptions" active={activeTab == "subscriptions"}><i className="fa fa-users" aria-hidden="true" /> Subscriptions</Nav.Link>
+                                    </Nav.Item>
+                                    {userHasPermission(user.id) ?
+                                        <Nav.Item>
+                                            <Nav.Link eventKey="likes" active={activeTab == "likes"}><i className="fa fa-heart" aria-hidden="true" /> Likes</Nav.Link>
+                                        </Nav.Item>
+                                        : null}
+                                    {loading ? <Spinner className="spinner" animation="border" role="status" /> : null}
+                                </Nav>
+                            </Row>
+                            <Row>
+                                <Tab.Content>
+                                    <Tab.Pane eventKey="about" active={activeTab == "about"}>
+                                        <AboutTab user={user && user} />
+                                    </Tab.Pane>
+                                    <Tab.Pane eventKey="recipes" active={activeTab == "recipes"}>
+                                        <RecipesTab key={tableKey} tab={activeTab} userId={user && user.id} handleRowClick={handleRowClick} setLoading={setLoading} />
+                                    </Tab.Pane>
+                                    <Tab.Pane eventKey="diets" active={activeTab == "diets"}>
+                                        <DietsTab key={tableKey} tab={activeTab} userId={user && user.id} handleRowClick={handleRowClick} setLoading={setLoading} />
+                                    </Tab.Pane>
+                                    <Tab.Pane eventKey="subscriptions" active={activeTab == "subscriptions"}>
+                                        <SubscriptionsTab key={tableKey} userId={user && user.id} handleRowClick={handleRowClick} setLoading={setLoading} />
+                                    </Tab.Pane>
+                                    <Tab.Pane eventKey="likes" active={activeTab == "likes"}>
+                                        <LikesTab key={tableKey} userId={user && user.id} setShow={setShow} setMessage={setMessage} setVariant={setVariant} getToken={props.getToken} setToken={props.setToken} setLoading={setLoading} />
+                                    </Tab.Pane>
+                                </Tab.Content>
+                            </Row>
+                        </Tab.Container>
 
-                {isMyAccount() && activeTab=="recipes" ? <button className="addButton" onClick={() => {setShowRecipeModal(true)}}> ADD NEW RECIPE </button> : null}
+                        {userHasPermission(user.id) && activeTab == "recipes" ? <button className="addButton" onClick={() => { setShowRecipeModal(true) }}> ADD NEW RECIPE </button> : null}
+                    </div>
                 </div>
+                <EditProfileModal showModal={showEditModal} handleCloseEditModal={() => setShowEditModal(false)} getToken={props.getToken} setToken={props.setToken} handleProfileUpdate={handleProfileUpdate} />
+                <RecipeForm show={showRecipeModal} title="Add Recipe" onHide={() => setShowRecipeModal(false)} getToken={props.getToken} setToken={props.setToken}  />
             </div>
-            <EditProfileModal showModal={showEditModal} handleCloseEditModal={() => setShowEditModal(false)} getToken={props.getToken} setToken={props.setToken} handleProfileUpdate={handleProfileUpdate} />
-            <RecipeForm show={showRecipeModal} title="Add Recipe" onHide={() => setShowRecipeModal(false)} />
-        </div>
         </div>
     )
 }

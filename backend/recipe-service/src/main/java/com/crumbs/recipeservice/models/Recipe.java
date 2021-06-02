@@ -2,12 +2,14 @@ package com.crumbs.recipeservice.models;
 
 import com.crumbs.recipeservice.utility.annotation.NullOrNotBlank;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.GenericGenerator;
+
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
@@ -59,7 +61,6 @@ public class Recipe {
 
     @NotNull
     @Min(value = 1, message = "Preparation time in minutes must be greater than zero!")
-    @JsonProperty(value = "preparation_time")
     private Integer preparationTime;
 
     @ManyToMany
@@ -87,7 +88,8 @@ public class Recipe {
     private Set<Ingredient> ingredients;
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "recipe", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @Cascade(CascadeType.ALL)
+    @OneToMany(mappedBy = "recipe", fetch = FetchType.LAZY, orphanRemoval = true)
     @ToString.Exclude
     private List<Image> images;
 }

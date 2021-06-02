@@ -34,8 +34,8 @@ public class RecipeRequest {
             "and special characters: _ \\ . , - ! ? % '")
     private String method;
 
-    @Size(max = 3000, message = "Recipe method exceeds allowed limit of 3000 characters!")
-    @Pattern(regexp = "^[a-zA-Z0-9_\\s\\\\.,\\-!?%]*$", flags = Pattern.Flag.UNICODE_CASE, message = "Recipe method can only contain letters, numbers " +
+    @Size(max = 3000, message = "Advice method exceeds allowed limit of 3000 characters!")
+    @Pattern(regexp = "^[a-zA-Z0-9_\\s\\\\.,\\-!?%]*$", flags = Pattern.Flag.UNICODE_CASE, message = "Advice method can only contain letters, numbers " +
             "and special characters: _ \\ . , - ! ? %")
     private String advice;
 

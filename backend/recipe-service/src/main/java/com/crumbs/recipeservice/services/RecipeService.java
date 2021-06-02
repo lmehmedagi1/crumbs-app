@@ -96,9 +96,13 @@ public class RecipeService {
             newImage.setRecipe(recipe);
             images.add(newImage);
         }
-        recipe.setImages(images);
 
-        System.out.println(recipe);
+        if (recipe.getImages() != null) {
+            recipe.getImages().clear();
+            recipe.getImages().addAll(images);
+        } else {
+            recipe.setImages(images);
+        }
     }
 
     @Transactional
