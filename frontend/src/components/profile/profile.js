@@ -7,6 +7,7 @@ import Alert from 'components/alert/alert'
 import Menu from 'components/common/menu'
 import { CustomImage } from 'components/common/customImage'
 import RecipeForm from 'components/recipe/recipeForm'
+import DietForm from 'components/diet/dietForm'
 
 import AboutTab from 'components/profile/tabs/AboutTab'
 import RecipesTab from 'components/profile/tabs/RecipesTab'
@@ -36,6 +37,7 @@ function Profile(props) {
 
     const [showEditModal, setShowEditModal] = useState(false);
     const [showRecipeModal, setShowRecipeModal] = useState(false);
+    const [showDietModal, setShowDietModal] = useState(false);
 
     useEffect(() => {
         readLocationPathname();
@@ -193,10 +195,12 @@ function Profile(props) {
                 </Tab.Container>
 
                 {isMyAccount() && activeTab=="recipes" ? <button className="addButton" onClick={() => {setShowRecipeModal(true)}}> ADD NEW RECIPE </button> : null}
+                {isMyAccount() && activeTab=="diets" ? <button className="addButton" onClick={() => {setShowDietModal(true)}}> ADD NEW DIET </button> : null}
                 </div>
             </div>
             <EditProfileModal showModal={showEditModal} handleCloseEditModal={() => setShowEditModal(false)} getToken={props.getToken} setToken={props.setToken} handleProfileUpdate={handleProfileUpdate} />
             <RecipeForm show={showRecipeModal} title="Add Recipe" onHide={() => setShowRecipeModal(false)} />
+            <DietForm show={showDietModal} title="Add Diet" onHide={() => setShowDietModal(false)} />
         </div>
         </div>
     )
