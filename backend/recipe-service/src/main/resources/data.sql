@@ -187,7 +187,5 @@ INSERT INTO images VALUES (gen_random_uuid(), ''id:IJb-yHir50sAAAAAAAAAFA'', zim
 INSERT INTO images VALUES (gen_random_uuid(), ''id:IJb-yHir50sAAAAAAAAAFA'', parmezan_piletina);
 INSERT INTO images VALUES (gen_random_uuid(), ''id:IJb-yHir50sAAAAAAAAAFA'', parmezan_piletina);
 INSERT INTO images VALUES (gen_random_uuid(), ''id:IJb-yHir50sAAAAAAAAAIg'', parmezan_piletina);
-
-
 END;
 ' LANGUAGE PLPGSQL;

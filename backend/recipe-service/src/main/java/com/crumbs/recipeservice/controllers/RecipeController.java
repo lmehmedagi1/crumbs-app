@@ -75,6 +75,7 @@ public class RecipeController {
             UUID authorId = recipe.getAuthor().getId();
             UserClassView user = webClientRequest.getUserPreview(authorId);
             recipe.setAuthor(user);
+            recipe.setImage(recipeService.getRecipeImage(recipe.getRecipeId()));
         }
 
         return CollectionModel.of(recipes.stream().map(recipeViewModelAssembler::toModel).collect(Collectors.toList()),
@@ -96,6 +97,7 @@ public class RecipeController {
             UUID authorId = recipe.getAuthor().getId();
             UserClassView author = webClientRequest.getUserPreview(authorId);
             recipe.setAuthor(author);
+            recipe.setImage(recipeService.getRecipeImage(recipe.getRecipeId()));
         }
 
         return CollectionModel.of(recipes.stream().map(recipeViewModelAssembler::toModel).collect(Collectors.toList()),
@@ -118,6 +120,7 @@ public class RecipeController {
             UUID authorId = recipe.getAuthor().getId();
             UserClassView user = webClientRequest.getUserPreview(authorId);
             recipe.setAuthor(user);
+            recipe.setImage(recipeService.getRecipeImage(recipe.getRecipeId()));
         }
 
         return CollectionModel.of(recipes.stream().map(recipeViewModelAssembler::toModel).collect(Collectors.toList()),
