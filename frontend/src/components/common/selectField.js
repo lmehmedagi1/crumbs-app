@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import { Form } from "react-bootstrap";
-import AsyncSelect from "react-select/async";
+import React, { useState } from "react"
+import { Form } from "react-bootstrap"
+import AsyncSelect from "react-select/async"
 import axios from "axios"
 import { env } from "configs/env"
 

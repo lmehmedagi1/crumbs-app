@@ -1,26 +1,22 @@
 import React from 'react'
-import { hostUrl } from 'components/utility/constants'
 import Requests from 'api/requests'
 import auth from 'api/auth'
+import { env } from 'configs/env'
 
 class NotificationApi extends React.Component {
 
-    constructor() {
-        super();
-    }
-
     sendGetUserNotificationsRequest = (cb, token, params) => {
-        Requests.sendGetRequest(cb, hostUrl + "notification-service/notifications", Requests.getAuthorizationHeader(token), 
+        Requests.sendGetRequest(cb, env.BASE_PATH + "notification-service/notifications", Requests.getAuthorizationHeader(token), 
         (response) => cb(response.data), (err) => cb(null, err));
     }
     
     sendMarkNotificationAsReadRequest = (cb, token, params) => {
-        Requests.sendPostRequest(cb, hostUrl + "notification-service/notifications/mark", params, Requests.getAuthorizationHeader(token), 
+        Requests.sendPostRequest(cb, env.BASE_PATH + "notification-service/notifications/mark", params, Requests.getAuthorizationHeader(token), 
         (response) => cb(response.data), (err) => cb(null, err));
     }
 
     sendMarkAllAsReadRequest = (cb, token, params) => {
-        Requests.sendPostRequest(cb, hostUrl + "notification-service/notifications/mark-all-as-read", params, Requests.getAuthorizationHeader(token), 
+        Requests.sendPostRequest(cb, env.BASE_PATH + "notification-service/notifications/mark-all-as-read", params, Requests.getAuthorizationHeader(token), 
         (response) => cb(response.data), (err) => cb(null, err));
     }
 
@@ -32,7 +28,7 @@ class NotificationApi extends React.Component {
                 'Authorization': `${token}`
             }
         };
-        Requests.sendDeleteRequest(cb, hostUrl + "notification-service/notifications", parameters, 
+        Requests.sendDeleteRequest(cb, env.BASE_PATH + "notification-service/notifications", parameters, 
         (response) => { cb(response.data, null); }, (err) => {cb(null, err)});
     }
 

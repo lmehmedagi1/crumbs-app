@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { env } from "configs/env";
+import { env } from "configs/env"
 
 export function getMostPopularRecipes(pageNo) {
     return (dispatch) => {

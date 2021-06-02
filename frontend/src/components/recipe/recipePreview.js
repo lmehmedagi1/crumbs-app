@@ -1,11 +1,12 @@
 import Menu from 'components/common/menu'
 import React, { useEffect, useState } from 'react'
 import { Col, Form, Row, ListGroup, Button} from 'react-bootstrap'
-import StarRatings from 'react-star-ratings';
-import HeartCheckbox from 'react-heart-checkbox';
+import StarRatings from 'react-star-ratings'
+import HeartCheckbox from 'react-heart-checkbox'
 import { withRouter } from 'react-router-dom'
 import { get, getRecipeRating, getRecipeReviews , postComment, getEntityReviewForUser, editComment, clearState, updateRating, updateLike} from '../../actions/recipeActions';
 import { useSelector, useDispatch } from 'react-redux'
+import moment from 'moment'
 
 function RecipePreview(props) {
 
@@ -25,7 +26,7 @@ function RecipePreview(props) {
         dispatch(get(props.match.params.id));
         dispatch(getRecipeRating(props.match.params.id));
         dispatch(getRecipeReviews(props.match.params.id, countComment));
-        dispatch(getEntityReviewForUser(props.match.params.id));
+        // dispatch(getEntityReviewForUser(props.match.params.id));
     }, []);
 
     const handleSearchChange = search => {
@@ -69,6 +70,11 @@ function RecipePreview(props) {
 
     const chkBoxOnClick = ( event, e ) => {
         dispatch(updateLike(!reviewOfUser.is_liked ? true : false, "recipe", props.match.params.id, reviewOfUser.id ? reviewOfUser.id : "noId"));
+    }
+
+    const timestampToDateTime = timestamp => {
+        const longDateTimeFormat = "MMMM Do YYYY, h:mm:ss a";
+        return moment.utc(timestamp).local().format(longDateTimeFormat);
     }
 
     return (
@@ -128,7 +134,7 @@ function RecipePreview(props) {
                                 { row.author.id=="75a8f34b-2539-452a-9325-b432dbe3b995" && editMode ?
                                   <Button style={{ background: "red"}} class="btnEditMode" > Delete </Button> : null}
                         </Col>
-                        <text className="comment-createdAt">{row.createdAt}</text>
+                        <text className="comment-createdAt">{timestampToDateTime(row.createdAt)}</text>
                 </Row>)) }
                 {<Button ID="btn-outline-primary" onClick={btnLoadMoreOnClick}> Load more... </Button>}
                 <textarea

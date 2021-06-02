@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { withRouter } from 'react-router-dom'
-import { Navbar, Nav, Form, FormControl, NavDropdown } from 'react-bootstrap'
+import { Navbar, Nav, Form, FormControl } from 'react-bootstrap'
 import { LinkContainer } from "react-router-bootstrap"
 import Logo from 'assets/images/food-logo.ico'
 import NotificationBell from 'components/notifications/notificationBell'
@@ -39,10 +39,13 @@ function Menu(props) {
                 </Form>
                 <Nav className="mr-auto" defaultActiveKey="/my-account">
                     <LinkContainer to={'/'} exact>
-                        <Nav.Link active={!window.location.pathname.includes("/browse") && !window.location.pathname.includes("/people") && !window.location.pathname.includes("/profile")}>Home</Nav.Link>
+                        <Nav.Link active={window.location.pathname.length == 0}>Home</Nav.Link>
                     </LinkContainer>
                     <LinkContainer to="/browse">
                         <Nav.Link active={window.location.pathname.includes("/browse")}>Recipes</Nav.Link>
+                    </LinkContainer>
+                    <LinkContainer to="/diets">
+                        <Nav.Link active={window.location.pathname.includes("/diets")}>Diets</Nav.Link>
                     </LinkContainer>
                     <LinkContainer to="/people">
                         <Nav.Link active={window.location.pathname.includes("/people")}>People</Nav.Link>

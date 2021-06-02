@@ -1,6 +1,6 @@
-import React from "react";
-import { Container } from "react-bootstrap";
-import { MdErrorOutline } from "react-icons/md";
+import React from "react"
+import { Container } from "react-bootstrap"
+import { MdErrorOutline } from "react-icons/md"
 
 const ErrorFallback = () => (
     <Container className="text-secondary text-center text-muted">

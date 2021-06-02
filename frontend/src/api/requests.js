@@ -1,12 +1,7 @@
 import React from 'react'
 import axios from 'axios'
 
-
 class Requests extends React.Component {
-
-    constructor() {
-        super();
-    }
 
     getCookieHeader = () => {
         return {

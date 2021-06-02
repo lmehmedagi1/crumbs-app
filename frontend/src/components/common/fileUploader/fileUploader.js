@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect } from "react"
 
 import {
     FileUploadContainer,
@@ -11,7 +11,7 @@ import {
     FileMetaData,
     RemoveFileIcon,
     InputLabel
-} from 'components/common/fileUploader/ImageUploadStyles';
+} from 'components/common/fileUploader/ImageUploadStyles'
 
 const KILO_BYTES_PER_BYTE = 1000;
 const DEFAULT_MAX_FILE_SIZE_IN_BYTES = 500000;

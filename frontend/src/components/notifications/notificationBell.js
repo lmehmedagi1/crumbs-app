@@ -32,7 +32,7 @@ function NotificationBell(props) {
         fetchNotifications();
 
         return () => {
-            stompClient.disconnect(() => {})
+            if (stompClient.connected) stompClient.disconnect(() => {})
         }
     }, []);
 

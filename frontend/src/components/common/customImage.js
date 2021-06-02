@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { listFiles, getImage } from 'components/common/dropbox'
+import { getImage } from 'components/common/dropbox'
 
 export function CustomImage(props) {
 

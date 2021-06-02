@@ -27,10 +27,6 @@ export const userIsLoggedIn = () => {
 
 class Auth extends React.Component {
 
-    constructor() {
-        super();
-    }
-
     forwardRequest = (cb, params, token, setToken, functionCb) => {
         if (token == null || token == "") 
             this.refreshToken(cb, token, setToken, params, functionCb);

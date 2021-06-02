@@ -1,5 +1,5 @@
-import axios from "axios";
-import { env } from "../configs/env";
+import axios from "axios"
+import { env } from "../configs/env"
 
 import { hostUrl } from 'components/utility/constants'
 

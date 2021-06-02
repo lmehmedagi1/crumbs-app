@@ -86,7 +86,7 @@ function Browse(props) {
 
 
     return (
-        <Container>
+        <Container className="browseContainer">
             <Menu handleSearchChange={handleSearchChange} {...props} />
             <Row>
                 <Col md={4}>

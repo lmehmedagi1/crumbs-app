@@ -1,11 +1,14 @@
-import axios from "axios";
-import { env } from "../configs/env";
+import axios from "axios"
+import { env } from "../configs/env"
 
 export function get(id) {
     return {
         type: "RECIPE_GET",
-        payload: axios(env.BASE_PATH + "/api/recipes/" + id, {
+        payload: axios(env.BASE_PATH + "recipe-service/recipes/recipe", {
             method: "GET",
+            params: {
+                id
+            }
         })
     };
 }
@@ -44,7 +47,7 @@ export function updateRating(rating, entity, entityId, reviewId) {
             },
             headers: {
                 "Content-Type": "application/json",
-                Authorization: "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI3NWE4ZjM0Yi0yNTM5LTQ1MmEtOTMyNS1iNDMyZGJlM2I5OTUiLCJpYXQiOjE2MjI0ODk3NTcsImV4cCI6MTYyMjU4NDgwMH0.CtLNVMSg7njioQCez4H27vgpaKcuCN08XNNpoMKJynW7SezpwK8qDtNd6_-kyBQ_w8XebrGPIb7GiQUqoYr2yA"
+                Authorization: "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJmYzk4NjEyYi1jMGMyLTQ3OTItYjJhYy1hY2I3ZGQ2NTU1YzEiLCJpYXQiOjE2MjI2Mjg2NDQsImV4cCI6MTYyMjc1NzYwMH0.ZykzuYy9nEJZT2Qt9g0wS9zKb2FMevL6sGQOfMbwgVyFzVMDXQ42Zxx5pWYtTgQ0xPQkMTeXTH3bCp0qxxu3Lw"
             }
         })
     };
@@ -66,7 +69,7 @@ export function updateLike(is_liked, entity, entityId, reviewId) {
             },
             headers: {
                 "Content-Type": "application/json",
-                Authorization: "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI3NWE4ZjM0Yi0yNTM5LTQ1MmEtOTMyNS1iNDMyZGJlM2I5OTUiLCJpYXQiOjE2MjI0ODk3NTcsImV4cCI6MTYyMjU4NDgwMH0.CtLNVMSg7njioQCez4H27vgpaKcuCN08XNNpoMKJynW7SezpwK8qDtNd6_-kyBQ_w8XebrGPIb7GiQUqoYr2yA"
+                Authorization: "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJmYzk4NjEyYi1jMGMyLTQ3OTItYjJhYy1hY2I3ZGQ2NTU1YzEiLCJpYXQiOjE2MjI2Mjg2NDQsImV4cCI6MTYyMjc1NzYwMH0.ZykzuYy9nEJZT2Qt9g0wS9zKb2FMevL6sGQOfMbwgVyFzVMDXQ42Zxx5pWYtTgQ0xPQkMTeXTH3bCp0qxxu3Lw"
             }
         })
     };
@@ -103,19 +106,14 @@ export function getEntityReviewForUser(entityId) {
             },
             headers: {
                 "Content-Type": "application/json",
-                Authorization: "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI3NWE4ZjM0Yi0yNTM5LTQ1MmEtOTMyNS1iNDMyZGJlM2I5OTUiLCJpYXQiOjE2MjI0ODk3NTcsImV4cCI6MTYyMjU4NDgwMH0.CtLNVMSg7njioQCez4H27vgpaKcuCN08XNNpoMKJynW7SezpwK8qDtNd6_-kyBQ_w8XebrGPIb7GiQUqoYr2yA"
+                Authorization: "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJmYzk4NjEyYi1jMGMyLTQ3OTItYjJhYy1hY2I3ZGQ2NTU1YzEiLCJpYXQiOjE2MjI2Mjg2NDQsImV4cCI6MTYyMjc1NzYwMH0.ZykzuYy9nEJZT2Qt9g0wS9zKb2FMevL6sGQOfMbwgVyFzVMDXQ42Zxx5pWYtTgQ0xPQkMTeXTH3bCp0qxxu3Lw"
             }
         })
     };
 }
 
-export function getRecipeReviews(recipeId) {
 export function postComment(comment, entity, entityId, reviewId) {
     return {
-        type: "RECIPE_GET_REVIEWS",
-        payload: axios(env.BASE_PATH + "review-service/reviews", {
-            method: "GET",
-            params: { recipeId },
         type: "RECIPE_POST_COMMENT",
         payload: axios("http://localhost:8090/review-service/reviews", {
             method: "PATCH",
@@ -129,7 +127,7 @@ export function postComment(comment, entity, entityId, reviewId) {
             },
             headers: {
                 "Content-Type": "application/json",
-                Authorization: "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI3NWE4ZjM0Yi0yNTM5LTQ1MmEtOTMyNS1iNDMyZGJlM2I5OTUiLCJpYXQiOjE2MjI0ODk3NTcsImV4cCI6MTYyMjU4NDgwMH0.CtLNVMSg7njioQCez4H27vgpaKcuCN08XNNpoMKJynW7SezpwK8qDtNd6_-kyBQ_w8XebrGPIb7GiQUqoYr2yA"
+                Authorization: "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJmYzk4NjEyYi1jMGMyLTQ3OTItYjJhYy1hY2I3ZGQ2NTU1YzEiLCJpYXQiOjE2MjI2Mjg2NDQsImV4cCI6MTYyMjc1NzYwMH0.ZykzuYy9nEJZT2Qt9g0wS9zKb2FMevL6sGQOfMbwgVyFzVMDXQ42Zxx5pWYtTgQ0xPQkMTeXTH3bCp0qxxu3Lw"
             }
         })
     };
@@ -152,7 +150,7 @@ export function editComment(comment, entity, entityId, reviewId) {
             },
             headers: {
                 "Content-Type": "application/json",
-                Authorization: "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI3NWE4ZjM0Yi0yNTM5LTQ1MmEtOTMyNS1iNDMyZGJlM2I5OTUiLCJpYXQiOjE2MjI0ODk3NTcsImV4cCI6MTYyMjU4NDgwMH0.CtLNVMSg7njioQCez4H27vgpaKcuCN08XNNpoMKJynW7SezpwK8qDtNd6_-kyBQ_w8XebrGPIb7GiQUqoYr2yA"
+                Authorization: "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJmYzk4NjEyYi1jMGMyLTQ3OTItYjJhYy1hY2I3ZGQ2NTU1YzEiLCJpYXQiOjE2MjI2Mjg2NDQsImV4cCI6MTYyMjc1NzYwMH0.ZykzuYy9nEJZT2Qt9g0wS9zKb2FMevL6sGQOfMbwgVyFzVMDXQ42Zxx5pWYtTgQ0xPQkMTeXTH3bCp0qxxu3Lw"
             }
         })
     };

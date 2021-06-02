@@ -36,7 +36,7 @@ function Header(props) {
                     </div>
                     :
                     <div className="logoutHeader">
-                    <CustomImage imageId={getUser().avatar} className="imageWrapper" alt="User avatar" onClick={handleProfileClick} />
+                    <CustomImage imageId={getUser().user_profile.avatar} className="imageWrapper" alt="User avatar" onClick={handleProfileClick} />
                     <div onClick={logout}>
                     <Link className="headerLink" to=''>
                         Logout

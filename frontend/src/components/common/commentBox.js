@@ -1,12 +1,5 @@
-import Menu from 'components/common/menu'
-import React, { useEffect, useState } from 'react'
-import { Col, Form, Row, ListGroup, Button} from 'react-bootstrap'
-import { withRouter } from 'react-router-dom'
-import { get, getRecipeRating, getRecipeReviews , postComment, getEntityReviewForUser} from '../../actions/recipeActions';
-import { useSelector, useDispatch } from 'react-redux'
+import React from 'react'
 import 'components/common/commentbox.scss'
-
-
 
 class CommentBox extends React.Component {
     constructor() {

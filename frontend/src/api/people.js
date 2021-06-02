@@ -1,15 +1,11 @@
 import React from 'react'
-import { hostUrl } from 'components/utility/constants'
 import Requests from 'api/requests'
+import { env } from 'configs/env'
 
 class PeopleApi extends React.Component {
 
-    constructor() {
-        super();
-    }
-
     getPeople = (cb, params) => {
-        Requests.sendGetRequest(cb, hostUrl + "user-service/account/all", { params: params }, (response) => { cb(response.data); }, (error) => { cb(error); });
+        Requests.sendGetRequest(cb, env.BASE_PATH  + "user-service/account/all", { params: params }, (response) => { cb(response.data); }, (error) => { cb(error); });
     }
 }
 
