@@ -16,7 +16,7 @@ class Requests extends React.Component {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `${token}`
-            }
+            },
         }
     }
 
@@ -56,6 +56,14 @@ class Requests extends React.Component {
             .then((response) => { successCb(response); })
             .catch(error => { this.handleError(error, cb, failureCb); });
     }
+
+    sendPatchRequest(cb, url, params, headers, successCb, failureCb, id = null) {
+        axios
+            .patch(url + "?id=" + id, params, headers)
+            .then((response) => { successCb(response); })
+            .catch(error => { if (failureCb && error.response) failureCb(error.response.data.message) });
+    }
+
 }
 
 export default new Requests();

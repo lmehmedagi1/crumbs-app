@@ -25,23 +25,28 @@ export const userIsLoggedIn = () => {
     return getUser() != null;
 }
 
+export const userHasPermission = (id) => {
+    if (!userIsLoggedIn()) return false;
+    return getUser().id == id;
+}
+
 class Auth extends React.Component {
 
     forwardRequest = (cb, params, token, setToken, functionCb) => {
-        if (token == null || token == "") 
+        if (token == null || token == "")
             this.refreshToken(cb, token, setToken, params, functionCb);
-        else 
+        else
             functionCb(cb, token, params);
     }
 
     refreshToken = (cb, token, setToken, params, successCb) => {
 
-        Requests.sendPostRequest(cb, hostUrl + "user-service/auth/refresh-token", {}, Requests.getCookieHeader(), 
-            (response) => { 
+        Requests.sendPostRequest(cb, hostUrl + "user-service/auth/refresh-token", {}, Requests.getCookieHeader(),
+            (response) => {
                 token = response.headers.authorization;
                 setToken(token);
                 successCb(cb, token, params);
-            },  
+            },
             (message) => {
                 removeUserSession();
                 cb(null, "Your session has expired, log in again!");
@@ -56,17 +61,17 @@ class Auth extends React.Component {
             username: values.username,
             password: values.password
         };
-        Requests.sendPostRequest(cb, url, parameters, Requests.getCookieHeader(), 
+        Requests.sendPostRequest(cb, url, parameters, Requests.getCookieHeader(),
             (response) => {
                 setUserSession(response.data);
                 cb(response.headers.authorization);
-        }, failCb);
+            }, failCb);
     }
 
     logout(cb) {
-        Requests.sendPostRequest(cb, hostUrl + 'user-service/auth/logout', {}, Requests.getCookieHeader(), 
-        (response) => { removeUserSession(); cb(); }, 
-        (error) => { removeUserSession(); cb(); });
+        Requests.sendPostRequest(cb, hostUrl + 'user-service/auth/logout', {}, Requests.getCookieHeader(),
+            (response) => { removeUserSession(); cb(); },
+            (error) => { removeUserSession(); cb(); });
     }
 
     register(cb, failCb, values) {
@@ -80,19 +85,19 @@ class Auth extends React.Component {
             phone_number: '062123123',
             password: values.password
         };
-        Requests.sendPostRequest(cb, url, parameters, Requests.getCookieHeader(), 
+        Requests.sendPostRequest(cb, url, parameters, Requests.getCookieHeader(),
             (response) => {
                 if (response.data.length === 0) {
                     failCb("Something went wrong!");
                     return;
                 }
                 cb(response.data);
-        }, failCb);
+            }, failCb);
     }
 
     confirmRegistration(cb, token) {
         let url = hostUrl + 'user-service/auth/registration-confirmation';
-        Requests.sendGetRequest(cb, url, {params: {token: token}}, (response) => {}, null);
+        Requests.sendGetRequest(cb, url, { params: { token: token } }, (response) => { }, null);
     }
 
     resetPassword(cb, values) {
@@ -101,16 +106,16 @@ class Auth extends React.Component {
             token: values.token,
             password: values.password
         }
-        Requests.sendPostRequest(cb, hostUrl + 'user-service/auth/password-reset', parameters, Requests.getCookieHeader(), 
-            (response) => { 
+        Requests.sendPostRequest(cb, hostUrl + 'user-service/auth/password-reset', parameters, Requests.getCookieHeader(),
+            (response) => {
                 setUserSession(response.data);
                 cb(null, null, response.headers.authorization);
             }, (err) => cb(err, "warning", null));
     }
-    
+
     sendResetPasswordEmail(cb, values) {
-        Requests.sendGetRequest(cb, hostUrl + 'user-service/auth/initialize-password-reset',  {params: {email: values.email}}, 
-            (response) => cb(`Email was sent to ${values.email}. It will expire in 24 hours`, "success", null), 
+        Requests.sendGetRequest(cb, hostUrl + 'user-service/auth/initialize-password-reset', { params: { email: values.email } },
+            (response) => cb(`Email was sent to ${values.email}. It will expire in 24 hours`, "success", null),
             (err) => cb(err, "warning", null));
     }
 }

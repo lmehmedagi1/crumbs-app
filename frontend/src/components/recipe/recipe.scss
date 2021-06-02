@@ -4,7 +4,12 @@
 
     .title {
         margin: 2%;
-        font-size: 1.6em;
+        font-size: 1.7em;
+    }
+
+    .subtitle {
+        margin-top: 2%;
+        font-size: 1.3em;
     }
 
     .row {
@@ -20,7 +25,7 @@
     }
 
     .comment-section {
-        margin-top: 5%;
+        margin-top: 3%;
     }
 
     .btn-submit {
@@ -28,29 +33,25 @@
         margin: 3% 0;
     }
 
-    .btn-comment-edit{
+    .btn-comment-edit {
         width: 35px;
         float: right;
         background-color: Transparent;
-        background-repeat:no-repeat;
+        background-repeat: no-repeat;
         border: none;
         cursor: pointer;
         overflow: hidden;
-        outline:none;
+        outline: none;
     }
 
-    .comment-edit{
-        padding-top: 10px;
+    .comment-edit {
+        padding-top: 5px;
     }
 
-    .comment-username{
+    .comment-username {
         width: 10%;
         float: left;
         font-size: medium;
-    }
-
-    .comment-comment {
-
     }
 
     .comment-createdAt {
@@ -64,16 +65,74 @@
         width: 70px;
     }
 
+    .listElement {
+        color: #8367d8;
+        font-size: 14pt;
+        font-weight: 500;
+        font-style: italic;
+    }
+
+    .recipeImages {
+        overflow: hidden;
+        margin: 2%;
+
+        img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 5%;
+            box-shadow: 0 8px 6px -6px grey;
+        }
+
+        .recipeImagesGrid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            gap: 10px;
+            margin-top: 10px;
+
+            .landingPagerecipe {
+                overflow: hidden;
+                img {
+                    height: 100px;
+                }
+            }
+
+            img {
+                -webkit-transform: scale(1);
+                transform: scale(1);
+                -webkit-transition: 0.3s ease-in-out;
+                transition: 0.3s ease-in-out;
+            }
+
+            .landingPagerecipe:hover img {
+                -webkit-transform: scale(1.1);
+                transform: scale(1.1);
+            }
+        }
+    }
 }
 
-.comment-section{
+.comment-section {
     margin-bottom: 2%;
 }
 .submit-button {
     color: white !important;
 }
 
-.my-modal{
+.my-modal {
     width: 90vw;
     min-width: 90vw;
+}
+
+.btn,
+.btn-primary {
+    color: white !important;
+}
+
+.review {
+    padding: 25px;
+
+    .commentsTitle {
+        margin: 2%;
+    }
 }

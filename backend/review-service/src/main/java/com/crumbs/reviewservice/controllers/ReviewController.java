@@ -2,7 +2,6 @@ package com.crumbs.reviewservice.controllers;
 
 //import com.crumbs.reviewservice.amqp.ReviewCreatedEvent;
 import com.crumbs.reviewservice.models.Review;
-import com.crumbs.reviewservice.models.User;
 import com.crumbs.reviewservice.projections.ReviewView;
 import com.crumbs.reviewservice.projections.UserClassView;
 import com.crumbs.reviewservice.projections.UserRecipeView;
@@ -52,11 +51,13 @@ public class ReviewController {
 
     @Autowired
     ReviewController(ReviewService reviewService, ReviewModelAssembler reviewModelAssembler,
-                     ReviewWebClientRequest reviewWebClientRequest, ReviewViewModelAssembler reviewViewModelAssembler/* , RabbitTemplate rabbitTemplate*/) {
+                     ReviewViewModelAssembler reviewViewModelAssembler, ReviewWebClientRequest reviewWebClientRequest
+//            , RabbitTemplate rabbitTemplate
+    ) {
         this.reviewService = reviewService;
         this.reviewModelAssembler = reviewModelAssembler;
-        this.reviewWebClientRequest = reviewWebClientRequest;
         this.reviewViewModelAssembler = reviewViewModelAssembler;
+        this.reviewWebClientRequest = reviewWebClientRequest;
 //        this.rabbitTemplate = rabbitTemplate;
     }
 
@@ -144,6 +145,9 @@ public class ReviewController {
         final Review newReview = reviewService.createReview(reviewRequest, userId);
         EntityModel<Review> entityModel = reviewModelAssembler.toModel(newReview);
 //
+//        ReviewCreatedEvent createdEvent = new ReviewCreatedEvent(UUID.randomUUID().toString(), newReview.getId(), reviewRequest.getComment());
+//        rabbitTemplate.convertAndSend("REVIEW_EXCHANGE", "REVIEW_ROUTING_KEY", createdEvent);
+
 //        ReviewCreatedEvent createdEvent = new ReviewCreatedEvent(UUID.randomUUID().toString(), newReview.getId(), reviewRequest.getComment());
 //        rabbitTemplate.convertAndSend("REVIEW_EXCHANGE", "REVIEW_ROUTING_KEY", createdEvent);
 

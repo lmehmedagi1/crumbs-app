@@ -146,6 +146,10 @@ INSERT INTO recipe_categories VALUES (zimska_juha, juhe_cat);
 INSERT INTO recipe_categories VALUES (zimska_juha, kuhanje_cat);
 INSERT INTO recipe_categories VALUES (zimska_juha, zima_cat);
 
+INSERT INTO recipe_categories VALUES (parmezan_piletina, juhe_cat);
+INSERT INTO recipe_categories VALUES (parmezan_piletina, kuhanje_cat);
+INSERT INTO recipe_categories VALUES (parmezan_piletina, zima_cat);
+
 INSERT INTO recipe_ingredients VALUES (sampita, slag, 250, ''g'');
 INSERT INTO recipe_ingredients VALUES (sampita, maslac, 50, ''g'');
 INSERT INTO recipe_ingredients VALUES (sampita, jaje, 1, ''kom'');
@@ -153,6 +157,11 @@ INSERT INTO recipe_ingredients VALUES (cheesecake, slag, 250, ''g'');
 INSERT INTO recipe_ingredients VALUES (cheesecake, maslac, 50, ''g'');
 INSERT INTO recipe_ingredients VALUES (cheesecake, jaje, 1, ''kom'');
 INSERT INTO recipe_ingredients VALUES (cheesecake, tresnja, 150, ''g'');
+
+INSERT INTO recipe_ingredients VALUES (parmezan_piletina, slag, 250, ''g'');
+INSERT INTO recipe_ingredients VALUES (parmezan_piletina, maslac, 50, ''g'');
+INSERT INTO recipe_ingredients VALUES (parmezan_piletina, jaje, 1, ''kom'');
+INSERT INTO recipe_ingredients VALUES (parmezan_piletina, tresnja, 150, ''g'');
 
 INSERT INTO diets VALUES (sport_diet, aki_id, ''Sporcka ishrana'', ''Idealna dijeta preko vikenda'', 3, ''true'', current_timestamp, current_timestamp + (10 * interval ''1 minute''));
 INSERT INTO diets VALUES (veget_diet, medo_id, ''Vegetarijanska ishrana'', ''Full vegetarijanski vikend'', 7, ''false'', current_timestamp, current_timestamp + (15 * interval ''1 minute''));
@@ -177,6 +186,6 @@ INSERT INTO images VALUES (gen_random_uuid(), ''id:IJb-yHir50sAAAAAAAAAFA'', zim
 
 INSERT INTO images VALUES (gen_random_uuid(), ''id:IJb-yHir50sAAAAAAAAAFA'', parmezan_piletina);
 INSERT INTO images VALUES (gen_random_uuid(), ''id:IJb-yHir50sAAAAAAAAAFA'', parmezan_piletina);
-INSERT INTO images VALUES (gen_random_uuid(), ''id:IJb-yHir50sAAAAAAAAAFA'', parmezan_piletina);
+INSERT INTO images VALUES (gen_random_uuid(), ''id:IJb-yHir50sAAAAAAAAAIg'', parmezan_piletina);
 END;
 ' LANGUAGE PLPGSQL;

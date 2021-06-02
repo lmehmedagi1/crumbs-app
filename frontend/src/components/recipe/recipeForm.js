@@ -3,15 +3,14 @@ import recipeApi from 'api/recipe'
 import { uploadFiles } from 'components/common/dropbox'
 import FileUploader from 'components/common/fileUploader/fileUploader'
 import SelectField from 'components/common/selectField'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Button, Col, Form, Modal, ProgressBar, Row } from "react-bootstrap"
 import NumberFormat from "react-number-format"
 import { useDispatch, useSelector } from 'react-redux'
+import { category_api_path, ingredient_api_path } from 'configs/env'
 
 function RecipeForm(props) {
 
-    const category_api_path = "recipe-service/categories/type";
-    const ingredient_api_path = "recipe-service/ingredients/type";
     const [loading, setLoading] = useState(false)
 
     const recipe = useSelector(state => state.recipes.recipe);
@@ -30,6 +29,12 @@ function RecipeForm(props) {
         value = value ? value : [];
         dispatch(setState({ [name]: value }))
     };
+
+    useEffect(() => {
+        if (!props.isEdit)
+            dispatch(clearState())
+    }, []);
+
 
     const prepareData = () => {
         var categoryKeys = ["preparationLevel", "group", "season", "preparationMethod"]
@@ -53,18 +58,20 @@ function RecipeForm(props) {
         if (isValidForm()) {
             setLoading(true);
             uploadFiles(files, 'recipes').then(fileIds => {
-                recipeApi.createRecipe((res, err) => {
-                    setLoading(false);
-                }, { ...prepareData(), images: fileIds }, props.getToken(), props.setToken);
+                if (props.isEdit)
+                    recipeApi.patchRecipe((res, err) => {
+                        setLoading(false);
+                    }, { ...prepareData(), images: fileIds, id: recipe.id }, props.getToken(), props.setToken);
+                else
+                    recipeApi.createRecipe((res, err) => {
+                        setLoading(false);
+                    }, { ...prepareData(), images: fileIds }, props.getToken(), props.setToken);
             })
         } else { }
 
     }
 
-    const onClose = () => {
-        dispatch(clearState())
-        props.onHide()
-    }
+    const onClose = () => props.onHide()
 
 
     return (<Modal dialogClassName="my-modal" show={props.show} onHide={onClose} scrollable >

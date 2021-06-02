@@ -1,20 +1,22 @@
-import React, { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
-import { Table } from 'react-bootstrap'
-
-import BootstrapTable from 'react-bootstrap-table-next'
+import profileApi from 'api/profile';
+import { CustomImage } from 'components/common/customImage';
+import React, { useEffect, useState } from 'react';
+import { Table } from 'react-bootstrap';
+import BootstrapTable from 'react-bootstrap-table-next';
+import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 import paginationFactory from 'react-bootstrap-table2-paginator';
-import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css'
-import 'react-bootstrap-table2-paginator/dist/react-bootstrap-table2-paginator.min.css'
+import 'react-bootstrap-table2-paginator/dist/react-bootstrap-table2-paginator.min.css';
+import { useDispatch, useSelector } from 'react-redux';
+import { clearState, setState } from 'actions/recipeActions';
 
-import { CustomImage } from 'components/common/customImage'
-
-import profileApi from 'api/profile'
 
 function CustomTable(props) {
 
     const [values, setValues] = useState([]);
     const [currTab, setCurrTab] = useState("");
+
+    const recipe = useSelector(state => state.recipes.recipe);
+    const dispatch = useDispatch()
 
     useEffect(() => {
 
@@ -30,6 +32,8 @@ function CustomTable(props) {
                 profileApi.getUserRecipes((data) => {
                     if (data == null) data = [];
                     setValues(data); 
+                    dispatch(clearState())
+                    dispatch(setState({...data}))
                     props.setLoading(false);
                 }, {id: props.userId});        
                 break;
