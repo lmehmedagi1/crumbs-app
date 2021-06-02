@@ -2,13 +2,14 @@ package com.crumbs.recipeservice.controllers;
 
 import com.crumbs.recipeservice.models.Diet;
 import com.crumbs.recipeservice.models.User;
+import com.crumbs.recipeservice.projections.DietClassView;
 import com.crumbs.recipeservice.projections.RecipeView;
 import com.crumbs.recipeservice.projections.UserClassView;
 import com.crumbs.recipeservice.projections.UserDietView;
-import com.crumbs.recipeservice.projections.UserRecipeView;
 import com.crumbs.recipeservice.projections.UserView;
 import com.crumbs.recipeservice.requests.DietRequest;
 import com.crumbs.recipeservice.requests.WebClientRequest;
+import com.crumbs.recipeservice.responses.DietViewResponse;
 import com.crumbs.recipeservice.responses.DietWithDetails;
 import com.crumbs.recipeservice.services.DietService;
 import com.crumbs.recipeservice.utility.JwtConfigAndUtil;
@@ -21,7 +22,6 @@ import com.github.fge.jsonpatch.JsonPatchException;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.http.HttpStatus;
@@ -33,9 +33,6 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
-
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping(value = "/diets")
@@ -59,17 +56,12 @@ public class DietController {
     }
 
     @GetMapping
-    public CollectionModel<EntityModel<Diet>> getDiets(
+    public ResponseEntity<DietViewResponse> getDiets(
             @RequestParam(defaultValue = "0") Integer pageNo,
-            @RequestParam(defaultValue = "5") Integer pageSize,
-            @RequestParam(defaultValue = "title") String sort) {
-
-        List<EntityModel<Diet>> diet = dietService.getDiets(pageNo, pageSize, sort)
-                .stream()
-                .map(dietModelAssembler::toModel)
-                .collect(Collectors.toList());
-
-        return CollectionModel.of(diet, linkTo(methodOn(DietController.class).getDiets(pageNo, pageSize, sort)).withSelfRel());
+            @RequestParam(defaultValue = "3") Integer pageSize,
+            @RequestParam(defaultValue = "title-asc") String sort,
+            @RequestParam(defaultValue = "") String search) {
+        return ResponseEntity.ok(dietService.getDietViews(pageNo, pageSize, sort, search));
     }
 
     @RequestMapping(params = "id", method = RequestMethod.GET)

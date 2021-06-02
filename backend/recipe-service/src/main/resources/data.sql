@@ -174,5 +174,9 @@ INSERT INTO images VALUES (krempita_slika1, ''id:IJb-yHir50sAAAAAAAAAFA'', sampi
 INSERT INTO images VALUES (omlet_slika1, ''id:IJb-yHir50sAAAAAAAAAFA'', zimska_juha);
 INSERT INTO images VALUES (gen_random_uuid(), ''id:IJb-yHir50sAAAAAAAAAFA'', zimska_juha);
 INSERT INTO images VALUES (gen_random_uuid(), ''id:IJb-yHir50sAAAAAAAAAFA'', zimska_juha);
+
+INSERT INTO images VALUES (gen_random_uuid(), ''id:IJb-yHir50sAAAAAAAAAFA'', parmezan_piletina);
+INSERT INTO images VALUES (gen_random_uuid(), ''id:IJb-yHir50sAAAAAAAAAFA'', parmezan_piletina);
+INSERT INTO images VALUES (gen_random_uuid(), ''id:IJb-yHir50sAAAAAAAAAFA'', parmezan_piletina);
 END;
 ' LANGUAGE PLPGSQL;

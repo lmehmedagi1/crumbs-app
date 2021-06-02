@@ -1,12 +1,23 @@
 import React, { useState, useEffect } from 'react'
 import { withRouter, Link } from 'react-router-dom'
-import { Spinner, Button, Form, FormControl } from 'react-bootstrap'
+import { Spinner, Button, Form, FormControl, DropdownButton, Dropdown } from 'react-bootstrap'
 
 import Alert from 'components/alert/alert'
 import Menu from 'components/common/menu'
 
 import dietApi from 'api/diet'
 import { CustomImage } from 'components/common/customImage'
+
+const sortingValues = {
+    "Title: A to Z": "title-asc",
+    "Title: Z to A": "title-desc",
+    "Duration: Shortest first": "duration-asc",
+    "Duration: Longest first": "duration-desc",
+    "Time added: Newest first": "createdAt-asc",
+    "Time added: Oldest first": "createdAt-desc"
+}
+
+const sortingKeys = Object.keys(sortingValues);
 
 function BrowseDiets(props) {
 
@@ -21,40 +32,40 @@ function BrowseDiets(props) {
     const [activePageNo, setActivePageNo] = useState(0);
     const [activeHasNext, setActiveHasNext] = useState(true);
     const [activeSearched, setActiveSearched] = useState("");
+    const [activeSort, setActiveSort] = useState({title: "Title: A to Z", value: "title-asc"});
 
     useEffect(() => {
-        fetchDiets("", 0);
+        fetchDiets(activeSearched, activePageNo, activeSort);
     }, []);
 
-    const fetchDiets = (searched, pageNo) => {
+    const fetchDiets = (searched, pageNo, sort) => {
         setActivePageNo(pageNo);
         setActiveSearched(searched);
 
         const params = {
             search: searched,
-            pageNo: pageNo
+            pageNo: pageNo,
+            sort: sort.value
         }
 
         setLoading(true);
-        // To do: Fetch diets
-        setLoading(false);
-        // dietApi.getDiets((data) => {
-        //     if (data == null) data = { users: [], hasNext: false };
-        //     if (data.users == null) data.users = [];
-        //     if (pageNo == 0) setPeople(data.users);
-        //     else {
-        //         let newUsers = [...people, ...data.users];
-        //         setPeople(newUsers);
-        //     }
-        //     setActiveHasNext(data.hasNext);
-        //     setLoading(false);
-        // }, params);
+        dietApi.getDiets((data) => {
+            if (data == null) data = { diets: [], hasNext: false };
+            if (data.diets == null) data.diets = [];
+            if (pageNo == 0) setDiets(data.diets);
+            else {
+                let newDiets = [...diets, ...data.diets];
+                setDiets(newDiets);
+            }
+            setActiveHasNext(data.hasNext);
+            setLoading(false);
+        }, params);
     }
 
     const exploreMore = () => {
         let pageNo = activePageNo + 1;
         setActivePageNo(pageNo);
-        fetchDiets(activeSearched, pageNo);
+        fetchDiets(activeSearched, pageNo, activeSort);
     }
 
     const handleSearchChange = search => {
@@ -69,7 +80,16 @@ function BrowseDiets(props) {
         event.preventDefault();
         const formData = new FormData(event.target),
         formDataObj = Object.fromEntries(formData.entries());
-        fetchDiets(formDataObj.search, 0);
+        fetchDiets(formDataObj.search, 0, activeSort);
+    }
+
+    const handleSortingSelect = event => {
+        let title = event;
+        let value = sortingValues[title];
+        let sorting = {title, value};
+        setActiveSort(sorting);
+        setActivePageNo(0);
+        fetchDiets(activeSearched, 0, sorting);
     }
 
     return (
@@ -86,21 +106,45 @@ function BrowseDiets(props) {
                                 <i className="fa fa-search" aria-hidden="true"></i>
                             </Form>
                         </div>
+                        <div className="sort">
+                            <DropdownButton id="dropdown-basic-button" title={activeSort.title} onSelect={handleSortingSelect} active>
+                                {sortingKeys.map((title, index) => (
+                                    <Dropdown.Item eventKey={title} active={activeSort.title === title}>{title}</Dropdown.Item>
+                                ))}
+                            </DropdownButton>
+                        </div>
                     </div>
                     {loading ? <Spinner className="spinner" animation="border" role="status" /> : null}
                     <div className="list">
-                        {diets.map((user, index) => (
-                            <Link to={"/diet/" + user.id}>
-                                <div className="userCard">
-                                    <CustomImage imageId={user.avatar} className="imageWrapper" alt="User avatar" />
-                                    <h1>{user.firstName + " " + user.lastName}</h1>
-                                    <h2>@{user.username}</h2>
+                        
+                        {diets.map((diet, index) => (
+                            <Link to={"/diet/" + diet.id}>
+                                <div className="diet-card">
+                                    <div className="diet-info">
+                                        <div>
+                                        <h1>{diet.title}</h1>
+                                        <h2>{diet.author.firstName + " " + diet.author.lastName + " (@" + diet.author.username + ")"}</h2>
+                                        </div>
+                                        <div>
+                                        <h3>Duration: {diet.duration} days</h3>
+                                        <h3>{diet.description}</h3>
+                                        </div>
+                                    </div>
+                                    <div className="recipe-list">
+                                        {diet.recipes.map((recipe, index) => (
+                                            <div className="recipe-card">
+                                                <CustomImage imageId={recipe.image} className="image-wrapper" alt="Recipe image" />
+                                                <h2> {recipe.title} </h2>
+                                                <h3> {recipe.description} </h3>
+                                            </div>
+                                        ))}
+                                    </div>
                                 </div>
                             </Link>
                         ))}
                     </div>
                     {activeHasNext ?
-                        <div className="loadMore">
+                        <div className="load-more">
                             <Button variant="primary" type="submit" onClick={() => exploreMore()}>LOAD MORE</Button>
                         </div>
                         : null}
