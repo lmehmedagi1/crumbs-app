@@ -1,6 +1,7 @@
-import { setState } from 'actions/recipeActions'
-import { userHasPermission, userIsLoggedIn, getUser } from 'api/auth'
+import { pushFile, setState } from 'actions/recipeActions'
+import { getUser, userHasPermission, userIsLoggedIn } from 'api/auth'
 import { CustomImage } from 'components/common/customImage'
+import { dbx } from 'components/common/dropbox'
 import Menu from 'components/common/menu'
 import SelectField from 'components/common/selectField'
 import RecipeForm from 'components/recipe/recipeForm'
@@ -36,7 +37,22 @@ function RecipePreview(props) {
         dispatch(get(props.match.params.id));
         dispatch(getRecipeRating(props.match.params.id));
         dispatch(getRecipeReviews(props.match.params.id, countComment));
+
     }, []);
+
+    useEffect(() => {
+        if (recipe.images && recipe.images.length > 0) {
+            recipe.images.forEach(element => {
+                dbx.filesDownload({
+                    path: element.image
+                }).then(x => {
+                    dispatch(pushFile({ file: x.result, name: x.result.name }));
+                })
+            })
+        }
+
+    }, [recipe.images]);
+
 
     const handleSearchChange = search => {
         props.history.push({

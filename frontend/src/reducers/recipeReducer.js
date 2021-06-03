@@ -1,4 +1,3 @@
-import { getUser } from 'api/auth'
 
 const initialState = {
     recipe: {
@@ -11,7 +10,8 @@ const initialState = {
         initialImages: {},
         categories: [],
         rating: 0,
-        comments: []
+        comments: [],
+        files: {}
     },
     hidden: false,
     reviewOfUser: {
@@ -27,6 +27,17 @@ const categoryFields = {
     "season": "Sezona",
     "preparationMethod": "Nacin pripreme"
 }
+
+const jpeg = ["jpg", "jpeg", "jfif", "pjpeg", "pjp"]
+const mimeType = {
+    "apng": "image/apng",
+    "gif": "image/gif",
+    "png": "image/png",
+    "svg": "image/webp"
+}
+jpeg.forEach(element => {
+    mimeType[element] = "image/jpeg"
+});
 
 const prepareCategories = (categories) => {
     var obj = {}
@@ -48,9 +59,21 @@ const recipeReducer = (state = { ...initialState }, action) => {
                 },
             });
             break;
+        case "RECIPE_PUSH_FILE":
+            var files = state.recipe.files
+            var name = action.payload.name
+            files[name] = new File([action.payload.file.fileBlob], name, { type: mimeType[name.split('.').pop()] })
+            return Object.assign({}, state, {
+                recipe: {
+                    ...state.recipe,
+                    files,
+                },
+            });
+            break;
         case "RECIPE_CLEAR_STATE":
             return Object.assign({}, state, {
                 recipe: {
+                    ...state.recipe,
                     title: "",
                     method: "",
                     ingredients: [],
@@ -91,16 +114,19 @@ const recipeReducer = (state = { ...initialState }, action) => {
             break;
         case "RECIPE_POST_LIKE_FULFILLED":
             return Object.assign({}, state, {
+                ...state,
                 reviewOfUser: { ...state.reviewOfUser, is_liked: action.payload.data.is_liked }
             });
             break;
         case "RECIPE_POST_RATING_FULFILLED":
             return Object.assign({}, state, {
+                ...state,
                 reviewOfUser: { ...state.reviewOfUser, rating: action.payload.data.rating }
             });
             break;
         case "RECIPE_POST_COMMENT_FULFILLED":
             return Object.assign({}, state, {
+                ...state,
                 recipe: Object.assign({}, state.recipe, {
                     ...state.recipe,
                     comments: [action.payload.data, ...state.recipe.comments]
@@ -110,6 +136,7 @@ const recipeReducer = (state = { ...initialState }, action) => {
             break;
         case "RECIPE_EDIT_COMMENT_FULFILLED":
             return Object.assign({}, state, {
+                ...state,
                 recipe: Object.assign({}, state.recipe, {
                     ...state.recipe,
                     comments: state.recipe.comments.map(function (item) { return item.reviewId == action.payload.data.reviewId ? action.payload.data : item; })
@@ -119,6 +146,7 @@ const recipeReducer = (state = { ...initialState }, action) => {
         case "RECIPE_GET_REVIEWS_FULFILLED":
             if (action.payload.data._embedded)
                 return Object.assign({}, state, {
+                    ...state,
                     recipe: Object.assign({}, state.recipe, {
                         ...state.recipe,
                         comments: [...state.recipe.comments, ...action.payload.data._embedded.reviewViewList].filter(x => x),
@@ -150,11 +178,6 @@ const recipeReducer = (state = { ...initialState }, action) => {
             });
             break;
         case "RECIPE_GET_MOST_POPULAR_REJECTED":
-            // console.log("idemoo", action.payload)
-            // return Object.assign({}, state, {
-            //     ...state,
-
-            // });
             return state
             break;
         default:
