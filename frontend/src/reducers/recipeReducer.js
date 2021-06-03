@@ -1,4 +1,6 @@
 
+import {getUser } from 'api/auth'
+
 const initialState = {
     recipe: {
         title: "",
@@ -112,19 +114,20 @@ const recipeReducer = (state = { ...initialState }, action) => {
                 }),
             });
             break;
-        case "RECIPE_POST_LIKE_FULFILLED":
-            return Object.assign({}, state, {
-                ...state,
-                reviewOfUser: { ...state.reviewOfUser, is_liked: action.payload.data.is_liked }
-            });
+        case "RECIPE_POST_LIKE":
+            if (action.payload)
+                return Object.assign({}, state, {
+                    reviewOfUser: { ...state.reviewOfUser, is_liked: action.payload.data.is_liked }
+                });
             break;
-        case "RECIPE_POST_RATING_FULFILLED":
-            return Object.assign({}, state, {
-                ...state,
-                reviewOfUser: { ...state.reviewOfUser, rating: action.payload.data.rating }
-            });
+        case "RECIPE_POST_RATING":
+            if (action.payload)
+                return Object.assign({}, state, {
+                    reviewOfUser: { ...state.reviewOfUser, rating: action.payload.data.rating }
+                });
+                return state;
             break;
-        case "RECIPE_POST_COMMENT_FULFILLED":
+        case "RECIPE_POST_COMMENT":
             return Object.assign({}, state, {
                 ...state,
                 recipe: Object.assign({}, state.recipe, {
@@ -134,7 +137,7 @@ const recipeReducer = (state = { ...initialState }, action) => {
                 reviewOfUser: { ...state.reviewOfUser, comment: action.payload.data }
             });
             break;
-        case "RECIPE_EDIT_COMMENT_FULFILLED":
+        case "RECIPE_EDIT_COMMENT":
             return Object.assign({}, state, {
                 ...state,
                 recipe: Object.assign({}, state.recipe, {
@@ -144,37 +147,68 @@ const recipeReducer = (state = { ...initialState }, action) => {
             });
             break;
         case "RECIPE_GET_REVIEWS_FULFILLED":
-            if (action.payload.data._embedded)
+            if (action.payload.data._embedded) {
+                var com;
+                var tempArr = [...state.recipe.comments, ...action.payload.data._embedded.reviewViewList];
+                if(getUser()) {
+                    tempArr = tempArr.filter(x => {
+                        if(x.author.id === getUser().id)
+                            com = x;
+                        return x.author.id !== getUser().id
+                    })
+                    if(com) {
+                        tempArr.unshift(com)
+                    }
+                }
                 return Object.assign({}, state, {
                     ...state,
                     recipe: Object.assign({}, state.recipe, {
                         ...state.recipe,
-                        comments: [...state.recipe.comments, ...action.payload.data._embedded.reviewViewList].filter(x => x),
+                        comments: [...tempArr]
                     }),
                 });
+                
+            }
+            return state;
             break;
         case "RECIPE_GET_MOST_POPULAR_FULFILLED":
-            return Object.assign({}, state, {
-                ...state,
-                mostPopularRecipes: action.payload.data._embedded.recipeViewList
-            });
+            if (action.payload.data._embedded)
+                return Object.assign({}, state, {
+                    ...state,
+                    mostPopularRecipes: action.payload.data._embedded.recipeViewList
+                });
+                return state;
             break;
         case "RECIPE_GET_DAILY_FULFILLED":
-            return Object.assign({}, state, {
-                ...state,
-                dailyRecipes: action.payload.data._embedded.recipeViewList
-            });
+            if (action.payload.data._embedded)
+                return Object.assign({}, state, {
+                    ...state,
+                    dailyRecipes: action.payload.data._embedded.recipeViewList
+                });
+            return state;
             break;
-        case "RECIPE_GET_REVIEW_FULFILLED":
-            return Object.assign({}, state, {
-                ...state,
-                reviewOfUser: action.payload.data
-            });
+        case "RECIPE_GET_REVIEW":
+            console.log(action.payload)
+            if (action.payload)
+                return Object.assign({}, state, {
+                    ...state,
+                    reviewOfUser: action.payload
+                });
+            return state;
             break;
         case "RECIPE_GET_REVIEW_REJECTED":
             return Object.assign({}, state, {
                 ...state,
                 reviewOfUser: {}
+            });
+            break;
+        case "RECIPE_DELETE_REVIEW":
+            return Object.assign({}, state, {
+                recipe: Object.assign({}, state.recipe, {
+                    ...state.recipe,
+                    comments: state.recipe.comments.filter(x => x.reviewId != action.payload),
+                }),
+                reviewOfUser: {...state.reviewOfUser, comment : null}
             });
             break;
         case "RECIPE_GET_MOST_POPULAR_REJECTED":

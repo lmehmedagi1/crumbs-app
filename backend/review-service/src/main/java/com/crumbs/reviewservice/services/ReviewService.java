@@ -64,12 +64,12 @@ public class ReviewService {
 
     @Transactional(readOnly = true)
     public List<UUID> getHighestRated(Pageable p) {
-        return reviewRepository.getFourTopRatedForMonth(p);
+        return reviewRepository.getFourTopRatedForMonth(LocalDateTime.now().minusMonths(1), p);
     }
 
     @Transactional(readOnly = true)
     public List<UUID> getHighestRatedDaily(Pageable p) {
-        return reviewRepository.getTopRatedDaily(p);
+        return reviewRepository.getTopRatedDaily(LocalDateTime.now().minusDays(1), p);
     }
 
     @Transactional
@@ -93,9 +93,9 @@ public class ReviewService {
 
     @Transactional
     public void deleteReview(@NotNull UUID reviewId, @NotNull UUID userId) {
-        //if (reviewRepository.findByIdAndUserId(reviewId, userId) == null)
-        //throw new UnauthorizedException("You don't have permission to delete this review");
-        reviewRepository.deleteById(reviewId);
+        if (reviewRepository.findByIdAndUserId(reviewId, userId) == null)
+            throw new UnauthorizedException("You don't have permission to delete this review");
+        reviewRepository.deleteForId(reviewId);
     }
 
     private void modifyReview(ReviewRequest reviewRequest, UUID userId, Review review) {

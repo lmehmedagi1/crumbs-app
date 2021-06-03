@@ -1,5 +1,6 @@
-import { pushFile, setState } from 'actions/recipeActions'
-import { getUser, userHasPermission, userIsLoggedIn } from 'api/auth'
+
+import { getEntityReviewForUser, setState, pushFile } from 'actions/recipeActions'
+import { userHasPermission, userIsLoggedIn, getUser } from 'api/auth'
 import { CustomImage } from 'components/common/customImage'
 import { dbx } from 'components/common/dropbox'
 import Menu from 'components/common/menu'
@@ -14,18 +15,21 @@ import NumberFormat from "react-number-format"
 import { useDispatch, useSelector } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import StarRatings from 'react-star-ratings'
+import ConfirmationModal from 'components/common/confirmationModal'
 import {
     clearState, editComment, get,
-    getRecipeRating, getRecipeReviews, postComment, updateLike, updateRating
+    getRecipeRating, getRecipeReviews, deleteReview, postComment, updateLike, updateRating
 } from '../../actions/recipeActions'
+import recipeApi from 'api/recipe'
 
 function RecipePreview(props) {
-
+    const [showConfirmationModal, setShowConfirmationModal] = useState(false);
     const recipe = useSelector(state => state.recipes.recipe);
     const userReview = useSelector(state => state.recipes.reviewOfUser);
     const [txtComment, setTxtComment] = useState("");
     const [txtCommentEdit, setTxtCommentEdit] = useState("");
     const [countComment, setCount] = useState(0);
+    const [idToDelete, setIdToDelete] = useState("");
     const [editMode, setEditMode] = useState(false);
     const [show, setShow] = useState(false);
 
@@ -36,8 +40,8 @@ function RecipePreview(props) {
         console.log("Id", props.match.params.id)
         dispatch(get(props.match.params.id));
         dispatch(getRecipeRating(props.match.params.id));
-        dispatch(getRecipeReviews(props.match.params.id, countComment));
-
+        dispatch(getRecipeReviews(props.match.params.id, countComment, getUser() ? getUser().id : "noId"));
+        getEntityReviewUser(props.match.params.id);
     }, []);
 
     useEffect(() => {
@@ -54,6 +58,17 @@ function RecipePreview(props) {
     }, [recipe.images]);
 
 
+
+    const getEntityReviewUser = (entityId) => {
+        let params = {
+            entityId
+        }
+
+        recipeApi.getEntityReviewForUser((res, err) => { 
+            if(err) return; 
+                dispatch(getEntityReviewForUser(res));
+        }, params, props.getToken(), props.setToken);
+    }
     const handleSearchChange = search => {
         props.history.push({
             pathname: '/browse',
@@ -67,12 +82,32 @@ function RecipePreview(props) {
     }
 
     const btnCommentOnClick = () => {
-        dispatch(postComment(txtComment, "recipe", props.match.params.id, userReview.id ? userReview.id : "noId"));
+        let body = {
+            comment: txtComment,
+            entity_type: "recipe",
+            entity_id: props.match.params.id,
+            id: userReview.id ? userReview.id : "noId"
+        }
+
+        recipeApi.postComment((res, err) => { 
+            if(err) return 
+                dispatch(postComment(res));
+        }, body, props.getToken(), props.setToken);
         setTxtComment("");
     }
 
     const btnSaveEditCommentOnClick = () => {
-        dispatch(editComment(txtCommentEdit, "recipe", props.match.params.id, userReview.id ? userReview.id : "noId"));
+        let body = {
+            comment: txtCommentEdit,
+            entity_type: "recipe",
+            entity_id: props.match.params.id,
+            id: userReview.id ? userReview.id : "noId"
+        }
+
+        recipeApi.postComment((res, err) => { 
+            if(err) return; 
+                dispatch(editComment(res));
+        }, body, props.getToken(), props.setToken);
         setEditMode(false);
     }
 
@@ -89,11 +124,38 @@ function RecipePreview(props) {
         setTxtCommentEdit(c);
     }
 
-    const changeRating = (newRating) =>
-        dispatch(updateRating(newRating, "recipe", props.match.params.id, userReview.id ? userReview.id : "noId"));
+    const changeRating = (newRating) => {
+        let body = {
+            rating: newRating,
+            entity_type: "recipe",
+            entity_id: props.match.params.id,
+            id: userReview.id ? userReview.id : "noId"
+        }
+
+        recipeApi.postComment((res, err) => { 
+            if(err) return 
+                dispatch(updateRating(res));
+        }, body, props.getToken(), props.setToken);
+    }
 
     const chkBoxOnClick = () => {
-        dispatch(updateLike(!userReview.is_liked ? true : false, "recipe", props.match.params.id, userReview.id ? userReview.id : "noId"));
+        let body = {
+            is_liked: !userReview.is_liked ? true : false,
+            entity_type: "recipe",
+            entity_id: props.match.params.id,
+            id: userReview.id ? userReview.id : "noId"
+        }
+
+        recipeApi.postComment((res, err) => { 
+            if(err) return 
+                dispatch(updateLike(res));
+        }, body, props.getToken(), props.setToken);
+    }
+
+    const btnDeleteOnClick = (id) => {
+        setEditMode(false);
+        setIdToDelete(id);
+        setShowConfirmationModal(true);
     }
 
     const timestampToDateTime = timestamp => {
@@ -105,6 +167,18 @@ function RecipePreview(props) {
         value = value ? value : [];
         dispatch(setState({ [name]: value }))
     };
+    
+    const handleDietDelete = () => {
+        let body = {
+            id: idToDelete
+        }
+        recipeApi.deleteEntityReview((res, err) => { 
+            if(err) return 
+                dispatch(deleteReview(idToDelete));
+        }, body, props.getToken(), props.setToken);
+        setShowConfirmationModal(false);
+    };
+    
 
 
     return (
@@ -252,7 +326,7 @@ function RecipePreview(props) {
                         <StarRatings
                             rating={userReview.rating ? userReview.rating : 0}
                             starRatedColor="orange"
-                            changeRating={changeRating}
+                            changeRating={userIsLoggedIn() ? changeRating : null}
                             numberOfStars={5}
                             name='rating'
                         />
@@ -260,8 +334,8 @@ function RecipePreview(props) {
 
                     <div className="commentsTitle"> <i className="fa fa-comments"></i> Komentari</div>
 
-                    {recipe.comments && (recipe.comments.map(row =>
-                        <Row className="border border-secondary">
+                    {recipe.comments && (recipe.comments.map(row => row.comment &&
+                        (<Row className="border border-secondary">
                             <Col><h4 className="comment-username">{row.author.username} </h4></Col>
                             <Col md={8}> {editMode && userIsLoggedIn() && row.author.id === getUser().id ?
                                 <textarea
@@ -281,17 +355,20 @@ function RecipePreview(props) {
                                 {userIsLoggedIn() && row.author.id === getUser().id && editMode ?
                                     <Button className="btnEditMode" onClick={btnSaveEditCommentOnClick}> Save </Button> : null}
                                 {userIsLoggedIn() && row.author.id === getUser().id && editMode ?
-                                    <Button style={{ background: "red" }} class="btnEditMode" > Delete </Button> : null}
+                                    <Button class="btnEditMode" onClick={() => {setEditMode(false)}}> Cancel </Button> : null}
+                                {userIsLoggedIn() && row.author.id === getUser().id && editMode ?
+                                    <Button style={{ background: "red" }} onClick={() => { btnDeleteOnClick(row.reviewId) }} class="btnEditMode" > Delete </Button> : null}
+                                     
                             </Col>
                             <text className="comment-createdAt">{timestampToDateTime(row.createdAt)}</text>
-                        </Row>))}
+                        </Row>)))}
                     {<Button id="btn-outline-primary" onClick={btnLoadMoreOnClick}> Load More </Button>}
                     <textarea
                         rows="5"
                         name="Comment"
                         value={!editMode ? txtComment : ""}
                         onChange={handleCommentChange}
-                        disabled={!userReview.comment || userReview.comment == "" ? false : true}
+                        disabled={userIsLoggedIn() && (!userReview.comment || userReview.comment == "" )? false : true}
                         className="comment-section form-control"
                     />
                     {<Button disabled={!userReview.comment || userReview.comment == "" ? false : true}
@@ -311,6 +388,11 @@ function RecipePreview(props) {
                 getToken={props.getToken}
                 setToken={props.setToken}
                 isEdit={true} />
+            <ConfirmationModal 
+                show={showConfirmationModal} onHide={() => setShowConfirmationModal(false)} 
+                title="Remove comment" message="Are you sure you want to remove this comment? This action cannot be undone."
+                onConfirm={handleDietDelete} confirmMessage="Delete"
+            />
         </div >
     )
 }

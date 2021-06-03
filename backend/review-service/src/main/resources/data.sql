@@ -35,6 +35,7 @@ BEGIN
     INSERT INTO review VALUES (review_2_id, medo_id, parmezan_piletina, ''recipe'', true, 5, ''SAMO MESO BAJO v2'', current_timestamp, current_timestamp + (15 * interval ''1 minute''));
     INSERT INTO review VALUES (review_3_id, manda_id, zimska_juha, ''recipe'', true, 4, ''Solidno iskreno :)'', current_timestamp, current_timestamp + (10 * interval ''1 minute''));
     INSERT INTO review VALUES (review_4_id, aki_id, parmezan_piletina, ''recipe'', true, 5, ''Prejako fakat'', current_timestamp, current_timestamp + (16 * interval ''1 minute''));
+    INSERT INTO review VALUES (review_11_id, lela_id, cheesecake, ''recipe'', true, 5, ''Prejako fakat24242'', current_timestamp, current_timestamp + (16 * interval ''1 minute''));
     INSERT INTO review VALUES (review_5_id, aki_id, sampita, ''recipe'', false, 2, ''Meh'', current_timestamp, current_timestamp + (14 * interval ''1 minute''));
     INSERT INTO review VALUES (review_6_id, lela_id, kolac_diet, ''diet'', true, 5, ''Yessir boi'', current_timestamp, current_timestamp + (7 * interval ''1 minute''));
     INSERT INTO review VALUES (review_8_id, lela_id, krempita, ''recipe'', true, 4, ''Yessir boiii1'', current_timestamp, current_timestamp + (7 * interval ''1 minute''));
