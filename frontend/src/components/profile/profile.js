@@ -16,7 +16,6 @@ import React, { useEffect, useState } from 'react'
 import { Nav, Row, Spinner, Tab } from 'react-bootstrap'
 import { withRouter } from 'react-router-dom'
 
-
 function Profile(props) {
 
     const [loading, setLoading] = useState(false);
@@ -40,6 +39,11 @@ function Profile(props) {
         if (props.location.state && props.location.state.activeKey) setActiveTab(props.location.state.activeKey);
         updateState(window.location.pathname.split('/')[3]);
     }, []);
+
+    useEffect(() => {
+        const newTableKey = tableKey * 89;
+        setTableKey(newTableKey);
+    }, [activeTab]);
 
     const readLocationPathname = () => {
         let values = window.location.pathname.split('/');
@@ -68,7 +72,7 @@ function Profile(props) {
 
     const handleSearchChange = search => {
         props.history.push({
-            pathname: '/shop',
+            pathname: '/browse',
             state: { search: search }
         });
     }
@@ -92,7 +96,7 @@ function Profile(props) {
         }, { id: user.id }, props.getToken(), props.setToken);
     }
 
-    const handleProfileUpdate = () => {
+    const handleProfileUpdate = (files) => {
         readLocationPathname();
         setShowEditModal(false);
     }
@@ -100,6 +104,13 @@ function Profile(props) {
     const update = (id) => {
         props.history.replace('/profile/' + id + '/about', { activeKey: 'about' });
         loadUser(id, 'about');
+    }
+
+    const onSuccessAdded = () => {
+        setShowDietModal(false);
+        const newTableKey = tableKey * 89;
+        setTableKey(newTableKey);
+        setLoading(false);
     }
 
     const handleRowClick = (id, type) => {
@@ -165,32 +176,33 @@ function Profile(props) {
                                 </Nav>
                             </Row>
                             <Row>
-                                <Tab.Content>
+                                <Tab.Content key={tableKey}>
                                     <Tab.Pane eventKey="about" active={activeTab == "about"}>
                                         <AboutTab user={user && user} />
                                     </Tab.Pane>
                                     <Tab.Pane eventKey="recipes" active={activeTab == "recipes"}>
-                                        <RecipesTab key={tableKey} tab={activeTab} userId={user && user.id} handleRowClick={handleRowClick} setLoading={setLoading} />
+                                        <RecipesTab key={tableKey} activeTab={activeTab} tab={activeTab} userId={user && user.id} handleRowClick={handleRowClick} setLoading={setLoading} setShow={setShow} setMessage={setMessage} setVariant={setVariant}/>
                                     </Tab.Pane>
                                     <Tab.Pane eventKey="diets" active={activeTab == "diets"}>
-                                        <DietsTab key={tableKey} tab={activeTab} userId={user && user.id} handleRowClick={handleRowClick} setLoading={setLoading} />
+                                        <DietsTab key={tableKey} activeTab={activeTab} tab={activeTab} userId={user && user.id} handleRowClick={handleRowClick} setLoading={setLoading} setShow={setShow} setMessage={setMessage} setVariant={setVariant} getToken={props.getToken} setToken={props.setToken} />
                                     </Tab.Pane>
                                     <Tab.Pane eventKey="subscriptions" active={activeTab == "subscriptions"}>
-                                        <SubscriptionsTab key={tableKey} userId={user && user.id} handleRowClick={handleRowClick} setLoading={setLoading} />
+                                        <SubscriptionsTab activeTab={activeTab} key={tableKey} userId={user && user.id} handleRowClick={handleRowClick} setLoading={setLoading} setShow={setShow} setMessage={setMessage} setVariant={setVariant}/>
                                     </Tab.Pane>
                                     <Tab.Pane eventKey="likes" active={activeTab == "likes"}>
-                                        <LikesTab key={tableKey} userId={user && user.id} setShow={setShow} setMessage={setMessage} setVariant={setVariant} getToken={props.getToken} setToken={props.setToken} setLoading={setLoading} />
+                                        <LikesTab activeTab={activeTab} key={tableKey} userId={user && user.id} setShow={setShow} setMessage={setMessage} setVariant={setVariant} getToken={props.getToken} setToken={props.setToken} setLoading={setLoading} />
                                     </Tab.Pane>
                                 </Tab.Content>
                             </Row>
                         </Tab.Container>
 
                         {userHasPermission(user.id) && activeTab == "recipes" ? <button className="addButton" onClick={() => { setShowRecipeModal(true) }}> ADD NEW RECIPE </button> : null}
+                        {userHasPermission(user.id) && activeTab == "diets" ? <button className="addButton" onClick={() => { setShowDietModal(true) }}> ADD NEW DIET </button> : null}
                     </div>
                 </div>
                 <EditProfileModal showModal={showEditModal} handleCloseEditModal={() => setShowEditModal(false)} getToken={props.getToken} setToken={props.setToken} handleProfileUpdate={handleProfileUpdate} />
-                <RecipeForm show={showRecipeModal} title="Add Recipe" onHide={() => setShowRecipeModal(false)}  getToken={props.getToken} setToken={props.setToken}/>
-                <DietForm show={showDietModal} title="Add Diet" onHide={() => setShowDietModal(false)} getToken={props.getToken} setToken={props.setToken} />
+                <RecipeForm show={showRecipeModal} title="Add Recipe" onHide={() => setShowRecipeModal(false)} onSuccess={onSuccessAdded} getToken={props.getToken} setToken={props.setToken}/>
+                <DietForm show={showDietModal} title="Add Diet" onHide={() => setShowDietModal(false)} onSuccess={onSuccessAdded} getToken={props.getToken} setToken={props.setToken} />
             </div>
 
         </div>

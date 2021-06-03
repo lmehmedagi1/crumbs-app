@@ -1,12 +1,11 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Form, Button, Modal } from 'react-bootstrap'
 import { Formik } from "formik"
 import * as yup from 'yup'
 import { getUser } from 'api/auth'
-
+import { CustomImage } from 'components/common/customImage'
+import { uploadFile } from 'components/common/dropbox'
 import profileApi from 'api/profile'
-
-const imagePlaceholder = "https://www.firstfishonline.com/wp-content/uploads/2017/07/default-placeholder-700x700.png";
 
 const schema = yup.object().shape({
     email: yup.string().email("*Email must be valid").required("*Email is required"),
@@ -22,9 +21,11 @@ const schema = yup.object().shape({
 function EditProfileModal(props) {
 
     const [loading, setLoading] = useState(false);
-
     const [image, setImage] = useState("");
-    const [base64URL, setBase64URL] = useState("");
+
+    useEffect(() => {
+        if (getUser()) setImage(getUser().user_profile.avatar); 
+    }, []);
 
     const getInitialValues = () => {
 
@@ -43,50 +44,34 @@ function EditProfileModal(props) {
     const handleSubmit = (user) => {
 
         user.gender = lowerFirstLetter(user.gender);
+        user.avatar = image;
 
         setLoading(true);
+
+        let files = [image];
 
         profileApi.updateUserInfo(() => {
             setLoading(false);
             props.handleProfileUpdate();
-        }, user, props.getToken(), props.setToken);   
+        }, user, props.getToken(), props.setToken);  
     }
 
-    const getBase64 = file => {
-        return new Promise(resolve => {
-            let reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = () => {
-                let baseURL = reader.result;
-                resolve(baseURL);
-            };
-        });
-    };
-
     const handleFileInputChange = e => {
-
+        setLoading(true);
         let file = e.target.files[0];
 
         if (file.type.substring(0, 6) != "image/") {
             props.setVariant("warning");
             props.setMessage("Invalid image type");
             props.setShow(true);
+            setLoading(false);
             return;
         }
 
-        getBase64(file)
-            .then(result => {
-                file["base64"] = result;
-                setBase64URL(result.substring(13 + file.type.length));
-                setImage(file);
-            })
-            .catch(err => {
-                props.setVariant("warning");
-                props.setMessage("Image loading failed");
-                props.setShow(true);
-            });
-
-        setImage(e.target.files[0]);
+        uploadFile(file, 'users').then(fileId => {
+            setImage(fileId);
+            setLoading(false);
+        });
     }
 
     const capitalizeFirstLetter = (text) => {
@@ -126,7 +111,7 @@ function EditProfileModal(props) {
 
                         <div className="image">
                             <div id="myFileDiv">
-                                <img src={imagePlaceholder} alt="Profile image"/>
+                                <CustomImage imageId={image} className="imageWrapper" alt="User avatar"/>
                                 <input type="file" id="inputFile" onChange={handleFileInputChange} accept="image/*"/>
                                 <label for="inputFile">CHANGE PHOTO</label>
                             </div>
