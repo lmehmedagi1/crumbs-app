@@ -11,6 +11,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -50,6 +51,12 @@ public class Diet {
     @JsonProperty("is_private")
     @Column(name = "is_private")
     private Boolean isPrivate;
+
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
+    @Column(name = "last_modify")
+    private LocalDateTime lastModify;
 
     @ManyToMany
     @JoinTable(

@@ -4,12 +4,13 @@ import Alert from 'components/alert/alert'
 import { CustomImage } from 'components/common/customImage'
 import Menu from 'components/common/menu'
 import EditProfileModal from 'components/profile/editProfile'
+import RecipeForm from 'components/recipe/recipeForm'
+import DietForm from 'components/diet/dietForm'
 import AboutTab from 'components/profile/tabs/AboutTab'
 import DietsTab from 'components/profile/tabs/DietTab'
 import LikesTab from 'components/profile/tabs/LikesTab'
 import RecipesTab from 'components/profile/tabs/RecipesTab'
 import SubscriptionsTab from 'components/profile/tabs/SubscriptionsTab'
-import RecipeForm from 'components/recipe/recipeForm'
 import ScrollButton from 'components/utility/scrollButton'
 import React, { useEffect, useState } from 'react'
 import { Nav, Row, Spinner, Tab } from 'react-bootstrap'
@@ -32,6 +33,7 @@ function Profile(props) {
 
     const [showEditModal, setShowEditModal] = useState(false);
     const [showRecipeModal, setShowRecipeModal] = useState(false);
+    const [showDietModal, setShowDietModal] = useState(false);
 
     useEffect(() => {
         readLocationPathname();
@@ -187,8 +189,10 @@ function Profile(props) {
                     </div>
                 </div>
                 <EditProfileModal showModal={showEditModal} handleCloseEditModal={() => setShowEditModal(false)} getToken={props.getToken} setToken={props.setToken} handleProfileUpdate={handleProfileUpdate} />
-                <RecipeForm show={showRecipeModal} title="Add Recipe" onHide={() => setShowRecipeModal(false)} getToken={props.getToken} setToken={props.setToken}  />
+                <RecipeForm show={showRecipeModal} title="Add Recipe" onHide={() => setShowRecipeModal(false)}  getToken={props.getToken} setToken={props.setToken}/>
+                <DietForm show={showDietModal} title="Add Diet" onHide={() => setShowDietModal(false)} />
             </div>
+
         </div>
     )
 }
