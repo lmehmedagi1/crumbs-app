@@ -1,3 +1,101 @@
 .dietContainer {
-    
+    margin: 2% 12%;
+
+
+    .title {
+        color: $default-purple-color;
+        font-size: 35px;
+        font-weight: bold;
+    }
+
+    .edit-buttons {
+        margin-top: 50px;
+
+        button {
+            background: $default-purple-color;
+            color: white;
+            border: 3px solid $default-purple-color;
+            box-shadow: 3px 3px 0 0 rgba(131,103,216,0.31);
+            font-size: 16px;
+            font-weight: bold;
+            width: 80px;
+            height: 40px;
+            margin-left: 10px;
+        }
+    }
+
+    .grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        column-gap: 20px;
+
+        .information {
+            text-align: left;
+            .subtitle {
+                border-bottom: 2px solid $text-color;
+                padding-bottom: 10px;
+                margin-bottom: 20px;
+                color: $base-color;
+                font-size: 28px;
+
+                margin-top: 50px;
+
+                :first-child {
+                    margin-top: 0;
+                }
+            }
+
+            .author-view {
+                display: flex;
+                justify-content: start;
+                .image-wrapper {
+                    overflow: hidden;
+                    margin-right: 30px;
+                    img {
+                        width: 90px;
+                        height: 90px;
+                        object-fit: cover;
+                        border-radius: 50%;
+                    }
+                }
+            }
+
+            h2 {
+                color: $text-color;
+                font-size: 20px;
+                span {
+                    color: $default-purple-color;
+                }
+            }
+        }
+
+        .recipes {
+            text-align: center;
+            max-height: 700px;
+            overflow-y: auto;
+            margin-top: 50px;
+
+            .itemCard {
+                .card {
+                    margin: 0 auto;
+
+                    .card-footer {
+                        display: none;
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media #{$tablet} {
+    .dietContainer {
+        margin: 5% 5%;
+    }
+}
+
+@media #{$mobile} {
+    .dietContainer {
+        margin: 5% 5%;
+    }
 }

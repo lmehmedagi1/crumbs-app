@@ -4,11 +4,13 @@ import com.crumbs.recipeservice.models.Diet;
 import com.crumbs.recipeservice.models.User;
 import com.crumbs.recipeservice.projections.DietClassView;
 import com.crumbs.recipeservice.projections.RecipeView;
+import com.crumbs.recipeservice.projections.SingleDietClassView;
 import com.crumbs.recipeservice.projections.UserClassView;
 import com.crumbs.recipeservice.projections.UserDietView;
 import com.crumbs.recipeservice.projections.UserView;
 import com.crumbs.recipeservice.requests.DietRequest;
 import com.crumbs.recipeservice.requests.WebClientRequest;
+import com.crumbs.recipeservice.responses.DietResponse;
 import com.crumbs.recipeservice.responses.DietViewResponse;
 import com.crumbs.recipeservice.responses.DietWithDetails;
 import com.crumbs.recipeservice.services.DietService;
@@ -64,38 +66,43 @@ public class DietController {
         return ResponseEntity.ok(dietService.getDietViews(pageNo, pageSize, sort, search));
     }
 
-    @RequestMapping(params = "id", method = RequestMethod.GET)
-    public EntityModel<Diet> getDiet(@RequestParam("id") @NotNull UUID id) {
-        return dietModelAssembler.toModel(dietService.getDiet(id));
+    @GetMapping("/public")
+    public ResponseEntity<DietResponse> getDiet(@RequestParam @NotNull UUID id) {
+        return ResponseEntity.ok(dietService.getPublicDiet(id));
     }
 
-    @RequestMapping(params = {"id", "details"}, method = RequestMethod.GET)
-    public EntityModel<?> getDietWithDetails(@RequestParam("id") @NotNull UUID id,
-                                             @RequestParam(value = "details", defaultValue = "false")
-                                             @NotNull Boolean details,
-                                             @RequestHeader("Authorization") String jwt) {
-        if (!details)
-            return getDiet(id);
-        else {
-            Diet diet = dietService.getDiet(id);
-
-            User author = webClientRequest.checkIfUserExists(jwt);
-            DietWithDetails dietWithDetails = new DietWithDetails(diet.getTitle(), diet.getDescription(), diet.getDuration());
-            dietWithDetails.setAuthor(new UserView(author.getId(), author.getUsername(), author.getUserProfile().getAvatar()));
-            dietWithDetails.setRecipes(diet.getRecipes().stream().map(recipe -> {
-                        RecipeView recipeView = new RecipeView(recipe.getId(), recipe.getTitle(), recipe.getDescription(), recipe.getId());
-                        if (!recipe.getImages().isEmpty())
-                            recipeView.setImage(recipe.getImages().get(0).getImage());
-
-                        UserClassView recipeAuthor = webClientRequest.getUserPreview(recipe.getUserId());
-                        recipeView.setAuthor(recipeAuthor);
-                        return recipeView;
-                    }
-            ).collect(Collectors.toList()));
-
-            return EntityModel.of(dietWithDetails);
-        }
+    @GetMapping("/private")
+    public ResponseEntity<DietResponse> getPrivateDiet(@RequestParam @NotNull UUID id, @RequestHeader("Authorization") String jwt) {
+        return ResponseEntity.ok(dietService.getPrivateDiet(id, webClientRequest.getUserPreview(JwtConfigAndUtil.getUserIdFromJwt(jwt))));
     }
+
+//    @RequestMapping(params = {"id", "details"}, method = RequestMethod.GET)
+//    public EntityModel<?> getDietWithDetails(@RequestParam("id") @NotNull UUID id,
+//                                             @RequestParam(value = "details", defaultValue = "false")
+//                                             @NotNull Boolean details,
+//                                             @RequestHeader("Authorization") String jwt) {
+//        if (!details)
+//            return getDiet(id);
+//        else {
+//            Diet diet = dietService.getDiet(id);
+//
+//            User author = webClientRequest.checkIfUserExists(jwt);
+//            DietWithDetails dietWithDetails = new DietWithDetails(diet.getTitle(), diet.getDescription(), diet.getDuration());
+//            dietWithDetails.setAuthor(new UserView(author.getId(), author.getUsername(), author.getUserProfile().getAvatar()));
+//            dietWithDetails.setRecipes(diet.getRecipes().stream().map(recipe -> {
+//                        RecipeView recipeView = new RecipeView(recipe.getId(), recipe.getTitle(), recipe.getDescription(), recipe.getId());
+//                        if (!recipe.getImages().isEmpty())
+//                            recipeView.setImage(recipe.getImages().get(0).getImage());
+//
+//                        UserClassView recipeAuthor = webClientRequest.getUserPreview(recipe.getUserId());
+//                        recipeView.setAuthor(recipeAuthor);
+//                        return recipeView;
+//                    }
+//            ).collect(Collectors.toList()));
+//
+//            return EntityModel.of(dietWithDetails);
+//        }
+//    }
 
     @PostMapping
     public ResponseEntity<?> createDiet(@RequestBody @Valid DietRequest dietRequest, @RequestHeader("Authorization") String jwt) {
@@ -118,22 +125,22 @@ public class DietController {
         return ResponseEntity.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(entityModel);
     }
 
-    /**
-     * PATCH method with partial update, based on JSON Patch
-     */
-    @PatchMapping(consumes = "application/json-patch+json")
-    public ResponseEntity<?> patchDiet(@RequestParam("id") @NotNull UUID id, @RequestBody JsonPatch patch) {
-        try {
-            Diet diet = dietService.getDiet(id);
-            final ObjectMapper objectMapper = new ObjectMapper();
-            JsonNode patched = patch.apply(objectMapper.convertValue(diet, JsonNode.class));
-            Diet dietPatched = objectMapper.treeToValue(patched, Diet.class);
-            dietService.updateDiet(dietPatched);
-            return ResponseEntity.ok(dietModelAssembler.toModel(dietPatched));
-        } catch (JsonPatchException | JsonProcessingException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
+//    /**
+//     * PATCH method with partial update, based on JSON Patch
+//     */
+//    @PatchMapping(consumes = "application/json-patch+json")
+//    public ResponseEntity<?> patchDiet(@RequestParam("id") @NotNull UUID id, @RequestBody JsonPatch patch) {
+//        try {
+//            Diet diet = dietService.getDiet(id);
+//            final ObjectMapper objectMapper = new ObjectMapper();
+//            JsonNode patched = patch.apply(objectMapper.convertValue(diet, JsonNode.class));
+//            Diet dietPatched = objectMapper.treeToValue(patched, Diet.class);
+//            dietService.updateDiet(dietPatched);
+//            return ResponseEntity.ok(dietModelAssembler.toModel(dietPatched));
+//        } catch (JsonPatchException | JsonProcessingException e) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+//        }
+//    }
 
     @DeleteMapping
     public ResponseEntity<?> deleteDiet(@RequestParam("id") @NotNull UUID id, @RequestHeader("Authorization") String jwt) {
