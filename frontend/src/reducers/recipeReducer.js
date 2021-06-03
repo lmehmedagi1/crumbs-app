@@ -1,4 +1,6 @@
 
+import {getUser } from 'api/auth'
+
 const initialState = {
     recipe: {
         title: "",

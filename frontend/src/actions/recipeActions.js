@@ -25,6 +25,13 @@ export function getMostPopularRecipes(pageNumber) {
     };
 }
 
+export function pushFile(payload) {
+    return {
+        type: "RECIPE_PUSH_FILE",
+        payload,
+    };
+}
+
 export function setState(data) {
     return {
         type: "RECIPE_SET_STATE",
