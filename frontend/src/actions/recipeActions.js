@@ -25,6 +25,13 @@ export function getMostPopularRecipes(pageNumber) {
     };
 }
 
+export function pushFile(payload) {
+    return {
+        type: "RECIPE_PUSH_FILE",
+        payload,
+    };
+}
+
 export function setState(data) {
     return {
         type: "RECIPE_SET_STATE",
@@ -32,46 +39,18 @@ export function setState(data) {
     };
 }
 
-export function updateRating(rating, entity, entityId, reviewId) {
+export function updateRating(payload) {
     return {
         type: "RECIPE_POST_RATING",
-        payload: axios("http://localhost:8090/review-service/reviews", {
-            method: "PATCH",
-            params: {
-                id: reviewId
-            },
-            data: {
-                entity_id: entityId,
-                entity_type: entity,
-                rating
-            },
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJmYzk4NjEyYi1jMGMyLTQ3OTItYjJhYy1hY2I3ZGQ2NTU1YzEiLCJpYXQiOjE2MjI2Mjg2NDQsImV4cCI6MTYyMjc1NzYwMH0.ZykzuYy9nEJZT2Qt9g0wS9zKb2FMevL6sGQOfMbwgVyFzVMDXQ42Zxx5pWYtTgQ0xPQkMTeXTH3bCp0qxxu3Lw"
-            }
-        })
+        payload
     };
 }
 
-export function updateLike(is_liked, entity, entityId, reviewId) {
+export function updateLike(payload) {
     
     return {
         type: "RECIPE_POST_LIKE",
-        payload: axios("http://localhost:8090/review-service/reviews", {
-            method: "PATCH",
-            params: {
-                id: reviewId
-            },
-            data: {
-                entity_id: entityId,
-                entity_type: entity,
-                is_liked
-            },
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJmYzk4NjEyYi1jMGMyLTQ3OTItYjJhYy1hY2I3ZGQ2NTU1YzEiLCJpYXQiOjE2MjI2Mjg2NDQsImV4cCI6MTYyMjc1NzYwMH0.ZykzuYy9nEJZT2Qt9g0wS9zKb2FMevL6sGQOfMbwgVyFzVMDXQ42Zxx5pWYtTgQ0xPQkMTeXTH3bCp0qxxu3Lw"
-            }
-        })
+        payload
     };
 }
 
@@ -95,76 +74,45 @@ export function getRecipeRating(recipeId) {
     };
 }
 
-export function getEntityReviewForUser(entityId) {
-    console.log("idEntity", entityId);
+export function deleteReview(payload) {
+    return {
+        type: "RECIPE_DELETE_REVIEW",
+        payload
+    };
+}
+
+export function getEntityReviewForUser(payload) {
     return {
         type: "RECIPE_GET_REVIEW",
-        payload: axios("http://localhost:8090/review-service/reviews/review-of-user", {
-            method: "GET",
-            params: {
-                entityId
-            },
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJmYzk4NjEyYi1jMGMyLTQ3OTItYjJhYy1hY2I3ZGQ2NTU1YzEiLCJpYXQiOjE2MjI2Mjg2NDQsImV4cCI6MTYyMjc1NzYwMH0.ZykzuYy9nEJZT2Qt9g0wS9zKb2FMevL6sGQOfMbwgVyFzVMDXQ42Zxx5pWYtTgQ0xPQkMTeXTH3bCp0qxxu3Lw"
-            }
-        })
+        payload
     };
 }
 
-export function postComment(comment, entity, entityId, reviewId) {
+export function postComment(payload) {
     return {
         type: "RECIPE_POST_COMMENT",
-        payload: axios("http://localhost:8090/review-service/reviews", {
-            method: "PATCH",
-            params: {
-                id: reviewId
-            },
-            data: {
-                entity_id: entityId,
-                entity_type: entity,
-                comment
-            },
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJmYzk4NjEyYi1jMGMyLTQ3OTItYjJhYy1hY2I3ZGQ2NTU1YzEiLCJpYXQiOjE2MjI2Mjg2NDQsImV4cCI6MTYyMjc1NzYwMH0.ZykzuYy9nEJZT2Qt9g0wS9zKb2FMevL6sGQOfMbwgVyFzVMDXQ42Zxx5pWYtTgQ0xPQkMTeXTH3bCp0qxxu3Lw"
-            }
-        })
+        payload
     };
 }
 
 
-export function editComment(comment, entity, entityId, reviewId) {
-    console.log("alooo", comment)
+export function editComment(payload) {
     return {
         type: "RECIPE_EDIT_COMMENT",
-        payload: axios("http://localhost:8090/review-service/reviews", {
-            method: "PATCH",
-            params: {
-                id: reviewId
-            },
-            data: {
-                entity_id: entityId,
-                entity_type: entity,
-                comment
-            },
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJmYzk4NjEyYi1jMGMyLTQ3OTItYjJhYy1hY2I3ZGQ2NTU1YzEiLCJpYXQiOjE2MjI2Mjg2NDQsImV4cCI6MTYyMjc1NzYwMH0.ZykzuYy9nEJZT2Qt9g0wS9zKb2FMevL6sGQOfMbwgVyFzVMDXQ42Zxx5pWYtTgQ0xPQkMTeXTH3bCp0qxxu3Lw"
-            }
-        })
+        payload
     };
 }
 
 
-export function getRecipeReviews(recipeId, pageNo) {
+export function getRecipeReviews(recipeId, pageNo, userId) {
     return {
         type: "RECIPE_GET_REVIEWS",
         payload: axios("http://localhost:8090/review-service/reviews/comments", {
             method: "GET",
             params: {
                 recipeId,
-                pageNo
+                pageNo,
+                userId
             }
         })
     }

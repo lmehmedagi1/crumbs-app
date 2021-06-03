@@ -26,11 +26,11 @@ public interface ReviewRepository extends JpaRepository<Review, UUID> {
     @Query(value = "SELECT AVG(r.rating), 2 FROM Review r WHERE r.entityId = ?1")
     Double getAvgRatingOfRecipe(UUID uuid);
 
-    @Query(value = "SELECT r.entityId as ids FROM Review r group by r.entityId order by AVG(r.rating) desc")
-    List<UUID> getFourTopRatedForMonth(Pageable pageable);
+    @Query(value = "SELECT r.entityId as ids FROM Review r where r.createdAt > ?1 group by r.entityId order by AVG(r.rating) desc")
+    List<UUID> getFourTopRatedForMonth(LocalDateTime localDateTime, Pageable pageable);
 
-    @Query(value = "SELECT r.entityId as ids FROM Review r group by r.entityId order by AVG(r.rating) desc")
-    List<UUID> getTopRatedDaily(Pageable pageable);
+    @Query(value = "SELECT r.entityId as ids FROM Review r where r.createdAt > ?1 group by r.entityId order by AVG(r.rating) desc")
+    List<UUID> getTopRatedDaily(LocalDateTime localDateTime, Pageable pageable);
 
     Review findByIdAndUserId(UUID id, UUID userId);
 
@@ -56,5 +56,8 @@ public interface ReviewRepository extends JpaRepository<Review, UUID> {
 
     boolean existsReviewByUserIdAndEntityId(UUID userid, UUID entityid);
 
-
+    @Modifying(clearAutomatically=true)
+    @Transactional
+    @Query("update Review r set r.comment = null, r.lastModify = current_timestamp where r.id = ?1")
+    void deleteForId(UUID reviewId);
 }

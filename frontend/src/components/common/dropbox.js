@@ -1,9 +1,10 @@
 import { Dropbox } from 'dropbox'
 import { dropbox } from 'configs/env'
 
-const dbx = new Dropbox({
+export const dbx = new Dropbox({
     accessToken: dropbox.token
 })
+
 
 export function listFiles() {
     dbx.filesListFolder({
@@ -22,7 +23,7 @@ export function getImage(id, f) {
     })
 }
 
-async function asyncForEach(array, callback) {
+export async function asyncForEach(array, callback) {
     for (let index = 0; index < array.length; index++) {
         await callback(array[index], index, array);
     }
@@ -45,7 +46,6 @@ export async function uploadFiles(files, path) {
     });
 
     return fileIds;
-
 }
 
 export async function uploadFile(file, path) {

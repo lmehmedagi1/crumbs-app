@@ -81,7 +81,8 @@ public class ReviewController {
     @RequestMapping(value="/comments", params = "recipeId", method = RequestMethod.GET)
     public CollectionModel<EntityModel<ReviewView>> getReviewsOfRecipe(@RequestParam("recipeId") @NotNull UUID recipeId,
                                                                        @RequestParam(defaultValue = "0") Integer pageNo,
-                                                                       @RequestParam(defaultValue = "4") Integer pageSize) {
+                                                                       @RequestParam(defaultValue = "4") Integer pageSize,
+                                                                       @RequestParam(defaultValue = "noId") String userId) {
 
         reviewWebClientRequest.checkIfRecipeExists(recipeId);
 
@@ -94,9 +95,15 @@ public class ReviewController {
             rV.setAuthor(user);
         }
 
+        if(!userId.equals("noId") && pageNo == 0) {
+            Review review = reviewService.getReviewOfEntityFromUser(recipeId, UUID.fromString(userId));
+            if(review != null)
+                reviews.add(getRv(review));
+        }
+
         return CollectionModel.of(reviews.stream().map(reviewViewModelAssembler::toModel).collect(Collectors.toList()),
                 linkTo(methodOn(ReviewController.class)
-                        .getReviewsOfRecipe(recipeId, pageNo, pageSize)).withSelfRel());
+                        .getReviewsOfRecipe(recipeId, pageNo, pageSize, userId)).withSelfRel());
 
     }
 
