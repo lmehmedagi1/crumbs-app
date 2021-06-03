@@ -1,42 +1,52 @@
-#dailyGrid {
-    padding-left: 200px;
-    width: 85%;
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 0.3fr;
-    justify-content: space-between;
-    row-gap: 20px;
-    margin-top: 20px;
-}
+.home-container {
+    margin: 2% 12%;
 
-a {
-    text-decoration: none;
-}
+    #dailyGrid {
+        display: flex;
+        justify-content: space-between;
+        row-gap: 20px;
+        margin-top: 20px;
+    }
 
-#mostPopularGrid {
-    padding-left: 100px;
-    width: 90%;
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr 0.3fr;
-    justify-content: space-between;
-    row-gap: 20px;
-    margin-top: 20px;
-}
+    a {
+        text-decoration: none;
+    }
 
-.headerText {
-    font-weight: 500;
-    font-size: 20pt;
-    margin: 2.5% 5% 2.5%;
-}
+    #mostPopularGrid {
+        display: flex;
+        justify-content: space-between;
+        row-gap: 20px;
+        margin-top: 20px;
+    }
 
-.addRecipe {
-    margin-right: 3%;
-    width: 50px;
-    margin-top: 2%;
-}
+    .headerText {
+        font-weight: 500;
+        font-size: 20pt;
+        margin: 5.5% 5% 2.5%;
+        color: $default-purple-color;
+    }
 
-.nextBtn {
-    max-height: 50px;
-    width: 50px;
-    align-self: center;
-    margin-left: 1vw;
+    .nextBtn {
+        max-height: 50px;
+        width: 50px;
+        align-self: center;
+        margin-left: 1vw;
+        border: none;
+        font-size: 35px;
+        font-weight: bold;
+        transition: none;
+        background: white;
+        color: $default-purple-color;
+    }
+
+    .nextBtn:hover {
+        background-color: white;
+        border: none;
+        transition: none;
+        color: $text-color;
+    }
+
+    .disabled {
+        color: lightgray;
+    }
 }

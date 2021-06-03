@@ -65,6 +65,7 @@ function RecipeForm(props) {
                 else
                     recipeApi.createRecipe((res, err) => {
                         setLoading(false);
+                        props.onSuccess();
                     }, { ...prepareData(), images: fileIds }, props.getToken(), props.setToken);
             })
         } else { }

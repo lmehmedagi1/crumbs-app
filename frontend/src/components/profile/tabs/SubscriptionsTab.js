@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
 import CustomTable from 'components/profile/tabs/table'
 
@@ -7,10 +7,10 @@ function SubscriptionsTab(props) {
     return (
         <div className="subscriptionsTab">
             <div>
-            <CustomTable userId={props.userId} tab={"subscribers"} handleRowClick={props.handleRowClick} setLoading={props.setLoading}></CustomTable>
+            <CustomTable tab={"subscribers"} {...props} />
             </div>
             <div>
-            <CustomTable userId={props.userId} tab={"subscriptions"} handleRowClick={props.handleRowClick} setLoading={props.setLoading}></CustomTable>
+            <CustomTable tab={"subscriptions"} {...props} />
             </div>
         </div>
     )

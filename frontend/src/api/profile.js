@@ -53,8 +53,19 @@ class ProfileApi extends React.Component {
         );
     }
 
+    sendGetUserDietsRequest = (cb, token, params) => {
+        let parameters = {
+            params: params, 
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `${token}`
+            }
+        };
+        Requests.sendGetRequest(cb, env.BASE_PATH + "recipe-service/diets/user", parameters, response => cb(response.data), err => cb(null, err));
+    }
+
     getUserInfo = (cb, params) => {
-        Requests.sendGetRequest(cb, env.BASE_PATH + "user-service/account/info", {params: params}, (response) => { cb(response.data); }, (err) => { cb(null); });
+        Requests.sendGetRequest(cb, env.BASE_PATH + "user-service/account/info", {params: params}, response => cb(response.data), err => cb(null, err));
     }
 
     checkIfUserIsSubscribed = (cb, params, token, setToken) => {
@@ -65,8 +76,12 @@ class ProfileApi extends React.Component {
         Requests.sendGetRequest(cb, env.BASE_PATH + "recipe-service/recipes/user", {params: params}, (response) => { cb(response.data); }, (err) => { cb(null); });
     } 
 
-    getUserDiets = (cb, params) => {
+    getUserPublicDiets = (cb, params) => {
         Requests.sendGetRequest(cb, env.BASE_PATH + "recipe-service/diets/user", {params: params}, (response) => { cb(response.data); }, (err) => { cb(null); });
+    } 
+
+    getUserDiets = (cb, params, token, setToken) => {
+        auth.forwardRequest(cb, params, token, setToken, this.sendGetUserDietsRequest);
     } 
 
     getUserSubscribers = (cb, params) => {

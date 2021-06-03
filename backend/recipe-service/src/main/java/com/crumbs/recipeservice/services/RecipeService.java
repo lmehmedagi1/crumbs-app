@@ -6,12 +6,14 @@ import com.crumbs.recipeservice.models.Category;
 import com.crumbs.recipeservice.models.Image;
 import com.crumbs.recipeservice.models.Ingredient;
 import com.crumbs.recipeservice.models.Recipe;
+import com.crumbs.recipeservice.projections.RecipeNameView;
 import com.crumbs.recipeservice.projections.RecipeView;
 import com.crumbs.recipeservice.projections.UserRecipeView;
 import com.crumbs.recipeservice.repositories.CategoryRepository;
 import com.crumbs.recipeservice.repositories.ImageRepository;
 import com.crumbs.recipeservice.repositories.IngredientRepository;
 import com.crumbs.recipeservice.repositories.RecipeRepository;
+import com.crumbs.recipeservice.requests.OptionRequest;
 import com.crumbs.recipeservice.requests.FilterRecipesRequest;
 import com.crumbs.recipeservice.requests.RecipeRequest;
 import lombok.NonNull;
@@ -161,5 +163,10 @@ public class RecipeService {
     public String getRecipeImage(UUID id) {
         Image image = imageRepository.findTop1ByRecipe_Id(id);
         return image != null ? image.getImage() : null;
+    }
+
+    @Transactional(readOnly = true)
+    public List<RecipeNameView> searchSelectRecipes(OptionRequest optionRequest) {
+        return recipeRepository.getSelectSearchRecipes(optionRequest.getSearchTerm(), PageRequest.of(0, 10)).getContent();
     }
 }

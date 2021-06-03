@@ -1,20 +1,12 @@
-import Menu from 'components/common/menu'
-import RecipeCard from 'components/common/recipeCard'
-import 'components/home/home.scss'
-import axios from "axios";
-import RecipeForm from 'components/recipe/recipeForm'
-import React, { useState, useEffect } from 'react'
-import { CardGroup, Container, Row } from 'react-bootstrap'
-import Button from 'react-bootstrap/Button'
-import { BsPlusCircleFill } from "react-icons/bs"
-import { ImArrowRight, ImArrowLeft } from "react-icons/im"
-import { Link, withRouter } from 'react-router-dom'
-import { getDailyRecipes, getMostPopularRecipes } from 'actions/recipeActions'
-import { useSelector, useDispatch } from 'react-redux'
-import { listFiles } from 'components/common/dropbox'
+import { getDailyRecipes, getMostPopularRecipes } from 'actions/recipeActions';
+import { listFiles } from 'components/common/dropbox';
+import Menu from 'components/common/menu';
+import RecipeCard from 'components/common/recipeCard';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, withRouter } from 'react-router-dom';
 
 function Home(props) {
-    const [show, setShow] = useState(false);
     const [count, setCount] = useState(0);
     const [countDaily, setDailyCount] = useState(0)
     const mostPopularRecipes = useSelector(state => state.recipes.mostPopularRecipes);
@@ -53,50 +45,43 @@ function Home(props) {
         setDailyCount(countDaily - 1);
     }
 
-
     return (
-        <Container className="container">
+        <div>
             <Menu handleSearchChange={handleSearchChange} {...props} />
+            <div className="home-container">
+            <div className="headerText">Daily Recipes</div>
 
-            <Button variant="outline-primary" className="addRecipe float-right" onClick={() => setShow(true)}>
-                <BsPlusCircleFill />
-            </Button>
-
-            <Row className="headerText">Daily Recipes</Row>
-
-            <CardGroup id="dailyGrid">
-                {countDaily > 0 ? <Button onClick={btnOnClickDailyLeft} variant="outline-primary" className="nextBtn">
-                    <ImArrowLeft />
-                </Button> : null}
+            <div id="dailyGrid">
+                <button disabled={countDaily === 0} onClick={btnOnClickDailyLeft} className="nextBtn">
+                    <i className={countDaily > 0 ? "bi bi-chevron-left" : "bi bi-chevron-left disabled"}></i>
+                </button>
                 {dailyRecipes.map(recipe => (
                     <Link to={"recipe/" + recipe.recipeId}>
                         <RecipeCard {...recipe}> </RecipeCard>
                     </Link>
 
                 ))}
-                {countDaily == 0 ? <Button onClick={btnOnClickDailyRight} variant="outline-primary" className="nextBtn">
-                    <ImArrowRight />
-                </Button> : null}
-            </CardGroup>
+                <button onClick={btnOnClickDailyRight} disabled={countDaily > 0} className="nextBtn">
+                    <i className={countDaily == 0 ? "bi bi-chevron-right" : "bi bi-chevron-right disabled"}></i>
+                </button>
+            </div>
 
-            <Row className="headerText">Most Popular Recipes</Row>
-            <Row id="mostPopularGrid" >
-                {count > 0 ? <Button onClick={btnOnClickLeft} variant="outline-primary" className="nextBtn" >
-                    <ImArrowLeft />
-                </Button> : null}
+            <div className="headerText">Most Popular Recipes</div>
+            <div id="mostPopularGrid" >
+                <button disabled={count === 0} onClick={btnOnClickLeft} className="nextBtn">
+                    <i className={count > 0 ? "bi bi-chevron-left" : "bi bi-chevron-left disabled"}></i>
+                </button>
                 {mostPopularRecipes.map(recipe => (
                     <Link to={"recipe/" + recipe.recipeId}>
                         <RecipeCard {...recipe}> </RecipeCard>
-                    </Link>))}
-
-                {count == 0 ? <Button onClick={btnOnClickRight} variant="outline-primary" className="nextBtn" >
-                    <ImArrowRight />
-                </Button> : null}
-            </Row>
-
-            <RecipeForm title="Create New Recipe" show={show} onHide={() => setShow(false)}
-                getToken={props.getToken} setToken={props.setToken} />
-        </Container>
+                    </Link>))
+                }
+                <button onClick={btnOnClickRight} disabled={count > 0} className="nextBtn">
+                    <i className={count == 0 ? "bi bi-chevron-right" : "bi bi-chevron-right disabled"}></i>
+                </button>
+            </div>
+            </div>
+        </div>
     )
 }
 

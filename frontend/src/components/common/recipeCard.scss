@@ -4,6 +4,7 @@
     .card-text {
         min-height: 100px;
         max-height: 100px;
+        overflow-wrap: break-word;
         overflow-y: auto;
     }
 

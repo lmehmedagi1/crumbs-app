@@ -1,15 +1,14 @@
-import React, { useState, useEffect } from 'react'
-import { withRouter, Link } from 'react-router-dom'
+import { getUser, userIsLoggedIn } from 'api/auth'
+import dietApi from 'api/diet'
+import Alert from 'components/alert/alert'
+import ConfirmationModal from 'components/common/confirmationModal'
+import { CustomImage } from 'components/common/customImage'
+import Menu from 'components/common/menu'
 import RecipeCard from 'components/common/recipeCard'
 import DietForm from 'components/diet/dietForm'
-import Alert from 'components/alert/alert'
-import Menu from 'components/common/menu'
-
-import dietApi from 'api/diet'
-import { getUser, userIsLoggedIn } from 'api/auth'
 import moment from 'moment'
-import { CustomImage } from 'components/common/customImage'
-import ConfirmationModal from 'components/common/confirmationModal'
+import React, { useEffect, useState } from 'react'
+import { Link, withRouter } from 'react-router-dom'
 
 function Diet(props) {
 
@@ -28,25 +27,26 @@ function Diet(props) {
         fetchDiet(dietId);
     }, []);
 
+    const handleError = message => {
+        setShow(true);
+        setMessage(message);
+        setVariant("warning");
+    }
+
     const fetchDiet = (id) => {
         setLoading(true);
         if (userIsLoggedIn()) {
             dietApi.getPrivateDiet((res, err) => {
                 setLoading(false);
-                if (err) return;
-                setDiet(res);
+                if (err) handleError(err);
+                else setDiet(res);
             }, {id}, props.getToken(), props.setToken);
         }
         else {
             dietApi.getPublicDiet((diet, err) => {
                 setLoading(false);
-                if (err) {
-                    setShow(true);
-                    setMessage(err);
-                    setVariant("warning");
-                    return;
-                }
-                setDiet(diet);
+                if (err) handleError(err);
+                else setDiet(diet);
             }, {id});
         }
     }
@@ -68,7 +68,14 @@ function Diet(props) {
     }
 
     const handleDietDelete = () => {
-
+        dietApi.deleteDiet((res, err) => {
+            if (err) handleError(err);
+            else {
+                props.history.push({
+                    pathname: '/'
+                });
+            }
+        }, { id: diet.id }, props.getToken(), props.setToken);
     }
 
     return (
@@ -102,7 +109,7 @@ function Diet(props) {
                                 </div>
                             </div>
 
-                            {userIsLoggedIn() && getUser().id === diet.id && 
+                            {userIsLoggedIn() && getUser().id === diet.author.id && 
                             <div className="edit-buttons">
                                 <button onClick={(() => setShowDietModal(true))}>EDIT</button>
                                 <button onClick={(() => setShowConfirmationModal(true))}>DELETE</button>
@@ -117,7 +124,7 @@ function Diet(props) {
                         </div>
                     </div>
                 </div>}
-                <DietForm show={showDietModal} title="Edit Diet" onHide={() => setShowDietModal(false)} diet={diet} getToken={props.getToken} setToken={props.setToken}/>
+                <DietForm show={showDietModal} title="Edit Diet" onHide={() => setShowDietModal(false)} diet={diet} getToken={props.getToken} setToken={props.setToken} update={update}/>
                 <ConfirmationModal 
                     show={showConfirmationModal} onHide={() => setShowConfirmationModal(false)} 
                     title="Remove diet" message="Are you sure you want to remove this diet? This action cannot be undone."

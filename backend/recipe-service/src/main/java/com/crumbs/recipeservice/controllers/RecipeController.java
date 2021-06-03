@@ -2,11 +2,14 @@ package com.crumbs.recipeservice.controllers;
 
 import com.crumbs.recipeservice.models.Recipe;
 import com.crumbs.recipeservice.models.User;
+import com.crumbs.recipeservice.projections.IngredientView;
+import com.crumbs.recipeservice.projections.RecipeNameView;
 import com.crumbs.recipeservice.projections.RecipeView;
 import com.crumbs.recipeservice.projections.UserClassView;
 import com.crumbs.recipeservice.projections.UserRecipeView;
 import com.crumbs.recipeservice.projections.UserView;
 import com.crumbs.recipeservice.requests.FilterRecipesRequest;
+import com.crumbs.recipeservice.requests.OptionRequest;
 import com.crumbs.recipeservice.requests.RecipeRequest;
 import com.crumbs.recipeservice.requests.WebClientRequest;
 import com.crumbs.recipeservice.responses.ListWrapper;
@@ -28,6 +31,7 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -258,5 +262,10 @@ public class RecipeController {
         recipe.setRating(webClientRequest.getRecipeRating(recipe.getId()));
         recipe.setImage(recipeService.getRecipeImage(recipe.getId()));
         return ResponseEntity.ok(recipe);
+    }
+
+    @PostMapping("/type")
+    public ResponseEntity<List<RecipeNameView>> searchSelectRecipes(@RequestBody @Valid OptionRequest optionRequest) {
+        return ResponseEntity.ok(recipeService.searchSelectRecipes(optionRequest));
     }
 }

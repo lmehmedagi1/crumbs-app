@@ -15,11 +15,57 @@ class RecipeApi extends React.Component {
             });
     }
 
+    sendPatchComment = (cb, token, params) => {
+        var id = params.id;
+        delete params["id"];
+
+        Requests.sendPatchRequest(cb, env.BASE_PATH + "review-service/reviews", params, Requests.getAuthorizationHeader(token),
+            (response) => {
+                cb(response);
+            }, (err) => {
+                cb(null, err)
+                console.log(err)
+            }, id);
+    }
+
+    sendDeleteEntityReviewRequest = (cb, token, params) => {
+        console.log("akI", params)
+        let parameters = {
+            params: params,
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `${token}`
+            }
+        };
+        Requests.sendDeleteRequest(cb, env.BASE_PATH + "review-service/reviews", parameters, 
+        (response) => { cb(response.data, null); }, (err) => {cb(null, err)});
+    }
+
+    getEntityReviewForUserRequest = (cb, token, params) => {
+        
+        let parameters = {
+            params: params, 
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `${token}`
+            }
+        };
+        Requests.sendGetRequest(cb, env.BASE_PATH + "review-service/reviews/review-of-user", parameters, 
+        (response) => cb(response.data), (err) => cb(null, err));
+    }
+
+    getEntityReviewForUser = (cb, params, token, setToken) => {
+        auth.forwardRequest(cb, params, token, setToken, this.getEntityReviewForUserRequest);
+    }
+
     createRecipe = (cb, params, token, setToken) => {
         auth.forwardRequest(cb, params, token, setToken, this.sendPostRecipe);
     }
 
 
+    postComment = (cb, params, token, setToken) => {
+        auth.forwardRequest(cb, params, token, setToken, this.sendPatchComment);
+    }
 
     sendPatchRecipe = (cb, token, params) => {
         var id = params.id;
@@ -36,6 +82,10 @@ class RecipeApi extends React.Component {
 
     patchRecipe = (cb, params, token, setToken) => {
         auth.forwardRequest(cb, params, token, setToken, this.sendPatchRecipe);
+    }
+
+    deleteEntityReview = (cb, params, token, setToken) => {
+        auth.forwardRequest(cb, params, token, setToken, this.sendDeleteEntityReviewRequest);
     }
 }
 
