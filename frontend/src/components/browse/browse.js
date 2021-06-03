@@ -1,76 +1,35 @@
-import { setState } from 'actions/recipeActions'
+import { clearState, getRecipes, setState } from 'actions/recipeActions'
 import Menu from 'components/common/menu'
+import { Paginator } from 'components/common/Paginator/Paginator'
 import RecipeCard from 'components/common/recipeCard'
 import SelectField from 'components/common/selectField'
 import RecipeForm from 'components/recipe/recipeForm'
-import React, { useState } from 'react'
+import { category_api_path } from 'configs/env'
+import React, { useEffect, useState } from 'react'
 import { Button, CardGroup, Col, Container, Form, Row } from 'react-bootstrap'
-import { BsPlusCircleFill } from "react-icons/bs"
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, withRouter } from 'react-router-dom'
 
 function Browse(props) {
 
-    const recipe = useSelector(state => state.recipes.recipe);
+    const { recipe, recipes } = useSelector(state => state.recipes);
     const dispatch = useDispatch()
 
     const [show, setShow] = useState(false);
-    const [title, setTitle] = useState()
+    const [page, setPage] = useState(1);
+    const [pageSize, setPageSize] = useState(3);
 
-    const category_api_path = "recipe-service/categories/type";
-    const ingredient_api_path = "recipe-service/ingredients/type";
-
-    const [products] = useState([
-        {
-            recipeName: "Ime recepta",
-            text: "Learn to swim 1",
-            author: "Autor 1",
-            id: 1
-        },
-        {
-            recipeName: "Ime recepta 2",
-            text: "Learn to swim 2",
-            author: "Autor 2",
-            id: 2
-        },
-        {
-            recipeName: "Ime recepta 3",
-            text: "Learn to swim 3",
-            author: "Autor 3",
-            id: 3
-        },
-        {
-            recipeName: "Ime recepta 4",
-            text: "Learn to swim 3",
-            author: "Autor 4",
-            id: 4
-        },
-        {
-            recipeName: "Ime recepta",
-            text: "Learn to swim 1",
-            author: "Autor 1",
-            id: 1
-        },
-        {
-            recipeName: "Ime recepta 2",
-            text: "Learn to swim 2",
-            author: "Autor 2",
-            id: 2
-        },
-        {
-            recipeName: "Ime recepta 3",
-            text: "Learn to swim 3",
-            author: "Autor 3",
-            id: 3
-        },
-        {
-            recipeName: "Ime recepta 4",
-            text: "Learn to swim 3",
-            author: "Autor 4",
-            id: 4
+    useEffect(() => {
+        dispatch(clearState());
+        var browseFilter = props.location.state
+        if (browseFilter && browseFilter.search) {
+            dispatch(setState({ title: browseFilter.search }))
+            dispatch(getRecipes(getFilters(browseFilter.search), page, pageSize));
+            props.history.replace('/browse');
         }
-
-    ]);
+        else
+            dispatch(getRecipes(getFilters(), page, pageSize));
+    }, []);
 
     const handleSearchChange = search => {
         props.history.push({
@@ -84,6 +43,32 @@ function Browse(props) {
         dispatch(setState({ [name]: value }))
     };
 
+    const onPageChange = page => {
+        setPage(page);
+        dispatch(getRecipes(getFilters(), page, pageSize));
+    };
+
+    const onPageSizeChange = pageSize => {
+        var size = Math.ceil(recipes.length / pageSize);
+        if (size > page) size = page;
+
+        setPageSize(pageSize)
+        dispatch(getRecipes(getFilters(), size, pageSize));
+    };
+
+
+    const getFilters = (param) => {
+        var categoryKeys = ["preparationLevel", "group", "season", "preparationMethod"]
+        var categories = categoryKeys.map(name => recipe[name] ? recipe[name].value : null).filter(x => x)
+
+        return {
+            categories,
+            title: param ? param : recipe.title
+        }
+    }
+
+    const handleSearch = () => dispatch(getRecipes(getFilters(), page, pageSize));
+
 
     return (
         <Container className="browseContainer">
@@ -95,21 +80,12 @@ function Browse(props) {
                         <Form.Control
                             type="text"
                             name="Title"
-                            placeholder="Recept..."
-                            value={title}
-                            onChange={e => setTitle(e.target.value)}
+                            placeholder="Title..."
+                            value={recipe.title}
+                            onChange={e => dispatch(setState({ title: e.target.value }))}
                             disabled={props.viewMode}
                         />
                     </Form.Group>
-                    <SelectField
-                        label="Ingredients"
-                        value={recipe.ingredients}
-                        name="ingredients"
-                        isMulti={true}
-                        onChange={item => handleOnSelectChange(item, "ingredients")}
-                        type="Tezina pripreme"
-                        apiPath={ingredient_api_path}
-                        viewMode={props.viewMode} />
                     <SelectField
                         label="Preparation Level"
                         value={recipe.preparationLevel}
@@ -145,14 +121,20 @@ function Browse(props) {
                         viewMode={props.viewMode}
                         type="Sezona" />
 
-                    <Button variant="outline-primary" className="addRecipe float-right" onClick={() => setShow(true)}>
-                        <BsPlusCircleFill />
+                    <Paginator
+                        page={page}
+                        pageSize={pageSize}
+                        onPageChange={onPageChange}
+                        onPageSizeChange={onPageSizeChange}
+                    />
+                    <Button variant="primary" className="search" onClick={handleSearch}>
+                        Search
                     </Button>
                 </Col>
                 <Col md={8}>
                     <CardGroup >
-                        {products.map(product => (
-                            <Link style={{ margin: "1%" }} to={"recipe/" + product.id}>
+                        {recipes.map(product => (
+                            <Link style={{ margin: "1%" }} to={"recipe/" + product.recipeId}>
                                 <RecipeCard  {...product}> </RecipeCard>
                             </Link>
                         ))}

@@ -158,7 +158,8 @@
     }
 }
 
-.sc-pNWdM, .eFvVPt{
+.sc-pNWdM,
+.eFvVPt {
     width: 200px;
     height: 200px;
 }
@@ -169,8 +170,20 @@
     height: 200px !important;
     img {
         width: 200px;
-        height: 200px; 
+        height: 200px;
         object-fit: cover;
     }
 }
 
+.notFoundContainer {
+    margin: 5%;
+    div {
+        .btn {
+            background-color: #8367d8;
+        }
+    }
+}
+
+.paginator-wrapper{
+    margin-top: 4%;
+}

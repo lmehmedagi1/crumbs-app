@@ -11,8 +11,10 @@ const initialState = {
         categories: [],
         rating: 0,
         comments: [],
-        files: {}
+        files: {},
+        hasData: true,
     },
+    recipes: [],
     hidden: false,
     reviewOfUser: {
         rating: 0
@@ -70,6 +72,13 @@ const recipeReducer = (state = { ...initialState }, action) => {
                 },
             });
             break;
+        case "RECIPE_GET_ALL_FULFILLED":
+            var list = action.payload.data._embedded ? [...action.payload.data._embedded.recipeViewList] : []
+            return Object.assign({}, state, {
+                ...state,
+                recipes: list
+            });
+            break;
         case "RECIPE_CLEAR_STATE":
             return Object.assign({}, state, {
                 recipe: {
@@ -104,6 +113,16 @@ const recipeReducer = (state = { ...initialState }, action) => {
                 }),
             });
             break;
+        case "RECIPE_GET_REJECTED":
+            return Object.assign({}, state, {
+                ...state,
+                recipe: Object.assign({}, state.recipe, {
+                    ...state.recipe,
+                    hasData: false
+                }),
+            });
+            break;
+
         case "RECIPE_GET_RATING_FULFILLED":
             return Object.assign({}, state, {
                 recipe: Object.assign({}, state.recipe, {

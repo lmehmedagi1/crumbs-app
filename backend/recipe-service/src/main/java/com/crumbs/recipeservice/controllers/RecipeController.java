@@ -6,6 +6,7 @@ import com.crumbs.recipeservice.projections.RecipeView;
 import com.crumbs.recipeservice.projections.UserClassView;
 import com.crumbs.recipeservice.projections.UserRecipeView;
 import com.crumbs.recipeservice.projections.UserView;
+import com.crumbs.recipeservice.requests.FilterRecipesRequest;
 import com.crumbs.recipeservice.requests.RecipeRequest;
 import com.crumbs.recipeservice.requests.WebClientRequest;
 import com.crumbs.recipeservice.responses.ListWrapper;
@@ -64,13 +65,14 @@ public class RecipeController {
         this.webClientRequest = webClientRequest;
     }
 
-    @GetMapping
+    @PostMapping("all")
     public CollectionModel<EntityModel<RecipeView>> getRecipePreviews(
             @RequestParam(defaultValue = "0") Integer pageNo,
             @RequestParam(defaultValue = "5") Integer pageSize,
-            @RequestParam(defaultValue = "title") String sort) {
+            @RequestParam(defaultValue = "title") String sort,
+            @RequestBody FilterRecipesRequest filters) {
 
-        List<RecipeView> recipes = recipeService.getRecipePreviews(pageNo, pageSize, sort);
+        List<RecipeView> recipes = recipeService.getRecipePreviews(pageNo, pageSize, sort, filters);
         for (RecipeView recipe : recipes) {
             UUID authorId = recipe.getAuthor().getId();
             UserClassView user = webClientRequest.getUserPreview(authorId);
@@ -80,7 +82,7 @@ public class RecipeController {
 
         return CollectionModel.of(recipes.stream().map(recipeViewModelAssembler::toModel).collect(Collectors.toList()),
                 linkTo(methodOn(RecipeController.class)
-                        .getRecipePreviews(pageNo, pageSize, sort)).withSelfRel());
+                        .getRecipePreviews(pageNo, pageSize, sort, filters)).withSelfRel());
     }
 
     @RequestMapping(value = "/topMonthly", method = RequestMethod.GET)

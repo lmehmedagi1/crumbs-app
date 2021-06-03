@@ -1,8 +1,10 @@
 package com.crumbs.recipeservice.repositories;
 
+import com.crumbs.recipeservice.models.Category;
 import com.crumbs.recipeservice.models.Recipe;
 import com.crumbs.recipeservice.projections.RecipeView;
 import com.crumbs.recipeservice.projections.UserRecipeView;
+import com.crumbs.recipeservice.requests.RecipeRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,8 +18,13 @@ import java.util.UUID;
 public interface RecipeRepository extends JpaRepository<Recipe, UUID> {
 
     @Query("SELECT new com.crumbs.recipeservice.projections.RecipeView(r.id, r.title, r.description, r.userId) " +
-            "FROM Recipe r")
-    Slice<RecipeView> findAllPreviews(Pageable pageable);
+            "FROM Recipe r " +
+            "INNER JOIN r.categories c " +
+            "WHERE (?3 < 1L OR c.id in (?1)) " +
+            "AND (?2 IS NULL OR lower(r.title) like lower(concat('%', ?2,'%'))) " +
+            "group by r.id, r.title, r.description, r.userId " +
+            "having ?3 < 1L OR count(c.id) = ?3 ")
+    Slice<RecipeView> findAllPreviews(List<UUID> categories, String title, Long size, Pageable pageable);
 
     @Query("SELECT new com.crumbs.recipeservice.projections.RecipeView(r.id, r.title, r.description, r.userId) " +
             "FROM Recipe r WHERE r.userId = ?1")

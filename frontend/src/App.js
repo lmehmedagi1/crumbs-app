@@ -28,18 +28,13 @@ function App(props) {
 
   return (
     <div className="App">
-      <ErrorBoundary
-        FallbackComponent={ErrorFallback}
-        onError={myErrorHandler}
-      >
-        <Router>
-          <div>
-            <Header {...props} />
-            <Routes setToken={refreshToken} getToken={getToken} />
-            <Footer />
-          </div>
-        </Router>
-      </ErrorBoundary>
+      <Router>
+        <div>
+          <Header {...props} />
+          <Routes setToken={refreshToken} getToken={getToken} />
+          <Footer />
+        </div>
+      </Router>
     </div>
   );
 }
