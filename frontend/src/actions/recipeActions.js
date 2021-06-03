@@ -127,3 +127,17 @@ export function getDailyRecipes(pageNo) {
         })
     };
 }
+
+const baseFilters = { title: "", categories: [] }
+
+export function getRecipes(filters = baseFilters, pageNo = 0, pageSize = 9, sort = "title") {
+    return {
+        type: "RECIPE_GET_ALL",
+        payload: axios(env.BASE_PATH + "recipe-service/recipes/all", {
+            method: "POST",
+            params: { pageNo: pageNo - 1, pageSize, sort },
+            data: filters
+        })
+    };
+}
+

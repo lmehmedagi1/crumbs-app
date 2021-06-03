@@ -21,6 +21,7 @@ import {
     getRecipeRating, getRecipeReviews, deleteReview, postComment, updateLike, updateRating
 } from '../../actions/recipeActions'
 import recipeApi from 'api/recipe'
+import NotFound from "components/common/notFound"
 
 function RecipePreview(props) {
     const [showConfirmationModal, setShowConfirmationModal] = useState(false);
@@ -64,9 +65,9 @@ function RecipePreview(props) {
             entityId
         }
 
-        recipeApi.getEntityReviewForUser((res, err) => { 
-            if(err) return; 
-                dispatch(getEntityReviewForUser(res));
+        recipeApi.getEntityReviewForUser((res, err) => {
+            if (err) return;
+            dispatch(getEntityReviewForUser(res));
         }, params, props.getToken(), props.setToken);
     }
     const handleSearchChange = search => {
@@ -89,9 +90,9 @@ function RecipePreview(props) {
             id: userReview.id ? userReview.id : "noId"
         }
 
-        recipeApi.postComment((res, err) => { 
-            if(err) return 
-                dispatch(postComment(res));
+        recipeApi.postComment((res, err) => {
+            if (err) return
+            dispatch(postComment(res));
         }, body, props.getToken(), props.setToken);
         setTxtComment("");
     }
@@ -104,9 +105,9 @@ function RecipePreview(props) {
             id: userReview.id ? userReview.id : "noId"
         }
 
-        recipeApi.postComment((res, err) => { 
-            if(err) return; 
-                dispatch(editComment(res));
+        recipeApi.postComment((res, err) => {
+            if (err) return;
+            dispatch(editComment(res));
         }, body, props.getToken(), props.setToken);
         setEditMode(false);
     }
@@ -132,9 +133,9 @@ function RecipePreview(props) {
             id: userReview.id ? userReview.id : "noId"
         }
 
-        recipeApi.postComment((res, err) => { 
-            if(err) return 
-                dispatch(updateRating(res));
+        recipeApi.postComment((res, err) => {
+            if (err) return
+            dispatch(updateRating(res));
         }, body, props.getToken(), props.setToken);
     }
 
@@ -146,9 +147,9 @@ function RecipePreview(props) {
             id: userReview.id ? userReview.id : "noId"
         }
 
-        recipeApi.postComment((res, err) => { 
-            if(err) return 
-                dispatch(updateLike(res));
+        recipeApi.postComment((res, err) => {
+            if (err) return
+            dispatch(updateLike(res));
         }, body, props.getToken(), props.setToken);
     }
 
@@ -167,234 +168,235 @@ function RecipePreview(props) {
         value = value ? value : [];
         dispatch(setState({ [name]: value }))
     };
-    
+
     const handleDietDelete = () => {
         let body = {
             id: idToDelete
         }
-        recipeApi.deleteEntityReview((res, err) => { 
-            if(err) return 
-                dispatch(deleteReview(idToDelete));
+        recipeApi.deleteEntityReview((res, err) => {
+            if (err) return
+            dispatch(deleteReview(idToDelete));
         }, body, props.getToken(), props.setToken);
         setShowConfirmationModal(false);
     };
-    
+
 
 
     return (
-        <div className="recipePreview">
-            <Menu handleSearchChange={handleSearchChange} {...props} />
-            <div className="float-right">
-                {userHasPermission(recipe.userId) && <Button className="float-right" onClick={() => setShow(true)}> Edit </Button>}
-            </div>
-            <Row>
-                <Form.Label className="title">{recipe.title}</Form.Label>
-            </Row>
-            <Row>
-                <Col md={6}>
-                    <Row>
-                        <SelectField
-                            as={Col}
-                            label="Preparation Level"
-                            value={recipe.preparationLevel}
-                            name="preparationLevel"
-                            onChange={item => handleOnSelectChange(item, "preparationLevel")}
-                            type="Tezina pripreme"
-                            apiPath={category_api_path}
-                            viewMode />
-                        <SelectField
-                            as={Col}
-                            label="Method"
-                            value={recipe.preparationMethod}
-                            name="preparationMethod"
-                            type="Nacin pripreme"
-                            apiPath={category_api_path}
-                            onChange={item => dispatch(setState({ preparationMethod: item.id, preparationMethod: item }))}
-                            viewMode />
-                    </Row>
-                    <Row>
-                        <SelectField
-                            as={Col}
-                            label="Group"
-                            value={recipe.group}
-                            name="group"
-                            apiPath={category_api_path}
-                            onChange={item => dispatch(setState({ group: item.id, group: item }))}
-                            viewMode
-                            type="Grupa jela" />
+        recipe.hasData ?
+            <div className="recipePreview">
+                <Menu handleSearchChange={handleSearchChange} {...props} />
+                <div className="float-right">
+                    {userHasPermission(recipe.userId) && <Button className="float-right" onClick={() => setShow(true)}> Edit </Button>}
+                </div>
+                <Row>
+                    <Form.Label className="title">{recipe.title}</Form.Label>
+                </Row>
+                <Row>
+                    <Col md={6}>
+                        <Row>
+                            <SelectField
+                                as={Col}
+                                label="Preparation Level"
+                                value={recipe.preparationLevel}
+                                name="preparationLevel"
+                                onChange={item => handleOnSelectChange(item, "preparationLevel")}
+                                type="Tezina pripreme"
+                                apiPath={category_api_path}
+                                viewMode />
+                            <SelectField
+                                as={Col}
+                                label="Method"
+                                value={recipe.preparationMethod}
+                                name="preparationMethod"
+                                type="Nacin pripreme"
+                                apiPath={category_api_path}
+                                onChange={item => dispatch(setState({ preparationMethod: item.id, preparationMethod: item }))}
+                                viewMode />
+                        </Row>
+                        <Row>
+                            <SelectField
+                                as={Col}
+                                label="Group"
+                                value={recipe.group}
+                                name="group"
+                                apiPath={category_api_path}
+                                onChange={item => dispatch(setState({ group: item.id, group: item }))}
+                                viewMode
+                                type="Grupa jela" />
 
-                        <SelectField
-                            as={Col}
-                            label="Season"
-                            value={recipe.season}
-                            name="season"
-                            apiPath={category_api_path}
-                            onChange={item => dispatch(setState({ season: item }))}
-                            viewMode
-                            type="Sezona" />
-                    </Row>
-                    <Row>
-                        <Col md={9} />
-                        <Col>
-                            <Form.Group>
-                                <Form.Label className="form-label">
-                                    Preparation time
-                        </Form.Label>
-                                <NumberFormat
-                                    className="form-control form-control-md text-right"
-                                    placeholder="..."
-                                    value={recipe.preparationTime}
-                                    thousandSeparator={true}
-                                    decimalScale={0}
-                                    suffix={" min"}
-                                    decimalPrecision={0}
-                                    disabled
-                                />
-                            </Form.Group>
-                        </Col>
-                    </Row>
+                            <SelectField
+                                as={Col}
+                                label="Season"
+                                value={recipe.season}
+                                name="season"
+                                apiPath={category_api_path}
+                                onChange={item => dispatch(setState({ season: item }))}
+                                viewMode
+                                type="Sezona" />
+                        </Row>
+                        <Row>
+                            <Col md={9} />
+                            <Col>
+                                <Form.Group>
+                                    <Form.Label className="form-label">
+                                        Preparation time
+                    </Form.Label>
+                                    <NumberFormat
+                                        className="form-control form-control-md text-right"
+                                        placeholder="..."
+                                        value={recipe.preparationTime}
+                                        thousandSeparator={true}
+                                        decimalScale={0}
+                                        suffix={" min"}
+                                        decimalPrecision={0}
+                                        disabled
+                                    />
+                                </Form.Group>
+                            </Col>
+                        </Row>
 
-                    <Form.Label className="form-label subtitle">Ingredients</Form.Label>
-                    <div>
-                        {recipe.ingredients && (recipe.ingredients.map((row, index) => <span className="listElement">
-                            {row.label + (index < recipe.ingredients.length - 1 ? "," : "")} </span>))}
-                    </div>
-                </Col>
-
-                <Col>
-                    {recipe.images && recipe.images.length > 0 && <div className="recipeImages">
+                        <Form.Label className="form-label subtitle">Ingredients</Form.Label>
                         <div>
-                            <CustomImage imageId={recipe.activeImage} className="" alt="Recipe Image" />
+                            {recipe.ingredients && (recipe.ingredients.map((row, index) => <span className="listElement">
+                                {row.label + (index < recipe.ingredients.length - 1 ? "," : "")} </span>))}
                         </div>
-                        <div className="recipeImagesGrid">
-                            {recipe.images.map(x => (
-                                <div className="landingPagerecipe" onClick={() => dispatch(setState({ activeImage: x.image }))}>
-                                    <CustomImage imageId={x.image} className="" alt="Image" />
-                                </div>
-                            ))}
-                        </div>
-                    </div>}
-                </Col>
-            </Row>
+                    </Col>
 
-            <Row>
-                <Col md={6}>
-                    <Form.Label className="form-label subtitle">Description</Form.Label>
-                    <textarea
-                        rows="4"
-                        name="opis"
-                        placeholder="Description..."
-                        value={recipe.description}
-                        disabled
-                        className="comment-section form-control"
-                    />
-                    <Form.Label className="form-label subtitle">Method of Preparation</Form.Label>
-                    <textarea
-                        rows="11"
-                        name="method"
-                        placeholder="..."
-                        value={recipe.method}
-                        disabled
-                        className="comment-section form-control"
-                    />
-                    <Form.Label className="form-label subtitle">Advice</Form.Label>
-                    <textarea
-                        rows="3"
-                        name="advice"
-                        placeholder="..."
-                        value={recipe.advice}
-                        disabled
-                        className="comment-section form-control"
-                    />
+                    <Col>
+                        {recipe.images && recipe.images.length > 0 && <div className="recipeImages">
+                            <div>
+                                <CustomImage imageId={recipe.activeImage} className="" alt="Recipe Image" />
+                            </div>
+                            <div className="recipeImagesGrid">
+                                {recipe.images.map(x => (
+                                    <div className="landingPagerecipe" onClick={() => dispatch(setState({ activeImage: x.image }))}>
+                                        <CustomImage imageId={x.image} className="" alt="Image" />
+                                    </div>
+                                ))}
+                            </div>
+                        </div>}
+                    </Col>
+                </Row>
 
-                </Col>
-                <Col md={6} className="review" >
-                    <button onClick={chkBoxOnClick} className="heartCheckbox">
-                    <i className={!userReview.is_liked ? "fa fa-heart" : "fa fa-heart liked"}></i>
-                    </button>
-                    <Row>
-                        <Form.Label>{recipe.rating ? parseFloat(recipe.rating).toFixed(1) : null}</Form.Label>
-                        <StarRatings
-                            rating={recipe.rating}
-                            starRatedColor="purple"
-                            starDimension="15px"
-                            numberOfStars={5}
-                            name='rating'
+                <Row>
+                    <Col md={6}>
+                        <Form.Label className="form-label subtitle">Description</Form.Label>
+                        <textarea
+                            rows="4"
+                            name="opis"
+                            placeholder="Description..."
+                            value={recipe.description}
+                            disabled
+                            className="comment-section form-control"
                         />
-                    </Row>
-                    <Row>
-                        <StarRatings
-                            rating={userReview.rating ? userReview.rating : 0}
-                            starRatedColor="orange"
-                            changeRating={userIsLoggedIn() ? changeRating : null}
-                            numberOfStars={5}
-                            name='rating'
+                        <Form.Label className="form-label subtitle">Method of Preparation</Form.Label>
+                        <textarea
+                            rows="11"
+                            name="method"
+                            placeholder="..."
+                            value={recipe.method}
+                            disabled
+                            className="comment-section form-control"
                         />
-                    </Row>
+                        <Form.Label className="form-label subtitle">Advice</Form.Label>
+                        <textarea
+                            rows="3"
+                            name="advice"
+                            placeholder="..."
+                            value={recipe.advice}
+                            disabled
+                            className="comment-section form-control"
+                        />
 
-                    <div className="commentsTitle"> <i className="fa fa-comments"></i> Komentari</div>
+                    </Col>
+                    <Col md={6} className="review" >
+                        <button onClick={chkBoxOnClick} className="heartCheckbox">
+                            <i className={!userReview.is_liked ? "fa fa-heart" : "fa fa-heart liked"}></i>
+                        </button>
+                        <Row>
+                            <Form.Label>{recipe.rating ? parseFloat(recipe.rating).toFixed(1) : null}</Form.Label>
+                            <StarRatings
+                                rating={recipe.rating}
+                                starRatedColor="purple"
+                                starDimension="15px"
+                                numberOfStars={5}
+                                name='rating'
+                            />
+                        </Row>
+                        <Row>
+                            <StarRatings
+                                rating={userReview.rating ? userReview.rating : 0}
+                                starRatedColor="orange"
+                                changeRating={userIsLoggedIn() ? changeRating : null}
+                                numberOfStars={5}
+                                name='rating'
+                            />
+                        </Row>
 
-                    {recipe.comments && (recipe.comments.map(row => row.comment &&
-                        (<Row className="border border-secondary">
-                            <Col><h4 className="comment-username">{row.author.username} </h4></Col>
-                            <Col md={8}> {editMode && userIsLoggedIn() && row.author.id === getUser().id ?
-                                <textarea
-                                    rows="2"
-                                    name="Comment"
-                                    value={editMode ? txtCommentEdit : ""}
-                                    onChange={handleEditCommentChange}
-                                    className="comment-section form-control"
-                                /> : <text className="comment-comment">{row.comment}</text>}
+                        <div className="commentsTitle"> <i className="fa fa-comments"></i> Komentari</div>
 
-                            </Col>
-                            <Col className="comment-edit" > {userIsLoggedIn() && row.author.id === getUser().id && !editMode ?
-                                <Button onClick={() => editCommentOnClick(row.comment)}
-                                    className="btn-comment-edit">
-                                    <i className="fa fa-pencil"></i>
-                                </Button> : null}
-                                {userIsLoggedIn() && row.author.id === getUser().id && editMode ?
-                                    <Button className="btnEditMode" onClick={btnSaveEditCommentOnClick}> Save </Button> : null}
-                                {userIsLoggedIn() && row.author.id === getUser().id && editMode ?
-                                    <Button class="btnEditMode" onClick={() => {setEditMode(false)}}> Cancel </Button> : null}
-                                {userIsLoggedIn() && row.author.id === getUser().id && editMode ?
-                                    <Button style={{ background: "red" }} onClick={() => { btnDeleteOnClick(row.reviewId) }} class="btnEditMode" > Delete </Button> : null}
-                                     
-                            </Col>
-                            <text className="comment-createdAt">{timestampToDateTime(row.createdAt)}</text>
-                        </Row>)))}
-                    {<Button id="btn-outline-primary" onClick={btnLoadMoreOnClick}> Load More </Button>}
-                    <textarea
-                        rows="5"
-                        name="Comment"
-                        value={!editMode ? txtComment : ""}
-                        onChange={handleCommentChange}
-                        disabled={userIsLoggedIn() && (!userReview.comment || userReview.comment == "" )? false : true}
-                        className="comment-section form-control"
-                    />
-                    {<Button disabled={!userReview.comment || userReview.comment == "" ? false : true}
-                        className="btn-submit"
-                        onClick={btnCommentOnClick}>
-                        Comment
-                        </Button>}
-                </Col>
+                        {recipe.comments && (recipe.comments.map(row => row.comment &&
+                            (<Row className="border border-secondary">
+                                <Col><h4 className="comment-username">{row.author.username} </h4></Col>
+                                <Col md={8}> {editMode && userIsLoggedIn() && row.author.id === getUser().id ?
+                                    <textarea
+                                        rows="2"
+                                        name="Comment"
+                                        value={editMode ? txtCommentEdit : ""}
+                                        onChange={handleEditCommentChange}
+                                        className="comment-section form-control"
+                                    /> : <text className="comment-comment">{row.comment}</text>}
 
-            </Row>
-            <RecipeForm title="Edit"
-                show={show}
-                onHide={() => {
-                    dispatch(get(props.match.params.id));
-                    setShow(false)
-                }}
-                getToken={props.getToken}
-                setToken={props.setToken}
-                isEdit={true} />
-            <ConfirmationModal 
-                show={showConfirmationModal} onHide={() => setShowConfirmationModal(false)} 
-                title="Remove comment" message="Are you sure you want to remove this comment? This action cannot be undone."
-                onConfirm={handleDietDelete} confirmMessage="Delete"
-            />
-        </div >
-    )
+                                </Col>
+                                <Col className="comment-edit" > {userIsLoggedIn() && row.author.id === getUser().id && !editMode ?
+                                    <Button onClick={() => editCommentOnClick(row.comment)}
+                                        className="btn-comment-edit">
+                                        <i className="fa fa-pencil"></i>
+                                    </Button> : null}
+                                    {userIsLoggedIn() && row.author.id === getUser().id && editMode ?
+                                        <Button className="btnEditMode" onClick={btnSaveEditCommentOnClick}> Save </Button> : null}
+                                    {userIsLoggedIn() && row.author.id === getUser().id && editMode ?
+                                        <Button class="btnEditMode" onClick={() => { setEditMode(false) }}> Cancel </Button> : null}
+                                    {userIsLoggedIn() && row.author.id === getUser().id && editMode ?
+                                        <Button style={{ background: "red" }} onClick={() => { btnDeleteOnClick(row.reviewId) }} class="btnEditMode" > Delete </Button> : null}
+
+                                </Col>
+                                <text className="comment-createdAt">{timestampToDateTime(row.createdAt)}</text>
+                            </Row>)))}
+                        {<Button id="btn-outline-primary" onClick={btnLoadMoreOnClick}> Load More </Button>}
+                        <textarea
+                            rows="5"
+                            name="Comment"
+                            value={!editMode ? txtComment : ""}
+                            onChange={handleCommentChange}
+                            disabled={userIsLoggedIn() && (!userReview.comment || userReview.comment == "") ? false : true}
+                            className="comment-section form-control"
+                        />
+                        {<Button disabled={!userReview.comment || userReview.comment == "" ? false : true}
+                            className="btn-submit"
+                            onClick={btnCommentOnClick}>
+                            Comment
+                    </Button>}
+                    </Col>
+
+                </Row>
+                <RecipeForm title="Edit"
+                    show={show}
+                    onHide={() => {
+                        dispatch(get(props.match.params.id));
+                        setShow(false)
+                    }}
+                    getToken={props.getToken}
+                    setToken={props.setToken}
+                    isEdit={true} />
+                <ConfirmationModal
+                    show={showConfirmationModal} onHide={() => setShowConfirmationModal(false)}
+                    title="Remove comment" message="Are you sure you want to remove this comment? This action cannot be undone."
+                    onConfirm={handleDietDelete} confirmMessage="Delete"
+                />
+            </div >
+            : <NotFound />)
 }
 
 export default withRouter(RecipePreview);

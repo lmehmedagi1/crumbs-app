@@ -14,6 +14,7 @@ import com.crumbs.recipeservice.repositories.ImageRepository;
 import com.crumbs.recipeservice.repositories.IngredientRepository;
 import com.crumbs.recipeservice.repositories.RecipeRepository;
 import com.crumbs.recipeservice.requests.OptionRequest;
+import com.crumbs.recipeservice.requests.FilterRecipesRequest;
 import com.crumbs.recipeservice.requests.RecipeRequest;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,9 +50,9 @@ public class RecipeService {
     }
 
     @Transactional(readOnly = true)
-    public List<RecipeView> getRecipePreviews(Integer pageNo, Integer pageSize, String sort) {
+    public List<RecipeView> getRecipePreviews(Integer pageNo, Integer pageSize, String sort, FilterRecipesRequest filters) {
         Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sort).ascending());
-        Slice<RecipeView> slicedProducts = recipeRepository.findAllPreviews(paging);
+        Slice<RecipeView> slicedProducts = recipeRepository.findAllPreviews(filters.getCategories(), filters.getTitle(), Long.valueOf(filters.getCategories().size()), paging);
         return slicedProducts.getContent();
     }
 
