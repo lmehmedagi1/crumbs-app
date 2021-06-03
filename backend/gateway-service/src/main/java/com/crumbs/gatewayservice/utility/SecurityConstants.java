@@ -15,6 +15,7 @@ public final class SecurityConstants {
             "/recipe-service/recipes/topMonthly",
             "/recipe-service/recipes/recipe",
             "/recipe-service/recipes/topDaily",
+            "/recipe-service/recipes/type",
             "/recipe-service/categories/type",
             "/recipe-service/ingredients/type",
             "/recipe-service/recipes/**",

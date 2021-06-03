@@ -219,9 +219,9 @@ function RecipePreview(props) {
 
                 </Col>
                 <Col md={6} className="review" >
-                    <HeartCheckbox
-                        checked={userReview.is_liked ? userReview.is_liked : false} onClick={chkBoxOnClick} >
-                    </HeartCheckbox>
+                    <button onClick={chkBoxOnClick} className="heartCheckbox">
+                    <i className={!userReview.is_liked ? "fa fa-heart" : "fa fa-heart liked"}></i>
+                    </button>
                     <Row>
                         <Form.Label>{recipe.rating ? parseFloat(recipe.rating).toFixed(1) : null}</Form.Label>
                         <StarRatings

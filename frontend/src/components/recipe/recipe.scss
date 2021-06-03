@@ -110,29 +110,44 @@
             }
         }
     }
-}
+    .comment-section {
+        margin-bottom: 2%;
+    }
+    .submit-button {
+        color: white !important;
+    }
+    
+    .my-modal {
+        width: 90vw;
+        min-width: 90vw;
+    }
+    
+    .btn,
+    .btn-primary {
+        color: white !important;
+    }
+    
+    .review {
+        padding: 25px;
+    
+        .commentsTitle {
+            margin: 2%;
+        }
+    }
 
-.comment-section {
-    margin-bottom: 2%;
-}
-.submit-button {
-    color: white !important;
-}
+    .heartCheckbox {
 
-.my-modal {
-    width: 90vw;
-    min-width: 90vw;
-}
+        border: none;
+        background: white;
+        box-shadow: none;
+        .fa-heart { 
+            color: #cbd3e3;
+            font-size: 70px;
+        }
 
-.btn,
-.btn-primary {
-    color: white !important;
-}
-
-.review {
-    padding: 25px;
-
-    .commentsTitle {
-        margin: 2%;
+        .liked {
+            color: $default-purple-color;
+        }
     }
 }
+

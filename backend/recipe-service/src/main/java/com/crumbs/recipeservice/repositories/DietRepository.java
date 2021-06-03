@@ -20,6 +20,10 @@ public interface DietRepository extends JpaRepository<Diet, UUID> {
     Diet findByIdAndUserId(UUID id, UUID userId);
 
     @Query("SELECT new com.crumbs.recipeservice.projections.UserDietView(r.id, r.title, r.description, 0., '') " +
+            "FROM Diet r WHERE r.userId=?1 AND r.isPrivate=false")
+    List<UserDietView> findPublicByUserId(UUID id);
+
+    @Query("SELECT new com.crumbs.recipeservice.projections.UserDietView(r.id, r.title, r.description, 0., '') " +
             "FROM Diet r WHERE r.userId=?1")
     List<UserDietView> findByUserId(UUID id);
 

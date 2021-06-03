@@ -47,3 +47,8 @@ export async function uploadFiles(files, path) {
     return fileIds;
 
 }
+
+export async function uploadFile(file, path) {
+    let upload = await dbx.filesUpload({ path: '/' + path + '/' + file.name, contents: file })
+    return upload.status === 200 ? upload.result.id : null
+}

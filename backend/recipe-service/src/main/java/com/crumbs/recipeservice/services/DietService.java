@@ -8,7 +8,6 @@ import com.crumbs.recipeservice.models.Recipe;
 import com.crumbs.recipeservice.projections.DietClassView;
 import com.crumbs.recipeservice.projections.IngredientView;
 import com.crumbs.recipeservice.projections.RecipeView;
-import com.crumbs.recipeservice.projections.SingleDietClassView;
 import com.crumbs.recipeservice.projections.UserClassView;
 import com.crumbs.recipeservice.projections.UserDietView;
 import com.crumbs.recipeservice.repositories.DietRepository;
@@ -27,11 +26,14 @@ import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import static com.crumbs.recipeservice.utility.Constants.DEFAULT_TIMEZONE;
 
 @Service
 @Validated
@@ -111,40 +113,42 @@ public class DietService {
         diet.setTitle(dietRequest.getTitle());
         diet.setDescription(dietRequest.getDescription());
         diet.setDuration(dietRequest.getDuration());
-        diet.setIsPrivate(dietRequest.getIs_private());
+        diet.setIsPrivate(dietRequest.getIsPrivate());
         diet.setUserId(userId);
-        diet.setRecipes(new ArrayList<>());
+        diet.setLastModify(LocalDateTime.now(ZoneId.of(DEFAULT_TIMEZONE)));
+
+        List<Recipe> recipes = new ArrayList<>();
+        for (UUID recipeId : dietRequest.getRecipes()) {
+            recipes.add(recipeService.getRecipe(recipeId));
+        }
+        diet.setRecipes(recipes);
     }
 
     @Transactional
-    public Diet saveDiet(@NotNull @Valid DietRequest dietRequest, @NotNull UUID userId) {
+    public void saveDiet(@NotNull @Valid DietRequest dietRequest, @NotNull UUID userId) {
         Diet diet = new Diet();
+        diet.setCreatedAt(LocalDateTime.now(ZoneId.of(DEFAULT_TIMEZONE)));
         modifyDiet(dietRequest, userId, diet);
         dietRepository.save(diet);
-        return diet;
     }
 
     @Transactional
-    public Diet updateDiet(@NotNull @Valid DietRequest dietRequest, @NotNull UUID id, @NotNull UUID userId) {
+    public void updateDiet(@NotNull @Valid DietRequest dietRequest, @NotNull UUID id, @NotNull UUID userId) {
         Diet diet = dietRepository.findByIdAndUserId(id, userId);
-        if (diet == null)
-            throw new UnauthorizedException("You don't have permission to update this diet");
-
+        if (diet == null) throw new UnauthorizedException("You don't have permission to update this diet");
         modifyDiet(dietRequest, userId, diet);
-        return dietRepository.save(diet);
-    }
-
-    @Transactional
-    public void updateDiet(@NotNull @Valid Diet updatedDiet) {
-        dietRepository.save(updatedDiet);
+        dietRepository.save(diet);
     }
 
     @Transactional
     public void deleteDiet(@NotNull UUID id, @NotNull UUID userId) {
-        if (dietRepository.findByIdAndUserId(id, userId) == null)
-            throw new DietNotFoundException("You don't have permission to delete this diet");
-
+        if (dietRepository.findByIdAndUserId(id, userId) == null) throw new UnauthorizedException("You don't have permission to delete this diet");
         dietRepository.deleteById(id);
+    }
+
+    @Transactional(readOnly = true)
+    public List<UserDietView> getPublicUserDiets(UUID id) {
+        return dietRepository.findPublicByUserId(id);
     }
 
     @Transactional(readOnly = true)

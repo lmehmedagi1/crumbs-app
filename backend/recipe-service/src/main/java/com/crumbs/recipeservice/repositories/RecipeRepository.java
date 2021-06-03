@@ -1,6 +1,8 @@
 package com.crumbs.recipeservice.repositories;
 
 import com.crumbs.recipeservice.models.Recipe;
+import com.crumbs.recipeservice.projections.DietClassView;
+import com.crumbs.recipeservice.projections.RecipeNameView;
 import com.crumbs.recipeservice.projections.RecipeView;
 import com.crumbs.recipeservice.projections.UserRecipeView;
 import org.springframework.data.domain.Pageable;
@@ -44,4 +46,8 @@ public interface RecipeRepository extends JpaRepository<Recipe, UUID> {
     @Query("SELECT new com.crumbs.recipeservice.projections.UserRecipeView(r.id, r.title, r.description, 0., '') " +
             "FROM Recipe r WHERE r.id=?1")
     UserRecipeView findViewById(UUID id);
+
+    @Query("SELECT new com.crumbs.recipeservice.projections.RecipeNameView(r.id, r.title) " +
+            "FROM Recipe r WHERE lower(r.title) like lower(concat('%', ?1,'%'))")
+    Slice<RecipeNameView> getSelectSearchRecipes(String search, Pageable pageable);
 }

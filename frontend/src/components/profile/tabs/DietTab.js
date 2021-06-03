@@ -6,7 +6,7 @@ function DietTab(props) {
 
     return (
         <div className="dietsTab">
-        <CustomTable userId={props.userId} tab={props.tab} handleRowClick={props.handleRowClick} setLoading={props.setLoading}></CustomTable>
+        <CustomTable {...props} />
         </div>
     )
 }

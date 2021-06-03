@@ -7,10 +7,10 @@ function LikesTab(props) {
     return (
         <div className="likesTab">
             <div>
-            <CustomTable userId={props.userId} tab={"likedRecipes"} setShow={props.setShow} handleRowClick={props.handleRowClick} setMessage={props.setMessage} setVariant={props.setVariant} getToken={props.getToken} setToken={props.setToken} setLoading={props.setLoading}></CustomTable>
+            <CustomTable tab={"likedRecipes"} {...props} />
             </div>
             <div>
-            <CustomTable userId={props.userId} tab={"likedDiets"} setShow={props.setShow} handleRowClick={props.handleRowClick} setMessage={props.setMessage} setVariant={props.setVariant} getToken={props.getToken} setToken={props.setToken} setLoading={props.setLoading}></CustomTable>
+            <CustomTable tab={"likedDiets"} {...props} />
             </div>
         </div>
     )
