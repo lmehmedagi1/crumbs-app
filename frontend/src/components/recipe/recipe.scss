@@ -99,49 +99,39 @@
             }
         }
     }
+
     .comment-section {
         margin-bottom: 2%;
     }
     .submit-button {
         color: white !important;
     }
-    
-    .my-modal {
-        width: 90vw;
-        min-width: 90vw;
-    }
-    
-    .btn,
-    .btn-primary {
-        color: white !important;
-    }
-    
+
     .review {
         padding: 25px;
-    
+
         .commentsTitle {
             margin: 2%;
         }
     }
-  
-  .btn-comment-edit {
-      width: 35px;
-      float: right;
-      background-color: white !important;
-      color: black !important ;
-      background-repeat: no-repeat;
-      border: none !important;
-      cursor: pointer;
-      overflow: hidden;
-      outline: none;
-  }
+
+    .btn-comment-edit {
+        width: 35px;
+        float: right;
+        background-color: white !important;
+        color: black !important ;
+        background-repeat: no-repeat;
+        border: none !important;
+        cursor: pointer;
+        overflow: hidden;
+        outline: none;
+    }
 
     .heartCheckbox {
-
         border: none;
         background: white;
         box-shadow: none;
-        .fa-heart { 
+        .fa-heart {
             color: #cbd3e3;
             font-size: 70px;
         }
@@ -152,3 +142,11 @@
     }
 }
 
+.my-modal {
+    width: 90vw;
+    min-width: 90vw;
+}
+
+.btn-primary {
+    color: white !important;
+}
