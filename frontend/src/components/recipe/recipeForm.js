@@ -3,11 +3,11 @@ import recipeApi from 'api/recipe'
 import { uploadFiles } from 'components/common/dropbox'
 import FileUploader from 'components/common/fileUploader/fileUploader'
 import SelectField from 'components/common/selectField'
-import React, { useState, useEffect } from 'react'
+import { category_api_path, ingredient_api_path } from 'configs/env'
+import React, { useEffect, useState } from 'react'
 import { Button, Col, Form, Modal, ProgressBar, Row } from "react-bootstrap"
 import NumberFormat from "react-number-format"
 import { useDispatch, useSelector } from 'react-redux'
-import { category_api_path, ingredient_api_path } from 'configs/env'
 
 function RecipeForm(props) {
 
@@ -18,7 +18,7 @@ function RecipeForm(props) {
 
     const [files, setProfileImages] = useState([]);
     const [imagesError, setImagesError] = useState("");
-    const [initialImages] = useState({});
+    const [initialImages] = useState(recipe.files);
 
     const updateUploadedFiles = (files) => {
         setProfileImages(files);

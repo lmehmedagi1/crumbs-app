@@ -32,6 +32,13 @@ export function setState(data) {
     };
 }
 
+export function pushFile(payload) {
+    return {
+        type: "RECIPE_PUSH_FILE",
+        payload,
+    };
+}
+
 export function updateRating(rating, entity, entityId, reviewId) {
     return {
         type: "RECIPE_POST_RATING",
@@ -54,7 +61,7 @@ export function updateRating(rating, entity, entityId, reviewId) {
 }
 
 export function updateLike(is_liked, entity, entityId, reviewId) {
-    
+
     return {
         type: "RECIPE_POST_LIKE",
         payload: axios("http://localhost:8090/review-service/reviews", {
