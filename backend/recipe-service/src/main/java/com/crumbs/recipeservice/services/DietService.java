@@ -3,13 +3,18 @@ package com.crumbs.recipeservice.services;
 import com.crumbs.recipeservice.exceptions.DietNotFoundException;
 import com.crumbs.recipeservice.exceptions.UnauthorizedException;
 import com.crumbs.recipeservice.models.Diet;
+import com.crumbs.recipeservice.models.Ingredient;
 import com.crumbs.recipeservice.models.Recipe;
 import com.crumbs.recipeservice.projections.DietClassView;
+import com.crumbs.recipeservice.projections.IngredientView;
 import com.crumbs.recipeservice.projections.RecipeView;
+import com.crumbs.recipeservice.projections.SingleDietClassView;
+import com.crumbs.recipeservice.projections.UserClassView;
 import com.crumbs.recipeservice.projections.UserDietView;
 import com.crumbs.recipeservice.repositories.DietRepository;
 import com.crumbs.recipeservice.requests.DietRequest;
 import com.crumbs.recipeservice.requests.WebClientRequest;
+import com.crumbs.recipeservice.responses.DietResponse;
 import com.crumbs.recipeservice.responses.DietViewResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -23,7 +28,9 @@ import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Service
@@ -70,8 +77,34 @@ public class DietService {
     }
 
     @Transactional(readOnly = true)
-    public Diet getDiet(@NotNull UUID id) {
-        return dietRepository.findById(id).orElseThrow(DietNotFoundException::new);
+    public DietResponse getPrivateDiet(@NotNull UUID id, @NotNull UserClassView author) {
+        Diet diet = dietRepository.findById(id).orElseThrow(DietNotFoundException::new);
+        if (diet.getIsPrivate() && !diet.getUserId().equals(author.getId())) throw new UnauthorizedException("You don't have permission to view this diet");
+        return getDiet(diet, author);
+    }
+
+    @Transactional(readOnly = true)
+    public DietResponse getPublicDiet(@NotNull UUID id) {
+        Diet diet = dietRepository.findById(id).orElseThrow(DietNotFoundException::new);
+        UserClassView author = webClientRequest.getUserPreview(diet.getUserId());
+        return getDiet(diet, author);
+    }
+
+    private DietResponse getDiet(Diet diet, UserClassView author) {
+        List<RecipeView> recipes = new ArrayList<>();
+        for (Recipe r : diet.getRecipes()) {
+            RecipeView recipeView = new RecipeView(r.getId(), r.getTitle(), r.getDescription(), r.getUserId());
+            if (r.getImages().size() > 0) recipeView.setImage(r.getImages().get(0).getImage());
+            recipes.add(recipeView);
+        }
+
+        Set<IngredientView> ingredients = new HashSet<>();
+        for (Recipe r : diet.getRecipes()) {
+            for (Ingredient i : r.getIngredients()) {
+                ingredients.add(new IngredientView(i.getId(), i.getName()));
+            }
+        }
+        return new DietResponse(diet.getId(), diet.getTitle(), diet.getDescription(), diet.getDuration(), diet.getIsPrivate(), diet.getCreatedAt(), author, recipes, ingredients);
     }
 
     private void modifyDiet(DietRequest dietRequest, UUID userId, Diet diet) {

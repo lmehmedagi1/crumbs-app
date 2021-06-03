@@ -26,6 +26,10 @@ public interface DietRepository extends JpaRepository<Diet, UUID> {
     @Query("SELECT d.recipes FROM Diet d WHERE d.id=?1")
     List<Recipe> getDietRecipes(UUID id);
 
+    @Query("SELECT new com.crumbs.recipeservice.projections.RecipeView(r.id, r.title, r.description, r.userId) " +
+            "FROM Diet d INNER JOIN d.recipes as r WHERE d.id=?1")
+    List<RecipeView> getDietRecipeViews(UUID id);
+
     @Query("SELECT new com.crumbs.recipeservice.projections.DietClassView(d.id, d.title, d.description, d.duration, d.userId) " +
             "FROM Diet d WHERE d.isPrivate=false AND lower(d.title) like lower(concat('%', ?1,'%'))")
     Slice<DietClassView> getPublicDiets(String search, Pageable pageable);

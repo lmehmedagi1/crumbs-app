@@ -14,7 +14,7 @@ function RecipeCard(props) {
                     </Card.Text>
                 </Card.Body>
                 <Card.Footer>
-                    <small className="text-muted" style={{ float: 'right' }} >{props.author.username}</small>
+                    {props.author.username && <small className="text-muted" style={{ float: 'right' }} >{props.author.username}</small>}
                 </Card.Footer>
             </Card>
         </div >

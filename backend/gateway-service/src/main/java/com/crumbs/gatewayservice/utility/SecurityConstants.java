@@ -10,6 +10,7 @@ public final class SecurityConstants {
             "/user-service/auth/**",
             "/user-service/account/**",
             "/recipe-service/diets",
+            "/recipe-service/diets/public",
             "/recipe-service/recipes/user",
             "/recipe-service/recipes/topMonthly",
             "/recipe-service/recipes/recipe",
