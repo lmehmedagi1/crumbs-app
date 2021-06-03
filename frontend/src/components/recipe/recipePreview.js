@@ -15,6 +15,7 @@ import NumberFormat from "react-number-format"
 import { useDispatch, useSelector } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import StarRatings from 'react-star-ratings'
+import ConfirmationModal from 'components/common/confirmationModal'
 import {
     clearState, editComment, get,
     getRecipeRating, getRecipeReviews, deleteReview, postComment, updateLike, updateRating
@@ -22,12 +23,13 @@ import {
 import recipeApi from 'api/recipe'
 
 function RecipePreview(props) {
-
+    const [showConfirmationModal, setShowConfirmationModal] = useState(false);
     const recipe = useSelector(state => state.recipes.recipe);
     const userReview = useSelector(state => state.recipes.reviewOfUser);
     const [txtComment, setTxtComment] = useState("");
     const [txtCommentEdit, setTxtCommentEdit] = useState("");
     const [countComment, setCount] = useState(0);
+    const [idToDelete, setIdToDelete] = useState("");
     const [editMode, setEditMode] = useState(false);
     const [show, setShow] = useState(false);
 
@@ -151,13 +153,9 @@ function RecipePreview(props) {
     }
 
     const btnDeleteOnClick = (id) => {
-        let body = {
-            id
-        }
-        recipeApi.deleteEntityReview((res, err) => { 
-            if(err) return 
-                dispatch(deleteReview(id));
-        }, body, props.getToken(), props.setToken);
+        setEditMode(false);
+        setIdToDelete(id);
+        setShowConfirmationModal(true);
     }
 
     const timestampToDateTime = timestamp => {
@@ -168,6 +166,17 @@ function RecipePreview(props) {
     const handleOnSelectChange = (value, name) => {
         value = value ? value : [];
         dispatch(setState({ [name]: value }))
+    };
+    
+    const handleDietDelete = () => {
+        let body = {
+            id: idToDelete
+        }
+        recipeApi.deleteEntityReview((res, err) => { 
+            if(err) return 
+                dispatch(deleteReview(idToDelete));
+        }, body, props.getToken(), props.setToken);
+        setShowConfirmationModal(false);
     };
     
 
@@ -317,7 +326,7 @@ function RecipePreview(props) {
                         <StarRatings
                             rating={userReview.rating ? userReview.rating : 0}
                             starRatedColor="orange"
-                            changeRating={changeRating}
+                            changeRating={userIsLoggedIn() ? changeRating : null}
                             numberOfStars={5}
                             name='rating'
                         />
@@ -359,7 +368,7 @@ function RecipePreview(props) {
                         name="Comment"
                         value={!editMode ? txtComment : ""}
                         onChange={handleCommentChange}
-                        disabled={!userReview.comment || userReview.comment == "" ? false : true}
+                        disabled={userIsLoggedIn() && (!userReview.comment || userReview.comment == "" )? false : true}
                         className="comment-section form-control"
                     />
                     {<Button disabled={!userReview.comment || userReview.comment == "" ? false : true}
@@ -379,6 +388,11 @@ function RecipePreview(props) {
                 getToken={props.getToken}
                 setToken={props.setToken}
                 isEdit={true} />
+            <ConfirmationModal 
+                show={showConfirmationModal} onHide={() => setShowConfirmationModal(false)} 
+                title="Remove comment" message="Are you sure you want to remove this comment? This action cannot be undone."
+                onConfirm={handleDietDelete} confirmMessage="Delete"
+            />
         </div >
     )
 }
