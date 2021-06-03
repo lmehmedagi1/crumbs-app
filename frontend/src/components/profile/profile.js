@@ -190,7 +190,7 @@ function Profile(props) {
                 </div>
                 <EditProfileModal showModal={showEditModal} handleCloseEditModal={() => setShowEditModal(false)} getToken={props.getToken} setToken={props.setToken} handleProfileUpdate={handleProfileUpdate} />
                 <RecipeForm show={showRecipeModal} title="Add Recipe" onHide={() => setShowRecipeModal(false)}  getToken={props.getToken} setToken={props.setToken}/>
-                <DietForm show={showDietModal} title="Add Diet" onHide={() => setShowDietModal(false)} />
+                <DietForm show={showDietModal} title="Add Diet" onHide={() => setShowDietModal(false)} getToken={props.getToken} setToken={props.setToken} />
             </div>
 
         </div>
