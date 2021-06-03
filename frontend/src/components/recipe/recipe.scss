@@ -33,17 +33,6 @@
         margin: 3% 0;
     }
 
-    .btn-comment-edit {
-        width: 35px;
-        float: right;
-        background-color: Transparent;
-        background-repeat: no-repeat;
-        border: none;
-        cursor: pointer;
-        overflow: hidden;
-        outline: none;
-    }
-
     .comment-edit {
         padding-top: 5px;
     }
@@ -61,7 +50,7 @@
     }
 
     .btnEditMode {
-        margin: 1%;
+        margin: 2%;
         width: 70px;
     }
 
@@ -127,6 +116,19 @@
 .btn,
 .btn-primary {
     color: white !important;
+}
+
+
+.btn-comment-edit {
+    width: 35px;
+    float: right;
+    background-color: white !important;
+    color: black !important ;
+    background-repeat: no-repeat;
+    border: none !important;
+    cursor: pointer;
+    overflow: hidden;
+    outline: none;
 }
 
 .review {
