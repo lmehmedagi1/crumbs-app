@@ -41,7 +41,7 @@ public class ReviewWebClientRequest {
     public Recipe checkIfRecipeExists(UUID recipeId) {
         return webClientBuilder.baseUrl("http://recipe-service").build().get()
                 .uri(uriBuilder -> uriBuilder
-                        .path("/recipes")
+                        .path("/recipes/recipe")
                         .queryParam("id", recipeId)
                         .build())
                 .retrieve()

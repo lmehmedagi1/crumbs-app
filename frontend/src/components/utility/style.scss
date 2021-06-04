@@ -14,6 +14,10 @@ body {
             pointer-events: none;
         }
     }
+
+    a:hover, a {
+        text-decoration: none;
+    }
 }
 
 /* Device widths */

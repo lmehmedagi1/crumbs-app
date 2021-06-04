@@ -1,16 +1,11 @@
-import React, { useState } from 'react'
-import './App.scss'
-
+import Footer from 'components/common/footer';
+import Header from 'components/common/header';
+import Routes from 'components/router/router';
+import React, { useState } from 'react';
 import {
   BrowserRouter as Router
 } from "react-router-dom";
-
-import Routes from 'components/router/router'
-import Footer from 'components/common/footer'
-import Header from 'components/common/header'
-
-import { ErrorBoundary } from "react-error-boundary";
-import ErrorFallback from "components/common/errorFallback";
+import './App.scss';
 
 function App(props) {
 

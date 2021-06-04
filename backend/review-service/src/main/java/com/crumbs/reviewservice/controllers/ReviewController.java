@@ -109,14 +109,14 @@ public class ReviewController {
 
     @RequestMapping(value = "/topMonthly", params = "pageNo", method = RequestMethod.GET)
     public UUID[] getHighestRated(@RequestParam("pageNo") @NotNull int pageNo,
-                                  @RequestParam(defaultValue = "4") Integer pageSize) {
+                                  @RequestParam(defaultValue = "3") Integer pageSize) {
         Pageable paging = PageRequest.of(pageNo, pageSize);
         return reviewService.getHighestRated(paging).toArray(new UUID[0]);
     }
 
     @RequestMapping(value = "/topDaily", params = "pageNo", method = RequestMethod.GET)
     public UUID[] getHighestRatedDaily(@RequestParam("pageNo") @NotNull int pageNo,
-                                       @RequestParam(defaultValue = "3") Integer pageSize) {
+                                       @RequestParam(defaultValue = "2") Integer pageSize) {
         Pageable paging = PageRequest.of(pageNo, pageSize);
         return reviewService.getHighestRatedDaily(paging).toArray(new UUID[0]);
     }

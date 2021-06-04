@@ -1,13 +1,11 @@
-import React, { useState, useEffect } from 'react'
-import { withRouter } from 'react-router-dom'
-import {  Button, Form } from 'react-bootstrap'
-import { Formik } from 'formik'
-import * as yup from 'yup'
-
-import authApi, { getUser } from 'api/auth'
+import { default as auth, default as authApi, getUser } from 'api/auth'
 import Alert from 'components/alert/alert'
 import ScrollButton from 'components/utility/scrollButton'
-import auth from 'api/auth'
+import { Formik } from 'formik'
+import React, { useEffect, useState } from 'react'
+import { Button, Form } from 'react-bootstrap'
+import { withRouter } from 'react-router-dom'
+import * as yup from 'yup'
 
 const schema = yup.object().shape({
     username: yup.string().required("*Username is required"),

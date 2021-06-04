@@ -1,27 +1,28 @@
 
-import { getEntityReviewForUser, setState, pushFile } from 'actions/recipeActions'
-import { userHasPermission, userIsLoggedIn, getUser } from 'api/auth'
+import { getEntityReviewForUser, pushFile, setState } from 'actions/recipeActions'
+import { getUser, userHasPermission, userIsLoggedIn } from 'api/auth'
+import recipeApi from 'api/recipe'
+import Alert from 'components/alert/alert'
+import ConfirmationModal from 'components/common/confirmationModal'
 import { CustomImage } from 'components/common/customImage'
 import { dbx } from 'components/common/dropbox'
 import Menu from 'components/common/menu'
+import NotFound from "components/common/notFound"
 import SelectField from 'components/common/selectField'
 import RecipeForm from 'components/recipe/recipeForm'
 import { category_api_path } from 'configs/env'
 import moment from 'moment'
 import React, { useEffect, useState } from 'react'
 import { Button, Col, Form, Row } from 'react-bootstrap'
-import HeartCheckbox from 'react-heart-checkbox'
 import NumberFormat from "react-number-format"
 import { useDispatch, useSelector } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import StarRatings from 'react-star-ratings'
-import ConfirmationModal from 'components/common/confirmationModal'
 import {
-    clearState, editComment, get,
-    getRecipeRating, getRecipeReviews, deleteReview, postComment, updateLike, updateRating
+    clearState,
+    deleteReview, editComment, get,
+    getRecipeRating, getRecipeReviews, postComment, updateLike, updateRating
 } from '../../actions/recipeActions'
-import recipeApi from 'api/recipe'
-import NotFound from "components/common/notFound"
 
 function RecipePreview(props) {
     const [showConfirmationModal, setShowConfirmationModal] = useState(false);
@@ -208,15 +209,15 @@ function RecipePreview(props) {
     return (
         <div className={loading ? "blockedWait" : ""}>
         <div className={loading ? "blocked" : ""}>
-        {recipe.hasData ?
+        <Menu handleSearchChange={handleSearchChange} {...props} />
+        <Alert message={message} showAlert={show} variant={variant} onShowChange={setShow} />
+        {recipe.hasData ? 
             <div className="recipePreview">
-                <Menu handleSearchChange={handleSearchChange} {...props} />
-                <Alert message={message} showAlert={show} variant={variant} onShowChange={setShow} />
                 <div className="float-right">
                     {userHasPermission(recipe.userId) && 
                     <div>
+                        <Button className="float-right delete-button" onClick={() => setShowDeleteConfirmationModal(true)}> Delete </Button>
                         <Button className="float-right" onClick={() => setShowEditModal(true)}> Edit </Button>
-                        <Button className="float-right" onClick={() => setShowDeleteConfirmationModal(true)}> Delete </Button>
                         </div>}
                 </div>
                 <Row>
@@ -371,7 +372,7 @@ function RecipePreview(props) {
                                 <Col><h4 className="comment-username">{row.author.username} </h4></Col>
                                 <Col md={8}> {editMode && userIsLoggedIn() && row.author.id === getUser().id ?
                                     <textarea
-                                        rows="2"
+                                        rows="4"
                                         name="Comment"
                                         value={editMode ? txtCommentEdit : ""}
                                         onChange={handleEditCommentChange}
@@ -385,11 +386,11 @@ function RecipePreview(props) {
                                         <i className="fa fa-pencil"></i>
                                     </Button> : null}
                                     {userIsLoggedIn() && row.author.id === getUser().id && editMode ?
-                                        <Button className="btnEditMode" onClick={btnSaveEditCommentOnClick}> Save </Button> : null}
+                                        <Button onClick={btnSaveEditCommentOnClick}> Save </Button> : null}
                                     {userIsLoggedIn() && row.author.id === getUser().id && editMode ?
-                                        <Button class="btnEditMode" onClick={() => { setEditMode(false) }}> Cancel </Button> : null}
+                                        <Button onClick={() => { setEditMode(false) }}> Cancel </Button> : null}
                                     {userIsLoggedIn() && row.author.id === getUser().id && editMode ?
-                                        <Button style={{ background: "red" }} onClick={() => { btnDeleteOnClick(row.reviewId) }} class="btnEditMode" > Delete </Button> : null}
+                                        <Button style={{ background: "red" }} onClick={() => { btnDeleteOnClick(row.reviewId) }} > Delete </Button> : null}
 
                                 </Col>
                                 <text className="comment-createdAt">{timestampToDateTime(row.createdAt)}</text>
@@ -431,7 +432,7 @@ function RecipePreview(props) {
                     onConfirm={handleRecipeDelete} confirmMessage="Delete"
                 />
             </div >
-            : <NotFound />}
+        : <NotFound />}
         </div>
         </div>
     )

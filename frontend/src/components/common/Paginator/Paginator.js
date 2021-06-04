@@ -1,7 +1,7 @@
-import React, { Component } from "react";
-import { Pagination, Dropdown } from "react-bootstrap";
+import React, { Component } from "react"
+import { Dropdown, Pagination } from "react-bootstrap"
+import "./paginator.scss"
 
-import "./paginator.scss";
 
 export class Paginator extends Component {
   constructor(props) {

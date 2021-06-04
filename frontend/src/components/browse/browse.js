@@ -71,10 +71,11 @@ function Browse(props) {
 
 
     return (
+        <div>
+        <Menu handleSearchChange={handleSearchChange} {...props} />
         <Container className="browseContainer">
-            <Menu handleSearchChange={handleSearchChange} {...props} />
             <Row>
-                <Col md={4}>
+                <Col md={3}>
                     <Form.Group>
                         <Form.Label>Title</Form.Label>
                         <Form.Control
@@ -131,7 +132,7 @@ function Browse(props) {
                         Search
                     </Button>
                 </Col>
-                <Col md={8}>
+                <Col>
                     <CardGroup >
                         {recipes.map(product => (
                             <Link style={{ margin: "1%" }} to={"recipe/" + product.recipeId}>
@@ -143,6 +144,7 @@ function Browse(props) {
             </Row>
             <RecipeForm title="Create" show={show} onHide={() => setShow(false)} getToken={props.getToken} setToken={props.setToken} />
         </Container>
+        </div>
     )
 }
 

@@ -1,19 +1,19 @@
-import Browse from 'components/browse/browse';
-import NotFound from 'components/common/notFound';
-import BrowseDiets from 'components/diet/browseDiets';
-import Diet from 'components/diet/diet';
-import Home from 'components/home/home';
-import Login from 'components/login/login';
-import People from 'components/people/people';
-import Profile from 'components/profile/profile';
-import RecipePreview from 'components/recipe/recipePreview';
-import Register from 'components/register/register';
-import PasswordReset from 'components/resetPassword/resetPassword';
-import ScrollToTop from 'components/utility/scrollToTop';
-import React from 'react';
+import Browse from 'components/browse/browse'
+import NotFound from 'components/common/notFound'
+import BrowseDiets from 'components/diet/browseDiets'
+import Diet from 'components/diet/diet'
+import Home from 'components/home/home'
+import Login from 'components/login/login'
+import People from 'components/people/people'
+import Profile from 'components/profile/profile'
+import RecipePreview from 'components/recipe/recipePreview'
+import Register from 'components/register/register'
+import PasswordReset from 'components/resetPassword/resetPassword'
+import ScrollToTop from 'components/utility/scrollToTop'
+import React from 'react'
 import {
   Route, Switch
-} from "react-router-dom";
+} from "react-router-dom"
 
 
 function Routes(props) {

@@ -26,7 +26,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "review")
+@Table(name = "reviews")
 public class Review implements Serializable {
 
     @Id
