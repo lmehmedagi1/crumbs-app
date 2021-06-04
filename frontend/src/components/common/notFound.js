@@ -2,7 +2,7 @@ import React from 'react'
 import { Button } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import Logo from 'assets/images/food-logo.ico'
-import { MdWarning } from "react-icons/md";
+import { MdWarning } from "react-icons/md"
 
 function NotFound(props) {
     return (

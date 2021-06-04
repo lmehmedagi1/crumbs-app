@@ -1,13 +1,12 @@
-import React, { useEffect, useState } from 'react'
-import { withRouter } from 'react-router-dom'
-import { Form, Button } from 'react-bootstrap'
-import { Formik } from "formik"
-import * as yup from 'yup'
 import auth, { getUser } from "api/auth"
-import ScrollButton from 'components/utility/scrollButton'
-
-import Menu from 'components/common/menu'
 import Alert from 'components/alert/alert'
+import Menu from 'components/common/menu'
+import ScrollButton from 'components/utility/scrollButton'
+import { Formik } from "formik"
+import React, { useEffect, useState } from 'react'
+import { Button, Form } from 'react-bootstrap'
+import { withRouter } from 'react-router-dom'
+import * as yup from 'yup'
 
 function equalTo(ref, msg) {
 	return this.test({

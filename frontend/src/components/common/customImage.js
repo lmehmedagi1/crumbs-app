@@ -11,7 +11,6 @@ export function CustomImage(props) {
     useEffect(() => {
         if (props.imageId)
             getImage(props.imageId, setImage);
-        // listFiles()
     }, [props.imageId]);
 
     return (

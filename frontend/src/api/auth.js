@@ -1,5 +1,5 @@
 import React from 'react'
-import { hostUrl } from 'components/utility/constants'
+import { env } from 'configs/env'
 import Requests from 'api/requests'
 
 // return the user data from the session storage
@@ -41,7 +41,7 @@ class Auth extends React.Component {
 
     refreshToken = (cb, token, setToken, params, successCb) => {
 
-        Requests.sendPostRequest(cb, hostUrl + "user-service/auth/refresh-token", {}, Requests.getCookieHeader(),
+        Requests.sendPostRequest(cb, env.BASE_PATH + "user-service/auth/refresh-token", {}, Requests.getCookieHeader(),
             (response) => {
                 token = response.headers.authorization;
                 setToken(token);
@@ -56,7 +56,7 @@ class Auth extends React.Component {
     }
 
     login(cb, failCb, values) {
-        let url = hostUrl + 'user-service/auth/login';
+        let url = env.BASE_PATH + 'user-service/auth/login';
         let parameters = {
             username: values.username,
             password: values.password
@@ -69,13 +69,13 @@ class Auth extends React.Component {
     }
 
     logout(cb) {
-        Requests.sendPostRequest(cb, hostUrl + 'user-service/auth/logout', {}, Requests.getCookieHeader(),
+        Requests.sendPostRequest(cb, env.BASE_PATH + 'user-service/auth/logout', {}, Requests.getCookieHeader(),
             (response) => { removeUserSession(); cb(); },
             (error) => { removeUserSession(); cb(); });
     }
 
     register(cb, failCb, values) {
-        let url = hostUrl + 'user-service/auth/register';
+        let url = env.BASE_PATH + 'user-service/auth/register';
         let parameters = {
             first_name: values.firstName,
             last_name: values.lastName,
@@ -96,7 +96,7 @@ class Auth extends React.Component {
     }
 
     confirmRegistration(cb, token) {
-        let url = hostUrl + 'user-service/auth/registration-confirmation';
+        let url = env.BASE_PATH + 'user-service/auth/registration-confirmation';
         Requests.sendGetRequest(cb, url, { params: { token: token } }, (response) => { }, null);
     }
 
@@ -106,7 +106,7 @@ class Auth extends React.Component {
             token: values.token,
             password: values.password
         }
-        Requests.sendPostRequest(cb, hostUrl + 'user-service/auth/password-reset', parameters, Requests.getCookieHeader(),
+        Requests.sendPostRequest(cb, env.BASE_PATH + 'user-service/auth/password-reset', parameters, Requests.getCookieHeader(),
             (response) => {
                 setUserSession(response.data);
                 cb(null, null, response.headers.authorization);
@@ -114,7 +114,7 @@ class Auth extends React.Component {
     }
 
     sendResetPasswordEmail(cb, values) {
-        Requests.sendGetRequest(cb, hostUrl + 'user-service/auth/initialize-password-reset', { params: { email: values.email } },
+        Requests.sendGetRequest(cb, env.BASE_PATH + 'user-service/auth/initialize-password-reset', { params: { email: values.email } },
             (response) => cb(`Email was sent to ${values.email}. It will expire in 24 hours`, "success", null),
             (err) => cb(err, "warning", null));
     }

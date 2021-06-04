@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react'
-import { NavDropdown, Overlay, OverlayTrigger, Tooltip } from 'react-bootstrap'
-import SockJS from 'sockjs-client'
-import Stomp from 'stompjs'
-import moment from 'moment'
 import { getUser } from 'api/auth'
 import notificationsApi from 'api/notification'
+import moment from 'moment'
+import React, { useEffect, useState } from 'react'
+import { NavDropdown, OverlayTrigger, Tooltip } from 'react-bootstrap'
+import SockJS from 'sockjs-client'
+import Stomp from 'stompjs'
 
 function NotificationBell(props) {
 

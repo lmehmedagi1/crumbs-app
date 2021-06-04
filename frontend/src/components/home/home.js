@@ -1,10 +1,10 @@
-import { getDailyRecipes, getMostPopularRecipes } from 'actions/recipeActions';
-import { listFiles } from 'components/common/dropbox';
-import Menu from 'components/common/menu';
-import RecipeCard from 'components/common/recipeCard';
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Link, withRouter } from 'react-router-dom';
+import { getDailyRecipes, getMostPopularRecipes } from 'actions/recipeActions'
+import { listFiles } from 'components/common/dropbox'
+import Menu from 'components/common/menu'
+import RecipeCard from 'components/common/recipeCard'
+import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { Link, withRouter } from 'react-router-dom'
 
 function Home(props) {
     const [count, setCount] = useState(0);

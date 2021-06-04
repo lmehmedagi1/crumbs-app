@@ -1,12 +1,10 @@
-import React, { useState, useEffect } from 'react'
-import { withRouter, Link } from 'react-router-dom'
-import { Spinner, Button, Form, FormControl } from 'react-bootstrap'
-
-import Alert from 'components/alert/alert'
-import Menu from 'components/common/menu'
-
 import peopleApi from 'api/people'
+import Alert from 'components/alert/alert'
 import { CustomImage } from 'components/common/customImage'
+import Menu from 'components/common/menu'
+import React, { useEffect, useState } from 'react'
+import { Button, Form, FormControl, Spinner } from 'react-bootstrap'
+import { Link, withRouter } from 'react-router-dom'
 
 function People(props) {
 

@@ -1,7 +1,6 @@
-import axios from "axios"
-import { env } from "../configs/env"
+import axios from "axios";
+import { env } from "../configs/env";
 
-import { hostUrl } from 'components/utility/constants'
 
 export const cookieHeader = {
     withCredentials: true,
@@ -11,7 +10,7 @@ export const cookieHeader = {
 export function login(values) {
     return {
         type: "AUTH_LOGIN",
-        payload: axios.post(hostUrl + 'user-service/auth/login', values, cookieHeader)
+        payload: axios.post(env.BASE_PATH + 'user-service/auth/login', values, cookieHeader)
     };
 }
 
