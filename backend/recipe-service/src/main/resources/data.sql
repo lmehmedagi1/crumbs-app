@@ -84,10 +84,8 @@ INSERT INTO recipes VALUES (parmezan_piletina, medo_id, ''Paremezan piletina'', 
 3. Meso poslažite u posudu za pečenje i prelite s ostatkom otopljenog maslaca. Pecite 20-30 minuta, tj. dok piletina ne dobije lijepu zlatnu boju i hrskavu koricu.'',
 ''Piletinu poslužite toplu s prilogom po želji. Ja najviše volim uz rižu ili pečeni krumpir. Dobar tek!'', 45, current_timestamp, current_timestamp + (30 * interval ''1 minute''));
 
-INSERT INTO recipes VALUES (tjestenina_tuna, lela_id, ''Tjestenina s tunom'', null, ''1. Staviti kuhati tjesteninu po želji. Osobno, kuham pene.$2. Crveni luk i češnjak usitniti. Otvoriti tri konzerve tune (po 80 g). Malo maslinovog ulja iz konzerve uliti na tavu, ostatak ukloniti. Ne preporučam staviti puno ulja jer će to previše razrijediti umak.;
-$3. Na maslinovom ulju kratko prepeći crveni luk. Stavljam ga vrlo malo, otprilike jednu čajnu žličicu usitnjenog luka.$4. Dodati parmezan i promiješati. Vrhnje se ne smije dugo držati na plamenu - od pola do maksimalno jedne minute - stoga je potrebno imati sve sastojke na dohvat ruke.$
-5. U bijeli umak dodati ocijeđenu tunu iz konzerve na način da se previše ne izmrvi, te lagano promiješati.$6. Tjesteninu staviti na tanjur, preko nje preliti bijeli umak i posuti s malo prešina.'',
-''Priprema jela traje zapravo onoliko koliko je potrebno tjestenini da se skuha. Umak je brzo gotov. :) Osobno, ne stavljam nikakve začine (osim peršina), pogotovo ne sol s obzirom na to da mi je parmezan dovoljno slan.'', 20, current_timestamp, current_timestamp + (40 * interval ''1 minute'') );
+INSERT INTO recipes VALUES (tjestenina_tuna, medo_id, ''Tjestenina s tunom'', null, '''',
+'''', 20, current_timestamp, current_timestamp + (40 * interval ''1 minute'') );
 
 INSERT INTO recipes VALUES (zimska_juha, manda_id, ''Zimska juha'', null, ''1. Naruci iz restorana'', null, 1, current_timestamp, current_timestamp + (50 * interval ''1 minute''));
 
@@ -97,40 +95,40 @@ INSERT INTO category_type VALUES (nacin_id, ''Nacin pripreme'');
 INSERT INTO category_type VALUES (grupa_id, ''Grupa jela'');
 INSERT INTO category_type VALUES (sezona_id, ''Sezona'');
 
-INSERT INTO categories VALUES (jednostavno_cat, tezina_id, ''Jednostavno'');
-INSERT INTO categories VALUES (srednje_cat, tezina_id, ''Srednje'');
-INSERT INTO categories VALUES (slozeno_cat, tezina_id, ''Slozeno'');
+INSERT INTO categories VALUES (jednostavno_cat, tezina_id, ''Easy'');
+INSERT INTO categories VALUES (srednje_cat, tezina_id, ''Medium'');
+INSERT INTO categories VALUES (slozeno_cat, tezina_id, ''Hard'');
 
-INSERT INTO categories VALUES (desert_cat, grupa_id, ''Desert'');
-INSERT INTO categories VALUES (glavno_jelo_cat, grupa_id, ''Glavno jelo'');
-INSERT INTO categories VALUES (juhe_cat, grupa_id, ''Juhe'');
-INSERT INTO categories VALUES (pica_cat, grupa_id, ''Pića'');
-INSERT INTO categories VALUES (notermic_cat, nacin_id, ''Bez termičke obrade'');
-INSERT INTO categories VALUES (kuhanje_cat, nacin_id, ''Kuhanje'');
-INSERT INTO categories VALUES (pecenje_cat, nacin_id, ''Pecenje'');
-INSERT INTO categories VALUES (przenje_cat, nacin_id, ''Przenje'');
-INSERT INTO categories VALUES (zima_cat, sezona_id, ''Zima'');
+INSERT INTO categories VALUES (desert_cat, grupa_id, ''Dessert'');
+INSERT INTO categories VALUES (glavno_jelo_cat, grupa_id, ''Main Meal'');
+INSERT INTO categories VALUES (juhe_cat, grupa_id, ''Soup'');
+INSERT INTO categories VALUES (pica_cat, grupa_id, ''Drink'');
+INSERT INTO categories VALUES (notermic_cat, nacin_id, ''Without Heat Treatment'');
+INSERT INTO categories VALUES (kuhanje_cat, nacin_id, ''Cooking'');
+INSERT INTO categories VALUES (pecenje_cat, nacin_id, ''Roast'');
+INSERT INTO categories VALUES (przenje_cat, nacin_id, ''Fry'');
+INSERT INTO categories VALUES (zima_cat, sezona_id, ''Winter'');
 
 
-INSERT INTO ingredients VALUES (pileca_prsa, ''Pileća prsa'');
-INSERT INTO ingredients VALUES (bijeli_luk, ''Bijeli luk'');
-INSERT INTO ingredients VALUES (maslac, ''Maslac'');
-INSERT INTO ingredients VALUES (jaje, ''Jaja'');
-INSERT INTO ingredients VALUES (so, ''So'');
-INSERT INTO ingredients VALUES (biber, ''Biber'');
-INSERT INTO ingredients VALUES (secer, ''Šećer'');
-INSERT INTO ingredients VALUES (parmezan, ''Parmezan sir'');
-INSERT INTO ingredients VALUES (keks, ''Keks'');
-INSERT INTO ingredients VALUES (tresnja, ''Trešnja'');
-INSERT INTO ingredients VALUES (konzerva_tuna, ''Tuna u konzervi'');
-INSERT INTO ingredients VALUES (crveni_luk, ''Crveni luk'');
-INSERT INTO ingredients VALUES (persin, ''Peršun'');
-INSERT INTO ingredients VALUES (tjestenina, ''Tjestenina'');
-INSERT INTO ingredients VALUES (slag, ''Šlag'');
-INSERT INTO ingredients VALUES (maslinovo_ulje, ''Maslinovo ulje'');
-INSERT INTO ingredients VALUES (sampinjoni, ''Šampinjoni'');
-INSERT INTO ingredients VALUES (mrkva, ''Mrkva'');
-INSERT INTO ingredients VALUES (kelj, ''Kelj'');
+INSERT INTO ingredients VALUES (pileca_prsa, ''Chicken breast'');
+INSERT INTO ingredients VALUES (bijeli_luk, ''Garlic'');
+INSERT INTO ingredients VALUES (maslac, ''Butter'');
+INSERT INTO ingredients VALUES (jaje, ''Eggs'');
+INSERT INTO ingredients VALUES (so, ''Salt'');
+INSERT INTO ingredients VALUES (biber, ''Pepper'');
+INSERT INTO ingredients VALUES (secer, ''Sugar'');
+INSERT INTO ingredients VALUES (parmezan, ''Parmesan cheese'');
+INSERT INTO ingredients VALUES (keks, ''Biscuit'');
+INSERT INTO ingredients VALUES (tresnja, ''Cherry'');
+INSERT INTO ingredients VALUES (konzerva_tuna, ''Canned tuna'');
+INSERT INTO ingredients VALUES (crveni_luk, ''Red onion'');
+INSERT INTO ingredients VALUES (persin, ''Parsley'');
+INSERT INTO ingredients VALUES (tjestenina, ''Pasta'');
+INSERT INTO ingredients VALUES (slag, ''Whip cream'');
+INSERT INTO ingredients VALUES (maslinovo_ulje, ''Olive Oil'');
+INSERT INTO ingredients VALUES (sampinjoni, ''Champignons'');
+INSERT INTO ingredients VALUES (mrkva, ''Carrot'');
+INSERT INTO ingredients VALUES (kelj, ''Kale'');
 
 INSERT INTO recipe_categories VALUES (sampita, desert_cat);
 INSERT INTO recipe_categories VALUES (sampita, jednostavno_cat);
@@ -176,16 +174,17 @@ INSERT INTO diet_recipes VALUES (kolac_diet, cheesecake);
 
 
 INSERT INTO images VALUES (sampita_slika1, ''id:IJb-yHir50sAAAAAAAAAFA'', sampita);
-INSERT INTO images VALUES (sampita_slika2, ''id:IJb-yHir50sAAAAAAAAAFA'', sampita);
-INSERT INTO images VALUES (monchay_slika1, ''id:IJb-yHir50sAAAAAAAAAFA'', cheesecake);
-INSERT INTO images VALUES (monchay_slika2, ''id:IJb-yHir50sAAAAAAAAAFA'', cheesecake);
-INSERT INTO images VALUES (krempita_slika1, ''id:IJb-yHir50sAAAAAAAAAFA'', sampita);
-INSERT INTO images VALUES (omlet_slika1, ''id:IJb-yHir50sAAAAAAAAAFA'', zimska_juha);
-INSERT INTO images VALUES (gen_random_uuid(), ''id:IJb-yHir50sAAAAAAAAAFA'', zimska_juha);
-INSERT INTO images VALUES (gen_random_uuid(), ''id:IJb-yHir50sAAAAAAAAAFA'', zimska_juha);
+INSERT INTO images VALUES (sampita_slika2, ''id:IJb-yHir50sAAAAAAAAAMw'', sampita);
+INSERT INTO images VALUES (monchay_slika1, ''id:IJb-yHir50sAAAAAAAAAMg'', cheesecake);
+INSERT INTO images VALUES (monchay_slika2, ''id:IJb-yHir50sAAAAAAAAAMA'', cheesecake);
 
-INSERT INTO images VALUES (gen_random_uuid(), ''id:IJb-yHir50sAAAAAAAAAFA'', parmezan_piletina);
-INSERT INTO images VALUES (gen_random_uuid(), ''id:IJb-yHir50sAAAAAAAAAFA'', parmezan_piletina);
-INSERT INTO images VALUES (gen_random_uuid(), ''id:IJb-yHir50sAAAAAAAAAIg'', parmezan_piletina);
+INSERT INTO images VALUES (omlet_slika1, ''id:IJb-yHir50sAAAAAAAAALw'', zimska_juha);
+INSERT INTO images VALUES (gen_random_uuid(), ''id:IJb-yHir50sAAAAAAAAALg'', zimska_juha);
+INSERT INTO images VALUES (gen_random_uuid(), ''id:IJb-yHir50sAAAAAAAAALQ'', zimska_juha);
+
+INSERT INTO images VALUES (gen_random_uuid(), ''id:IJb-yHir50sAAAAAAAAAJg'', parmezan_piletina);
+
+INSERT INTO images VALUES (gen_random_uuid(), ''id:IJb-yHir50sAAAAAAAAAMQ'', tjestenina_tuna);
+INSERT INTO images VALUES (gen_random_uuid(), ''id:IJb-yHir50sAAAAAAAAANA'', tjestenina_tuna);
 END;
 ' LANGUAGE PLPGSQL;
