@@ -5,7 +5,7 @@ import { env } from 'configs/env'
 class PeopleApi extends React.Component {
 
     getPeople = (cb, params) => {
-        Requests.sendGetRequest(cb, env.BASE_PATH  + "user-service/account/all", { params: params }, (response) => { cb(response.data); }, (error) => { cb(error); });
+        Requests.sendGetRequest(cb, env.BASE_PATH  + "user-service/account/all", { params: params }, response =>{ cb(response.data); }, (error) => { cb(error); });
     }
 }
 

@@ -24,28 +24,28 @@ function CustomTable(props) {
         if (props.tab.includes("subscri") && !props.activeTab.includes("subscri")) return;
 
         setCurrTab(tab);
-        
+
         props.setLoading(true);
         switch (tab) {
             case "recipes":
-                profileApi.getUserRecipes((data, err) => updateData(data, err), {id: props.userId});      
+                profileApi.getUserRecipes((data, err) => updateData(data, err), { id: props.userId });
                 break;
             case "diets":
-                if (userIsLoggedIn() && getUser().id === props.userId) 
-                    profileApi.getUserDiets((data, err) => updateData(data, err), {id: props.userId}, props.getToken(), props.setToken);   
-                else profileApi.getUserPublicDiets((data, err) => updateData(data, err), {id: props.userId});   
+                if (userIsLoggedIn() && getUser().id === props.userId)
+                    profileApi.getUserDiets((data, err) => updateData(data, err), { id: props.userId }, props.getToken(), props.setToken);
+                else profileApi.getUserPublicDiets((data, err) => updateData(data, err), { id: props.userId });
                 break;
             case "subscribers":
-                profileApi.getUserSubscribers((data, err) => updateData(data, err), {id: props.userId});   
+                profileApi.getUserSubscribers((data, err) => updateData(data, err), { id: props.userId });
                 break;
             case "subscriptions":
-                profileApi.getUserSubscriptions((data, err) => updateData(data, err), {id: props.userId});
+                profileApi.getUserSubscriptions((data, err) => updateData(data, err), { id: props.userId });
                 break;
             case "likedRecipes":
-                profileApi.getUserLikedRecipes((data, err) => updateData(data, err), {id: props.userId}, props.getToken(), props.setToken);    
+                profileApi.getUserLikedRecipes((data, err) => updateData(data, err), { id: props.userId }, props.getToken(), props.setToken);
                 break;
             case "likedDiets":
-                profileApi.getUserLikedDiets((data, err) => updateData(data, err), {id: props.userId}, props.getToken(), props.setToken);   
+                profileApi.getUserLikedDiets((data, err) => updateData(data, err), { id: props.userId }, props.getToken(), props.setToken);
                 break;
             default:
                 props.setLoading(false);
@@ -72,7 +72,7 @@ function CustomTable(props) {
             dataField: 'title',
             text: '',
             formatter: (value, row) => {
-                return <CustomImage imageId={row.image} className="rowImage" alt="Image"/>
+                return <CustomImage imageId={row.image} className="rowImage" alt="Image" />
             }
         }, {
             dataField: 'title',
@@ -94,7 +94,7 @@ function CustomTable(props) {
             dataField: 'firstName',
             text: '',
             formatter: (value, row) => {
-                return <CustomImage imageId={row.avatar} className="rowImage" alt="User avatar"/>
+                return <CustomImage imageId={row.avatar} className="rowImage" alt="User avatar" />
             }
         }, {
             dataField: 'firstName',
@@ -118,14 +118,14 @@ function CustomTable(props) {
         prePageText: 'Back',
         nextPageText: 'Next',
         sizePerPageList: [{
-          text: '2', value: 2
+            text: '2', value: 2
         }, {
-          text: '10', value: 10
+            text: '10', value: 10
         }]
     };
 
     const clickEvents = {
-        onClick: (e, row, rowIndex) => {
+        onClick: (e, row) => {
             props.handleRowClick(row.id, currTab);
         }
     }
@@ -148,17 +148,17 @@ function CustomTable(props) {
     return (
         <div className="customTable">
             {getTitle()}
-            {values.length ? 
-            <BootstrapTable hover={true} keyField='id' data={ values } columns={ (props.tab == "diets" || props.tab == "recipes" || props.tab.includes("liked")) ? recipesColumns : userColumns } pagination={ paginationFactory(options) } rowEvents={ clickEvents } />
-            :
-            <Table className="emptyTable">
-            <thead>
-                <tr><th> {getNoValuesMessage().charAt(0).toUpperCase() + getNoValuesMessage().slice(1)}</th></tr>
-            </thead>
-            <tbody>
-                <tr><td>No {getNoValuesMessage()} yet</td></tr>
-            </tbody>
-            </Table>
+            {values.length ?
+                <BootstrapTable hover={true} keyField='id' data={values} columns={(props.tab == "diets" || props.tab == "recipes" || props.tab.includes("liked")) ? recipesColumns : userColumns} pagination={paginationFactory(options)} rowEvents={clickEvents} />
+                :
+                <Table className="emptyTable">
+                    <thead>
+                        <tr><th> {getNoValuesMessage().charAt(0).toUpperCase() + getNoValuesMessage().slice(1)}</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>No {getNoValuesMessage()} yet</td></tr>
+                    </tbody>
+                </Table>
             }
         </div>
     )

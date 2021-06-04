@@ -9,16 +9,14 @@ function ConfirmationModal(props) {
             keyboard={false}
         >
             <Modal.Header closeButton>
-            <Modal.Title>{props.title}</Modal.Title>
+                <Modal.Title>{props.title}</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-            {props.message}
+                {props.message}
             </Modal.Body>
             <Modal.Footer>
-            <Button variant="secondary" onClick={props.onHide}>
-                Close
-            </Button>
-            <Button variant="primary" onClick={props.onConfirm}>{props.confirmMessage}</Button>
+                <Button variant="secondary" onClick={props.onHide}>  Close </Button>
+                <Button variant="primary" onClick={props.onConfirm}>{props.confirmMessage}</Button>
             </Modal.Footer>
         </Modal>
     )

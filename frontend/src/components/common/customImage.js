@@ -1,12 +1,10 @@
-import React, { useState, useEffect } from 'react'
-import { getImage, listFiles } from 'components/common/dropbox'
+import { getImage } from 'components/common/dropbox';
+import React, { useEffect, useState } from 'react';
 
 export function CustomImage(props) {
 
     const imagePlaceholder = "https://www.firstfishonline.com/wp-content/uploads/2017/07/default-placeholder-700x700.png";
-
     const [image, setImage] = useState(imagePlaceholder);
-
 
     useEffect(() => {
         if (props.imageId)

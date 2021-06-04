@@ -1,26 +1,18 @@
-import React, { useState, useEffect } from 'react'
-import { withRouter } from 'react-router-dom'
-import { Navbar, Nav, Form, FormControl } from 'react-bootstrap'
-import { LinkContainer } from "react-router-bootstrap"
+import { userIsLoggedIn } from 'api/auth'
 import Logo from 'assets/images/food-logo.ico'
 import NotificationBell from 'components/notifications/notificationBell'
-
-import { userIsLoggedIn } from 'api/auth'
+import React from 'react'
+import { Form, FormControl, Nav, Navbar } from 'react-bootstrap'
+import { LinkContainer } from "react-router-bootstrap"
+import { withRouter } from 'react-router-dom'
 
 function Menu(props) {
 
-    const [initialSearch, setInitialSearch] = useState("");
-
     const handleSearch = event => {
         event.preventDefault();
-        const formData = new FormData(event.target),
-        formDataObj = Object.fromEntries(formData.entries());
+        const formDataObj = Object.fromEntries(new FormData(event.target).entries());
         if (props.handleSearchChange) props.handleSearchChange(formDataObj.search);
     }
-
-    useEffect(() => {
-        if (props.initial) setInitialSearch(props.initial);
-    }, [props]);
 
     return (
         <div className="menuContainer">
@@ -28,7 +20,7 @@ function Menu(props) {
                 <LinkContainer to="/">
                     <Navbar.Brand>
                         <div className="logo">
-                            <img src={Logo} alt="Svg Gavel Icon" /> 
+                            <img src={Logo} alt="Svg Gavel Icon" />
                             CRUMBS APP
                         </div>
                     </Navbar.Brand>
@@ -50,7 +42,7 @@ function Menu(props) {
                     <LinkContainer to="/people">
                         <Nav.Link active={window.location.pathname.includes("/people")}>People</Nav.Link>
                     </LinkContainer>
-                    {userIsLoggedIn() ? <NotificationBell {...props}/> : null}
+                    {userIsLoggedIn() ? <NotificationBell {...props} /> : null}
                 </Nav>
             </Navbar>
         </div>

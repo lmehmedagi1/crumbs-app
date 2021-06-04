@@ -1,7 +1,6 @@
 package com.crumbs.notificationservice.amqp;
 
 import com.crumbs.notificationservice.models.Notification;
-import com.crumbs.notificationservice.requests.NotificationRequest;
 import com.crumbs.notificationservice.services.NotificationService;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;

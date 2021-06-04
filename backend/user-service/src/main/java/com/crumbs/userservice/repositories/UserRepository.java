@@ -4,9 +4,9 @@ import com.crumbs.userservice.models.User;
 import com.crumbs.userservice.projections.UserClassView;
 import com.crumbs.userservice.projections.UserView;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import th.co.geniustree.springdata.jpa.repository.JpaSpecificationExecutorWithProjection;
 
 import java.util.List;

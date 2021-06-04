@@ -1,7 +1,6 @@
 package com.crumbs.recipeservice.controllers;
 
 import com.crumbs.recipeservice.models.Ingredient;
-import com.crumbs.recipeservice.projections.CategoryView;
 import com.crumbs.recipeservice.projections.IngredientView;
 import com.crumbs.recipeservice.requests.IngredientRequest;
 import com.crumbs.recipeservice.requests.OptionRequest;

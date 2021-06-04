@@ -11,7 +11,6 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
 import static com.crumbs.userservice.utility.Constants.DEV_APP_URL;
-import static com.crumbs.userservice.utility.Constants.PRODUCTION_APP_URL;
 
 @Service
 public class EmailService {

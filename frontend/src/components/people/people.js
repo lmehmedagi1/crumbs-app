@@ -11,8 +11,8 @@ function People(props) {
     const [loading, setLoading] = useState(false);
 
     const [show, setShow] = useState(false);
-    const [message, setMessage] = useState("");
-    const [variant, setVariant] = useState("");
+    const [message] = useState("");
+    const [variant] = useState("");
 
     const [people, setPeople] = useState([]);
 

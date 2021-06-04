@@ -1,5 +1,6 @@
 
-import {getUser } from 'api/auth'
+import { getUser } from 'api/auth'
+import { getMimeTypes } from 'components/common/imageUtility'
 
 const initialState = {
     recipe: {
@@ -32,16 +33,7 @@ const categoryFields = {
     "preparationMethod": "Nacin pripreme"
 }
 
-const jpeg = ["jpg", "jpeg", "jfif", "pjpeg", "pjp"]
-const mimeType = {
-    "apng": "image/apng",
-    "gif": "image/gif",
-    "png": "image/png",
-    "svg": "image/webp"
-}
-jpeg.forEach(element => {
-    mimeType[element] = "image/jpeg"
-});
+const mimeType = getMimeTypes()
 
 const prepareCategories = (categories) => {
     var obj = {}
@@ -144,7 +136,7 @@ const recipeReducer = (state = { ...initialState }, action) => {
                 return Object.assign({}, state, {
                     reviewOfUser: { ...state.reviewOfUser, rating: action.payload.data.rating }
                 });
-                return state;
+            return state;
             break;
         case "RECIPE_POST_COMMENT":
             return Object.assign({}, state, {
@@ -169,13 +161,13 @@ const recipeReducer = (state = { ...initialState }, action) => {
             if (action.payload.data._embedded) {
                 var com;
                 var tempArr = [...state.recipe.comments, ...action.payload.data._embedded.reviewViewList];
-                if(getUser()) {
+                if (getUser()) {
                     tempArr = tempArr.filter(x => {
-                        if(x.author.id === getUser().id)
+                        if (x.author.id === getUser().id)
                             com = x;
                         return x.author.id !== getUser().id
                     })
-                    if(com) {
+                    if (com) {
                         tempArr.unshift(com)
                     }
                 }
@@ -186,7 +178,7 @@ const recipeReducer = (state = { ...initialState }, action) => {
                         comments: [...tempArr]
                     }),
                 });
-                
+
             }
             return state;
             break;
@@ -196,7 +188,7 @@ const recipeReducer = (state = { ...initialState }, action) => {
                     ...state,
                     mostPopularRecipes: action.payload.data._embedded.recipeViewList
                 });
-                return state;
+            return state;
             break;
         case "RECIPE_GET_DAILY_FULFILLED":
             if (action.payload.data._embedded)
@@ -227,7 +219,7 @@ const recipeReducer = (state = { ...initialState }, action) => {
                     ...state.recipe,
                     comments: state.recipe.comments.filter(x => x.reviewId != action.payload),
                 }),
-                reviewOfUser: {...state.reviewOfUser, comment : null}
+                reviewOfUser: { ...state.reviewOfUser, comment: null }
             });
             break;
         case "RECIPE_GET_MOST_POPULAR_REJECTED":

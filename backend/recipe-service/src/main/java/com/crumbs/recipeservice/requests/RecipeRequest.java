@@ -2,7 +2,6 @@ package com.crumbs.recipeservice.requests;
 
 import com.crumbs.recipeservice.utility.annotation.NullOrNotBlank;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.common.collect.Lists;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 

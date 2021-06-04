@@ -10,16 +10,9 @@ import './App.scss';
 function App(props) {
 
   const [token, setToken] = useState(null);
+  const refreshToken = token => setToken(token);
+  const getToken = () => token;
 
-  const refreshToken = (token) => {
-    setToken(token);
-  }
-
-  const getToken = () => {
-    return token;
-  }
-
-  const myErrorHandler = (error, componentStack) => console.log(error, componentStack);
 
   return (
     <div className="App">

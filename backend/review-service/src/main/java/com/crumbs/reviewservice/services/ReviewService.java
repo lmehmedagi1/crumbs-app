@@ -6,7 +6,6 @@ import com.crumbs.reviewservice.models.Review;
 import com.crumbs.reviewservice.projections.ReviewView;
 import com.crumbs.reviewservice.repositories.ReviewRepository;
 import com.crumbs.reviewservice.requests.ReviewRequest;
-import com.crumbs.reviewservice.utility.converters.CustomEnumType;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
@@ -16,16 +15,12 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
-import static com.fasterxml.jackson.annotation.JsonFormat.DEFAULT_TIMEZONE;
 
 
 @Log4j2

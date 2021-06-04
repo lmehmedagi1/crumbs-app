@@ -4,8 +4,6 @@ import com.crumbs.recipeservice.exceptions.RecipeNotFoundException;
 import com.crumbs.recipeservice.exceptions.UserNotFoundException;
 import com.crumbs.recipeservice.models.User;
 import com.crumbs.recipeservice.projections.UserClassView;
-import com.crumbs.recipeservice.projections.UserView;
-import com.crumbs.recipeservice.responses.ListWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.HttpStatus;
@@ -13,7 +11,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
-import java.util.List;
 import java.util.UUID;
 
 @Component
@@ -41,7 +38,7 @@ public class WebClientRequest {
     public UUID[] getTopMonthlyRecepies(int pageNo) {
         return webClientBuilder.baseUrl("http://review-service").build().get()
                 .uri(uriBuilder -> uriBuilder
-                        .path("/reviews/topMonthly")
+                        .path("/reviews/top-monthly")
                         .queryParam("pageNo", pageNo)
                         .build())
                 .accept(MediaTypes.HAL_JSON)
@@ -92,7 +89,7 @@ public class WebClientRequest {
     public UUID[] getTopDailyRecepies(Integer pageNo) {
         return webClientBuilder.baseUrl("http://review-service").build().get()
                 .uri(uriBuilder -> uriBuilder
-                        .path("/reviews/topDaily")
+                        .path("/reviews/top-daily")
                         .queryParam("pageNo", pageNo)
                         .build())
                 .accept(MediaTypes.HAL_JSON)

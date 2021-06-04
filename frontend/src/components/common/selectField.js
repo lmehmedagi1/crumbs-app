@@ -1,8 +1,8 @@
+import axios from "axios"
+import { env } from "configs/env"
 import React, { useState } from "react"
 import { Form } from "react-bootstrap"
 import AsyncSelect from "react-select/async"
-import axios from "axios"
-import { env } from "configs/env"
 
 export default function SelectField(props) {
 
@@ -20,7 +20,7 @@ export default function SelectField(props) {
     };
 
     const loadOptions = (inputValue, callback) => {
-        getOptions(inputValue).then((response) => {
+        getOptions(inputValue).then(response => {
             const data = response.data.map(x => {
                 return { value: x.id, label: x.name.trim() };
             });

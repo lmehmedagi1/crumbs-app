@@ -35,14 +35,14 @@ function Login(props) {
         let searchArray = props.location.search.split('=');
         if (searchArray && searchArray.length > 1) {
             let verificationToken = searchArray[1]
-            auth.confirmRegistration(() => {}, verificationToken);
+            auth.confirmRegistration(() => { }, verificationToken);
         }
     }, []);
 
     const handleSubmit = user => {
         setLoading(true);
         setShow(false);
-        
+
         authApi.login(token => {
             setLoading(false);
             props.setToken(token);
@@ -53,7 +53,7 @@ function Login(props) {
             setVariant("warning");
             setShow(true);
             ScrollButton.scrollToTop();
-        },  user);
+        }, user);
     }
 
     const handleForgotPasswordCLick = () => {
@@ -64,50 +64,50 @@ function Login(props) {
 
     return (
         <div className={loading ? "blockedWait" : ""}>
-        <div className={loading ? "blocked" : ""}>
-            <Alert message={message} showAlert={show} variant={variant} onShowChange={setShow} />
-            <div className="formContainer">
-                <div>
-                    <div className="formTitle">
-                        LOGIN
+            <div className={loading ? "blocked" : ""}>
+                <Alert message={message} showAlert={show} variant={variant} onShowChange={setShow} />
+                <div className="formContainer">
+                    <div>
+                        <div className="formTitle">
+                            LOGIN
                     </div>
-                    <Formik
-                        validationSchema={schema}
-                        initialValues={initialValues}
-                        onSubmit={handleSubmit}
-                    >
-                        {({
-                            handleSubmit,
-                            handleChange,
-                            touched,
-                            errors,
-                        }) => (
-                            <Form noValidate className="formBasic" onSubmit={handleSubmit}>
-                                <Form.Group controlId="formBasicUsername">
-                                    <Form.Label>Enter Username</Form.Label>
-                                    <Form.Control type="email" name="username" onChange={handleChange} isInvalid={touched.username && errors.username} />
-                                    <Form.Control.Feedback type="invalid">{errors.username}</Form.Control.Feedback>
-                                </Form.Group>
-                                <Form.Group controlId="formBasicPassword">
-                                    <Form.Label>Password</Form.Label>
-                                    <Form.Control type="password" name="password" onChange={handleChange} isInvalid={touched.password && errors.password} />
-                                    <Form.Control.Feedback type="invalid">{errors.password}</Form.Control.Feedback>
-                                </Form.Group>
-                                <Form.Group controlId="formBasicCheckbox">
-                                    <Form.Check type="checkbox" label="Remember me" />
-                                </Form.Group>
-                                <Form.Group>
-                                    <Button variant="primary" type="submit">
-                                        LOGIN
+                        <Formik
+                            validationSchema={schema}
+                            initialValues={initialValues}
+                            onSubmit={handleSubmit}
+                        >
+                            {({
+                                handleSubmit,
+                                handleChange,
+                                touched,
+                                errors,
+                            }) => (
+                                <Form noValidate className="formBasic" onSubmit={handleSubmit}>
+                                    <Form.Group controlId="formBasicUsername">
+                                        <Form.Label>Enter Username</Form.Label>
+                                        <Form.Control type="email" name="username" onChange={handleChange} isInvalid={touched.username && errors.username} />
+                                        <Form.Control.Feedback type="invalid">{errors.username}</Form.Control.Feedback>
+                                    </Form.Group>
+                                    <Form.Group controlId="formBasicPassword">
+                                        <Form.Label>Password</Form.Label>
+                                        <Form.Control type="password" name="password" onChange={handleChange} isInvalid={touched.password && errors.password} />
+                                        <Form.Control.Feedback type="invalid">{errors.password}</Form.Control.Feedback>
+                                    </Form.Group>
+                                    <Form.Group controlId="formBasicCheckbox">
+                                        <Form.Check type="checkbox" label="Remember me" />
+                                    </Form.Group>
+                                    <Form.Group>
+                                        <Button variant="primary" type="submit">
+                                            LOGIN
                                     </Button>
-                                </Form.Group>
-                                <div className="forgotPassword" onClick={handleForgotPasswordCLick}>Forgot Password?</div>
-                            </Form>
-                        )}
-                    </Formik>
+                                    </Form.Group>
+                                    <div className="forgotPassword" onClick={handleForgotPasswordCLick}>Forgot Password?</div>
+                                </Form>
+                            )}
+                        </Formik>
+                    </div>
                 </div>
             </div>
-        </div>
         </div>
     )
 }

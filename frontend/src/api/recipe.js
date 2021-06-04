@@ -7,9 +7,9 @@ class RecipeApi extends React.Component {
 
     sendPostRecipe = (cb, token, params) => {
         Requests.sendPostRequest(cb, env.BASE_PATH + "recipe-service/recipes", params, Requests.getAuthorizationHeader(token),
-            (response) => {
+            response =>{
                 cb(response);
-            }, (err) => {
+            }, err => {
                 cb(null, err)
                 console.log(err)
             });
@@ -20,9 +20,9 @@ class RecipeApi extends React.Component {
         delete params["id"];
 
         Requests.sendPatchRequest(cb, env.BASE_PATH + "review-service/reviews", params, Requests.getAuthorizationHeader(token),
-            (response) => {
+            response =>{
                 cb(response);
-            }, (err) => {
+            }, err => {
                 cb(null, err)
                 console.log(err)
             }, id);
@@ -37,21 +37,21 @@ class RecipeApi extends React.Component {
                 'Authorization': `${token}`
             }
         };
-        Requests.sendDeleteRequest(cb, env.BASE_PATH + "review-service/reviews", parameters, 
-        (response) => { cb(response.data, null); }, (err) => {cb(null, err)});
+        Requests.sendDeleteRequest(cb, env.BASE_PATH + "review-service/reviews", parameters,
+            response =>{ cb(response.data, null); }, err => { cb(null, err) });
     }
 
     getEntityReviewForUserRequest = (cb, token, params) => {
-        
+
         let parameters = {
-            params: params, 
+            params: params,
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `${token}`
             }
         };
-        Requests.sendGetRequest(cb, env.BASE_PATH + "review-service/reviews/review-of-user", parameters, 
-        (response) => cb(response.data), (err) => cb(null, err));
+        Requests.sendGetRequest(cb, env.BASE_PATH + "review-service/reviews/user-review", parameters,
+            response =>cb(response.data), err => cb(null, err));
     }
 
     getEntityReviewForUser = (cb, params, token, setToken) => {
@@ -72,9 +72,8 @@ class RecipeApi extends React.Component {
         delete params["id"];
 
         Requests.sendPatchRequest(cb, env.BASE_PATH + "recipe-service/recipes", params, Requests.getAuthorizationHeader(token),
-            (response) => {
-                cb(response);
-            }, (err) => {
+            response => cb(response)
+            , err => {
                 cb(null, err)
                 console.log(err)
             }, id);
@@ -100,8 +99,8 @@ class RecipeApi extends React.Component {
                 'Authorization': `${token}`
             }
         };
-        Requests.sendDeleteRequest(cb, env.BASE_PATH + "recipe-service/recipes", parameters, 
-        (response) => { cb(response.data, null); }, (err) => {cb(null, err)});
+        Requests.sendDeleteRequest(cb, env.BASE_PATH + "recipe-service/recipes", parameters,
+            response =>{ cb(response.data, null); }, err => { cb(null, err) });
     }
 }
 

@@ -38,11 +38,8 @@ export async function uploadFiles(files, path) {
         let blob = new Blob([new Uint8Array(arrayBuffer)], { type: element.type });
 
         let upload = await dbx.filesUpload({ path: '/' + path + '/' + element.name, contents: blob })
-
         if (upload.status === 200)
             fileIds.push(upload.result.id)
-
-        console.log("After upload", upload)
     });
 
     return fileIds;

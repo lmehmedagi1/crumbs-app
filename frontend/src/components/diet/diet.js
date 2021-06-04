@@ -40,14 +40,14 @@ function Diet(props) {
                 setLoading(false);
                 if (err) handleError(err);
                 else setDiet(res);
-            }, {id}, props.getToken(), props.setToken);
+            }, { id }, props.getToken(), props.setToken);
         }
         else {
             dietApi.getPublicDiet((diet, err) => {
                 setLoading(false);
                 if (err) handleError(err);
                 else setDiet(diet);
-            }, {id});
+            }, { id });
         }
     }
 
@@ -95,9 +95,9 @@ function Diet(props) {
                             <div className="subtitle">Ingredients</div>
                             <h2>For this diet you will need:</h2>
                             <h2>
-                            {diet.ingredients.map((ingredient, index) => (
-                                <span>{ingredient.name} {(index < diet.ingredients.length-1) && ", "}</span>
-                            ))}</h2>
+                                {diet.ingredients.map((ingredient, index) => (
+                                    <span>{ingredient.name} {(index < diet.ingredients.length - 1) && ", "}</span>
+                                ))}</h2>
 
                             <div className="subtitle">Author</div>
                             <div className="author-view">
@@ -109,11 +109,11 @@ function Diet(props) {
                                 </div>
                             </div>
 
-                            {userIsLoggedIn() && getUser().id === diet.author.id && 
-                            <div className="edit-buttons">
-                                <button onClick={(() => setShowDietModal(true))}>EDIT</button>
-                                <button onClick={(() => setShowConfirmationModal(true))}>DELETE</button>
-                            </div>}
+                            {userIsLoggedIn() && getUser().id === diet.author.id &&
+                                <div className="edit-buttons">
+                                    <button onClick={(() => setShowDietModal(true))}>EDIT</button>
+                                    <button onClick={(() => setShowConfirmationModal(true))}>DELETE</button>
+                                </div>}
                         </div>
                         <div className="recipes">
                             {diet.recipes.map((recipe, index) => (
@@ -124,9 +124,9 @@ function Diet(props) {
                         </div>
                     </div>
                 </div>}
-                <DietForm show={showDietModal} title="Edit Diet" onHide={() => setShowDietModal(false)} diet={diet} getToken={props.getToken} setToken={props.setToken} update={update}/>
-                <ConfirmationModal 
-                    show={showConfirmationModal} onHide={() => setShowConfirmationModal(false)} 
+                <DietForm show={showDietModal} title="Edit Diet" onHide={() => setShowDietModal(false)} diet={diet} getToken={props.getToken} setToken={props.setToken} update={update} />
+                <ConfirmationModal
+                    show={showConfirmationModal} onHide={() => setShowConfirmationModal(false)}
                     title="Remove diet" message="Are you sure you want to remove this diet? This action cannot be undone."
                     onConfirm={handleDietDelete} confirmMessage="Delete"
                 />
