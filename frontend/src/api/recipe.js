@@ -87,6 +87,22 @@ class RecipeApi extends React.Component {
     deleteEntityReview = (cb, params, token, setToken) => {
         auth.forwardRequest(cb, params, token, setToken, this.sendDeleteEntityReviewRequest);
     }
+
+    deleteRecipe = (cb, params, token, setToken) => {
+        auth.forwardRequest(cb, params, token, setToken, this.sendDeleteRecipeRequest);
+    }
+
+    sendDeleteRecipeRequest = (cb, token, params) => {
+        let parameters = {
+            params: params,
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `${token}`
+            }
+        };
+        Requests.sendDeleteRequest(cb, env.BASE_PATH + "recipe-service/recipes", parameters, 
+        (response) => { cb(response.data, null); }, (err) => {cb(null, err)});
+    }
 }
 
 export default new RecipeApi();

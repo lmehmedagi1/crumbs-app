@@ -25,6 +25,7 @@ import NotFound from "components/common/notFound"
 
 function RecipePreview(props) {
     const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+    const [showDeleteConfirmationModal, setShowDeleteConfirmationModal] = useState(false);
     const recipe = useSelector(state => state.recipes.recipe);
     const userReview = useSelector(state => state.recipes.reviewOfUser);
     const [txtComment, setTxtComment] = useState("");
@@ -32,7 +33,13 @@ function RecipePreview(props) {
     const [countComment, setCount] = useState(0);
     const [idToDelete, setIdToDelete] = useState("");
     const [editMode, setEditMode] = useState(false);
+    const [showEditModal, setShowEditModal] = useState(false);
+
+    const [loading, setLoading] = useState(false);
+
     const [show, setShow] = useState(false);
+    const [message, setMessage] = useState("");
+    const [variant, setVariant] = useState("");
 
     const dispatch = useDispatch()
 
@@ -169,7 +176,7 @@ function RecipePreview(props) {
         dispatch(setState({ [name]: value }))
     };
 
-    const handleDietDelete = () => {
+    const handleCommentDelete = () => {
         let body = {
             id: idToDelete
         }
@@ -180,14 +187,37 @@ function RecipePreview(props) {
         setShowConfirmationModal(false);
     };
 
+    const handleRecipeDelete = () => {
+        setLoading(true);
+        recipeApi.deleteRecipe((res, err) => {
+            setLoading(false);
+            if (err) {
+                setMessage(err);
+                setVariant("warning");
+                setShow(true);
+            }
+            else {
+                props.history.push({
+                    pathname: '/'
+                });
+            }
+        }, {id: recipe.id}, props.getToken(), props.setToken);
+    }
 
 
     return (
-        recipe.hasData ?
+        <div className={loading ? "blockedWait" : ""}>
+        <div className={loading ? "blocked" : ""}>
+        {recipe.hasData ?
             <div className="recipePreview">
                 <Menu handleSearchChange={handleSearchChange} {...props} />
+                <Alert message={message} showAlert={show} variant={variant} onShowChange={setShow} />
                 <div className="float-right">
-                    {userHasPermission(recipe.userId) && <Button className="float-right" onClick={() => setShow(true)}> Edit </Button>}
+                    {userHasPermission(recipe.userId) && 
+                    <div>
+                        <Button className="float-right" onClick={() => setShowEditModal(true)}> Edit </Button>
+                        <Button className="float-right" onClick={() => setShowDeleteConfirmationModal(true)}> Delete </Button>
+                        </div>}
                 </div>
                 <Row>
                     <Form.Label className="title">{recipe.title}</Form.Label>
@@ -382,10 +412,10 @@ function RecipePreview(props) {
 
                 </Row>
                 <RecipeForm title="Edit"
-                    show={show}
+                    show={showEditModal}
                     onHide={() => {
                         dispatch(get(props.match.params.id));
-                        setShow(false)
+                        setShowEditModal(false)
                     }}
                     getToken={props.getToken}
                     setToken={props.setToken}
@@ -393,10 +423,18 @@ function RecipePreview(props) {
                 <ConfirmationModal
                     show={showConfirmationModal} onHide={() => setShowConfirmationModal(false)}
                     title="Remove comment" message="Are you sure you want to remove this comment? This action cannot be undone."
-                    onConfirm={handleDietDelete} confirmMessage="Delete"
+                    onConfirm={handleCommentDelete} confirmMessage="Delete"
+                />
+                <ConfirmationModal
+                    show={showDeleteConfirmationModal} onHide={() => setShowDeleteConfirmationModal(false)}
+                    title="Remove recipe" message="Are you sure you want to remove this recipe? This action cannot be undone."
+                    onConfirm={handleRecipeDelete} confirmMessage="Delete"
                 />
             </div >
-            : <NotFound />)
+            : <NotFound />}
+        </div>
+        </div>
+    )
 }
 
 export default withRouter(RecipePreview);
