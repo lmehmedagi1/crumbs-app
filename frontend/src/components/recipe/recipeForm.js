@@ -61,6 +61,7 @@ function RecipeForm(props) {
                 if (props.isEdit)
                     recipeApi.patchRecipe((res, err) => {
                         setLoading(false);
+                        onClose()
                     }, { ...prepareData(), images: fileIds, id: recipe.id }, props.getToken(), props.setToken);
                 else
                     recipeApi.createRecipe((res, err) => {

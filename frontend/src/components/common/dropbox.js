@@ -8,7 +8,7 @@ export const dbx = new Dropbox({
 
 export function listFiles() {
     dbx.filesListFolder({
-        path: '',
+        path: '/recipes/',
     }).then(res => console.log("Direktorij:", res))
 }
 
