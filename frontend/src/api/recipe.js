@@ -29,7 +29,6 @@ class RecipeApi extends React.Component {
     }
 
     sendDeleteEntityReviewRequest = (cb, token, params) => {
-        console.log("akI", params)
         let parameters = {
             params: params,
             headers: {

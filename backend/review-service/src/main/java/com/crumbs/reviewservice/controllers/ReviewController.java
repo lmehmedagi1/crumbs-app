@@ -78,7 +78,7 @@ public class ReviewController {
                 linkTo(methodOn(ReviewController.class).getReviewsOfUser(userId, jwt)).withSelfRel());
     }
 
-    @RequestMapping(value="/comments", params = "recipeId", method = RequestMethod.GET)
+    @RequestMapping(value = "/comments", params = "recipeId", method = RequestMethod.GET)
     public CollectionModel<EntityModel<ReviewView>> getReviewsOfRecipe(@RequestParam("recipeId") @NotNull UUID recipeId,
                                                                        @RequestParam(defaultValue = "0") Integer pageNo,
                                                                        @RequestParam(defaultValue = "4") Integer pageSize,
@@ -95,9 +95,9 @@ public class ReviewController {
             rV.setAuthor(user);
         }
 
-        if(!userId.equals("noId") && pageNo == 0) {
+        if (!userId.equals("noId") && pageNo == 0) {
             Review review = reviewService.getReviewOfEntityFromUser(recipeId, UUID.fromString(userId));
-            if(review != null)
+            if (review != null)
                 reviews.add(getRv(review));
         }
 
@@ -128,9 +128,9 @@ public class ReviewController {
         return reviewService.getRecipeRating(recipeId);
     }
 
-    @RequestMapping(value = "/user-review",params = "entityId", method = RequestMethod.GET)
+    @RequestMapping(value = "/user-review", params = "entityId", method = RequestMethod.GET)
     public ResponseEntity<?> getReviewOfEntityFromUser(@RequestParam("entityId") @NotNull UUID entityId,
-                                                      @RequestHeader("Authorization") String jwt) {
+                                                       @RequestHeader("Authorization") String jwt) {
 
         final UUID userId = getUserIdFromJwt(jwt);
         reviewWebClientRequest.checkIfRecipeExists(entityId);
@@ -172,19 +172,19 @@ public class ReviewController {
     }
 
     @PatchMapping(consumes = "application/json")
-    public ResponseEntity<?> saveReview(  @RequestParam(defaultValue = "noId") String id,
-                                          @RequestBody @Valid ReviewRequest reviewRequest,
-                                          @RequestHeader("Authorization") String jwt) {
+    public ResponseEntity<?> saveReview(@RequestParam(defaultValue = "noId") String id,
+                                        @RequestBody @Valid ReviewRequest reviewRequest,
+                                        @RequestHeader("Authorization") String jwt) {
 
         UUID userId = getUserIdFromJwt(jwt);
         reviewWebClientRequest.checkIfRecipeExists(UUID.fromString(reviewRequest.getEntity_id()));
         reviewWebClientRequest.checkIfUserExists(jwt);
         Review review;
-        if(id.equals("noId") || id.equals("")) {
+        if (id.equals("noId") || id.equals("")) {
             review = reviewService.getReviewOfEntityFromUser(UUID.fromString(reviewRequest.getEntity_id()), userId);
-            if(review == null) {
+            if (review == null) {
                 final Review newReview = reviewService.createReview(reviewRequest, userId);
-                if(reviewRequest.getComment() != null) {
+                if (reviewRequest.getComment() != null) {
                     ReviewView reviewView = getRv(newReview);
                     return ResponseEntity.ok(reviewViewModelAssembler.toModel(reviewView));
                 } else
@@ -192,7 +192,7 @@ public class ReviewController {
             }
             id = review.getId().toString();
         }
-        if(reviewRequest.getIs_liked() != null) {
+        if (reviewRequest.getIs_liked() != null) {
             reviewService.updateReviewLike(reviewRequest.getIs_liked(), UUID.fromString(id));
         } else if (reviewRequest.getComment() != null) {
             reviewService.updateReviewComment(reviewRequest.getComment(), UUID.fromString(id));
@@ -200,11 +200,16 @@ public class ReviewController {
             reviewService.updateReviewRating(reviewRequest.getRating(), UUID.fromString(id));
         }
         review = reviewService.getReview(UUID.fromString(id));
-        if(reviewRequest.getComment() != null) {
+        if (reviewRequest.getComment() != null) {
             ReviewView reviewView = getRv(review);
             return ResponseEntity.ok(reviewViewModelAssembler.toModel(reviewView));
-        } else
-            return ResponseEntity.ok(reviewModelAssembler.toModel(review));
+        } else {
+            Double recipeRating = reviewService.getRecipeRating(UUID.fromString(reviewRequest.getEntity_id()));
+            ReviewView reviewView = getRv(review);
+            reviewView.setRecipeRating(recipeRating);
+            reviewView.setRating(review.getRating());
+            return ResponseEntity.ok(reviewViewModelAssembler.toModel(reviewView));
+        }
     }
 
     @DeleteMapping

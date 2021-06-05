@@ -16,6 +16,10 @@ const initialState = {
         comments: [],
         files: {},
         hasData: true,
+        preparationLevel: null,
+        group: null,
+        season: null,
+        preparationMethod: null
     },
     recipes: [],
     hidden: false,
@@ -75,22 +79,7 @@ const recipeReducer = (state = { ...initialState }, action) => {
             break;
         case "RECIPE_CLEAR_STATE":
             return Object.assign({}, state, {
-                recipe: {
-                    ...state.recipe,
-                    title: "",
-                    method: "",
-                    ingredients: [],
-                    description: "",
-                    profileImages: [],
-                    imagesError: "",
-                    initialImages: {},
-                    categories: [],
-                    comments: []
-                },
-                hidden: false,
-                reviewOfUser: {},
-                dailyRecipes: [],
-                mostPopularRecipes: []
+                ...initialState
             });
             break;
         case "RECIPE_GET_FULFILLED":
@@ -134,7 +123,11 @@ const recipeReducer = (state = { ...initialState }, action) => {
         case "RECIPE_POST_RATING":
             if (action.payload)
                 return Object.assign({}, state, {
-                    reviewOfUser: { ...state.reviewOfUser, rating: action.payload.data.rating }
+                    recipe: {
+                        ...state.recipe,
+                        rating: action.payload.data.recipeRating,
+                    },
+                    reviewOfUser: { ...state.reviewOfUser, rating: action.payload.data.rating },
                 });
             return state;
             break;
@@ -199,7 +192,6 @@ const recipeReducer = (state = { ...initialState }, action) => {
             return state;
             break;
         case "RECIPE_GET_REVIEW":
-            console.log(action.payload)
             if (action.payload)
                 return Object.assign({}, state, {
                     ...state,

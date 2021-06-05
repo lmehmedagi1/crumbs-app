@@ -17,6 +17,8 @@ public class ReviewView {
     LocalDateTime createdAt;
     LocalDateTime modifiedAt;
     UserClassView author;
+    Double recipeRating;
+    Integer rating;
 
     public ReviewView(UUID reviewId, String comment, UUID entityId, LocalDateTime createdAt, LocalDateTime modifiedAt, UUID authorId) {
         this.reviewId = reviewId;
