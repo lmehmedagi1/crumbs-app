@@ -17,6 +17,14 @@ CRUMBS APP je aplikacija koja se koristi za pronalaženje recepata za hranu. Mo�
 
 - Uputstvo coming soon
 
+
+## Uputstvo za pokretanje selenium IDE testova
+- Instalirati Selenium IDE ekstenziju za browser
+- Učitati projekat za testove koji se nalazi u root folderu aplikacije
+- Ponovo pokrenuti servise kako bi se baza restartovala
+- Odlogovati se sa aplikacije na frontendu
+- Pokrenuti testove u prozoru Selenium IDE ekstenzije 
+
 ## Funkcionalnosti
 
 Autentikacija:
