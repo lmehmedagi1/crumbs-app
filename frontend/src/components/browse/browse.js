@@ -20,7 +20,6 @@ function Browse(props) {
     const [pageSize, setPageSize] = useState(3);
 
     useEffect(() => {
-        console.log("I STA SAD DRUG", props.location)
         var browseFilter = props.location.state
         if (browseFilter && browseFilter.search) {
             dispatch(getRecipes(getFilters(browseFilter.search), page, pageSize));
