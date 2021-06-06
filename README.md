@@ -11,12 +11,18 @@ CRUMBS APP je aplikacija koja se koristi za pronala≈æenje recepata za hranu. Mo≈
 
 ## Demo aplikacije
 
-- Video coming soon
+- [Video](https://drive.google.com/drive/folders/1ZvSa7iVrfdQpD5iSKFoIk_lkG3-shmrJ?usp=sharing)
+
+## Konfiguracijske datoteke
+
+- [Repozitorij](https://github.com/lmehmedagi1/crumbs-app-configuration)
 
 ## Uputstvo za pokretanje
 
-- Uputstvo coming soon
-
+```
+docker compose build
+docker compose up
+```
 
 ## Uputstvo za pokretanje selenium IDE testova
 - Instalirati Selenium IDE ekstenziju za browser
