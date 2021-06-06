@@ -4,8 +4,6 @@ import com.crumbs.userservice.jwt.JwtConfigAndUtil;
 import com.crumbs.userservice.models.User;
 import com.crumbs.userservice.projections.UserClassView;
 import com.crumbs.userservice.projections.UserView;
-import com.crumbs.userservice.requests.LoginRequest;
-import com.crumbs.userservice.requests.RegisterRequest;
 import com.crumbs.userservice.requests.SubscribeRequest;
 import com.crumbs.userservice.requests.UserUpdateRequest;
 import com.crumbs.userservice.responses.UserListResponse;
@@ -19,9 +17,7 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.UUID;
@@ -110,7 +106,7 @@ public class UserController {
         return ResponseEntity.ok(userService.getUserSubscriptions(id));
     }
 
-    @PutMapping("/updateInfo")
+    @PutMapping("/update-info")
     public ResponseEntity<User> updateUserInformation(@RequestBody @Valid UserUpdateRequest userUpdateRequest, @RequestHeader("Authorization") String jwt) {
         UUID userId = getUserIdFromJwt(jwt);
         final User user = userService.updateUserInfo(userUpdateRequest, userId);

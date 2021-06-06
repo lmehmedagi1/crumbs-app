@@ -1,12 +1,10 @@
-import React, { useState, useEffect } from 'react'
-import { withRouter, Link } from 'react-router-dom'
-import { Spinner, Button, Form, FormControl, DropdownButton, Dropdown } from 'react-bootstrap'
-
-import Alert from 'components/alert/alert'
-import Menu from 'components/common/menu'
-
 import dietApi from 'api/diet'
+import Alert from 'components/alert/alert'
 import { CustomImage } from 'components/common/customImage'
+import Menu from 'components/common/menu'
+import React, { useEffect, useState } from 'react'
+import { Button, Dropdown, DropdownButton, Form, FormControl, Spinner } from 'react-bootstrap'
+import { Link, withRouter } from 'react-router-dom'
 
 const sortingValues = {
     "Title: A to Z": "title-asc",
@@ -24,15 +22,15 @@ function BrowseDiets(props) {
     const [loading, setLoading] = useState(false);
 
     const [show, setShow] = useState(false);
-    const [message, setMessage] = useState("");
-    const [variant, setVariant] = useState("");
+    const [message] = useState("");
+    const [variant] = useState("");
 
     const [diets, setDiets] = useState([]);
 
     const [activePageNo, setActivePageNo] = useState(0);
     const [activeHasNext, setActiveHasNext] = useState(true);
     const [activeSearched, setActiveSearched] = useState("");
-    const [activeSort, setActiveSort] = useState({title: "Title: A to Z", value: "title-asc"});
+    const [activeSort, setActiveSort] = useState({ title: "Title: A to Z", value: "title-asc" });
 
     useEffect(() => {
         fetchDiets(activeSearched, activePageNo, activeSort);
@@ -79,14 +77,14 @@ function BrowseDiets(props) {
         setDiets([]);
         event.preventDefault();
         const formData = new FormData(event.target),
-        formDataObj = Object.fromEntries(formData.entries());
+            formDataObj = Object.fromEntries(formData.entries());
         fetchDiets(formDataObj.search, 0, activeSort);
     }
 
     const handleSortingSelect = event => {
         let title = event;
         let value = sortingValues[title];
-        let sorting = {title, value};
+        let sorting = { title, value };
         setActiveSort(sorting);
         setActivePageNo(0);
         fetchDiets(activeSearched, 0, sorting);
@@ -116,18 +114,18 @@ function BrowseDiets(props) {
                     </div>
                     {loading ? <Spinner className="spinner" animation="border" role="status" /> : null}
                     <div className="list">
-                        
+
                         {diets.map((diet, index) => (
                             <Link to={"/diet/" + diet.id}>
                                 <div className="diet-card">
                                     <div className="diet-info">
                                         <div>
-                                        <h1>{diet.title}</h1>
-                                        <h2>{diet.author.firstName + " " + diet.author.lastName + " (@" + diet.author.username + ")"}</h2>
+                                            <h1>{diet.title}</h1>
+                                            <h2>{diet.author.firstName + " " + diet.author.lastName + " (@" + diet.author.username + ")"}</h2>
                                         </div>
                                         <div>
-                                        <h3>Duration: {diet.duration} days</h3>
-                                        <h3>{diet.description}</h3>
+                                            <h3>Duration: {diet.duration} days</h3>
+                                            <h3>{diet.description}</h3>
                                         </div>
                                     </div>
                                     <div className="recipe-list">

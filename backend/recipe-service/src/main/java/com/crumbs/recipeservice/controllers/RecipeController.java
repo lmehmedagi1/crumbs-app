@@ -2,17 +2,14 @@ package com.crumbs.recipeservice.controllers;
 
 import com.crumbs.recipeservice.models.Recipe;
 import com.crumbs.recipeservice.models.User;
-import com.crumbs.recipeservice.projections.IngredientView;
 import com.crumbs.recipeservice.projections.RecipeNameView;
 import com.crumbs.recipeservice.projections.RecipeView;
 import com.crumbs.recipeservice.projections.UserClassView;
 import com.crumbs.recipeservice.projections.UserRecipeView;
-import com.crumbs.recipeservice.projections.UserView;
 import com.crumbs.recipeservice.requests.FilterRecipesRequest;
 import com.crumbs.recipeservice.requests.OptionRequest;
 import com.crumbs.recipeservice.requests.RecipeRequest;
 import com.crumbs.recipeservice.requests.WebClientRequest;
-import com.crumbs.recipeservice.responses.ListWrapper;
 import com.crumbs.recipeservice.responses.RecipeWithDetails;
 import com.crumbs.recipeservice.services.RecipeService;
 import com.crumbs.recipeservice.utility.JwtConfigAndUtil;
@@ -31,12 +28,10 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -89,7 +84,7 @@ public class RecipeController {
                         .getRecipePreviews(pageNo, pageSize, sort, filters)).withSelfRel());
     }
 
-    @RequestMapping(value = "/topMonthly", method = RequestMethod.GET)
+    @RequestMapping(value = "/top-monthly", method = RequestMethod.GET)
     public CollectionModel<EntityModel<RecipeView>> getRecipePreviewsTopMonthly(
             @RequestParam(defaultValue = "0") Integer pageNo,
             @RequestParam(defaultValue = "5") Integer pageSize,
@@ -112,7 +107,7 @@ public class RecipeController {
 
     }
 
-    @RequestMapping(value = "/topDaily", method = RequestMethod.GET)
+    @RequestMapping(value = "/top-daily", method = RequestMethod.GET)
     public CollectionModel<EntityModel<RecipeView>> getRecipePreviewsTopDaily(
             @RequestParam(defaultValue = "0") Integer pageNo,
             @RequestParam(defaultValue = "5") Integer pageSize,

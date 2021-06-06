@@ -32,35 +32,35 @@ class Requests extends React.Component {
     sendPostRequest(cb, url, params, headers, successCb, failureCb) {
         axios
             .post(url, params, headers)
-            .then((response) => { successCb(response); })
+            .then(response =>{ successCb(response); })
             .catch(error => { if (failureCb && error.response) failureCb(error.response.data.error); else failureCb(error.message) });
     }
 
     sendGetRequest(cb, url, params, successCb, failureCb) {
         axios
             .get(url, params)
-            .then((response) => { successCb(response); })
+            .then(response =>{ successCb(response); })
             .catch(error => { if (failureCb && error.response) failureCb(error.response.data.message) });
     }
 
     sendPutRequest(cb, url, params, headers, successCb, failureCb) {
         axios
             .put(url, params, headers)
-            .then((response) => { successCb(response); })
+            .then(response =>{ successCb(response); })
             .catch(error => { if (failureCb && error.response) failureCb(error.response.data.message) });
     }
 
     sendDeleteRequest(cb, url, params, successCb, failureCb) {
         axios
             .delete(url, params)
-            .then((response) => { successCb(response); })
+            .then(response =>{ successCb(response); })
             .catch(error => { this.handleError(error, cb, failureCb); });
     }
 
     sendPatchRequest(cb, url, params, headers, successCb, failureCb, id = null) {
         axios
             .patch(url + "?id=" + id, params, headers)
-            .then((response) => { successCb(response); })
+            .then(response =>{ successCb(response); })
             .catch(error => { if (failureCb && error.response) failureCb(error.response.data.message) });
     }
 

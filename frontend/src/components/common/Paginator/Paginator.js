@@ -1,7 +1,6 @@
 import React, { Component } from "react"
 import { Dropdown, Pagination } from "react-bootstrap"
-import "./paginator.scss"
-
+import 'components/common/Paginator/paginator.scss'
 
 export class Paginator extends Component {
   constructor(props) {
@@ -9,23 +8,10 @@ export class Paginator extends Component {
   }
 
   render() {
-    var size = this.props.pageSize
     var numbers = [
-      ...Array(size).keys()
+      ...Array(this.props.pageSize).keys()
     ];
-    var before = true;
-    var after = true;
-    var items = numbers.map(i => {
-  if (i > this.props.page && after) {
-        after = false;
-        return <Pagination.Ellipsis key="after" />
-      }
-      else if (i + 2 < this.props.page && before) {
-        before = false;
-        return <Pagination.Ellipsis key="before" />
-      }
-    });
-
+    
     return (
       <div className="paginator-wrapper">
         <Dropdown>

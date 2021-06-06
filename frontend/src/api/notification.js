@@ -7,17 +7,17 @@ class NotificationApi extends React.Component {
 
     sendGetUserNotificationsRequest = (cb, token, params) => {
         Requests.sendGetRequest(cb, env.BASE_PATH + "notification-service/notifications", Requests.getAuthorizationHeader(token), 
-        (response) => cb(response.data), (err) => cb(null, err));
+        response =>cb(response.data), err => cb(null, err));
     }
     
     sendMarkNotificationAsReadRequest = (cb, token, params) => {
         Requests.sendPostRequest(cb, env.BASE_PATH + "notification-service/notifications/mark", params, Requests.getAuthorizationHeader(token), 
-        (response) => cb(response.data), (err) => cb(null, err));
+        response =>cb(response.data), err => cb(null, err));
     }
 
     sendMarkAllAsReadRequest = (cb, token, params) => {
         Requests.sendPostRequest(cb, env.BASE_PATH + "notification-service/notifications/mark-all-as-read", params, Requests.getAuthorizationHeader(token), 
-        (response) => cb(response.data), (err) => cb(null, err));
+        response =>cb(response.data), err => cb(null, err));
     }
 
     sendDeleteNotificationRequest = (cb, token, params) => {
@@ -29,7 +29,7 @@ class NotificationApi extends React.Component {
             }
         };
         Requests.sendDeleteRequest(cb, env.BASE_PATH + "notification-service/notifications", parameters, 
-        (response) => { cb(response.data, null); }, (err) => {cb(null, err)});
+        response =>{ cb(response.data, null); }, err => {cb(null, err)});
     }
 
     getUserNotifications = (cb, token, setToken) => {

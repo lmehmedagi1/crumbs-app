@@ -1,7 +1,6 @@
 package com.crumbs.notificationservice.models;
 
 import com.crumbs.notificationservice.utility.converters.CustomEnumType;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
@@ -10,6 +9,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
@@ -19,8 +20,6 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.UUID;
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
 
 @TypeDef(name = "entype", typeClass = CustomEnumType.class)
 @Data

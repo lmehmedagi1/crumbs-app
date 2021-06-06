@@ -6,11 +6,11 @@ import auth from 'api/auth'
 class DietApi extends React.Component {
 
     getDiets = (cb, params) => {
-        Requests.sendGetRequest(cb, env.BASE_PATH  + "recipe-service/diets", { params: params }, (response) => { cb(response.data); }, (error) => { cb(null, error); });
+        Requests.sendGetRequest(cb, env.BASE_PATH  + "recipe-service/diets", { params: params }, response =>{ cb(response.data); }, (error) => { cb(null, error); });
     }
 
     getPublicDiet = (cb, params) => {
-        Requests.sendGetRequest(cb, env.BASE_PATH  + "recipe-service/diets/public", { params: params }, (response) => { cb(response.data); }, (error) => { cb(null, error); });
+        Requests.sendGetRequest(cb, env.BASE_PATH  + "recipe-service/diets/public", { params: params }, response =>{ cb(response.data); }, (error) => { cb(null, error); });
     }
 
     getPrivateDiet = (cb, params, token, setToken) => {
@@ -38,14 +38,14 @@ class DietApi extends React.Component {
             }
         };
         Requests.sendGetRequest(cb, env.BASE_PATH + "recipe-service/diets/private", parameters, 
-        (response) => cb(response.data), (err) => cb(null, err));
+        response =>cb(response.data), err => cb(null, err));
     }
 
     sendPostDietRequest = (cb, token, params) => {
         Requests.sendPostRequest(cb, env.BASE_PATH + "recipe-service/diets", params, Requests.getAuthorizationHeader(token),
-            (response) => {
+            response =>{
                 cb(response);
-            }, (err) => {
+            }, err => {
                 cb(null, err)
             });
     }
@@ -55,7 +55,7 @@ class DietApi extends React.Component {
         delete params["id"];
 
         Requests.sendPatchRequest(cb, env.BASE_PATH + "recipe-service/diets", params, Requests.getAuthorizationHeader(token),
-            (response) => cb(response), (err) => cb(null, err), id);
+            response =>cb(response), err => cb(null, err), id);
     }
 
     sendDeleteDietRequest = (cb, token, params) => {
@@ -67,7 +67,7 @@ class DietApi extends React.Component {
             }
         };
         Requests.sendDeleteRequest(cb, env.BASE_PATH + "recipe-service/diets", parameters, 
-        (response) => { cb(response.data, null); }, (err) => {cb(null, err)});
+        response =>{ cb(response.data, null); }, err => {cb(null, err)});
     }
 }
 

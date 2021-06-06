@@ -13,7 +13,7 @@ class ProfileApi extends React.Component {
                 'Authorization': `${token}`
             }
         };
-        Requests.sendGetRequest(cb, env.BASE_PATH + "user-service/account/subscribed", parameters, (response) => { cb(response.data); }, (err) => { cb(null); });
+        Requests.sendGetRequest(cb, env.BASE_PATH + "user-service/account/subscribed", parameters, response =>{ cb(response.data); }, err => { cb(null); });
     }
 
     sendGetUserLikedRecipesRequest = (cb, token, params) => {
@@ -24,7 +24,7 @@ class ProfileApi extends React.Component {
                 'Authorization': `${token}`
             }
         };
-        Requests.sendGetRequest(cb, env.BASE_PATH + "review-service/reviews/likes/recipes", parameters, (response) => { cb(response.data); }, (err) => { cb(null); });
+        Requests.sendGetRequest(cb, env.BASE_PATH + "review-service/reviews/likes/recipes", parameters, response =>{ cb(response.data); }, err => { cb(null); });
     }
 
     sendGetUserLikedDietsRequest = (cb, token, params) => {
@@ -35,21 +35,21 @@ class ProfileApi extends React.Component {
                 'Authorization': `${token}`
             }
         };
-        Requests.sendGetRequest(cb, env.BASE_PATH + "review-service/reviews/likes/diets", parameters, (response) => { cb(response.data); }, (err) => { cb(null); });
+        Requests.sendGetRequest(cb, env.BASE_PATH + "review-service/reviews/likes/diets", parameters, response =>{ cb(response.data); }, err => { cb(null); });
     }
 
     sendPutUpdateUserInfo = (cb, token, params) => {
-        Requests.sendPutRequest(cb, env.BASE_PATH + "user-service/account/updateInfo", params, Requests.getAuthorizationHeader(token), 
-            (response) => {
+        Requests.sendPutRequest(cb, env.BASE_PATH + "user-service/account/update-info", params, Requests.getAuthorizationHeader(token), 
+            response =>{
                 removeUserSession();
                 setUserSession(response.data);
                 cb();
-            }, (err) => {console.log(err)});
+            }, err => {console.log(err)});
     }
 
     sendPostSubscribeRequest = (cb, token, params) => {
         Requests.sendPostRequest(cb, env.BASE_PATH + "user-service/account/subscribe", params, Requests.getAuthorizationHeader(token), 
-            (response) => { cb(response.data); }, (err) => { console.log(err); cb(null); },
+            response =>{ cb(response.data); }, err => { console.log(err); cb(null); },
         );
     }
 
@@ -73,11 +73,11 @@ class ProfileApi extends React.Component {
     }
 
     getUserRecipes = (cb, params) => {
-        Requests.sendGetRequest(cb, env.BASE_PATH + "recipe-service/recipes/user", {params: params}, (response) => { cb(response.data); }, (err) => { cb(null); });
+        Requests.sendGetRequest(cb, env.BASE_PATH + "recipe-service/recipes/user", {params: params}, response =>{ cb(response.data); }, err => { cb(null); });
     } 
 
     getUserPublicDiets = (cb, params) => {
-        Requests.sendGetRequest(cb, env.BASE_PATH + "recipe-service/diets/user", {params: params}, (response) => { cb(response.data); }, (err) => { cb(null); });
+        Requests.sendGetRequest(cb, env.BASE_PATH + "recipe-service/diets/user", {params: params}, response =>{ cb(response.data); }, err => { cb(null); });
     } 
 
     getUserDiets = (cb, params, token, setToken) => {
@@ -85,11 +85,11 @@ class ProfileApi extends React.Component {
     } 
 
     getUserSubscribers = (cb, params) => {
-        Requests.sendGetRequest(cb, env.BASE_PATH + "user-service/account/subscribers", {params: params}, (response) => { cb(response.data); }, (err) => { cb(null); });
+        Requests.sendGetRequest(cb, env.BASE_PATH + "user-service/account/subscribers", {params: params}, response =>{ cb(response.data); }, err => { cb(null); });
     } 
 
     getUserSubscriptions = (cb, params) => {
-        Requests.sendGetRequest(cb, env.BASE_PATH + "user-service/account/subscriptions", {params: params}, (response) => { cb(response.data); }, (err) => { cb(null); });
+        Requests.sendGetRequest(cb, env.BASE_PATH + "user-service/account/subscriptions", {params: params}, response =>{ cb(response.data); }, err => { cb(null); });
     } 
 
     getUserLikedRecipes = (cb, params, token, setToken) => {

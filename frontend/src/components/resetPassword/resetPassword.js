@@ -9,17 +9,17 @@ import { withRouter } from 'react-router-dom'
 import * as yup from 'yup'
 
 function equalTo(ref, msg) {
-	return this.test({
-		name: 'equalTo',
-		exclusive: false,
-    message: msg || '${path} must be the same as ${reference}',
-		params: {
-			reference: ref.path
-		},
-		test: function(value) {
-      return value === this.resolve(ref) 
-		}
-	})
+    return this.test({
+        name: 'equalTo',
+        exclusive: false,
+        message: msg || '${path} must be the same as ${reference}',
+        params: {
+            reference: ref.path
+        },
+        test: function (value) {
+            return value === this.resolve(ref)
+        }
+    })
 };
 
 yup.addMethod(yup.string, 'equalTo', equalTo);
@@ -53,7 +53,7 @@ function PasswordReset(props) {
         }
 
         var queryDict = {}
-        window.location.search.substr(1).split("&").forEach(function(item) {queryDict[item.split("=")[0]] = item.split("=")[1]})
+        window.location.search.substr(1).split("&").forEach(function (item) { queryDict[item.split("=")[0]] = item.split("=")[1] })
         if (queryDict["token"]) setToken(queryDict["token"]);
     }, []);
 
@@ -101,76 +101,76 @@ function PasswordReset(props) {
 
     return (
         <div className={loading ? "blockedWait" : ""}>
-        <div className={loading ? "blocked" : ""}>
-            <Menu handleSearchChange={handleSearchChange} {...props}/>
-            <Alert message={message} showAlert={show} variant={variant} onShowChange={setShow} />
-            <div className="formContainer">
-                <div>
-                    <div className="formTitle">
-                        FORGOT PASSWORD
+            <div className={loading ? "blocked" : ""}>
+                <Menu handleSearchChange={handleSearchChange} {...props} />
+                <Alert message={message} showAlert={show} variant={variant} onShowChange={setShow} />
+                <div className="formContainer">
+                    <div>
+                        <div className="formTitle">
+                            FORGOT PASSWORD
                     </div>
-                    {token == "" ?
-                    <Formik
-                        validationSchema={schemaEmail}
-                        initialValues={{ email: "" }}
-                        onSubmit={handleSubmitEmail}
-                    >
-                        {({
-                            handleSubmit,
-                            handleChange,
-                            touched,
-                            errors,
-                        }) => (
-                            <Form noValidate className="formBasic" onSubmit={handleSubmit}>
-                                <div className="formInfoText"> Please enter your email address. You will receive a link to create a new password via email. </div>
-                                <Form.Group controlId="formBasicEmail">
-                                    <Form.Label>Enter Email</Form.Label>
-                                    <Form.Control type="email" name="email" onChange={handleChange} isInvalid={touched.email && errors.email} />
-                                    <Form.Control.Feedback type="invalid">{errors.email}</Form.Control.Feedback>
-                                </Form.Group>
-                                <Form.Group>
-                                    <Button variant="primary" type="submit">
-                                        SEND EMAIL
+                        {token == "" ?
+                            <Formik
+                                validationSchema={schemaEmail}
+                                initialValues={{ email: "" }}
+                                onSubmit={handleSubmitEmail}
+                            >
+                                {({
+                                    handleSubmit,
+                                    handleChange,
+                                    touched,
+                                    errors,
+                                }) => (
+                                    <Form noValidate className="formBasic" onSubmit={handleSubmit}>
+                                        <div className="formInfoText"> Please enter your email address. You will receive a link to create a new password via email. </div>
+                                        <Form.Group controlId="formBasicEmail">
+                                            <Form.Label>Enter Email</Form.Label>
+                                            <Form.Control type="email" name="email" onChange={handleChange} isInvalid={touched.email && errors.email} />
+                                            <Form.Control.Feedback type="invalid">{errors.email}</Form.Control.Feedback>
+                                        </Form.Group>
+                                        <Form.Group>
+                                            <Button variant="primary" type="submit">
+                                                SEND EMAIL
                                     </Button>
-                                </Form.Group>
-                            </Form>
-                        )}
-                    </Formik>
-                    :
-                    <Formik
-                        validationSchema={schemaPassword}
-                        initialValues={{password: "", confirmPassword: ""}}
-                        onSubmit={handleSubmitPassword}
-                    >
-                        {({
-                            handleSubmit,
-                            handleChange,
-                            touched,
-                            errors,
-                        }) => (
-                            <Form noValidate className="formBasic" onSubmit={handleSubmit}>
-                                <Form.Group controlId="formBasicPassword">
-                                    <Form.Label>Password</Form.Label>
-                                    <Form.Control type="password" name="password" onChange={handleChange} isInvalid={touched.password && errors.password} />
-                                    <Form.Control.Feedback type="invalid">{errors.password}</Form.Control.Feedback>
-                                </Form.Group>
-                                <Form.Group controlId="formBasicPassword">
-                                    <Form.Label>Confirm Password</Form.Label>
-                                    <Form.Control type="password" name="confirmPassword" onChange={handleChange} isInvalid={touched.confirmPassword && errors.confirmPassword} />
-                                    <Form.Control.Feedback type="invalid">{errors.confirmPassword}</Form.Control.Feedback>
-                                </Form.Group>
-                                <Form.Group>
-                                    <Button variant="primary" type="submit">
-                                        RESET PASSWORD
+                                        </Form.Group>
+                                    </Form>
+                                )}
+                            </Formik>
+                            :
+                            <Formik
+                                validationSchema={schemaPassword}
+                                initialValues={{ password: "", confirmPassword: "" }}
+                                onSubmit={handleSubmitPassword}
+                            >
+                                {({
+                                    handleSubmit,
+                                    handleChange,
+                                    touched,
+                                    errors,
+                                }) => (
+                                    <Form noValidate className="formBasic" onSubmit={handleSubmit}>
+                                        <Form.Group controlId="formBasicPassword">
+                                            <Form.Label>Password</Form.Label>
+                                            <Form.Control type="password" name="password" onChange={handleChange} isInvalid={touched.password && errors.password} />
+                                            <Form.Control.Feedback type="invalid">{errors.password}</Form.Control.Feedback>
+                                        </Form.Group>
+                                        <Form.Group controlId="formBasicPassword">
+                                            <Form.Label>Confirm Password</Form.Label>
+                                            <Form.Control type="password" name="confirmPassword" onChange={handleChange} isInvalid={touched.confirmPassword && errors.confirmPassword} />
+                                            <Form.Control.Feedback type="invalid">{errors.confirmPassword}</Form.Control.Feedback>
+                                        </Form.Group>
+                                        <Form.Group>
+                                            <Button variant="primary" type="submit">
+                                                RESET PASSWORD
                                     </Button>
-                                </Form.Group>
-                            </Form>
-                        )}
-                    </Formik>
-                    }
+                                        </Form.Group>
+                                    </Form>
+                                )}
+                            </Formik>
+                        }
+                    </div>
                 </div>
             </div>
-        </div>
         </div>
     )
 }

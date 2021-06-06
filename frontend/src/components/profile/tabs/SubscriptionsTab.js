@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import CustomTable from 'components/profile/tabs/table';
+import React from 'react';
 
-import CustomTable from 'components/profile/tabs/table'
 
 function SubscriptionsTab(props) {
 

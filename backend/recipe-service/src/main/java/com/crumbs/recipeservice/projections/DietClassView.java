@@ -1,6 +1,5 @@
 package com.crumbs.recipeservice.projections;
 
-import com.crumbs.recipeservice.models.Recipe;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

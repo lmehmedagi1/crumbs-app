@@ -1,7 +1,6 @@
 package com.crumbs.reviewservice.responses;
 
 import com.crumbs.reviewservice.models.Review;
-import com.crumbs.reviewservice.models.User;
 import com.crumbs.reviewservice.projections.UserClassView;
 import lombok.AllArgsConstructor;
 import lombok.Data;

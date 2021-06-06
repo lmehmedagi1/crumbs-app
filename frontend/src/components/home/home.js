@@ -1,5 +1,4 @@
 import { getDailyRecipes, getMostPopularRecipes } from 'actions/recipeActions'
-import { listFiles } from 'components/common/dropbox'
 import Menu from 'components/common/menu'
 import RecipeCard from 'components/common/recipeCard'
 import React, { useEffect, useState } from 'react'
@@ -15,7 +14,6 @@ function Home(props) {
     useEffect(() => {
         dispatch(getMostPopularRecipes(count))
         dispatch(getDailyRecipes(countDaily))
-        listFiles()
     }, []);
 
     const handleSearchChange = search => {

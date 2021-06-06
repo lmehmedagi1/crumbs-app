@@ -5,11 +5,7 @@ import com.crumbs.recipeservice.exceptions.UnauthorizedException;
 import com.crumbs.recipeservice.models.Diet;
 import com.crumbs.recipeservice.models.Ingredient;
 import com.crumbs.recipeservice.models.Recipe;
-import com.crumbs.recipeservice.projections.DietClassView;
-import com.crumbs.recipeservice.projections.IngredientView;
-import com.crumbs.recipeservice.projections.RecipeView;
-import com.crumbs.recipeservice.projections.UserClassView;
-import com.crumbs.recipeservice.projections.UserDietView;
+import com.crumbs.recipeservice.projections.*;
 import com.crumbs.recipeservice.repositories.DietRepository;
 import com.crumbs.recipeservice.requests.DietRequest;
 import com.crumbs.recipeservice.requests.WebClientRequest;
@@ -28,11 +24,8 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
+
 import static com.crumbs.recipeservice.utility.Constants.DEFAULT_TIMEZONE;
 
 @Service

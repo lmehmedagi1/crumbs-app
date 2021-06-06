@@ -16,7 +16,7 @@ export function get(id) {
 export function getMostPopularRecipes(pageNumber) {
     return {
         type: "RECIPE_GET_MOST_POPULAR",
-        payload: axios(env.BASE_PATH + "recipe-service/recipes/topMonthly", {
+        payload: axios(env.BASE_PATH + "recipe-service/recipes/top-monthly", {
             method: "GET",
             params: {
                 pageNo: pageNumber
@@ -47,7 +47,7 @@ export function updateRating(payload) {
 }
 
 export function updateLike(payload) {
-    
+
     return {
         type: "RECIPE_POST_LIKE",
         payload
@@ -121,7 +121,7 @@ export function getRecipeReviews(recipeId, pageNo, userId) {
 export function getDailyRecipes(pageNo) {
     return {
         type: "RECIPE_GET_DAILY",
-        payload: axios(env.BASE_PATH + "recipe-service/recipes/topDaily", {
+        payload: axios(env.BASE_PATH + "recipe-service/recipes/top-daily", {
             method: "GET",
             params: { pageNo }
         })
@@ -129,7 +129,6 @@ export function getDailyRecipes(pageNo) {
 }
 
 const baseFilters = { title: "", categories: [] }
-
 export function getRecipes(filters = baseFilters, pageNo = 0, pageSize = 9, sort = "title") {
     return {
         type: "RECIPE_GET_ALL",

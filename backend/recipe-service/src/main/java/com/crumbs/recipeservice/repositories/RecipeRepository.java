@@ -1,12 +1,9 @@
 package com.crumbs.recipeservice.repositories;
 
-import com.crumbs.recipeservice.models.Category;
 import com.crumbs.recipeservice.models.Recipe;
-import com.crumbs.recipeservice.projections.DietClassView;
 import com.crumbs.recipeservice.projections.RecipeNameView;
 import com.crumbs.recipeservice.projections.RecipeView;
 import com.crumbs.recipeservice.projections.UserRecipeView;
-import com.crumbs.recipeservice.requests.RecipeRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -6,10 +6,10 @@ import com.crumbs.notificationservice.models.Notification;
 import com.crumbs.notificationservice.repositories.NotificationRepository;
 import com.crumbs.notificationservice.responses.NotificationResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;

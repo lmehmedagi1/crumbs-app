@@ -1,7 +1,6 @@
 package com.crumbs.recipeservice.repositories;
 
 import com.crumbs.recipeservice.models.Ingredient;
-import com.crumbs.recipeservice.projections.CategoryView;
 import com.crumbs.recipeservice.projections.IngredientView;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
