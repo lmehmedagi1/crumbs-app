@@ -44,12 +44,12 @@ class ProfileApi extends React.Component {
                 removeUserSession();
                 setUserSession(response.data);
                 cb();
-            }, err => {console.log(err)});
+            }, err => console.log(err));
     }
 
     sendPostSubscribeRequest = (cb, token, params) => {
         Requests.sendPostRequest(cb, env.BASE_PATH + "user-service/account/subscribe", params, Requests.getAuthorizationHeader(token), 
-            response =>{ cb(response.data); }, err => { console.log(err); cb(null); },
+            response => cb(response.data), err => cb(null, err),
         );
     }
 

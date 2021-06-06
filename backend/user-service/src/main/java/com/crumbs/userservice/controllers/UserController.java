@@ -106,6 +106,11 @@ public class UserController {
         return ResponseEntity.ok(userService.getUserSubscriptions(id));
     }
 
+    @GetMapping("/subscribers-id")
+    public UUID[] getUserSubscibersIds(@RequestParam UUID id) {
+        return userService.getUserSubscribersIds(id);
+    }
+
     @PutMapping("/update-info")
     public ResponseEntity<User> updateUserInformation(@RequestBody @Valid UserUpdateRequest userUpdateRequest, @RequestHeader("Authorization") String jwt) {
         UUID userId = getUserIdFromJwt(jwt);

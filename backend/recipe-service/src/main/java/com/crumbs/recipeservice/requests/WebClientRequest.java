@@ -98,4 +98,14 @@ public class WebClientRequest {
                 .bodyToMono(UUID[].class)
                 .block();
     }
+
+    public String notifySubscribers(RecipeAddedNotificationRequest request) {
+        return webClientBuilder.baseUrl("http://notification-service").build().post()
+                .uri("/notifications/recipe")
+                .body(Mono.just(request), RecipeAddedNotificationRequest.class)
+                .retrieve()
+                .onStatus(HttpStatus::is4xxClientError, response -> Mono.error(new UserNotFoundException()))
+                .bodyToMono(String.class)
+                .block();
+    }
 }

@@ -4,6 +4,7 @@ import com.crumbs.notificationservice.models.Notification;
 import com.crumbs.notificationservice.requests.MarkNotificationRequest;
 import com.crumbs.notificationservice.requests.NotificationRequest;
 import com.crumbs.notificationservice.requests.NotificationWebClientRequest;
+import com.crumbs.notificationservice.requests.RecipeAddedNotificationRequest;
 import com.crumbs.notificationservice.services.NotificationService;
 import com.crumbs.notificationservice.utility.JwtConfigAndUtil;
 import io.swagger.annotations.ApiResponse;
@@ -52,17 +53,17 @@ public class NotificationController {
     }
 
     @PostMapping
-    public ResponseEntity<String> createNotification(@RequestBody @Valid NotificationRequest notificationRequest) {
-        Notification notification = new Notification();
-        notification.setDescription(notificationRequest.getDescription());
-        notification.setTitle(notificationRequest.getTitle());
-        notification.setCreatedAt(LocalDateTime.now(ZoneId.of(DEFAULT_TIMEZONE)));
-        notification.setIsRead(false);
-        notification.setUserId(notificationRequest.getUserId());
-        notification.setEntityId(notificationRequest.getEntityId());
-        notification.setEntityType(Notification.EntityType.valueOf(notificationRequest.getEntityType().toString()));
-        notificationService.sendNotification(notification);
+    public ResponseEntity<String> createNotification(@RequestBody @Valid NotificationRequest request) {
+        sendNotification(request.getDescription(), request.getTitle(), request.getUserId(), request.getEntityId(), Notification.EntityType.valueOf(request.getEntityType().toString()));
         return ResponseEntity.ok("Notification sent");
+    }
+
+    @PostMapping("/recipe")
+    public ResponseEntity<String> notifySubscribers(@RequestBody @Valid RecipeAddedNotificationRequest request) {
+        final UUID[] ids = notificationWebClientRequest.getUserSubscribers(request.getUserId());
+        for (UUID id : ids)
+            sendNotification(request.getMessage(), "New recipe", id, request.getRecipeId(), Notification.EntityType.recipe);
+        return ResponseEntity.ok("Notifications sent");
     }
 
     @PostMapping(value = "/mark-all-as-read")
@@ -86,5 +87,17 @@ public class NotificationController {
         UUID userId = getUserIdFromJwt(jwt);
         notificationService.deleteNotification(id, userId);
         return ResponseEntity.ok("Notification successfully deleted");
+    }
+
+    private void sendNotification(String message, String title, UUID userId, UUID entityId, Notification.EntityType type) {
+        Notification notification = new Notification();
+        notification.setDescription(message);
+        notification.setTitle(title);
+        notification.setCreatedAt(LocalDateTime.now(ZoneId.of(DEFAULT_TIMEZONE)));
+        notification.setIsRead(false);
+        notification.setUserId(userId);
+        notification.setEntityId(entityId);
+        notification.setEntityType(type);
+        notificationService.sendNotification(notification);
     }
 }

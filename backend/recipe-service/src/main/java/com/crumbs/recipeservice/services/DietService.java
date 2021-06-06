@@ -44,13 +44,6 @@ public class DietService {
     }
 
     @Transactional(readOnly = true)
-    public List<Diet> getDiets(Integer pageNo, Integer pageSize, String sort) {
-        Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sort).ascending());
-        Slice<Diet> slicedProducts = dietRepository.findAll(paging);
-        return slicedProducts.getContent();
-    }
-
-    @Transactional(readOnly = true)
     public DietViewResponse getDietViews(Integer pageNo, Integer pageSize, String sort, String search) {
         Sort sorting = getDietSorting(sort);
         Pageable paging = PageRequest.of(pageNo, pageSize, sorting);

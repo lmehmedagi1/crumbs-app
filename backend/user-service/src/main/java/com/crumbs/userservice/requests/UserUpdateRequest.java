@@ -11,11 +11,11 @@ import javax.validation.constraints.Size;
 @AllArgsConstructor
 public class UserUpdateRequest {
     @NotBlank
-    @Pattern(regexp = "^[A-Za-z]+$", flags = Pattern.Flag.UNICODE_CASE, message = "First name can only contain letters!")
+    @Pattern(regexp = "^[A-Za-zščćžđŠČĆŽĐ]+$", flags = Pattern.Flag.UNICODE_CASE, message = "First name can only contain letters!")
     private String firstName;
 
     @NotBlank
-    @Pattern(regexp = "^[A-Za-z]+$", flags = Pattern.Flag.UNICODE_CASE, message = "Last name can only contain letters!")
+    @Pattern(regexp = "^[A-Za-zščćžđŠČĆŽĐ]+$", flags = Pattern.Flag.UNICODE_CASE, message = "Last name can only contain letters!")
     private String lastName;
 
     @NotBlank

@@ -15,6 +15,6 @@ public class CategoryRequest {
     @NotBlank
     @Size(min = 5, message = "Category name must be at least 5 characters long!")
     @Size(max = 30, message = "Category name exceeds allowed limit of 30 characters!")
-    @Pattern(regexp = "^[A-Za-z\\s]+$", flags = Pattern.Flag.UNICODE_CASE, message = "Category name can only contain letters and whitespaces!")
+    @Pattern(regexp = "^[A-Za-zščćžđŠČĆŽĐ\\s]+$", flags = Pattern.Flag.UNICODE_CASE, message = "Category name can only contain letters and whitespaces!")
     private String name;
 }

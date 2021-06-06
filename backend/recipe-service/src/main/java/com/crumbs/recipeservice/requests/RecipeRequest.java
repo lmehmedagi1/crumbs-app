@@ -16,25 +16,25 @@ public class RecipeRequest {
     @NotBlank
     @Size(min = 5, message = "Recipe title must be at least 5 characters long!")
     @Size(max = 50, message = "Recipe title exceeds allowed limit of 50 characters!")
-    @Pattern(regexp = "^[a-zA-Z0-9_\\s\\\\.,\\-!?%']*$", flags = Pattern.Flag.UNICODE_CASE, message = "Recipe description can only contain letters, numbers " +
+    @Pattern(regexp = "^[a-zA-Z0-9ščćžđ_\\s\\\\.,\\-!?%']*$", flags = Pattern.Flag.UNICODE_CASE, message = "Recipe description can only contain letters, numbers " +
             "and special characters: _ \\ . , - ! ? % '")
     private String title;
 
     @NullOrNotBlank
     @Size(max = 500, message = "Recipe description exceeds allowed limit of 500 characters!")
-    @Pattern(regexp = "^[a-zA-Z0-9_\\s\\\\.,\\-!?%']*$", flags = Pattern.Flag.UNICODE_CASE, message = "Recipe description can only contain letters, numbers " +
+    @Pattern(regexp = "^[a-zA-Z0-9šđčćžŠĐČĆŽ_\\s\\\\.,\\-!?%']*$", flags = Pattern.Flag.UNICODE_CASE, message = "Recipe description can only contain letters, numbers " +
             "and special characters: _ \\ . , - ! ? % '")
     private String description;
 
     @NotBlank
     @Size(min = 50, message = "Recipe method must be at least 50 characters long!")
     @Size(max = 3000, message = "Recipe method exceeds allowed limit of 3000 characters!")
-    @Pattern(regexp = "^[a-zA-Z0-9_\\s\\\\.,\\-!?%']*$", flags = Pattern.Flag.UNICODE_CASE, message = "Recipe method can only contain letters, numbers " +
+    @Pattern(regexp = "^[a-zA-Z0-9šđčćžŠĐČĆŽ_\\s\\\\.,\\-!?%']*$", flags = Pattern.Flag.UNICODE_CASE, message = "Recipe method can only contain letters, numbers " +
             "and special characters: _ \\ . , - ! ? % '")
     private String method;
 
     @Size(max = 3000, message = "Advice method exceeds allowed limit of 3000 characters!")
-    @Pattern(regexp = "^[a-zA-Z0-9_\\s\\\\.,\\-!?%]*$", flags = Pattern.Flag.UNICODE_CASE, message = "Advice method can only contain letters, numbers " +
+    @Pattern(regexp = "^[a-zA-Z0-9ščćđžČŠĆĐŽ_\\s\\\\.,\\-!?%]*$", flags = Pattern.Flag.UNICODE_CASE, message = "Advice method can only contain letters, numbers " +
             "and special characters: _ \\ . , - ! ? %")
     private String advice;
 

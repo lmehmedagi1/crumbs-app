@@ -33,4 +33,7 @@ public interface UserRepository extends JpaRepository<User, UUID>, JpaSpecificat
             "c.author.userProfile.firstName, c.author.userProfile.lastName," +
             "c.author.username, c.author.email, c.author.userProfile.avatar) FROM Subscription c WHERE c.subscriber.id = ?1")
     List<UserClassView> getUserSubscriptions(UUID id);
+
+    @Query("SELECT s.subscriber.id FROM User u INNER JOIN u.subscribers as s WHERE u.id=?1")
+    UUID[] getUserSubscribersIds(UUID id);
 }

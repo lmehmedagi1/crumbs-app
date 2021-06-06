@@ -29,11 +29,11 @@ public class SpringFoxConfig {
 
     private ApiInfo apiInfo() {
         return new ApiInfo(
-                "Auction App API Documentation",
-                "Atlantbh internship project.",
+                "Crumbs App API Documentation",
+                "User service documentation.",
                 "1.0",
                 "Terms of service",
-                new Contact("Lejla Mehmedagic", "https://auction-app-atlantbh-frontend.herokuapp.com/", "lmehmedagi1@etf.unsa.ba"),
+                new Contact("LAMA team", "https://github.com/lmehmedagi1/crumbs-app", "lmehmedagi1@etf.unsa.ba"),
                 "License of API",
                 "API license URL",
                 Collections.emptyList());

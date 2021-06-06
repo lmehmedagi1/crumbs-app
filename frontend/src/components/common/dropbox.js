@@ -5,14 +5,6 @@ export const dbx = new Dropbox({
     accessToken: dropbox.token
 })
 
-
-export function listFiles() {
-    dbx.filesListFolder({
-        path: '/recipes/',
-    }).then(res => console.log("Direktorij:", res))
-}
-
-
 export function getImage(id, f) {
     dbx.filesDownload({
         path: id

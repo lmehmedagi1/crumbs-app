@@ -25,19 +25,24 @@ public class ReviewEventListener {
     @RabbitListener(queues = "REVIEW_QUEUE")
     public void handleReviewEvent(ReviewCreatedEvent event) {
         try {
-            Notification notification = new Notification();
-            notification.setEntityType(Notification.EntityType.recipe);
-            notification.setUserId(event.getReviewId());
-            notification.setEntityId(event.getReviewId());
-            notification.setTitle("New review");
-            notification.setIsRead(false);
-            notification.setCreatedAt(LocalDateTime.now(ZoneId.of(DEFAULT_TIMEZONE)));
-            notification.setDescription(event.getPoruka());
-
-            notificationService.sendNotification(notification);
+            notifyUser(event.getAuthorId(), event.getRecipeId(), "New recipe", event.getMessage());
         } catch (Exception e) {
+            notifyUser(event.getReviewerId(), event.getRecipeId(), "Review failed", "Your review could not be posted");
             NotificationFailedEvent failedEvent = new NotificationFailedEvent(UUID.randomUUID().toString(), event.getReviewId());
             rabbitTemplate.convertAndSend("NOTIFICATION_EXCHANGE", "NOTIFICATION_ROUTING_KEY", failedEvent);
         }
+    }
+
+    private void notifyUser(UUID receiverId, UUID recipeId, String title, String message) {
+        Notification notification = new Notification();
+        notification.setEntityType(Notification.EntityType.recipe);
+        notification.setUserId(receiverId);
+        notification.setEntityId(recipeId);
+        notification.setTitle(title);
+        notification.setIsRead(false);
+        notification.setCreatedAt(LocalDateTime.now(ZoneId.of(DEFAULT_TIMEZONE)));
+        notification.setDescription(message);
+
+        notificationService.sendNotification(notification);
     }
 }

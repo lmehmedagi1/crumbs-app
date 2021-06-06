@@ -177,11 +177,18 @@ function RecipePreview(props) {
 
     const isUsersRecipe = () => getUser().id === recipe.userId
 
+    const update = id => {
+        dispatch(clearState());
+        dispatch(get(id));
+        dispatch(getRecipeRating(id));
+        dispatch(getRecipeReviews(id, countComment, getUser() ? getUser().id : "noId"));
+        getEntityReviewUser(id);
+    }
 
     return (
         <div className={loading ? "blockedWait" : ""}>
             <div className={loading ? "blocked" : ""}>
-                <Menu handleSearchChange={handleSearchChange} {...props} />
+                <Menu handleSearchChange={handleSearchChange} {...props} update={update}/>
                 <Alert message={message} showAlert={show} variant={variant} onShowChange={setShow} />
                 {recipe.hasData ?
                     <div className="recipePreview">

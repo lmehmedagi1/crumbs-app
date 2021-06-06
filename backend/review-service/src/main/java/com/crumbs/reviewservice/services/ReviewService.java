@@ -54,7 +54,9 @@ public class ReviewService {
 
     @Transactional(readOnly = true)
     public Double getRecipeRating(@NotNull UUID recipeId) {
-        return (double) Math.round(reviewRepository.getAvgRatingOfRecipe(recipeId) * 100) / 100;
+        Double rating = reviewRepository.getAvgRatingOfRecipe(recipeId);
+        rating = rating==null ? 0 : rating;
+        return (double) Math.round(rating * 100) / 100;
     }
 
     @Transactional(readOnly = true)
@@ -75,15 +77,6 @@ public class ReviewService {
         Review returnReview = reviewRepository.save(review);
         System.out.println("Rev id: " + returnReview.getId() + " a old rev id: " + review.getId());
         return returnReview;
-    }
-
-    @Transactional
-    public Review updateReview(@NotNull @Valid ReviewRequest reviewRequest, @NotNull UUID reviewId, @NotNull UUID userId) {
-        Review review = reviewRepository.findByIdAndUserId(reviewId, userId);
-        if (review == null)
-            throw new UnauthorizedException("You don't have permission to update this review");
-        modifyReview(reviewRequest, userId, review);
-        return reviewRepository.save(review);
     }
 
     @Transactional
@@ -127,9 +120,5 @@ public class ReviewService {
 
     public int updateReviewRating(Integer rating, UUID id) {
         return reviewRepository.setRatingForReview(rating, id);
-    }
-
-    public boolean doesReviewExist(UUID userId, UUID entity_id) {
-        return reviewRepository.existsReviewByUserIdAndEntityId(userId, entity_id);
     }
 }
