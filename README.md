@@ -1,6 +1,6 @@
 # CRUMBS APP
 
-CRUMBS APP je aplikacija koja se koristi za pronalaženje recepata za hranu. Možete odabrati kategoriju; želite li doručak, ručak, večeru? Tražite desert, vegetarijanski izbor, hranu za djecu i još mnogo toga? Na osnovu kategorije koju odaberete prikazat će vam se adekvatni recepti. Korisnici će moći ostaviti povratne informacije i ocjene za svaki recept. Svakog dana svim korisnicima je globalno dostupan drugačiji „Recept dana“, kao i drugi najbolje ocijenjeni recepti. 
+CRUMBS APP je aplikacija koja se koristi za pronalaženje recepata za hranu. Možete odabrati kategoriju; želite li doručak, ručak, večeru? Tražite desert, vegetarijanski izbor, sezonske recepte i još mnogo toga? Na osnovu kategorije koju odaberete prikazat će vam se odgovarajući recepti. Korisnici mogu ostaviti povratne informacije, komentare i ocjene za svaki recept. Ukoliko Vam se sviđa sadržaj kojeg objavljuje određeni autor, možete se pretplatiti na njega te biti odmah obaviješteni o novim objavama u vidu notifikacija. Svakog dana svim korisnicima su globalno dostupan drugačiji „Recepti dana“, kao i drugi najbolje ocijenjeni recepti. CRUMBS APP karakterišu i raznovrsni planovi israne koje korisnicima olakšavanju ostvarenje nutricionih ciljeva. Ukoliko uživate u hrani i njenoj pripremi, CRUMBS APP je aplikacija za Vas. 
 
 ## Članovi tima
 
