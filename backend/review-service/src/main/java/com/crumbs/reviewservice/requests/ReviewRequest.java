@@ -30,7 +30,7 @@ public class ReviewRequest {
     @NullOrNotBlank
     @Size(min = 5, message = "Comment must contain at least 5 characters!")
     @Size(max = 1000, message = "Comment exceeds allowed limit of 1000 characters!")
-    @Pattern(regexp = "^[A-Za-z0-9 .,:;\\-_?!&%/'@()\"]*$", flags = {Pattern.Flag.MULTILINE, Pattern.Flag.UNICODE_CASE},
+    @Pattern(regexp = "^[A-Za-z0-9ščćžđŠČĆŽĐ .,:;\\-_?!&%/'@()\"]*$", flags = {Pattern.Flag.MULTILINE, Pattern.Flag.UNICODE_CASE},
             message = "Comment can only contain letters, numbers, spaces, and punctuation!")
     private String comment;
 }

@@ -254,6 +254,11 @@ public class UserService {
         else subscriptionRepository.delete(subscription);
     }
 
+    @Transactional(readOnly = true)
+    public UUID[] getUserSubscribersIds(UUID id) {
+        return userRepository.getUserSubscribersIds(id);
+    }
+
     @Transactional
     public User updateUserInfo(UserUpdateRequest userUpdateRequest, UUID userId) {
         User user = userRepository.findById(userId).orElseThrow(() ->

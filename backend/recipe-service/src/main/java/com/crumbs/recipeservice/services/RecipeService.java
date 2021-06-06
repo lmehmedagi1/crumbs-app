@@ -56,12 +56,14 @@ public class RecipeService {
         return slicedProducts.getContent();
     }
 
+    @Transactional(readOnly = true)
     public List<RecipeView> getRecipePreviewsForUser(UUID userId, Integer pageNo, Integer pageSize, String sort) {
         Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sort).ascending());
         Slice<RecipeView> slicedProducts = recipeRepository.findRecipesForUserId(userId, paging);
         return slicedProducts.getContent();
     }
 
+    @Transactional(readOnly = true)
     public List<RecipeView> getRecipePreviewsForCategory(UUID userId, Integer pageNo, Integer pageSize, String sort) {
         Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sort).ascending());
         Slice<RecipeView> slicedProducts = recipeRepository.findRecipesInCategory(userId, paging);

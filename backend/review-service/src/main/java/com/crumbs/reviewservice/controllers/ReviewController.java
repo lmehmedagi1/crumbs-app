@@ -1,8 +1,10 @@
 package com.crumbs.reviewservice.controllers;
 
-//import com.crumbs.reviewservice.amqp.ReviewCreatedEvent;
+import com.crumbs.reviewservice.amqp.ReviewCreatedEvent;
 
+import com.crumbs.reviewservice.models.Recipe;
 import com.crumbs.reviewservice.models.Review;
+import com.crumbs.reviewservice.models.User;
 import com.crumbs.reviewservice.projections.ReviewView;
 import com.crumbs.reviewservice.projections.UserClassView;
 import com.crumbs.reviewservice.projections.UserRecipeView;
@@ -14,6 +16,7 @@ import com.crumbs.reviewservice.utility.assemblers.ReviewModelAssembler;
 import com.crumbs.reviewservice.utility.assemblers.ReviewViewModelAssembler;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -47,18 +50,18 @@ public class ReviewController {
     private final ReviewModelAssembler reviewModelAssembler;
     private final ReviewViewModelAssembler reviewViewModelAssembler;
     private final ReviewWebClientRequest reviewWebClientRequest;
-//    private final RabbitTemplate rabbitTemplate;
+    private final RabbitTemplate rabbitTemplate;
 
     @Autowired
     ReviewController(ReviewService reviewService, ReviewModelAssembler reviewModelAssembler,
                      ReviewViewModelAssembler reviewViewModelAssembler, ReviewWebClientRequest reviewWebClientRequest
-//            , RabbitTemplate rabbitTemplate
+            , RabbitTemplate rabbitTemplate
     ) {
         this.reviewService = reviewService;
         this.reviewModelAssembler = reviewModelAssembler;
         this.reviewViewModelAssembler = reviewViewModelAssembler;
         this.reviewWebClientRequest = reviewWebClientRequest;
-//        this.rabbitTemplate = rabbitTemplate;
+        this.rabbitTemplate = rabbitTemplate;
     }
 
     @RequestMapping(params = "id", method = RequestMethod.GET)
@@ -124,7 +127,6 @@ public class ReviewController {
 
     @RequestMapping(value = "/rating", params = "recipeId", method = RequestMethod.GET)
     public Double getRecipeRating(@RequestParam("recipeId") @NotNull UUID recipeId) {
-        reviewWebClientRequest.checkIfRecipeExists(recipeId);
         return reviewService.getRecipeRating(recipeId);
     }
 
@@ -138,25 +140,6 @@ public class ReviewController {
 
         final Review review = reviewService.getReviewOfEntityFromUser(entityId, userId);
         EntityModel<Review> entityModel = reviewModelAssembler.toModel(review);
-
-        return ResponseEntity.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(entityModel);
-    }
-
-    @PostMapping
-    public ResponseEntity<?> createReviewOfRecipe(@RequestBody @Valid ReviewRequest reviewRequest, @RequestHeader("Authorization") String jwt) {
-
-        final UUID userId = getUserIdFromJwt(jwt);
-        reviewWebClientRequest.checkIfRecipeExists(UUID.fromString(reviewRequest.getEntity_id()));
-        reviewWebClientRequest.checkIfUserExists(jwt);
-
-        final Review newReview = reviewService.createReview(reviewRequest, userId);
-        EntityModel<Review> entityModel = reviewModelAssembler.toModel(newReview);
-//
-//        ReviewCreatedEvent createdEvent = new ReviewCreatedEvent(UUID.randomUUID().toString(), newReview.getId(), reviewRequest.getComment());
-//        rabbitTemplate.convertAndSend("REVIEW_EXCHANGE", "REVIEW_ROUTING_KEY", createdEvent);
-
-//        ReviewCreatedEvent createdEvent = new ReviewCreatedEvent(UUID.randomUUID().toString(), newReview.getId(), reviewRequest.getComment());
-//        rabbitTemplate.convertAndSend("REVIEW_EXCHANGE", "REVIEW_ROUTING_KEY", createdEvent);
 
         return ResponseEntity.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(entityModel);
     }
@@ -176,9 +159,10 @@ public class ReviewController {
                                         @RequestBody @Valid ReviewRequest reviewRequest,
                                         @RequestHeader("Authorization") String jwt) {
 
-        UUID userId = getUserIdFromJwt(jwt);
-        reviewWebClientRequest.checkIfRecipeExists(UUID.fromString(reviewRequest.getEntity_id()));
-        reviewWebClientRequest.checkIfUserExists(jwt);
+        final UUID userId = getUserIdFromJwt(jwt);
+        final Recipe recipe = reviewWebClientRequest.checkIfRecipeExists(UUID.fromString(reviewRequest.getEntity_id()));
+        final User user = reviewWebClientRequest.checkIfUserExists(jwt);
+
         Review review;
         if (id.equals("noId") || id.equals("")) {
             review = reviewService.getReviewOfEntityFromUser(UUID.fromString(reviewRequest.getEntity_id()), userId);
@@ -200,6 +184,11 @@ public class ReviewController {
             reviewService.updateReviewRating(reviewRequest.getRating(), UUID.fromString(id));
         }
         review = reviewService.getReview(UUID.fromString(id));
+
+        final String message = user.getUserProfile().getFirstName() + " " + user.getUserProfile().getLastName() + " left a review on your recipe for " + recipe.getTitle();
+        ReviewCreatedEvent createdEvent = new ReviewCreatedEvent(UUID.randomUUID().toString(), UUID.fromString(id), recipe.getId(), recipe.getUserId(), user.getId(), message);
+        rabbitTemplate.convertAndSend("REVIEW_EXCHANGE", "REVIEW_ROUTING_KEY", createdEvent);
+
         if (reviewRequest.getComment() != null) {
             ReviewView reviewView = getRv(review);
             return ResponseEntity.ok(reviewViewModelAssembler.toModel(reviewView));

@@ -8,6 +8,7 @@ import com.crumbs.recipeservice.projections.UserClassView;
 import com.crumbs.recipeservice.projections.UserRecipeView;
 import com.crumbs.recipeservice.requests.FilterRecipesRequest;
 import com.crumbs.recipeservice.requests.OptionRequest;
+import com.crumbs.recipeservice.requests.RecipeAddedNotificationRequest;
 import com.crumbs.recipeservice.requests.RecipeRequest;
 import com.crumbs.recipeservice.requests.WebClientRequest;
 import com.crumbs.recipeservice.responses.RecipeWithDetails;
@@ -195,11 +196,11 @@ public class RecipeController {
 
     @PostMapping
     public ResponseEntity<?> createRecipe(@RequestBody @Valid RecipeRequest recipeRequest, @RequestHeader("Authorization") String jwt) {
-
-        webClientRequest.checkIfUserExists(jwt);
-        UUID userId = JwtConfigAndUtil.getUserIdFromJwt(jwt);
-
+        final User user = webClientRequest.checkIfUserExists(jwt);
+        final UUID userId = JwtConfigAndUtil.getUserIdFromJwt(jwt);
         final Recipe recipe = recipeService.saveRecipe(recipeRequest, userId);
+        final String message = user.getUserProfile().getFirstName() + " " + user.getUserProfile().getLastName() + " added a new recipe for " + recipe.getTitle();
+        webClientRequest.notifySubscribers(new RecipeAddedNotificationRequest(userId, recipe.getId(), message));
         EntityModel<Recipe> entityModel = recipeModelAssembler.toModel(recipe);
         return ResponseEntity.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(entityModel);
     }

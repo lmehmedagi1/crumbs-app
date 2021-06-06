@@ -108,6 +108,7 @@ function Profile(props) {
 
     const onSuccessAdded = () => {
         setShowDietModal(false);
+        setShowRecipeModal(false);
         const newTableKey = tableKey * 89;
         setTableKey(newTableKey);
         setLoading(false);

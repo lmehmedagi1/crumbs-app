@@ -29,13 +29,13 @@ public class UserProfile implements Serializable {
     @Column(name = "first_name")
     @JsonProperty("first_name")
     @NotBlank
-    @Pattern(regexp = "^[A-Za-z]+$", flags = Pattern.Flag.UNICODE_CASE, message = "First name can only contain letters!")
+    @Pattern(regexp = "^[A-Za-zščćžđŠČĆŽĐ]+$", flags = Pattern.Flag.UNICODE_CASE, message = "First name can only contain letters!")
     private String firstName;
 
     @Column(name = "last_name")
     @JsonProperty("last_name")
     @NotBlank
-    @Pattern(regexp = "^[A-Za-z]+$", flags = Pattern.Flag.UNICODE_CASE, message = "Last name can only contain letters!")
+    @Pattern(regexp = "^[A-Za-zščćžđŠČĆŽĐ]+$", flags = Pattern.Flag.UNICODE_CASE, message = "Last name can only contain letters!")
     private String lastName;
 
     @NotBlank

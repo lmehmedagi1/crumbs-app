@@ -64,7 +64,7 @@ public class Review implements Serializable {
     @NullOrNotBlank
     @Size(min = 5, message = "Comment must contain at least 5 characters!")
     @Size(max = 2500, message = "Comment exceeds allowed limit of 2500 characters!")
-    @Pattern(regexp = "^[A-Za-z0-9 .,:;\\-_?!&%/'@()\"]*$", flags = {Pattern.Flag.MULTILINE, Pattern.Flag.UNICODE_CASE},
+    @Pattern(regexp = "^[A-Za-z0-9ščćžđŠČĆŽĐ .,:;\\-_?!&%/'@()\"]*$", flags = {Pattern.Flag.MULTILINE, Pattern.Flag.UNICODE_CASE},
             message = "Comment can only contain letters, numbers, spaces, and punctuation!")
     private String comment;
 

@@ -32,13 +32,13 @@ public class NotificationRequest {
 
     @NotBlank
     @Size(max = 100, message = "Title exceeds allowed limit of 100 characters!")
-    @Pattern(regexp = "^[A-Za-z0-9 .,:;\\-_?!&%/'@()\"]*$", flags = {Pattern.Flag.MULTILINE, Pattern.Flag.UNICODE_CASE},
+    @Pattern(regexp = "^[A-Za-z0-9ščćžđŠČĆŽĐ .,:;\\-_?!&%/'@()\"]*$", flags = {Pattern.Flag.MULTILINE, Pattern.Flag.UNICODE_CASE},
             message = "Title can only contain letters, numbers, spaces, and punctuation marks!")
     private String title;
 
     @NotBlank
     @Size(max = 150, message = "Description exceeds allowed limit of 250 characters!")
-    @Pattern(regexp = "^[A-Za-z0-9 .,:;\\-_?!&%/'@()\"]*$", flags = {Pattern.Flag.MULTILINE, Pattern.Flag.UNICODE_CASE},
+    @Pattern(regexp = "^[A-Za-z0-9ščćžđŠČĆŽĐ .,:;\\-_?!&%/'@()\"]*$", flags = {Pattern.Flag.MULTILINE, Pattern.Flag.UNICODE_CASE},
             message = "Description can only contain letters, numbers, spaces, and punctuation marks!")
     private String description;
 }

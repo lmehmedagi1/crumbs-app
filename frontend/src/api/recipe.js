@@ -11,7 +11,6 @@ class RecipeApi extends React.Component {
                 cb(response);
             }, err => {
                 cb(null, err)
-                console.log(err)
             });
     }
 
@@ -24,7 +23,6 @@ class RecipeApi extends React.Component {
                 cb(response);
             }, err => {
                 cb(null, err)
-                console.log(err)
             }, id);
     }
 
@@ -74,7 +72,6 @@ class RecipeApi extends React.Component {
             response => cb(response)
             , err => {
                 cb(null, err)
-                console.log(err)
             }, id);
     }
 

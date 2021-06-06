@@ -52,8 +52,6 @@ public interface ReviewRepository extends JpaRepository<Review, UUID> {
     @Query("update Review r set r.rating = ?1, r.lastModify = current_timestamp where r.id = ?2")
     int setRatingForReview(int rating, UUID id);
 
-    boolean existsReviewByUserIdAndEntityId(UUID userid, UUID entityid);
-
     @Modifying(clearAutomatically=true)
     @Transactional
     @Query("update Review r set r.comment = null, r.lastModify = current_timestamp where r.id = ?1")

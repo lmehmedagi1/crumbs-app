@@ -33,10 +33,7 @@ function Browse(props) {
 
     const handleSearchChange = search => {
         dispatch(setState({ title: search }))
-        props.history.push({
-            pathname: '/browse',
-            state: { search: search }
-        });
+        dispatch(getRecipes(getFilters(search), page, pageSize));
     }
 
     const handleOnSelectChange = (value, name) => {
