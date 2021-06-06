@@ -35,47 +35,47 @@ docker compose up
 
 Autentikacija:
 - Prijava i registracija
+- Verifikacija računa putem email-a
 - Odjava
 - Zaboravljena lozinka
 
 Upravljanje profilom
 - Promjena ličnih podataka
 - Promjena avatara
-- Promjena šifre
 
 Upravljanje receptima
-- Dodavanje recepata (unosi neophodne podatke kao sto su sastojci, upute za pripremu te najmanje 1 sliku)
+- Dodavanje recepata
 - Brisanje vlastitih recepata
 - Izmjena vlastitih recepata
 
 Pregled recepata
 - Pregled svih recepata
 - Detaljan pregled odabranog recepta: sastojci, galerija i upute 
-- Pretraživanje recepata na osnovu naziva i sastojaka
-- Sortiranje recepata, npr. na osnovu datuma dodavanja, ocjene, popularnosti...
+- Pretraživanje recepata na osnovu naziva
 - Filtriranje recepata, npr. na osnovu osnovu tipa ishrane
-- Svakodnevno generisani “Recept dana”
+- Pregled najbolje ocijenjenih recepata na dnevnoj i mjesečnoj bazi
 - Pregled omiljenih recepata
 
 Upravljanje planovima ishrane
-- Generisanje plana ishrane na određeni period
-- Generisanje liste sastojaka potrebnih za kreirani plan ishrane
+- Kreiranje plana ishrane na određeni period
 - Označavanje plana kao globalno dostupan
 - Pregled svih globalno dostupnih planova
+- Pregled liste sastojaka potrebnih za kreirani plan ishrane
 
 Recenzija recepata
 - Ocjenjivanje recepata ocjenom od 1 do 5
 - Komentarisanje recepata
+- Označavanje recepta kao jedan od omiljenih
 - Primanje notifikacije o novoj recenziji na vaš recept
 
 Pretplata na autore
 - Pretplata na omiljene autore
-- Pregled autora na koji ste pretplaćeni
 - Poništavanje pretplate na pretplaćene autore
+- Pregled autora na koji ste pretplaćeni
+- Primanje notifikacije o novoj pretplati
 - Primanje notifikacije o novom receptu omiljenih autora
-
 
 ## Pristup ponovnoj izradi projekta
 
-Ukoliko bi projekat započeli iznova pristup realizaciji bi zasigurno bio  drugačiji. Primarno, mnogo više vremena i truda bi bilo uloženo u fazi planiranja i dizajna. Smatramo da bi time efektivno uklonili neželjene ispravke implementacije koje su bile nužne u kasnijoj fazi projekta. Također, uvođenje sofvera za rukovođenje projekta (Jira) u kasnoj fazi projekta pokazalo se vrlo korisno te je poboljšalo cjelokupan rad i organizaciju na projektu. Ovakav pristup bi sigurno bio korišten od prvog dana projekta. 
+Ukoliko bismo projekat započeli iznova pristup realizaciji bi zasigurno bio drugačiji. Primarno, mnogo više vremena i truda bi bilo uloženo u fazi planiranja i dizajna. Smatramo da bi time efektivno uklonili neželjene ispravke implementacije koje su bile nužne u kasnijoj fazi projekta. Također, uvođenje sofvera za rukovođenje projekta (Jira) u kasnoj fazi projekta pokazalo se vrlo korisno te je poboljšalo cjelokupan rad i organizaciju na projektu. Ovakav pristup bi sigurno bio korišten od prvog dana projekta. 
 
