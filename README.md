@@ -68,3 +68,8 @@ Pretplata na autore
 - Poništavanje pretplate na pretplaćene autore
 - Primanje notifikacije o novom receptu omiljenih autora
 
+
+## Pristup ponovnoj izradi projekta
+
+Ukoliko bi projekat započeli iznova pristup realizaciji bi zasigurno bio  drugačiji. Primarno, mnogo više vremena i truda bi bilo uloženo u fazi planiranja i dizajna. Smatramo da bi time efektivno uklonili neželjene ispravke implementacije koje su bile nužne u kasnijoj fazi projekta. Također, uvođenje sofvera za rukovođenje projekta (Jira) u kasnoj fazi projekta pokazalo se vrlo korisno te je poboljšalo cjelokupan rad i organizaciju na projektu. Ovakav pristup bi sigurno bio korišten od prvog dana projekta. 
+
