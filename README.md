@@ -1,6 +1,6 @@
 # CRUMBS APP
 
-CRUMBS APP je aplikacija koja se koristi za pronalaženje recepata za hranu. Možete odabrati kategoriju; želite li doručak, ručak, večeru? Tražite desert, vegetarijanski izbor, hranu za djecu i još mnogo toga? Na osnovu kategorije koju odaberete prikazat će vam se adekvatni recepti. Korisnici će moći ostaviti povratne informacije i ocjene za svaki recept. Svakog dana svim korisnicima je globalno dostupan drugačiji „Recept dana“, kao i drugi najbolje ocijenjeni recepti. 
+CRUMBS APP je aplikacija koja se koristi za pronalaženje recepata za hranu. Možete odabrati kategoriju; želite li doručak, ručak, večeru? Tražite desert, vegetarijanski izbor, sezonske recepte i još mnogo toga? Na osnovu kategorije koju odaberete prikazat će vam se odgovarajući recepti. Korisnici mogu ostaviti povratne informacije, komentare i ocjene za svaki recept. Ukoliko Vam se sviđa sadržaj kojeg objavljuje određeni autor, možete se pretplatiti na njega te biti odmah obaviješteni o novim objavama u vidu notifikacija. Svakog dana svim korisnicima su globalno dostupan drugačiji „Recepti dana“, kao i drugi najbolje ocijenjeni recepti. CRUMBS APP karakterišu i raznovrsni planovi israne koje korisnicima olakšavanju ostvarenje nutricionih ciljeva. Ukoliko uživate u hrani i njenoj pripremi, CRUMBS APP je aplikacija za Vas. 
 
 ## Članovi tima
 
@@ -11,12 +11,18 @@ CRUMBS APP je aplikacija koja se koristi za pronalaženje recepata za hranu. Mo�
 
 ## Demo aplikacije
 
-- Video coming soon
+- [Video](https://drive.google.com/drive/folders/1ZvSa7iVrfdQpD5iSKFoIk_lkG3-shmrJ?usp=sharing)
+
+## Konfiguracijske datoteke
+
+- [Repozitorij](https://github.com/lmehmedagi1/crumbs-app-configuration)
 
 ## Uputstvo za pokretanje
 
-- Uputstvo coming soon
-
+```
+docker compose build
+docker compose up
+```
 
 ## Uputstvo za pokretanje selenium IDE testova
 - Instalirati Selenium IDE ekstenziju za browser
@@ -29,47 +35,47 @@ CRUMBS APP je aplikacija koja se koristi za pronalaženje recepata za hranu. Mo�
 
 Autentikacija:
 - Prijava i registracija
+- Verifikacija računa putem email-a
 - Odjava
 - Zaboravljena lozinka
 
 Upravljanje profilom
 - Promjena ličnih podataka
 - Promjena avatara
-- Promjena šifre
 
 Upravljanje receptima
-- Dodavanje recepata (unosi neophodne podatke kao sto su sastojci, upute za pripremu te najmanje 1 sliku)
+- Dodavanje recepata
 - Brisanje vlastitih recepata
 - Izmjena vlastitih recepata
 
 Pregled recepata
 - Pregled svih recepata
 - Detaljan pregled odabranog recepta: sastojci, galerija i upute 
-- Pretraživanje recepata na osnovu naziva i sastojaka
-- Sortiranje recepata, npr. na osnovu datuma dodavanja, ocjene, popularnosti...
+- Pretraživanje recepata na osnovu naziva
 - Filtriranje recepata, npr. na osnovu osnovu tipa ishrane
-- Svakodnevno generisani “Recept dana”
+- Pregled najbolje ocijenjenih recepata na dnevnoj i mjesečnoj bazi
 - Pregled omiljenih recepata
 
 Upravljanje planovima ishrane
-- Generisanje plana ishrane na određeni period
-- Generisanje liste sastojaka potrebnih za kreirani plan ishrane
+- Kreiranje plana ishrane na određeni period
 - Označavanje plana kao globalno dostupan
 - Pregled svih globalno dostupnih planova
+- Pregled liste sastojaka potrebnih za kreirani plan ishrane
 
 Recenzija recepata
 - Ocjenjivanje recepata ocjenom od 1 do 5
 - Komentarisanje recepata
+- Označavanje recepta kao jedan od omiljenih
 - Primanje notifikacije o novoj recenziji na vaš recept
 
 Pretplata na autore
 - Pretplata na omiljene autore
-- Pregled autora na koji ste pretplaćeni
 - Poništavanje pretplate na pretplaćene autore
+- Pregled autora na koji ste pretplaćeni
+- Primanje notifikacije o novoj pretplati
 - Primanje notifikacije o novom receptu omiljenih autora
-
 
 ## Pristup ponovnoj izradi projekta
 
-Ukoliko bi projekat započeli iznova pristup realizaciji bi zasigurno bio  drugačiji. Primarno, mnogo više vremena i truda bi bilo uloženo u fazi planiranja i dizajna. Smatramo da bi time efektivno uklonili neželjene ispravke implementacije koje su bile nužne u kasnijoj fazi projekta. Također, uvođenje sofvera za rukovođenje projekta (Jira) u kasnoj fazi projekta pokazalo se vrlo korisno te je poboljšalo cjelokupan rad i organizaciju na projektu. Ovakav pristup bi sigurno bio korišten od prvog dana projekta. 
+Ukoliko bismo projekat započeli iznova pristup realizaciji bi zasigurno bio drugačiji. Primarno, mnogo više vremena i truda bi bilo uloženo u fazi planiranja i dizajna. Smatramo da bi time efektivno uklonili neželjene ispravke implementacije koje su bile nužne u kasnijoj fazi projekta. Također, uvođenje sofvera za rukovođenje projekta (Jira) u kasnoj fazi projekta pokazalo se vrlo korisno te je poboljšalo cjelokupan rad i organizaciju na projektu. Ovakav pristup bi sigurno bio korišten od prvog dana projekta. 
 
