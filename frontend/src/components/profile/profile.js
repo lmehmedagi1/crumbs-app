@@ -182,13 +182,13 @@ function Profile(props) {
                                         <AboutTab user={user && user} />
                                     </Tab.Pane>
                                     <Tab.Pane eventKey="recipes" active={activeTab == "recipes"}>
-                                        <RecipesTab key={tableKey} activeTab={activeTab} tab={activeTab} userId={user && user.id} handleRowClick={handleRowClick} setLoading={setLoading} setShow={setShow} setMessage={setMessage} setVariant={setVariant} />
+                                        <RecipesTab key={tableKey} activeTab={activeTab} tab={activeTab} userId={user && user.id} handleRowClick={handleRowClick} setLoading={setLoading} setShow={setShow} getToken={props.getToken} setToken={props.setToken} setMessage={setMessage} setVariant={setVariant} />
                                     </Tab.Pane>
                                     <Tab.Pane eventKey="diets" active={activeTab == "diets"}>
                                         <DietsTab key={tableKey} activeTab={activeTab} tab={activeTab} userId={user && user.id} handleRowClick={handleRowClick} setLoading={setLoading} setShow={setShow} setMessage={setMessage} setVariant={setVariant} getToken={props.getToken} setToken={props.setToken} />
                                     </Tab.Pane>
                                     <Tab.Pane eventKey="subscriptions" active={activeTab == "subscriptions"}>
-                                        <SubscriptionsTab activeTab={activeTab} key={tableKey} userId={user && user.id} handleRowClick={handleRowClick} setLoading={setLoading} setShow={setShow} setMessage={setMessage} setVariant={setVariant} />
+                                        <SubscriptionsTab activeTab={activeTab} key={tableKey} userId={user && user.id} handleRowClick={handleRowClick} setLoading={setLoading} setShow={setShow} getToken={props.getToken} setToken={props.setToken} setMessage={setMessage} setVariant={setVariant} />
                                     </Tab.Pane>
                                     <Tab.Pane eventKey="likes" active={activeTab == "likes"}>
                                         <LikesTab activeTab={activeTab} key={tableKey} userId={user && user.id} setShow={setShow} setMessage={setMessage} setVariant={setVariant} getToken={props.getToken} setToken={props.setToken} setLoading={setLoading} />
