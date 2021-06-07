@@ -10,6 +10,10 @@ spring:
     config:
       uri: https://crumbs-config-server.herokuapp.com
 
+ribbon:
+  eureka:
+    enabled: true
+
 zuul:
   sensitiveHeaders:
   host:
@@ -36,10 +40,6 @@ zuul:
       serviceId: recipe-service
       # url: https://crumbs-recipe-service.herokuapp.com/
       url: http://localhost:8082
-
-ribbon:
-  eureka:
-    enabled: true
 
 eureka:
   instance:

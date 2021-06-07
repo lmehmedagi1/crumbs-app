@@ -8,8 +8,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -27,45 +30,59 @@ class ReviewServiceTest {
     }
 
     @Test
-    void testGetReviewNull() {
-        assertThrows(InvalidDataAccessApiUsageException.class, () -> reviewService.getReview(null));
-    }
-
-    @Test
     void testGetReviewCorrectId() {
         final Review review = reviewService.getReview(UUID.fromString("9469a486-1e50-4aaf-a760-1daf770a2147"));
         assertAll(
                 () -> assertEquals(true, review.getIsLiked()),
                 () -> assertEquals(4, review.getRating()),
-                () -> assertEquals("Dobar pravo", review.getComment()));
+                () -> assertEquals("Yessir boiii3", review.getComment()));
+    }
+
+
+    @Test
+    void testGetDailyRecepies() {
+        Pageable paging = PageRequest.of(0, 2);
+        List<UUID> list = reviewService.getHighestRated(paging);
+        assertAll(() -> assertTrue(list.contains(UUID.fromString("2e0233d2-6e01-455c-8724-2117ad252ced"))));
     }
 
     @Test
-    void testCreateReviewNullInputParameter() {
-        assertThrows(NullPointerException.class, () -> {
-            reviewService.createReview(null, null);
-        });
+    void testGetMonthlyRecepies() {
+        Pageable paging = PageRequest.of(0, 2);
+        List<UUID> list = reviewService.getHighestRatedDaily(paging);
+        assertAll(() -> assertTrue(list.contains(UUID.fromString("2e0233d2-6e01-455c-8724-2117ad252ced"))));
     }
-//
-//    @Test
-//    void testCreateReviewSuccess() {
-//        final ReviewRequest createRecipeRequest = new ReviewRequest("5ccafc30-b1b3-4f74-ba3c-79583a3129c7", true, 3, "Sir Meso");
-//        final Review review = reviewService.createReview(createRecipeRequest, UUID.fromString("5ccafc30-b1b3-4f74-ba3c-79583a3129c6"));
-//        assertAll(
-//                () -> assertEquals(true, review.getIsLiked()),
-//                () -> assertEquals(3, review.getRating()),
-//                () -> assertEquals("Sir Meso", review.getComment()));
-//    }
 
-//    @Test
-//    void testUpdateReviewSuccess() {
-//        final ReviewRequest updateRecipeRequest = new ReviewRequest("ac8ff8ff-7193-4c45-90bd-9c662cc0494a", true, 3, "Sir Meso");
-//        final Review review = reviewService.updateReview(updateRecipeRequest, UUID.fromString("3e8ec94c-3edf-49e0-b548-425088881f60"));
-//        assertAll(
-//                () -> assertEquals(true, review.getIsLiked()),
-//                () -> assertEquals(3, review.getRating()),
-//                () -> assertEquals("Sir Meso", review.getComment()));
-//    }
+    @Test
+    void testCreateReviewSuccess() {
+        final ReviewRequest createRecipeRequest = new ReviewRequest("5ccafc30-b1b3-4f74-ba3c-79583a3129c7", "recipe", true, 3, "Sir Meso");
+        final Review review = reviewService.createReview(createRecipeRequest, UUID.fromString("5ccafc30-b1b3-4f74-ba3c-79583a3129c6"));
+        assertAll(
+                () -> assertEquals(true, review.getIsLiked()),
+                () -> assertEquals(3, review.getRating()),
+                () -> assertEquals("Sir Meso", review.getComment()));
+    }
+
+    @Test
+    void testUpdateReviewCommentSuccess() {
+        final int rev = reviewService.updateReviewComment("novi kom", UUID.fromString("9469a486-1e50-4aaf-a760-1daf770a2147"));
+        final Review review = reviewService.getReview(UUID.fromString("9469a486-1e50-4aaf-a760-1daf770a2147"));
+        assertEquals("novi kom", review.getComment());
+    }
+
+    @Test
+    void testUpdateReviewLikeSuccess() {
+        final int rev = reviewService.updateReviewLike(true, UUID.fromString("9469a486-1e50-4aaf-a760-1daf770a2147"));
+        final Review review = reviewService.getReview(UUID.fromString("9469a486-1e50-4aaf-a760-1daf770a2147"));
+        assertEquals(true, review.getIsLiked());
+    }
+
+    @Test
+    void testUpdateReviewRatingSuccess() {
+        final int rev = reviewService.updateReviewRating(3, UUID.fromString("9469a486-1e50-4aaf-a760-1daf770a2147"));
+        final Review review = reviewService.getReview(UUID.fromString("9469a486-1e50-4aaf-a760-1daf770a2147"));
+        assertEquals(3, review.getRating());
+    }
 
     @Test
     void testDeleteReviewSuccess() {

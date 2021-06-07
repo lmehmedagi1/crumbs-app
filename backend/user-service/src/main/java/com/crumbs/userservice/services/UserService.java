@@ -268,6 +268,7 @@ public class UserService {
         user.getUserProfile().setLastName(userUpdateRequest.getLastName());
         user.getUserProfile().setGender(userUpdateRequest.getGender());
         user.getUserProfile().setPhoneNumber(userUpdateRequest.getPhoneNumber());
+        user.getUserProfile().setAvatar(userUpdateRequest.getAvatar());
 
         return userRepository.save(user);
     }

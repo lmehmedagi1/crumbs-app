@@ -175,7 +175,7 @@ function RecipePreview(props) {
         }, { id: recipe.id }, props.getToken(), props.setToken);
     }
 
-    const isUsersRecipe = () => getUser().id === recipe.userId
+    const isUsersRecipe = () => getUser() && getUser().id === recipe.userId
 
     const update = id => {
         dispatch(clearState());
@@ -321,7 +321,7 @@ function RecipePreview(props) {
 
                             </Col>
                             <Col md={6} className="review" >
-                                <button onClick={chkBoxOnClick} className="heartCheckbox" disabled={isUsersRecipe()}>
+                                <button onClick={chkBoxOnClick} className="heartCheckbox" disabled={!userIsLoggedIn() || isUsersRecipe()}>
                                     <i className={!userReview.is_liked ? "fa fa-heart" : "fa fa-heart liked"}></i>
                                 </button>
                                 <Row>
